@@ -95,7 +95,9 @@ jobs:
       # OPTIONAL If your unit test requires Python libraries from other collections
       # Install them like this
       - name: Install collection dependencies
-        run: ansible-galaxy collection install ansible.netcommon ansible.utils -p .
+        run: git clone --depth=1 --single-branch https://github.com/ansible-collections/community.internal_test_tools.git ./ansible_collections/community/internal_test_tools
+        # NOTE: we're installing with git to work around Galaxy being a huge PITA (https://github.com/ansible/galaxy/issues/2429)
+        # run: ansible-galaxy collection install community.internal_test_tools -p .
 
       # Run the unit tests
       - name: Run unit test
@@ -165,7 +167,9 @@ jobs:
       # OPTIONAL If your integration test requires Python libraries or modules from other collections
       # Install them like this
       - name: Install collection dependencies
-        run: ansible-galaxy collection install ansible.netcommon -p .
+        run: git clone --depth=1 --single-branch https://github.com/ansible-collections/community.general.git ./ansible_collections/community/general
+        # NOTE: we're installing with git to work around Galaxy being a huge PITA (https://github.com/ansible/galaxy/issues/2429)
+        # run: ansible-galaxy collection install community.general -p .
 
       # Run the integration tests
       - name: Run integration test
