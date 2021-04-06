@@ -1,22 +1,20 @@
 # See https://docs.ansible.com/ansible/latest/dev_guide/collections_galaxy_meta.html
 
 namespace: community
-name: FIXME
+name: dns
 version: 0.1.0
 readme: README.md
 authors:
-  - YOUR NAME (github.com/YOURGITHUB)
-description: null
-license_file: LICENSE
+  - Felix Fontein (github.com/felixfontein)
+description: Plugins and modules for working with DNS
+license_file: COPYING
 tags:
-# tags so people can search for collections https://galaxy.ansible.com/search
-# tags are all lower-case, no spaces, no dashes.
-  - example1
-  - example2
-repository: https://github.com/ansible-collections/community.REPO_NAME
-#documentation: https://github.com/ansible-collection-migration/community.REPO_NAME/tree/main/docs
-homepage: https://github.com/ansible-collections/community.REPO_NAME
-issues: https://github.com/ansible-collections/community.REPO_NAME/issues
+  - community
+  - dns
+repository: https://github.com/ansible-collections/community.dns
+#documentation: https://github.com/ansible-collection-migration/community.dns/tree/main/docs
+homepage: https://github.com/ansible-collections/community.dns
+issues: https://github.com/ansible-collections/community.dns/issues
 build_ignore:
 # https://docs.ansible.com/ansible/devel/dev_guide/developing_collections.html#ignoring-files-and-folders
   - .gitignore

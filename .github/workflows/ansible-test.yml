@@ -1,9 +1,3 @@
-# README FIRST
-# 1. replace "NAMESPACE" and "COLLECTION_NAME" with the correct name in the env section (e.g. with 'community' and 'mycollection')
-# 2. If you don't have unit tests remove that section
-# 3. If your collection depends on other collections ensure they are installed, see "Install collection dependencies"
-# If you need help please ask in #ansible-devel on Freenode IRC
-
 name: CI
 on:
   # Run CI against all pushes (direct commits, also merged PRs), Pull Requests
@@ -14,8 +8,8 @@ on:
   schedule:
     - cron: '0 6 * * *'
 env:
-  NAMESPACE: NAMESPACE
-  COLLECTION_NAME: COLLECTION_NAME 
+  NAMESPACE: community
+  COLLECTION_NAME: dns
 
 jobs:
 
@@ -31,8 +25,9 @@ jobs:
         ansible:
           # It's important that Sanity is tested against all stable-X.Y branches
           # Testing against `devel` may fail as new tests are added.
-        # - stable-2.9 # Only if your collection supports Ansible 2.9
+          - stable-2.9
           - stable-2.10
+          - stable-2.11
           - devel
     runs-on: ubuntu-latest
     steps:
@@ -76,8 +71,9 @@ jobs:
       fail-fast: true
       matrix:
         ansible:
-          # - stable-2.9 # Only if your collection supports Ansible 2.9
+          - stable-2.9
           - stable-2.10
+          - stable-2.11
           - devel
 
     steps:
@@ -111,7 +107,7 @@ jobs:
         run: ansible-test coverage xml -v --requirements --group-by command --group-by version
         working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
-      # See the reports at https://codecov.io/gh/GITHUBORG/REPONAME
+      # See the reports at https://codecov.io/gh/ansible-collections/community.dns
       - uses: codecov/codecov-action@v1
         with:
           fail_ci_if_error: false
@@ -133,8 +129,9 @@ jobs:
       fail-fast: false
       matrix:
         ansible:
-          # - stable-2.9 # Only if your collection supports Ansible 2.9
+          - stable-2.9
           - stable-2.10
+          - stable-2.11
           - devel
         python:
           - 2.6
@@ -180,7 +177,7 @@ jobs:
         run: ansible-test coverage xml -v --requirements --group-by command --group-by version
         working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
 
-      # See the reports at https://codecov.io/gh/GITHUBORG/REPONAME
+      # See the reports at https://codecov.io/gh/ansible-collections/community.dns
       - uses: codecov/codecov-action@v1
         with:
           fail_ci_if_error: false
