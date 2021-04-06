@@ -13,9 +13,15 @@ Depends on the plugin or module used.
 
 ## Included content
 
-- `hosttech_dns_record` module
-- `hosttech_dns_record_info` module
-- `wait_for_txt` module
+- Modules:
+  - `hosttech_dns_record`: create/update/delete DNS records with HostTech DNS.
+  - `hosttech_dns_record_info`: retrieve information on DNS records from HostTech DNS.
+  - `wait_for_txt`: wait for TXT records to propagate to all name servers.
+- Filters:
+  - `get_public_suffix`: given a domain name, returns the public suffix. For example, `"www.ansible.com" | community.dns.get_public_suffix == ".com"` and `"some.random.prefixes.ansible.co.uk" | community.dns.get_public_suffix == ".co.uk"`.
+  - `get_registrable_domain`: given a domain name, returns the *registrable domain name* (also called *registered domain name*). For example, `"www.ansible.com" | community.dns.get_registrable_domain == "ansible.com"` and `"some.random.prefixes.ansible.co.uk" | community.dns.get_registrable_domain == "ansible.co.uk"`.
+  - `remove_public_suffix`: given a domain name, returns the part before the public suffix. For example, `"www.ansible.com" | community.dns.remove_public_suffix == "www.ansible"` and `"some.random.prefixes.ansible.co.uk" | community.dns.remove_public_suffix == "some.random.prefixes.ansible"`.
+  - `remove_registrable_domain`: given a domain name, returns the part before the DNS zone. For example, `"www.ansible.com" | community.dns.remove_registrable_domain == "www"` and `"some.random.prefixes.ansible.co.uk" | community.dns.remove_registrable_domain == "some.random.prefixes"`.
 
 ## Using this collection
 
@@ -56,6 +62,8 @@ See the [changelog](https://github.com/ansible-collections/community.dns/tree/ma
 
 ## Licensing
 
-GNU General Public License v3.0 or later.
+All files except specifially noted are licensed under the GNU General Public License v3.0 or later.
 
 See [COPYING](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.
+
+The only exception is `plugins/public_suffix_list.dat`, which is subject to the terms of the Mozilla Public License, v. 2.0. See [MPL](https://mozilla.org/MPL/2.0/) for the full text.
