@@ -13,7 +13,7 @@ Depends on the plugin or module used.
 
 ## Included content
 
-...
+- `wait_for_txt` module
 
 ## Using this collection
 

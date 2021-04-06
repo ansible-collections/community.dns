@@ -1,0 +1,4 @@
+---
+- hosts: localhost
+  roles:
+    - { role: wait_for_txt }
