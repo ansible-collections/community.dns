@@ -27,3 +27,4 @@ sections:
   - Known Issues
 title: Community DNS Collection
 trivial_section_name: trivial
+use_fqcn: true
