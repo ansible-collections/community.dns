@@ -1,0 +1,17 @@
+name: Check for Public Suffix List updates
+on:
+  # Run CI once per day (at 06:00 UTC)
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  update_check:
+    name: Check for Public Suffix List updates
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+
+      - name: Update PSL (returns exit code 1 if something changed)
+        run: ./update-psl.sh

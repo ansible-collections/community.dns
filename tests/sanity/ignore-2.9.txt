@@ -1,0 +1,1 @@
+plugins/public_suffix_list.dat no-smart-quotes
