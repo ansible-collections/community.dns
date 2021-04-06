@@ -13,6 +13,8 @@ Depends on the plugin or module used.
 
 ## Included content
 
+- `hosttech_dns_record` module
+- `hosttech_dns_record_info` module
 - `wait_for_txt` module
 
 ## Using this collection
@@ -33,6 +35,8 @@ See [Ansible Using collections](https://docs.ansible.com/ansible/latest/user_gui
 ## Contributing to this collection
 
 If you want to develop new content for this collection or improve what is already here, the easiest way to work on the collection is to clone it into one of the configured [`COLLECTIONS_PATH`](https://docs.ansible.com/ansible/latest/reference_appendices/config.html#collections-paths), and work on it there.
+
+See [TESTING.md](https://github.com/ansible-collections/community.dns/tree/main/TESTING.md) for information on running the tests.
 
 You can find more information in the [developer guide for collections](https://docs.ansible.com/ansible/devel/dev_guide/developing_collections.html#contributing-to-collections), and in the [Ansible Community Guide](https://docs.ansible.com/ansible/latest/community/index.html).
 
