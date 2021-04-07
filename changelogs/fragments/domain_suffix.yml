@@ -1,9 +1,0 @@
-add plugin.filter:
-  - name: get_registrable_domain
-    description: Returns the registrable domain name of a DNS name
-  - name: get_public_suffix
-    description: Returns the public suffix of a DNS name
-  - name: remove_registrable_domain
-    description: Removes the registrable domain name from a DNS name
-  - name: remove_public_suffix
-    description: Removes the public suffix from a DNS name
