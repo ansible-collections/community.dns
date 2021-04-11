@@ -231,8 +231,9 @@ RETURN = ''' # '''
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.community.dns.plugins.module_utils.wsdl import (
-    HAS_LXML_ETREE, WSDLException, WSDLNetworkError,
+from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
+    create_argument_spec,
+    create_api,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
@@ -243,13 +244,10 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech.record impo
     DNSRecord, format_records_for_output,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.hosttech.wsdl_api import (
-    HostTechWSDLAPI,
-)
-
 
 def run_module():
-    module_args = dict(
+    argument_spec = create_argument_spec()
+    argument_spec['argument_spec'].update(dict(
         state=dict(type='str', choices=['present', 'absent'], required=True),
         zone=dict(type='str', required=True),
         record=dict(type='str', required=True),
@@ -257,13 +255,11 @@ def run_module():
         type=dict(choices=['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA'], required=True),
         value=dict(required=True, type='list', elements='str'),
         overwrite=dict(default=False, type='bool'),
-        hosttech_username=dict(type='str', required=True),
-        hosttech_password=dict(type='str', required=True, no_log=True),
-    )
-    module = AnsibleModule(argument_spec=module_args, supports_check_mode=True)
+    ))
+    module = AnsibleModule(supports_check_mode=True, **argument_spec)
 
-    if not HAS_LXML_ETREE:
-        module.fail_json(msg='Needs lxml Python module (pip install lxml)')
+    # Create API
+    api = create_api(module)
 
     # Get zone and record.
     zone_in = module.params.get('zone').lower()
@@ -281,8 +277,7 @@ def run_module():
     else:
         prefix = record_in[:len(record_in) - len(zone_in) - 1]
 
-    # Create API and get zone information
-    api = HostTechWSDLAPI(module.params.get('hosttech_username'), module.params.get('hosttech_password'), debug=False)
+    # Get zone information
     try:
         zone = api.get_zone(zone_in)
         if zone is None:
@@ -290,9 +285,7 @@ def run_module():
     except HostTechAPIAuthError as e:
         module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=str(e))
     except HostTechAPIError as e:
-        module.fail_json(msg='Internal error (API level): {0}'.format(e), error=str(e))
-    except WSDLException as e:
-        module.fail_json(msg='Internal error (WSDL level): {0}'.format(e), error=str(e))
+        module.fail_json(msg='Error: {0}'.format(e), error=str(e))
 
     # Find matching records
     type_in = module.params.get('type')
@@ -381,11 +374,7 @@ def run_module():
         except HostTechAPIAuthError as e:
             module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=str(e))
         except HostTechAPIError as e:
-            module.fail_json(msg='Internal error (API level): {0}'.format(e), error=str(e))
-        except WSDLNetworkError as e:
-            module.fail_json(msg='Network error: {0}'.format(e), error=str(e))
-        except WSDLException as e:
-            module.fail_json(msg='Internal error (WSDL level): {0}'.format(e), error=str(e))
+            module.fail_json(msg='Error: {0}'.format(e), error=str(e))
 
     result = dict(changed=True)
     if module._diff:

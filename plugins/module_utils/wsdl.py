@@ -10,7 +10,6 @@ __metaclass__ = type
 from ansible.module_utils._text import to_native
 from ansible.module_utils.urls import open_url, urllib_error, NoSSLError, ConnectionError
 
-
 try:
     import lxml.etree
     HAS_LXML_ETREE = True

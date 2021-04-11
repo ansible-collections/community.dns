@@ -9,6 +9,7 @@ __metaclass__ = type
 
 from ansible_collections.community.dns.plugins.module_utils.hosttech.record import (
     DNSRecord,
+    format_ttl,
 )
 
 

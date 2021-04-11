@@ -1,0 +1,93 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2017-2021 Felix Fontein
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
+
+import abc
+
+from ansible.module_utils import six
+
+from ansible_collections.community.dns.plugins.module_utils.wsdl import (
+    HAS_LXML_ETREE,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
+    HostTechAPIError,
+    HostTechAPIAuthError,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.hosttech.record import (
+    DNSRecord,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.hosttech.zone import (
+    DNSZone,
+)
+
+
+@six.add_metaclass(abc.ABCMeta)
+class HostTechAPI(object):
+    @abc.abstractmethod
+    def get_zone(self, search):
+        """
+        Search a zone by name or id.
+
+        @param search: The search string, i.e. a zone name or ID (string)
+        @return The zone information (DNSZone)
+        """
+        pass
+
+    @abc.abstractmethod
+    def add_record(self, search, record):
+        """
+        Adds a new record to an existing zone.
+
+        @param zone: The search string, i.e. a zone name or ID (string)
+        @param record: The DNS record (DNSRecord)
+        @return The created DNS record (DNSRecord)
+        """
+        pass
+
+    @abc.abstractmethod
+    def update_record(self, record):
+        """
+        Update a record.
+
+        @param record: The DNS record (DNSRecord)
+        @return The DNS record (DNSRecord)
+        """
+        pass
+
+    @abc.abstractmethod
+    def delete_record(self, record):
+        """
+        Delete a record.
+
+        @param record: The DNS record (DNSRecord)
+        @return True in case of success (boolean)
+        """
+        pass
+
+
+def create_argument_spec():
+    return dict(
+        argument_spec=dict(
+            hosttech_username=dict(type='str', required=True),
+            hosttech_password=dict(type='str', required=True, no_log=True),
+        ),
+        required_together=[],
+        required_if=[],
+        mutually_exclusive=[],
+    )
+
+
+def create_api(module):
+    if not HAS_LXML_ETREE:
+        module.fail_json(msg='Needs lxml Python module (pip install lxml)')
+
+    from ansible_collections.community.dns.plugins.module_utils.hosttech.wsdl_api import HostTechWSDLAPI
+    return HostTechWSDLAPI(module.params['hosttech_username'], module.params['hosttech_password'], debug=False)
