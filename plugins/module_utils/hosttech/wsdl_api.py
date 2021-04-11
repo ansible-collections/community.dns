@@ -53,8 +53,9 @@ class HostTechWSDLAPI(HostTechAPI):
         return command
 
     def _announce(self, msg):
-        pass
-        # q.q('{0} {1} {2}'.format('=' * 4, msg, '=' * 40))
+        if self._debug:
+            pass
+            # q.q('{0} {1} {2}'.format('=' * 4, msg, '=' * 40))
 
     def _execute(self, command, result_name, acceptable_types):
         if self._debug:
@@ -84,8 +85,7 @@ class HostTechWSDLAPI(HostTechAPI):
         @param search: The search string, i.e. a zone name or ID (string)
         @return The zone information (DNSZone)
         """
-        if self._debug:
-            self._announce('get zone')
+        self._announce('get zone')
         command = self._prepare()
         command.add_simple_command('getZone', sZoneName=search)
         try:
@@ -105,8 +105,7 @@ class HostTechWSDLAPI(HostTechAPI):
         @param record: The DNS record (DNSRecord)
         @return The created DNS record (DNSRecord)
         """
-        if self._debug:
-            self._announce('add record')
+        self._announce('add record')
         command = self._prepare()
         command.add_simple_command('addRecord', search=search, recorddata=record.encode(include_ids=False))
         try:
@@ -125,8 +124,7 @@ class HostTechWSDLAPI(HostTechAPI):
         """
         if record.id is None:
             raise HostTechAPIError('Need record ID to update record!')
-        if self._debug:
-            self._announce('update record')
+        self._announce('update record')
         command = self._prepare()
         command.add_simple_command('updateRecord', recordId=record.id, recorddata=record.encode(include_ids=False))
         try:
@@ -145,8 +143,7 @@ class HostTechWSDLAPI(HostTechAPI):
         """
         if record.id is None:
             raise HostTechAPIError('Need record ID to delete record!')
-        if self._debug:
-            self._announce('delete record')
+        self._announce('delete record')
         command = self._prepare()
         command.add_simple_command('deleteRecord', recordId=record.id)
         try:

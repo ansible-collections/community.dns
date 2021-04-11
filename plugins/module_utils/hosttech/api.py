@@ -76,18 +76,26 @@ class HostTechAPI(object):
 def create_argument_spec():
     return dict(
         argument_spec=dict(
-            hosttech_username=dict(type='str', required=True),
-            hosttech_password=dict(type='str', required=True, no_log=True),
+            hosttech_username=dict(type='str'),
+            hosttech_password=dict(type='str', no_log=True),
+            hosttech_token=dict(type='str', no_log=True),
         ),
-        required_together=[],
+        required_together=[('hosttech_username', 'hosttech_password')],
         required_if=[],
-        mutually_exclusive=[],
+        mutually_exclusive=[('hosttech_username', 'hosttech_token')],
     )
 
 
 def create_api(module):
-    if not HAS_LXML_ETREE:
-        module.fail_json(msg='Needs lxml Python module (pip install lxml)')
+    if module.params['hosttech_username'] is not None:
+        if not HAS_LXML_ETREE:
+            module.fail_json(msg='Needs lxml Python module (pip install lxml)')
 
-    from ansible_collections.community.dns.plugins.module_utils.hosttech.wsdl_api import HostTechWSDLAPI
-    return HostTechWSDLAPI(module.params['hosttech_username'], module.params['hosttech_password'], debug=False)
+        from ansible_collections.community.dns.plugins.module_utils.hosttech.wsdl_api import HostTechWSDLAPI
+        return HostTechWSDLAPI(module.params['hosttech_username'], module.params['hosttech_password'], debug=False)
+
+    if module.params['hosttech_token'] is not None:
+        from ansible_collections.community.dns.plugins.module_utils.hosttech.json_api import HostTechJSONAPI
+        return HostTechJSONAPI(module, module.params['hosttech_token'])
+
+    raise HostTechAPIError('Internal error!')

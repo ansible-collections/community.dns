@@ -36,6 +36,18 @@ class DNSZone(object):
         result.records = [DNSRecord.create_from_encoding(record) for record in source['records']]
         return result
 
+    @staticmethod
+    def create_from_json(source):
+        result = DNSZone(source['name'])
+        result.id = source['id']
+        result.email = source.get('email')
+        result.ttl = int(source['ttl'])
+        result.nameserver = source['nameserver']
+        result.serial = None
+        result.template = None
+        result.records = [DNSRecord.create_from_json(record, zone=source['name']) for record in source['records']]
+        return result
+
     def encode(self):
         return {
             'id': self.id,

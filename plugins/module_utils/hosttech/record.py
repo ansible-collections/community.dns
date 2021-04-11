@@ -45,6 +45,49 @@ class DNSRecord(object):
         result.priority = source.get('priority')
         return result
 
+    @staticmethod
+    def create_from_json(source, zone=None, type=None):
+        result = DNSRecord()
+        result.id = source['id']
+        result.zone = zone
+        result.type = source.get('type', type)
+        result.ttl = int(source['ttl']) if source['ttl'] is not None else None
+
+        name = source.get('name')
+        target = None
+        priority = None
+        if result.type == 'A':
+            target = source['ipv4']
+        elif result.type == 'AAAA':
+            target = source['ipv6']
+        elif result.type == 'CAA':
+            target = '{0} {1} {2}'.format(source['flag'], source['tag'], source['value'])
+        elif result.type == 'CNAME':
+            target = source['cname']
+        elif result.type == 'MX':
+            priority = source['pref']
+            target = source['name']
+            name = source['ownername']
+        elif result.type == 'NS':
+            name = source['ownername']
+            target = source['targetname']
+        elif result.type == 'PTR':
+            name = ''
+            target = '{0} {1}'.format(source['origin'], source['name'])
+        elif result.type == 'SRV':
+            name = source['service']
+            target = '{0} {1} {2} {3}'.format(source['priority'], source['weight'], source['port'], source['target'])
+            # priority = source['priority']
+        elif result.type == 'TXT':
+            target = source['text']
+        elif result.type == 'TLSA':
+            target = source['text']
+
+        result.prefix = name
+        result.target = target
+        result.priority = priority
+        return result
+
     def encode(self, include_ids=False):
         result = {
             'type': self.type,
