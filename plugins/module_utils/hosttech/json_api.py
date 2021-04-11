@@ -7,6 +7,8 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 
+import json
+
 from ansible.module_utils.six import raise_from
 from ansible.module_utils.six.moves.urllib.parse import urlencode
 from ansible.module_utils._text import to_native
@@ -54,16 +56,7 @@ class HostTechJSONAPI(HostTechAPI):
             # q.q('Request: {0}'.format(command))
         # TODO implement!
 
-    def _get(self, url, query=None, must_have_content=True):
-        full_url = self._build_url(url, query)
-        if self._debug:
-            pass
-            # q.q('Request: GET {0}'.format(full_url))
-        headers = dict(
-            accept='application/json',
-            authorization='Bearer {token}'.format(token=self._token),
-        )
-        response, info = fetch_url(self._module, full_url, headers=headers)
+    def _process_json_result(self, response, info, must_have_content=True):
         try:
             content = response.read()
         except AttributeError:
@@ -76,6 +69,62 @@ class HostTechJSONAPI(HostTechAPI):
                     'GET {0} did not yield JSON data, but HTTP status code {1} with data: {2}'.format(
                         full_url, info['status'], to_native(content)))
             return None, info
+
+    def _get(self, url, query=None, must_have_content=True):
+        full_url = self._build_url(url, query)
+        if self._debug:
+            pass
+            # q.q('Request: GET {0}'.format(full_url))
+        headers = dict(
+            accept='application/json',
+            authorization='Bearer {token}'.format(token=self._token),
+        )
+        response, info = fetch_url(self._module, full_url, headers=headers)
+        return self._process_json_result(response, info, must_have_content=must_have_content)
+
+    def _post(self, url, data=None, query=None, must_have_content=True):
+        full_url = self._build_url(url, query)
+        if self._debug:
+            pass
+            # q.q('Request: POST {0}'.format(full_url))
+        headers = dict(
+            accept='application/json',
+            authorization='Bearer {token}'.format(token=self._token),
+        )
+        encoded_data = None
+        if data is not None:
+            headers['content-type'] = 'application/json'
+            encoded_data = json.dumps(data).encode('utf-8')
+        response, info = fetch_url(self._module, full_url, headers=headers, method='POST', data=encoded_data)
+        return self._process_json_result(response, info, must_have_content=must_have_content)
+
+    def _put(self, url, data=None, query=None, must_have_content=True):
+        full_url = self._build_url(url, query)
+        if self._debug:
+            pass
+            # q.q('Request: PUT {0}'.format(full_url))
+        headers = dict(
+            accept='application/json',
+            authorization='Bearer {token}'.format(token=self._token),
+        )
+        encoded_data = None
+        if data is not None:
+            headers['content-type'] = 'application/json'
+            encoded_data = json.dumps(data).encode('utf-8')
+        response, info = fetch_url(self._module, full_url, headers=headers, method='PUT', data=encoded_data)
+        return self._process_json_result(response, info, must_have_content=must_have_content)
+
+    def _delete(self, url, query=None, must_have_content=True):
+        full_url = self._build_url(url, query)
+        if self._debug:
+            pass
+            # q.q('Request: DELETE {0}'.format(full_url))
+        headers = dict(
+            accept='application/json',
+            authorization='Bearer {token}'.format(token=self._token),
+        )
+        response, info = fetch_url(self._module, full_url, headers=headers, method='DELETE')
+        # TODO check status 204
 
     def _list_pagination(self, url, query=None):
         result = []
