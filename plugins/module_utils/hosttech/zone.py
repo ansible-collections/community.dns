@@ -45,7 +45,6 @@ class DNSZone(object):
             'nameserver': self.nameserver,
             'serial': self.serial,
             'template': self.template,
-            'ns3': self.ns3,
             'records': [record.encode(include_ids=True) for record in self.records],
         }
 
