@@ -235,8 +235,16 @@ from ansible_collections.community.dns.plugins.module_utils.wsdl import (
     HAS_LXML_ETREE, WSDLException, WSDLNetworkError,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.hosttech_dns import (
-    HostTechAPIError, HostTechAPIAuthError, HostTechAPI, DNSRecord, format_records_for_output,
+from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
+    HostTechAPIError, HostTechAPIAuthError,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.hosttech.record import (
+    DNSRecord, format_records_for_output,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.hosttech.wsdl_api import (
+    HostTechWSDLAPI,
 )
 
 
@@ -274,7 +282,7 @@ def run_module():
         prefix = record_in[:len(record_in) - len(zone_in) - 1]
 
     # Create API and get zone information
-    api = HostTechAPI(module.params.get('hosttech_username'), module.params.get('hosttech_password'), debug=False)
+    api = HostTechWSDLAPI(module.params.get('hosttech_username'), module.params.get('hosttech_password'), debug=False)
     try:
         zone = api.get_zone(zone_in)
         if zone is None:
