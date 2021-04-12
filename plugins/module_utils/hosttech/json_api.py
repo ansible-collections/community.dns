@@ -14,17 +14,17 @@ from ansible.module_utils.six.moves.urllib.parse import urlencode
 from ansible.module_utils._text import to_native
 from ansible.module_utils.urls import fetch_url
 
-from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
-    HostTechAPIError,
-    HostTechAPIAuthError,
-)
-
-from ansible_collections.community.dns.plugins.module_utils.hosttech.record import (
+from ansible_collections.community.dns.plugins.module_utils.record import (
     DNSRecord,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.hosttech.zone import (
+from ansible_collections.community.dns.plugins.module_utils.zone import (
     DNSZone,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
+    HostTechAPIError,
+    HostTechAPIAuthError,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
@@ -169,7 +169,7 @@ class HostTechJSONAPI(HostTechAPI):
             # q.q('Request: {0}'.format(command))
         # TODO implement!
 
-    def _process_json_result(self, response, info, must_have_content=True):
+    def _process_json_result(self, response, info, full_url, must_have_content=True):
         try:
             content = response.read()
         except AttributeError:
@@ -193,7 +193,7 @@ class HostTechJSONAPI(HostTechAPI):
             authorization='Bearer {token}'.format(token=self._token),
         )
         response, info = fetch_url(self._module, full_url, headers=headers)
-        return self._process_json_result(response, info, must_have_content=must_have_content)
+        return self._process_json_result(response, info, full_url, must_have_content=must_have_content)
 
     def _post(self, url, data=None, query=None, must_have_content=True):
         full_url = self._build_url(url, query)
@@ -209,7 +209,7 @@ class HostTechJSONAPI(HostTechAPI):
             headers['content-type'] = 'application/json'
             encoded_data = json.dumps(data).encode('utf-8')
         response, info = fetch_url(self._module, full_url, headers=headers, method='POST', data=encoded_data)
-        return self._process_json_result(response, info, must_have_content=must_have_content)
+        return self._process_json_result(response, info, full_url, must_have_content=must_have_content)
 
     def _put(self, url, data=None, query=None, must_have_content=True):
         full_url = self._build_url(url, query)
@@ -225,7 +225,7 @@ class HostTechJSONAPI(HostTechAPI):
             headers['content-type'] = 'application/json'
             encoded_data = json.dumps(data).encode('utf-8')
         response, info = fetch_url(self._module, full_url, headers=headers, method='PUT', data=encoded_data)
-        return self._process_json_result(response, info, must_have_content=must_have_content)
+        return self._process_json_result(response, info, full_url, must_have_content=must_have_content)
 
     def _delete(self, url, query=None, must_have_content=True):
         full_url = self._build_url(url, query)

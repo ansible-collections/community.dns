@@ -10,23 +10,23 @@ __metaclass__ = type
 from ansible.module_utils.six import raise_from
 from ansible.module_utils._text import to_native
 
+from ansible_collections.community.dns.plugins.module_utils.record import (
+    DNSRecord,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.wsdl import (
     WSDLError,
     WSDLNetworkError,
     Composer,
 )
 
+from ansible_collections.community.dns.plugins.module_utils.zone import (
+    DNSZone,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
     HostTechAPIError,
     HostTechAPIAuthError,
-)
-
-from ansible_collections.community.dns.plugins.module_utils.hosttech.record import (
-    DNSRecord,
-)
-
-from ansible_collections.community.dns.plugins.module_utils.hosttech.zone import (
-    DNSZone,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (

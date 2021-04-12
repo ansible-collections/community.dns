@@ -145,6 +145,10 @@ sets:
 
 from ansible.module_utils.basic import AnsibleModule
 
+from ansible_collections.community.dns.plugins.module_utils.record import (
+    format_records_for_output,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
     create_argument_spec,
     create_api,
@@ -152,10 +156,6 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech.api import 
 
 from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
     HostTechAPIError, HostTechAPIAuthError,
-)
-
-from ansible_collections.community.dns.plugins.module_utils.hosttech.record import (
-    format_records_for_output,
 )
 
 
