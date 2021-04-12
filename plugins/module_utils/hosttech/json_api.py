@@ -81,11 +81,9 @@ def create_record_from_json(source, zone=None, type=None):
 def create_zone_from_json(source):
     result = DNSZone(source['name'])
     result.id = source['id']
-    result.email = source.get('email')
-    result.ttl = int(source['ttl'])
-    result.nameserver = source['nameserver']
-    result.serial = None
-    result.template = None
+    # result.email = source.get('email')
+    # result.ttl = int(source['ttl'])
+    # result.nameserver = source['nameserver']
     result.records = [create_record_from_json(record, zone=source['name']) for record in source['records']]
     return result
 
@@ -272,21 +270,22 @@ class HostTechJSONAPI(HostTechAPI):
                 return self._get_zone_by_id(zone['id'])
         return None
 
-    def add_record(self, search, record):
+    def add_record(self, zone_id, record):
         """
         Adds a new record to an existing zone.
 
-        @param zone: The search string, i.e. a zone name or ID (string)
+        @param zone_id: The zone ID
         @param record: The DNS record (DNSRecord)
         @return The created DNS record (DNSRecord)
         """
         self._announce('add record')
         # TODO implement!
 
-    def update_record(self, record):
+    def update_record(self, zone_id, record):
         """
         Update a record.
 
+        @param zone_id: The zone ID
         @param record: The DNS record (DNSRecord)
         @return The DNS record (DNSRecord)
         """
@@ -295,10 +294,11 @@ class HostTechJSONAPI(HostTechAPI):
         self._announce('update record')
         # TODO implement!
 
-    def delete_record(self, record):
+    def delete_record(self, zone_id, record):
         """
         Delete a record.
 
+        @param zone_id: The zone ID
         @param record: The DNS record (DNSRecord)
         @return True in case of success (boolean)
         """

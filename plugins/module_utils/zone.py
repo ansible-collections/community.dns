@@ -17,11 +17,6 @@ class DNSZone(object):
     def __init__(self, name):
         self.id = None
         self.name = name
-        self.email = None
-        self.ttl = 10800  # 3 * 60 * 60
-        self.nameserver = None
-        self.serial = None
-        self.template = None
         self.records = []
 
     def __str__(self):
@@ -29,15 +24,6 @@ class DNSZone(object):
         if self.id:
             data.append('id: {0}'.format(self.id))
         data.append('name: {0}'.format(self.name))
-        if self.email:
-            data.append('email: {0}'.format(self.email))
-        data.append('ttl: {0}'.format(format_ttl(self.ttl)))
-        if self.nameserver:
-            data.append('nameserver: {0}'.format(self.nameserver))
-        if self.serial:
-            data.append('serial: {0}'.format(self.serial))
-        if self.template:
-            data.append('template: {0}'.format(self.template))
         for record in self.records:
             data.append('record: {0}'.format(str(record)))
         return 'DNSZone(\n' + ',\n'.join(['  ' + line for line in data]) + '\n)'

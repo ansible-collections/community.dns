@@ -368,11 +368,11 @@ def run_module():
     if not module.check_mode:
         try:
             for record in to_delete:
-                api.delete_record(record)
+                api.delete_record(zone.id, record)
             for record in to_change:
-                api.update_record(record)
+                api.update_record(zone.id, record)
             for record in to_create:
-                api.add_record(zone_in, record)
+                api.add_record(zone.id, record)
         except HostTechAPIAuthError as e:
             module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=str(e))
         except HostTechAPIError as e:

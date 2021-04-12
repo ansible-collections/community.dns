@@ -26,7 +26,6 @@ def format_ttl(ttl):
 class DNSRecord(object):
     def __init__(self):
         self.id = None
-        self.zone = None
         self.type = None
         self.prefix = None
         self.target = None
@@ -37,7 +36,6 @@ class DNSRecord(object):
     def clone(self):
         result = DNSRecord()
         result.id = self.id
-        result.zone = self.zone
         result.type = self.type
         result.prefix = self.prefix
         result.target = self.target
@@ -50,8 +48,6 @@ class DNSRecord(object):
         data = []
         if self.id:
             data.append('id: {0}'.format(self.id))
-        if self.zone:
-            data.append('zone: {0}'.format(self.zone))
         data.append('type: {0}'.format(self.type))
         if self.prefix:
             data.append('prefix: "{0}"'.format(self.prefix))

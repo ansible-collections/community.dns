@@ -42,31 +42,33 @@ class HostTechAPI(object):
         pass
 
     @abc.abstractmethod
-    def add_record(self, search, record):
+    def add_record(self, zone_id, record):
         """
         Adds a new record to an existing zone.
 
-        @param zone: The search string, i.e. a zone name or ID (string)
+        @param zone_id: The zone ID
         @param record: The DNS record (DNSRecord)
         @return The created DNS record (DNSRecord)
         """
         pass
 
     @abc.abstractmethod
-    def update_record(self, record):
+    def update_record(self, zone_id, record):
         """
         Update a record.
 
+        @param zone_id: The zone ID
         @param record: The DNS record (DNSRecord)
         @return The DNS record (DNSRecord)
         """
         pass
 
     @abc.abstractmethod
-    def delete_record(self, record):
+    def delete_record(self, zone_id, record):
         """
         Delete a record.
 
+        @param zone_id: The zone ID
         @param record: The DNS record (DNSRecord)
         @return True in case of success (boolean)
         """
