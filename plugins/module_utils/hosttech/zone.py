@@ -24,42 +24,6 @@ class DNSZone(object):
         self.template = None
         self.records = []
 
-    @staticmethod
-    def create_from_encoding(source):
-        result = DNSZone(source['name'])
-        result.id = source['id']
-        result.email = source.get('email')
-        result.ttl = int(source['ttl'])
-        result.nameserver = source['nameserver']
-        result.serial = source['serial']
-        result.template = source.get('template')
-        result.records = [DNSRecord.create_from_encoding(record) for record in source['records']]
-        return result
-
-    @staticmethod
-    def create_from_json(source):
-        result = DNSZone(source['name'])
-        result.id = source['id']
-        result.email = source.get('email')
-        result.ttl = int(source['ttl'])
-        result.nameserver = source['nameserver']
-        result.serial = None
-        result.template = None
-        result.records = [DNSRecord.create_from_json(record, zone=source['name']) for record in source['records']]
-        return result
-
-    def encode(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email,
-            'ttl': self.ttl,
-            'nameserver': self.nameserver,
-            'serial': self.serial,
-            'template': self.template,
-            'records': [record.encode(include_ids=True) for record in self.records],
-        }
-
     def __str__(self):
         data = []
         if self.id:
@@ -77,6 +41,3 @@ class DNSZone(object):
         for record in self.records:
             data.append('record: {0}'.format(str(record)))
         return 'DNSZone(\n' + ',\n'.join(['  ' + line for line in data]) + '\n)'
-
-    def __repr__(self):
-        return 'DNSZone.create_from_encoding({0!r})'.format(self.encode())

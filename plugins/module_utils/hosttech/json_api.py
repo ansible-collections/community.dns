@@ -32,6 +32,119 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech.api import 
 )
 
 
+def create_record_from_json(source, zone=None, type=None):
+    result = DNSRecord()
+    result.id = source['id']
+    result.zone = zone
+    result.type = source.get('type', type)
+    result.ttl = int(source['ttl']) if source['ttl'] is not None else None
+    result.comment = source['comment']
+
+    name = source.get('name')
+    target = None
+    priority = None
+    if result.type == 'A':
+        target = source['ipv4']
+    elif result.type == 'AAAA':
+        target = source['ipv6']
+    elif result.type == 'CAA':
+        target = '{0} {1} {2}'.format(source['flag'], source['tag'], source['value'])
+    elif result.type == 'CNAME':
+        target = source['cname']
+    elif result.type == 'MX':
+        name = source['ownername']
+        priority = source['pref']
+        target = source['name']
+    elif result.type == 'NS':
+        name = source['ownername']
+        target = source['targetname']
+    elif result.type == 'PTR':
+        name = ''
+        target = '{0} {1}'.format(source['origin'], source['name'])
+    elif result.type == 'SRV':
+        name = source['service']
+        priority = source['priority']
+        target = '{0} {1} {2}'.format(source['weight'], source['port'], source['target'])
+    elif result.type == 'TXT':
+        target = source['text']
+    elif result.type == 'TLSA':
+        target = source['text']
+    else:
+        raise HostTechAPIError('Cannot parse unknown record type: {0}'.format(result.type))
+
+    result.prefix = name
+    result.target = target
+    result.priority = priority
+    return result
+
+
+def create_zone_from_json(source):
+    result = DNSZone(source['name'])
+    result.id = source['id']
+    result.email = source.get('email')
+    result.ttl = int(source['ttl'])
+    result.nameserver = source['nameserver']
+    result.serial = None
+    result.template = None
+    result.records = [create_record_from_json(record, zone=source['name']) for record in source['records']]
+    return result
+
+
+def record_to_json(record, include_ids=False):
+    result = {
+        'type': record.type,
+        'ttl': record.ttl,
+    }
+
+    if record.type == 'A':
+        result['name'] = record.prefix
+        result['ipv4'] = record.target
+    elif record.type == 'AAAA':
+        result['name'] = record.prefix
+        result['ipv6'] = record.target
+    elif record.type == 'CAA':
+        result['name'] = record.prefix
+        flag, tag, value = record.target.split(' ', 2)
+        result['flag'] = flag
+        result['tag'] = tag
+        result['value'] = value
+    elif record.type == 'CNAME':
+        result['name'] = record.prefix
+        result['cname'] = record.target
+    elif record.type == 'MX':
+        result['ownername'] = record.prefix
+        result['pref'] = record.priority
+        result['name'] = record.target
+    elif record.type == 'NS':
+        result['ownername'] = record.prefix
+        result['targetname'] = record.target
+    elif record.type == 'PTR':
+        origin, name = record.target.split(' ', 1)
+        result['origin'] = origin
+        result['name'] = name
+    elif record.type == 'SRV':
+        result['service'] = record.prefix
+        result['priority'] = record.priority
+        weight, port, target = record.target.split(' ', 2)
+        result['weight'] = int(weight)
+        result['port'] = int(port)
+        result['target'] = target
+    elif record.type == 'TXT':
+        result['name'] = record.prefix
+        result['text'] = record.target
+    elif record.type == 'TLSA':
+        result['name'] = record.prefix
+        result['text'] = record.target
+    else:
+        raise HostTechAPIError('Cannot serialize unknown record type: {0}'.format(record.type))
+
+    if include_ids:
+        result['id'] = record.id
+    if record.comment is not None:
+        result['comment'] = record.comment
+    return result
+
+
 class HostTechJSONAPI(HostTechAPI):
     def __init__(self, module, token, api='https://api.ns1.hosttech.eu/api/', debug=False):
         """
@@ -143,7 +256,7 @@ class HostTechJSONAPI(HostTechAPI):
     def _get_zone_by_id(self, zone_id):
         self._announce('get zone by id')
         result, info = self._get('user/v1/zones/{0}'.format(zone_id))
-        return DNSZone.create_from_json(result['data'])
+        return create_zone_from_json(result['data'])
 
     def get_zone(self, search):
         """
@@ -192,4 +305,5 @@ class HostTechJSONAPI(HostTechAPI):
         if record.id is None:
             raise HostTechAPIError('Need record ID to delete record!')
         self._announce('delete record')
-        # TODO implement!
+        # FIXME need zone_id!
+        result, info = self._delete('user/v1/zones/{0}/record/{1}'.format(zone_id, record.id))

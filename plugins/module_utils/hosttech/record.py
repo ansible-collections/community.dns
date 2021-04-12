@@ -32,77 +32,19 @@ class DNSRecord(object):
         self.target = None
         self.ttl = 86400  # 24 * 60 * 60
         self.priority = None
-
-    @staticmethod
-    def create_from_encoding(source, type=None):
-        result = DNSRecord()
-        result.id = source['id']
-        result.zone = source['zone']
-        result.type = source.get('type', type)
-        result.prefix = source.get('prefix')
-        result.target = source.get('target')
-        result.ttl = int(source['ttl']) if source['ttl'] is not None else None
-        result.priority = source.get('priority')
-        return result
-
-    @staticmethod
-    def create_from_json(source, zone=None, type=None):
-        result = DNSRecord()
-        result.id = source['id']
-        result.zone = zone
-        result.type = source.get('type', type)
-        result.ttl = int(source['ttl']) if source['ttl'] is not None else None
-
-        name = source.get('name')
-        target = None
-        priority = None
-        if result.type == 'A':
-            target = source['ipv4']
-        elif result.type == 'AAAA':
-            target = source['ipv6']
-        elif result.type == 'CAA':
-            target = '{0} {1} {2}'.format(source['flag'], source['tag'], source['value'])
-        elif result.type == 'CNAME':
-            target = source['cname']
-        elif result.type == 'MX':
-            priority = source['pref']
-            target = source['name']
-            name = source['ownername']
-        elif result.type == 'NS':
-            name = source['ownername']
-            target = source['targetname']
-        elif result.type == 'PTR':
-            name = ''
-            target = '{0} {1}'.format(source['origin'], source['name'])
-        elif result.type == 'SRV':
-            name = source['service']
-            target = '{0} {1} {2} {3}'.format(source['priority'], source['weight'], source['port'], source['target'])
-            # priority = source['priority']
-        elif result.type == 'TXT':
-            target = source['text']
-        elif result.type == 'TLSA':
-            target = source['text']
-
-        result.prefix = name
-        result.target = target
-        result.priority = priority
-        return result
-
-    def encode(self, include_ids=False):
-        result = {
-            'type': self.type,
-            'prefix': self.prefix,
-            'target': self.target,
-            'ttl': self.ttl,
-            'priority': self.priority,
-        }
-        if include_ids:
-            result['id'] = self.id
-            result['zone'] = self.zone
-        return result
+        self.comment = None
 
     def clone(self):
-        return DNSRecord.create_from_encoding(self.encode(include_ids=True))
+        result = DNSRecord()
+        result.id = self.id
+        result.zone = self.zone
+        result.type = self.type
+        result.prefix = self.prefix
+        result.target = self.target
+        result.ttl = self.ttl
+        result.priority = self.priority
+        result.comment = self.comment
+        return result
 
     def __str__(self):
         data = []
@@ -119,10 +61,9 @@ class DNSRecord(object):
         data.append('ttl: {0}'.format(format_ttl(self.ttl)))
         if self.priority:
             data.append('priority: {0}'.format(self.priority))
+        if self.comment is not None:
+            data.append('comment: {0}'.format(self.comment))
         return 'DNSRecord(' + ', '.join(data) + ')'
-
-    def __repr__(self):
-        return 'DNSRecord.create_from_encoding({0!r})'.format(self.encode(include_ids=True))
 
 
 def format_records_for_output(records, record_name):
