@@ -88,11 +88,15 @@ def create_zone_from_json(source):
     return result
 
 
-def record_to_json(record, include_ids=False):
+def record_to_json(record, include_id=False, include_type=True):
     result = {
-        'type': record.type,
         'ttl': record.ttl,
+        'comment': record.comment or '',
     }
+    if include_type:
+        result['type'] = record.type
+    if include_id:
+        result['id'] = record.id
 
     if record.type == 'A':
         result['name'] = record.prefix
@@ -136,10 +140,6 @@ def record_to_json(record, include_ids=False):
     else:
         raise HostTechAPIError('Cannot serialize unknown record type: {0}'.format(record.type))
 
-    if include_ids:
-        result['id'] = record.id
-    if record.comment is not None:
-        result['comment'] = record.comment
     return result
 
 
@@ -279,7 +279,8 @@ class HostTechJSONAPI(HostTechAPI):
         @return The created DNS record (DNSRecord)
         """
         self._announce('add record')
-        # TODO implement!
+        data = record_to_json(record, include_id=False, include_type=True)
+        result, info = self._put('user/v1/zones/{0}/records'.format(zone_id, record.id), data=data)
 
     def update_record(self, zone_id, record):
         """
@@ -292,7 +293,8 @@ class HostTechJSONAPI(HostTechAPI):
         if record.id is None:
             raise HostTechAPIError('Need record ID to update record!')
         self._announce('update record')
-        # TODO implement!
+        data = record_to_json(record, include_id=False, include_type=False)
+        result, info = self._put('user/v1/zones/{0}/records/{1}'.format(zone_id, record.id), data=data)
 
     def delete_record(self, zone_id, record):
         """
@@ -305,5 +307,4 @@ class HostTechJSONAPI(HostTechAPI):
         if record.id is None:
             raise HostTechAPIError('Need record ID to delete record!')
         self._announce('delete record')
-        # FIXME need zone_id!
-        result, info = self._delete('user/v1/zones/{0}/record/{1}'.format(zone_id, record.id))
+        result, info = self._delete('user/v1/zones/{0}/records/{1}'.format(zone_id, record.id))
