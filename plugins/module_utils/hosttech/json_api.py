@@ -241,8 +241,6 @@ class HostTechJSONAPI(ZoneRecordAPI):
         # Decode content as JSON
         try:
             result = self._module.from_json(content.decode('utf8')), info
-            self._validate(result=result, info=info, expected=expected, method=method)
-            return result
         except Exception:
             if must_have_content:
                 raise DNSAPIError(
@@ -250,6 +248,8 @@ class HostTechJSONAPI(ZoneRecordAPI):
                         method, info['url'], info['status'], to_native(content)))
             self._validate(result=content, info=info, expected=expected, method=method)
             return None, info
+        self._validate(result=result, info=info, expected=expected, method=method)
+        return result
 
     def _get(self, url, query=None, must_have_content=True, expected=None):
         full_url = self._build_url(url, query)
