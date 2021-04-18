@@ -19,37 +19,9 @@ version_added: 0.1.0
 description:
     - "Retrieves DNS records in Hosttech DNS service U(https://ns1.hosttech.eu/public/api?wsdl)."
 
-notes:
-    - "Supports C(check_mode)."
-
-options:
-    what:
-        description:
-        - Describes whether to fetch a single record and type combination, all types for a
-          record, or all records. By default, a single record and type combination is fetched.
-        - Note that the return value structure depends on this option.
-        choices: ['single_record', 'all_types_for_record', 'all_records']
-        default: single_record
-        type: str
-    zone:
-        description:
-        - The DNS zone to modify.
-        required: yes
-        type: str
-    record:
-        description:
-        - The full DNS record to retrieve.
-        - Required if I(what) is C(single_record) or C(all_types_for_record).
-        type: str
-    type:
-        description:
-        - The type of DNS record to retrieve.
-        - Required if I(what) is C(single_record).
-        choices: ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
-        type: str
-
 extends_documentation_fragment:
     - community.dns.hosttech
+    - community.dns.module_record_info
 
 author:
     - Felix Fontein (@felixfontein)
@@ -145,116 +117,22 @@ sets:
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.community.dns.plugins.module_utils.record import (
-    format_records_for_output,
-)
-
-from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
-    DNSAPIError,
-    DNSAPIAuthenticationError,
-)
-
 from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
-    create_argument_spec,
-    create_api,
+    create_hosttech_argument_spec,
+    create_hosttech_api,
 )
 
-
-def get_prefix(module, zone_in):
-    # Get zone and record.
-    record_in = module.params.get('record').lower()
-    if record_in[-1:] == '.':
-        record_in = record_in[:-1]
-
-    # Convert record to prefix
-    if not record_in.endswith('.' + zone_in) and record_in != zone_in:
-        module.fail_json(msg='Record must be in zone')
-    if record_in == zone_in:
-        return None, record_in
-    else:
-        return record_in[:len(record_in) - len(zone_in) - 1], record_in
-
-
-def run_module():
-    argument_spec = create_argument_spec()
-    argument_spec['argument_spec'].update(dict(
-        what=dict(type='str', choices=['single_record', 'all_types_for_record', 'all_records'], default='single_record'),
-        zone=dict(type='str', required=True),
-        record=dict(type='str', default=None),
-        type=dict(type='str', choices=['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA'], default=None),
-    ))
-    argument_spec['required_if'].extend([
-        ('what', 'single_record', ['record', 'type']),
-        ('what', 'all_types_for_record', ['record']),
-    ])
-    module = AnsibleModule(supports_check_mode=True, **argument_spec)
-
-    # Create API
-    api = create_api(module)
-
-    # Get zone and record.
-    zone_in = module.params.get('zone').lower()
-    if zone_in[-1:] == '.':
-        zone_in = zone_in[:-1]
-
-    # Get zone information
-    try:
-        zone = api.get_zone_with_records_by_name(zone_in)
-        if zone is None:
-            module.fail_json(msg='Zone not found')
-    except DNSAPIAuthenticationError as e:
-        module.fail_json(msg='Cannot authenticate: {0}'.format(e), exception=e)
-    except DNSAPIError as e:
-        module.fail_json(msg='Error: {0}'.format(e), error=str(e))
-
-    if module.params.get('what') == 'single_record':
-        # Extract prefix
-        prefix, record_in = get_prefix(module, zone_in)
-
-        # Find matching records
-        type_in = module.params.get('type')
-        records = []
-        for record in zone.records:
-            if record.prefix == prefix and record.type == type_in:
-                records.append(record)
-
-        # Format output
-        data = format_records_for_output(records, record_in) if records else {}
-        module.exit_json(
-            changed=False,
-            set=data,
-        )
-    else:
-        # Extract prefix if necessary
-        if module.params.get('what') == 'all_types_for_record':
-            check_prefix = True
-            prefix, dummy = get_prefix(module, zone_in)
-        else:
-            check_prefix = False
-            prefix = None
-
-        # Find matching records
-        records = {}
-        for record in zone.records:
-            if check_prefix:
-                if record.prefix != prefix:
-                    continue
-            key = ((record.prefix + '.' + zone_in) if record.prefix else zone_in, record.type)
-            record_list = records.get(key)
-            if record_list is None:
-                record_list = records[key] = []
-            record_list.append(record)
-
-        # Format output
-        data = [format_records_for_output(record_list, record_name) for (record_name, dummy), record_list in sorted(records.items())]
-        module.exit_json(
-            changed=False,
-            sets=data,
-        )
+from ansible_collections.community.dns.plugins.module_utils.module.record import (
+    run_module,
+    create_module_argument_spec,
+)
 
 
 def main():
-    run_module()
+    argument_spec = create_hosttech_argument_spec()
+    argument_spec.merge(create_module_argument_spec())
+    module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
+    run_module(module, lambda: create_hosttech_api(module))
 
 
 if __name__ == '__main__':

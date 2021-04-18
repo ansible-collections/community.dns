@@ -26,6 +26,8 @@ from ansible_collections.community.dns.plugins.module_utils.zone import (
 )
 
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
+    DNSAPIError,
+    DNSAPIAuthenticationError,
     ZoneRecordAPI,
 )
 

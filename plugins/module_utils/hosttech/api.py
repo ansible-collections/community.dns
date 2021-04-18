@@ -7,9 +7,9 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 
-import abc
-
-from ansible.module_utils import six
+from ansible_collections.community.dns.plugins.module_utils.argspec import (
+    ArgumentSpec,
+)
 
 from ansible_collections.community.dns.plugins.module_utils.wsdl import (
     HAS_LXML_ETREE,
@@ -28,20 +28,19 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech.json_api im
 )
 
 
-def create_argument_spec():
-    return dict(
+def create_hosttech_argument_spec():
+    return ArgumentSpec(
         argument_spec=dict(
             hosttech_username=dict(type='str'),
             hosttech_password=dict(type='str', no_log=True),
             hosttech_token=dict(type='str', no_log=True),
         ),
         required_together=[('hosttech_username', 'hosttech_password')],
-        required_if=[],
         mutually_exclusive=[('hosttech_username', 'hosttech_token')],
     )
 
 
-def create_api(module):
+def create_hosttech_api(module):
     if module.params['hosttech_username'] is not None:
         if not HAS_LXML_ETREE:
             module.fail_json(msg='Needs lxml Python module (pip install lxml)')

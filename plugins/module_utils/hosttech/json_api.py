@@ -11,7 +11,6 @@ __metaclass__ = type
 
 import json
 
-from ansible.module_utils.six import raise_from
 from ansible.module_utils.six.moves.urllib.parse import urlencode
 from ansible.module_utils._text import to_native
 from ansible.module_utils.urls import fetch_url
