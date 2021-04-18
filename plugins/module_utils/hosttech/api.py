@@ -33,6 +33,16 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech.errors impo
 @six.add_metaclass(abc.ABCMeta)
 class HostTechAPI(object):
     @abc.abstractmethod
+    def get_zone_by_name(self, name):
+        """
+        Given a zone name, return the zone contents if found.
+
+        @param name: The zone name (string)
+        @return The zone information (DNSZone), or None if not found
+        """
+        pass
+
+    @abc.abstractmethod
     def get_zone_with_records_by_name(self, name):
         """
         Given a zone name, return the zone contents with records if found.

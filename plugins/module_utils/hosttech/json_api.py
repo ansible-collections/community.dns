@@ -83,7 +83,13 @@ def create_zone_from_json(source):
     # zone.email = source.get('email')
     # zone.ttl = int(source['ttl'])
     # zone.nameserver = source['nameserver']
-    return DNSZoneWithRecords(zone, [create_record_from_json(record) for record in source['records']])
+    return zone
+
+
+def create_zone_with_records_from_json(source):
+    return DNSZoneWithRecords(
+        create_zone_from_json(source),
+        [create_record_from_json(record) for record in source['records']])
 
 
 def record_to_json(record, include_id=False, include_type=True):
@@ -312,10 +318,6 @@ class HostTechJSONAPI(HostTechAPI):
                 return result
             offset += block_size
 
-    def _get_zone_by_id(self, zone_id):
-        result, info = self._get('user/v1/zones/{0}'.format(zone_id), expected=[200])
-        return create_zone_from_json(result['data'])
-
     def get_zone_with_records_by_id(self, id):
         """
         Given a zone ID, return the zone contents with records if found.
@@ -326,7 +328,7 @@ class HostTechJSONAPI(HostTechAPI):
         result, info = self._get('user/v1/zones/{0}'.format(id), expected=[200, 404], must_have_content=[200])
         if info['status'] == 404:
             return None
-        return create_zone_from_json(result['data'])
+        return create_zone_with_records_from_json(result['data'])
 
     def get_zone_with_records_by_name(self, name):
         """
@@ -338,7 +340,21 @@ class HostTechJSONAPI(HostTechAPI):
         result = self._list_pagination('user/v1/zones', query=dict(query=name))
         for zone in result:
             if zone['name'] == name:
-                return self.get_zone_with_records_by_id(zone['id'])
+                result, info = self._get('user/v1/zones/{0}'.format(zone['id']), expected=[200])
+                return create_zone_with_records_from_json(result['data'])
+        return None
+
+    def get_zone_by_name(self, name):
+        """
+        Given a zone name, return the zone contents if found.
+
+        @param name: The zone name (string)
+        @return The zone information (DNSZone), or None if not found
+        """
+        result = self._list_pagination('user/v1/zones', query=dict(query=name))
+        for zone in result:
+            if zone['name'] == name:
+                return create_zone_from_json(zone)
         return None
 
     def add_record(self, zone_id, record):
