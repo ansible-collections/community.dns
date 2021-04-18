@@ -388,7 +388,7 @@ class TestHosttechDNSRecord(ModuleTestCase):
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
                 expect_authentication('foo', 'bar'),
-                validate_add_request('example.com', new_entry),
+                validate_add_request('42', new_entry),
             ]))
             .result_str(create_add_result(new_entry)),
         ])

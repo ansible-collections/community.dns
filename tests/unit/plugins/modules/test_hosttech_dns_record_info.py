@@ -175,7 +175,7 @@ class TestHosttechDNSRecordInfo(ModuleTestCase):
             'record': 'example.com',
             'ttl': 3600,
             'type': 'MX',
-            'value': ['example.com'],
+            'value': ['10 example.com'],
         }
         assert sets[5] == {
             'record': 'example.com',
