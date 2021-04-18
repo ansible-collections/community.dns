@@ -281,7 +281,7 @@ def run_module():
 
     # Get zone information
     try:
-        zone = api.get_zone(zone_in)
+        zone = api.get_zone_with_records_by_name(zone_in)
         if zone is None:
             module.fail_json(msg='Zone not found')
     except HostTechAPIAuthError as e:
@@ -369,11 +369,11 @@ def run_module():
     if not module.check_mode:
         try:
             for record in to_delete:
-                api.delete_record(zone.id, record)
+                api.delete_record(zone.zone.id, record)
             for record in to_change:
-                api.update_record(zone.id, record)
+                api.update_record(zone.zone.id, record)
             for record in to_create:
-                api.add_record(zone.id, record)
+                api.add_record(zone.zone.id, record)
         except HostTechAPIAuthError as e:
             module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=str(e))
         except HostTechAPIError as e:

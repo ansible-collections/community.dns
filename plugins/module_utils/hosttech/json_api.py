@@ -22,6 +22,7 @@ from ansible_collections.community.dns.plugins.module_utils.record import (
 
 from ansible_collections.community.dns.plugins.module_utils.zone import (
     DNSZone,
+    DNSZoneWithRecords,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
@@ -81,13 +82,12 @@ def create_record_from_json(source, type=None):
 
 
 def create_zone_from_json(source):
-    result = DNSZone(source['name'])
-    result.id = source['id']
-    # result.email = source.get('email')
-    # result.ttl = int(source['ttl'])
-    # result.nameserver = source['nameserver']
-    result.records = [create_record_from_json(record) for record in source['records']]
-    return result
+    zone = DNSZone(source['name'])
+    zone.id = source['id']
+    # zone.email = source.get('email')
+    # zone.ttl = int(source['ttl'])
+    # zone.nameserver = source['nameserver']
+    return DNSZoneWithRecords(zone, [create_record_from_json(record) for record in source['records']])
 
 
 def record_to_json(record, include_id=False, include_type=True):
@@ -193,6 +193,8 @@ class HostTechJSONAPI(HostTechAPI):
                         ', '.join(['{0}'.format(e) for e in expected]), method, url, status, more))
 
     def _process_json_result(self, response, info, must_have_content=True, method='GET', expected=None):
+        if isinstance(must_have_content, (list, tuple)):
+            must_have_content = info['status'] in must_have_content
         # Read content
         try:
             content = response.read()
@@ -297,17 +299,29 @@ class HostTechJSONAPI(HostTechAPI):
         result, info = self._get('user/v1/zones/{0}'.format(zone_id), expected=[200])
         return create_zone_from_json(result['data'])
 
-    def get_zone(self, search):
+    def get_zone_with_records_by_id(self, id):
         """
-        Search a zone by name or id.
+        Given a zone ID, return the zone contents with records if found.
 
-        @param search: The search string, i.e. a zone name or ID (string)
-        @return The zone information (DNSZone)
+        @param id: The zone ID
+        @return The zone information with records (DNSZoneWithRecords), or None if not found
         """
-        result = self._list_pagination('user/v1/zones', query=dict(query=search))
+        result, info = self._get('user/v1/zones/{0}'.format(id), expected=[200, 404], must_have_content=[200])
+        if info['status'] == 404:
+            return None
+        return create_zone_from_json(result['data'])
+
+    def get_zone_with_records_by_name(self, name):
+        """
+        Given a zone name, return the zone contents with records if found.
+
+        @param name: The zone name (string)
+        @return The zone information with records (DNSZoneWithRecords), or None if not found
+        """
+        result = self._list_pagination('user/v1/zones', query=dict(query=name))
         for zone in result:
-            if zone['name'] == search or str(zone['id']) == search:
-                return self._get_zone_by_id(zone['id'])
+            if zone['name'] == name:
+                return self.get_zone_with_records_by_id(zone['id'])
         return None
 
     def add_record(self, zone_id, record):

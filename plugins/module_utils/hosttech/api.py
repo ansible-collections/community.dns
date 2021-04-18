@@ -21,6 +21,7 @@ from ansible_collections.community.dns.plugins.module_utils.wsdl import (
 
 from ansible_collections.community.dns.plugins.module_utils.zone import (
     DNSZone,
+    DNSZoneWithRecords,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
@@ -32,12 +33,22 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech.errors impo
 @six.add_metaclass(abc.ABCMeta)
 class HostTechAPI(object):
     @abc.abstractmethod
-    def get_zone(self, search):
+    def get_zone_with_records_by_name(self, name):
         """
-        Search a zone by name or id.
+        Given a zone name, return the zone contents with records if found.
 
-        @param search: The search string, i.e. a zone name or ID (string)
-        @return The zone information (DNSZone)
+        @param name: The zone name (string)
+        @return The zone information with records (DNSZoneWithRecords), or None if not found
+        """
+        pass
+
+    @abc.abstractmethod
+    def get_zone_with_records_by_id(self, id):
+        """
+        Given a zone ID, return the zone contents with records if found.
+
+        @param id: The zone ID
+        @return The zone information with records (DNSZoneWithRecords), or None if not found
         """
         pass
 

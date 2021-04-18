@@ -198,7 +198,7 @@ def run_module():
 
     # Get zone information
     try:
-        zone = api.get_zone(zone_in)
+        zone = api.get_zone_with_records_by_name(zone_in)
         if zone is None:
             module.fail_json(msg='Zone not found')
     except HostTechAPIAuthError as e:

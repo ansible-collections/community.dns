@@ -22,6 +22,7 @@ from ansible_collections.community.dns.plugins.module_utils.wsdl import (
 
 from ansible_collections.community.dns.plugins.module_utils.zone import (
     DNSZone,
+    DNSZoneWithRecords,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
@@ -46,15 +47,14 @@ def create_record_from_encoding(source, type=None):
 
 
 def create_zone_from_encoding(source):
-    result = DNSZone(source['name'])
-    result.id = source['id']
-    # result.email = source.get('email')
-    # result.ttl = int(source['ttl'])
-    # result.nameserver = source['nameserver']
-    # result.serial = source['serial']
-    # result.template = source.get('template')
-    result.records = [create_record_from_encoding(record) for record in source['records']]
-    return result
+    zone = DNSZone(source['name'])
+    zone.id = source['id']
+    # zone.email = source.get('email')
+    # zone.ttl = int(source['ttl'])
+    # zone.nameserver = source['nameserver']
+    # zone.serial = source['serial']
+    # zone.template = source.get('template')
+    return DNSZoneWithRecords(zone, [create_record_from_encoding(record) for record in source['records']])
 
 
 def encode_record(record, include_id=False):
@@ -127,16 +127,16 @@ class HostTechWSDLAPI(HostTechAPI):
             # q.q('Result: {0}; extracted type {1}'.format(result, type(res)))
         raise HostTechAPIError('Result has unexpected type {0} (expecting {1})!'.format(type(res), acceptable_types))
 
-    def get_zone(self, search):
+    def get_zone_with_records_by_name(self, name):
         """
-        Search a zone by name or id.
+        Given a zone name, return the zone contents with records if found.
 
-        @param search: The search string, i.e. a zone name or ID (string)
-        @return The zone information (DNSZone)
+        @param name: The zone name (string)
+        @return The zone information with records (DNSZoneWithRecords), or None if not found
         """
         self._announce('get zone')
         command = self._prepare()
-        command.add_simple_command('getZone', sZoneName=search)
+        command.add_simple_command('getZone', sZoneName=name)
         try:
             return create_zone_from_encoding(self._execute(command, 'getZoneResponse', dict))
         except WSDLError as exc:
@@ -145,6 +145,15 @@ class HostTechWSDLAPI(HostTechAPI):
             raise_from(HostTechAPIError('Error while getting zone: {0}'.format(to_native(exc))), exc)
         except WSDLNetworkError as exc:
             raise_from(HostTechAPIError('Network error while getting zone: {0}'.format(to_native(exc))), exc)
+
+    def get_zone_with_records_by_id(self, id):
+        """
+        Given a zone ID, return the zone contents with records if found.
+
+        @param id: The zone ID
+        @return The zone information with records (DNSZoneWithRecords), or None if not found
+        """
+        return self.get_zone_with_records_by_name(str(id))
 
     def add_record(self, zone_id, record):
         """

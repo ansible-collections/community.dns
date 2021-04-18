@@ -17,16 +17,25 @@ class DNSZone(object):
     def __init__(self, name):
         self.id = None
         self.name = name
-        self.records = []
 
     def __str__(self):
         data = []
-        if self.id:
+        if self.id is not None:
             data.append('id: {0}'.format(self.id))
         data.append('name: {0}'.format(self.name))
-        for record in self.records:
-            data.append('record: {0}'.format(str(record)))
         return 'DNSZone(\n' + ',\n'.join(['  ' + line for line in data]) + '\n)'
 
     def __repr__(self):
         return self.__str__()
+
+
+class DNSZoneWithRecords(object):
+    def __init__(self, zone, records):
+        self.zone = zone
+        self.records = records
+
+    def __str__(self):
+        return '({0}, {1})'.format(self.zone, self.records)
+
+    def __repr__(self):
+        return 'DNSZoneWithRecords({0!r}, {1!r})'.format(self.zone, self.records)
