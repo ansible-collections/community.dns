@@ -262,7 +262,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
             accept='application/json',
             authorization='Bearer {token}'.format(token=self._token),
         )
-        response, info = fetch_url(self._module, full_url, headers=headers)
+        response, info = fetch_url(self._module, full_url, headers=headers, method='GET')
         return self._process_json_result(response, info, must_have_content=must_have_content, method='GET', expected=expected)
 
     def _post(self, url, data=None, query=None, must_have_content=True, expected=None):

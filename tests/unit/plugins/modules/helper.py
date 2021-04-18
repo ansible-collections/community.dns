@@ -22,6 +22,82 @@ WSDL_DEFAULT_ENTRIES = [
     (132, 42, 'NS', '', 'ns1.hostserv.eu', 10800, None, None),
 ]
 
+JSON_DEFAULT_ENTRIES = [
+    # (125, 42, 'A', '', '1.2.3.4', 3600, None, None),
+    {
+        'id': 125,
+        'type': 'A',
+        'name': '',
+        'ipv4': '1.2.3.4',
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (126, 42, 'A', '*', '1.2.3.5', 3600, None, None),
+    {
+        'id': 126,
+        'type': 'A',
+        'name': '*',
+        'ipv4': '1.2.3.5',
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (127, 42, 'AAAA', '', '2001:1:2::3', 3600, None, None),
+    {
+        'id': 127,
+        'type': 'AAAA',
+        'name': '',
+        'ipv6': '2001:1:2::3',
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (128, 42, 'AAAA', '*', '2001:1:2::4', 3600, None, None),
+    {
+        'id': 128,
+        'type': 'AAAA',
+        'name': '*',
+        'ipv6': '2001:1:2::4',
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (129, 42, 'MX', '', 'example.com', 3600, None, '10'),
+    {
+        'id': 129,
+        'type': 'MX',
+        'ownername': '',
+        'name': 'example.com',
+        'pref': 10,
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (130, 42, 'NS', '', 'ns3.hostserv.eu', 10800, None, None),
+    {
+        'id': 130,
+        'type': 'NS',
+        'ownername': '',
+        'targetname': 'ns3.hostserv.eu',
+        'ttl': 10800,
+        'comment': '',
+    },
+    # (131, 42, 'NS', '', 'ns2.hostserv.eu', 10800, None, None),
+    {
+        'id': 131,
+        'type': 'NS',
+        'ownername': '',
+        'targetname': 'ns2.hostserv.eu',
+        'ttl': 10800,
+        'comment': '',
+    },
+    # (132, 42, 'NS', '', 'ns1.hostserv.eu', 10800, None, None),
+    {
+        'id': 132,
+        'type': 'NS',
+        'ownername': '',
+        'targetname': 'ns1.hostserv.eu',
+        'ttl': 10800,
+        'comment': '',
+    },
+]
+
 
 def validate_wsdl_call(conditions):
     def predicate(content):
@@ -191,3 +267,28 @@ def create_wsdl_zones_answer(zone_id, zone_name, entries):
 
 
 WSDL_DEFAULT_ZONE_RESULT = create_wsdl_zones_answer(42, 'example.com', WSDL_DEFAULT_ENTRIES)
+
+JSON_ZONE_LIST_RESULT = {
+    "data": [
+        {
+            "id": 42,
+            "name": "example.com",
+            "email": "test@example.com",
+            "ttl": 10800,
+            "nameserver": "ns1.hosttech.ch",
+            "dnssec": False,
+        },
+    ],
+}
+
+JSON_ZONE_GET_RESULT = {
+    "data": {
+        "id": 42,
+        "name": "example.com",
+        "email": "test@example.com",
+        "ttl": 10800,
+        "nameserver": "ns1.hosttech.ch",
+        "dnssec": False,
+        "records": JSON_DEFAULT_ENTRIES,
+    }
+}

@@ -8,6 +8,11 @@ import pytest
 
 from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import patch
 
+from ansible_collections.community.internal_test_tools.tests.unit.utils.fetch_url_module_framework import (
+    BaseTestModule,
+    FetchUrlCall,
+)
+
 from ansible_collections.community.internal_test_tools.tests.unit.utils.open_url_framework import (
     OpenUrlCall,
     OpenUrlProxy,
