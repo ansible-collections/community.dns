@@ -11,89 +11,21 @@ import abc
 
 from ansible.module_utils import six
 
-from ansible_collections.community.dns.plugins.module_utils.record import (
-    DNSRecord,
-)
-
 from ansible_collections.community.dns.plugins.module_utils.wsdl import (
     HAS_LXML_ETREE,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.zone import (
-    DNSZone,
-    DNSZoneWithRecords,
+from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
+    DNSAPIError,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
-    HostTechAPIError,
-    HostTechAPIAuthError,
+from ansible_collections.community.dns.plugins.module_utils.hosttech.wsdl_api import (
+    HostTechWSDLAPI,
 )
 
-
-@six.add_metaclass(abc.ABCMeta)
-class HostTechAPI(object):
-    @abc.abstractmethod
-    def get_zone_by_name(self, name):
-        """
-        Given a zone name, return the zone contents if found.
-
-        @param name: The zone name (string)
-        @return The zone information (DNSZone), or None if not found
-        """
-        pass
-
-    @abc.abstractmethod
-    def get_zone_with_records_by_name(self, name):
-        """
-        Given a zone name, return the zone contents with records if found.
-
-        @param name: The zone name (string)
-        @return The zone information with records (DNSZoneWithRecords), or None if not found
-        """
-        pass
-
-    @abc.abstractmethod
-    def get_zone_with_records_by_id(self, id):
-        """
-        Given a zone ID, return the zone contents with records if found.
-
-        @param id: The zone ID
-        @return The zone information with records (DNSZoneWithRecords), or None if not found
-        """
-        pass
-
-    @abc.abstractmethod
-    def add_record(self, zone_id, record):
-        """
-        Adds a new record to an existing zone.
-
-        @param zone_id: The zone ID
-        @param record: The DNS record (DNSRecord)
-        @return The created DNS record (DNSRecord)
-        """
-        pass
-
-    @abc.abstractmethod
-    def update_record(self, zone_id, record):
-        """
-        Update a record.
-
-        @param zone_id: The zone ID
-        @param record: The DNS record (DNSRecord)
-        @return The DNS record (DNSRecord)
-        """
-        pass
-
-    @abc.abstractmethod
-    def delete_record(self, zone_id, record):
-        """
-        Delete a record.
-
-        @param zone_id: The zone ID
-        @param record: The DNS record (DNSRecord)
-        @return True in case of success (boolean)
-        """
-        pass
+from ansible_collections.community.dns.plugins.module_utils.hosttech.json_api import (
+    HostTechJSONAPI,
+)
 
 
 def create_argument_spec():
@@ -114,11 +46,9 @@ def create_api(module):
         if not HAS_LXML_ETREE:
             module.fail_json(msg='Needs lxml Python module (pip install lxml)')
 
-        from ansible_collections.community.dns.plugins.module_utils.hosttech.wsdl_api import HostTechWSDLAPI
         return HostTechWSDLAPI(module.params['hosttech_username'], module.params['hosttech_password'], debug=False)
 
     if module.params['hosttech_token'] is not None:
-        from ansible_collections.community.dns.plugins.module_utils.hosttech.json_api import HostTechJSONAPI
         return HostTechJSONAPI(module, module.params['hosttech_token'])
 
-    raise HostTechAPIError('Internal error!')
+    raise DNSAPIError('Internal error!')

@@ -149,13 +149,14 @@ from ansible_collections.community.dns.plugins.module_utils.record import (
     format_records_for_output,
 )
 
+from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
+    DNSAPIError,
+    DNSAPIAuthenticationError,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
     create_argument_spec,
     create_api,
-)
-
-from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
-    HostTechAPIError, HostTechAPIAuthError,
 )
 
 
@@ -201,9 +202,9 @@ def run_module():
         zone = api.get_zone_with_records_by_name(zone_in)
         if zone is None:
             module.fail_json(msg='Zone not found')
-    except HostTechAPIAuthError as e:
+    except DNSAPIAuthenticationError as e:
         module.fail_json(msg='Cannot authenticate: {0}'.format(e), exception=e)
-    except HostTechAPIError as e:
+    except DNSAPIError as e:
         module.fail_json(msg='Error: {0}'.format(e), error=str(e))
 
     if module.params.get('what') == 'single_record':

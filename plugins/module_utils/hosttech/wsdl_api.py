@@ -25,17 +25,12 @@ from ansible_collections.community.dns.plugins.module_utils.zone import (
     DNSZoneWithRecords,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
-    HostTechAPIError,
-    HostTechAPIAuthError,
-)
-
-from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
-    HostTechAPI,
+from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
+    ZoneRecordAPI,
 )
 
 
-def create_record_from_encoding(source, type=None):
+def _create_record_from_encoding(source, type=None):
     result = DNSRecord()
     result.id = source['id']
     result.type = source.get('type', type)
@@ -48,7 +43,7 @@ def create_record_from_encoding(source, type=None):
     return result
 
 
-def create_zone_from_encoding(source):
+def _create_zone_from_encoding(source):
     zone = DNSZone(source['name'])
     zone.id = source['id']
     # zone.email = source.get('email')
@@ -56,10 +51,10 @@ def create_zone_from_encoding(source):
     # zone.nameserver = source['nameserver']
     # zone.serial = source['serial']
     # zone.template = source.get('template')
-    return DNSZoneWithRecords(zone, [create_record_from_encoding(record) for record in source['records']])
+    return DNSZoneWithRecords(zone, [_create_record_from_encoding(record) for record in source['records']])
 
 
-def encode_record(record, include_id=False):
+def _encode_record(record, include_id=False):
     result = {
         'type': record.type,
         'prefix': record.prefix,
@@ -72,7 +67,7 @@ def encode_record(record, include_id=False):
             result['priority'] = int(priority)
             result['target'] = target
         except Exception as e:
-            raise HostTechAPIError(
+            raise DNSAPIError(
                 'Cannot split {0} record "{1}" into integer priority and target: {2}'.format(
                     record.type, record.target, e))
     else:
@@ -82,7 +77,7 @@ def encode_record(record, include_id=False):
     return result
 
 
-def encode_zone(zone):
+def _encode_zone(zone):
     return {
         'id': zone.id,
         'name': zone.name,
@@ -91,11 +86,11 @@ def encode_zone(zone):
         # 'nameserver': zone.nameserver,
         # 'serial': zone.serial,
         # 'template': zone.template,
-        'records': [encode_record(record, include_id=True) for record in zone.records],
+        'records': [_encode_record(record, include_id=True) for record in zone.records],
     }
 
 
-class HostTechWSDLAPI(HostTechAPI):
+class HostTechWSDLAPI(ZoneRecordAPI):
     def __init__(self, username, password, api='https://ns1.hosttech.eu/public/api', debug=False):
         """
         Create a new HostTech API instance with given username and password.
@@ -126,7 +121,7 @@ class HostTechWSDLAPI(HostTechAPI):
             result = command.execute(debug=self._debug)
         except WSDLError as e:
             if e.error_code == '998':
-                raise HostTechAPIAuthError('Error on authentication ({0})'.format(e.error_message))
+                raise DNSAPIAuthenticationError('Error on authentication ({0})'.format(e.error_message))
             raise
         res = result.get_result(result_name)
         if isinstance(res, acceptable_types):
@@ -137,7 +132,7 @@ class HostTechWSDLAPI(HostTechAPI):
         if self._debug:
             pass
             # q.q('Result: {0}; extracted type {1}'.format(result, type(res)))
-        raise HostTechAPIError('Result has unexpected type {0} (expecting {1})!'.format(type(res), acceptable_types))
+        raise DNSAPIError('Result has unexpected type {0} (expecting {1})!'.format(type(res), acceptable_types))
 
     def get_zone_with_records_by_name(self, name):
         """
@@ -150,13 +145,13 @@ class HostTechWSDLAPI(HostTechAPI):
         command = self._prepare()
         command.add_simple_command('getZone', sZoneName=name)
         try:
-            return create_zone_from_encoding(self._execute(command, 'getZoneResponse', dict))
+            return _create_zone_from_encoding(self._execute(command, 'getZoneResponse', dict))
         except WSDLError as exc:
             if exc.error_origin == 'server' and exc.error_message == 'zone not found':
                 return None
-            raise_from(HostTechAPIError('Error while getting zone: {0}'.format(to_native(exc))), exc)
+            raise_from(DNSAPIError('Error while getting zone: {0}'.format(to_native(exc))), exc)
         except WSDLNetworkError as exc:
-            raise_from(HostTechAPIError('Network error while getting zone: {0}'.format(to_native(exc))), exc)
+            raise_from(DNSAPIError('Network error while getting zone: {0}'.format(to_native(exc))), exc)
 
     def get_zone_with_records_by_id(self, id):
         """
@@ -187,13 +182,13 @@ class HostTechWSDLAPI(HostTechAPI):
         """
         self._announce('add record')
         command = self._prepare()
-        command.add_simple_command('addRecord', search=str(zone_id), recorddata=encode_record(record, include_id=False))
+        command.add_simple_command('addRecord', search=str(zone_id), recorddata=_encode_record(record, include_id=False))
         try:
-            return create_record_from_encoding(self._execute(command, 'addRecordResponse', dict))
+            return _create_record_from_encoding(self._execute(command, 'addRecordResponse', dict))
         except WSDLError as exc:
-            raise_from(HostTechAPIError('Error while adding record: {0}'.format(to_native(exc))), exc)
+            raise_from(DNSAPIError('Error while adding record: {0}'.format(to_native(exc))), exc)
         except WSDLNetworkError as exc:
-            raise_from(HostTechAPIError('Network error while adding record: {0}'.format(to_native(exc))), exc)
+            raise_from(DNSAPIError('Network error while adding record: {0}'.format(to_native(exc))), exc)
 
     def update_record(self, zone_id, record):
         """
@@ -204,16 +199,16 @@ class HostTechWSDLAPI(HostTechAPI):
         @return The DNS record (DNSRecord)
         """
         if record.id is None:
-            raise HostTechAPIError('Need record ID to update record!')
+            raise DNSAPIError('Need record ID to update record!')
         self._announce('update record')
         command = self._prepare()
-        command.add_simple_command('updateRecord', recordId=record.id, recorddata=encode_record(record, include_id=False))
+        command.add_simple_command('updateRecord', recordId=record.id, recorddata=_encode_record(record, include_id=False))
         try:
-            return create_record_from_encoding(self._execute(command, 'updateRecordResponse', dict))
+            return _create_record_from_encoding(self._execute(command, 'updateRecordResponse', dict))
         except WSDLError as exc:
-            raise_from(HostTechAPIError('Error while updating record: {0}'.format(to_native(exc))), exc)
+            raise_from(DNSAPIError('Error while updating record: {0}'.format(to_native(exc))), exc)
         except WSDLNetworkError as exc:
-            raise_from(HostTechAPIError('Network error while updating record: {0}'.format(to_native(exc))), exc)
+            raise_from(DNSAPIError('Network error while updating record: {0}'.format(to_native(exc))), exc)
 
     def delete_record(self, zone_id, record):
         """
@@ -224,13 +219,13 @@ class HostTechWSDLAPI(HostTechAPI):
         @return True in case of success (boolean)
         """
         if record.id is None:
-            raise HostTechAPIError('Need record ID to delete record!')
+            raise DNSAPIError('Need record ID to delete record!')
         self._announce('delete record')
         command = self._prepare()
         command.add_simple_command('deleteRecord', recordId=record.id)
         try:
             return self._execute(command, 'deleteRecordResponse', bool)
         except WSDLError as exc:
-            raise_from(HostTechAPIError('Error while deleting record: {0}'.format(to_native(exc))), exc)
+            raise_from(DNSAPIError('Error while deleting record: {0}'.format(to_native(exc))), exc)
         except WSDLNetworkError as exc:
-            raise_from(HostTechAPIError('Network error while deleting record: {0}'.format(to_native(exc))), exc)
+            raise_from(DNSAPIError('Network error while deleting record: {0}'.format(to_native(exc))), exc)

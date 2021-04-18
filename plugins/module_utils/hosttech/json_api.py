@@ -25,18 +25,14 @@ from ansible_collections.community.dns.plugins.module_utils.zone import (
     DNSZoneWithRecords,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
-    HostTechError,
-    HostTechAPIError,
-    HostTechAPIAuthError,
-)
-
-from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
-    HostTechAPI,
+from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
+    DNSAPIError,
+    DNSAPIAuthenticationError,
+    ZoneRecordAPI,
 )
 
 
-def create_record_from_json(source, type=None):
+def _create_record_from_json(source, type=None):
     result = DNSRecord()
     result.id = source['id']
     result.type = source.get('type', type)
@@ -70,14 +66,14 @@ def create_record_from_json(source, type=None):
     elif result.type == 'TLSA':
         target = source['text']
     else:
-        raise HostTechAPIError('Cannot parse unknown record type: {0}'.format(result.type))
+        raise DNSAPIError('Cannot parse unknown record type: {0}'.format(result.type))
 
     result.prefix = name
     result.target = target
     return result
 
 
-def create_zone_from_json(source):
+def _create_zone_from_json(source):
     zone = DNSZone(source['name'])
     zone.id = source['id']
     # zone.email = source.get('email')
@@ -86,13 +82,13 @@ def create_zone_from_json(source):
     return zone
 
 
-def create_zone_with_records_from_json(source):
+def _create_zone_with_records_from_json(source):
     return DNSZoneWithRecords(
-        create_zone_from_json(source),
-        [create_record_from_json(record) for record in source['records']])
+        _create_zone_from_json(source),
+        [_create_record_from_json(record) for record in source['records']])
 
 
-def record_to_json(record, include_id=False, include_type=True):
+def _record_to_json(record, include_id=False, include_type=True):
     result = {
         'ttl': record.ttl,
         'comment': record.comment or '',
@@ -116,7 +112,7 @@ def record_to_json(record, include_id=False, include_type=True):
             result['tag'] = tag
             result['value'] = value
         except Exception as e:
-            raise HostTechAPIError(
+            raise DNSAPIError(
                 'Cannot split {0} record "{1}" into flag, tag and value: {2}'.format(
                     record.type, record.target, e))
     elif record.type == 'CNAME':
@@ -129,7 +125,7 @@ def record_to_json(record, include_id=False, include_type=True):
             result['pref'] = int(pref)
             result['name'] = name
         except Exception as e:
-            raise HostTechAPIError(
+            raise DNSAPIError(
                 'Cannot split {0} record "{1}" into integer preference and name: {2}'.format(
                     record.type, record.target, e))
     elif record.type == 'NS':
@@ -141,7 +137,7 @@ def record_to_json(record, include_id=False, include_type=True):
             result['origin'] = origin
             result['name'] = name
         except Exception as e:
-            raise HostTechAPIError(
+            raise DNSAPIError(
                 'Cannot split {0} record "{1}" into origin and name: {2}'.format(
                     record.type, record.target, e))
     elif record.type == 'SRV':
@@ -153,7 +149,7 @@ def record_to_json(record, include_id=False, include_type=True):
             result['port'] = int(port)
             result['target'] = target
         except Exception as e:
-            raise HostTechAPIError(
+            raise DNSAPIError(
                 'Cannot split {0} record "{1}" into integer priority, integer weight, integer port and target: {2}'.format(
                     record.type, record.target, e))
     elif record.type == 'TXT':
@@ -163,12 +159,12 @@ def record_to_json(record, include_id=False, include_type=True):
         result['name'] = record.prefix
         result['text'] = record.target
     else:
-        raise HostTechAPIError('Cannot serialize unknown record type: {0}'.format(record.type))
+        raise DNSAPIError('Cannot serialize unknown record type: {0}'.format(record.type))
 
     return result
 
 
-class HostTechJSONAPI(HostTechAPI):
+class HostTechJSONAPI(ZoneRecordAPI):
     def __init__(self, module, token, api='https://api.ns1.hosttech.eu/api/', debug=False):
         """
         Create a new HostTech API instance with given username and password.
@@ -196,7 +192,7 @@ class HostTechJSONAPI(HostTechAPI):
 
     def _validate(self, response=None, result=None, info=None, expected=None, method='GET'):
         if info is None:
-            raise HostTechError('Internal error: info needs to be provided')
+            raise DNSAPIError('Internal error: info needs to be provided')
         status = info['status']
         url = info['url']
         # Check expected status
@@ -205,13 +201,13 @@ class HostTechJSONAPI(HostTechAPI):
                 more = self._extract_error_message(result)
                 if result is not None:
                     more = ' with data: {0}'.format(result)
-                raise HostTechAPIError(
+                raise DNSAPIError(
                     'Expected HTTP status {0} for {1} {2}, but got HTTP status {3}{4}'.format(
                         ', '.join(['{0}'.format(e) for e in expected]), method, url, status, more))
         else:
             if status < 200 or status >= 300:
                 more = self._extract_error_message(result)
-                raise HostTechAPIError(
+                raise DNSAPIError(
                     'Expected successful HTTP status for {1} {2}, but got HTTP status {3}{4}'.format(
                         ', '.join(['{0}'.format(e) for e in expected]), method, url, status, more))
 
@@ -230,7 +226,7 @@ class HostTechJSONAPI(HostTechAPI):
                 content_type = v
         if content_type != 'application/json':
             if must_have_content:
-                raise HostTechAPIError(
+                raise DNSAPIError(
                     '{0} {1} did not yield JSON data, but HTTP status code {2} with Content-Type "{2}" and data: {3}'.format(
                         method, info['url'], info['status'], content_type, to_native(content)))
             self._validate(result=content, info=info, expected=expected, method=method)
@@ -242,7 +238,7 @@ class HostTechJSONAPI(HostTechAPI):
             return result
         except Exception:
             if must_have_content:
-                raise HostTechAPIError(
+                raise DNSAPIError(
                     '{0} {1} did not yield JSON data, but HTTP status code {2} with data: {3}'.format(
                         method, info['url'], info['status'], to_native(content)))
             self._validate(result=content, info=info, expected=expected, method=method)
@@ -328,7 +324,7 @@ class HostTechJSONAPI(HostTechAPI):
         result, info = self._get('user/v1/zones/{0}'.format(id), expected=[200, 404], must_have_content=[200])
         if info['status'] == 404:
             return None
-        return create_zone_with_records_from_json(result['data'])
+        return _create_zone_with_records_from_json(result['data'])
 
     def get_zone_with_records_by_name(self, name):
         """
@@ -341,7 +337,7 @@ class HostTechJSONAPI(HostTechAPI):
         for zone in result:
             if zone['name'] == name:
                 result, info = self._get('user/v1/zones/{0}'.format(zone['id']), expected=[200])
-                return create_zone_with_records_from_json(result['data'])
+                return _create_zone_with_records_from_json(result['data'])
         return None
 
     def get_zone_by_name(self, name):
@@ -354,7 +350,7 @@ class HostTechJSONAPI(HostTechAPI):
         result = self._list_pagination('user/v1/zones', query=dict(query=name))
         for zone in result:
             if zone['name'] == name:
-                return create_zone_from_json(zone)
+                return _create_zone_from_json(zone)
         return None
 
     def add_record(self, zone_id, record):
@@ -365,9 +361,9 @@ class HostTechJSONAPI(HostTechAPI):
         @param record: The DNS record (DNSRecord)
         @return The created DNS record (DNSRecord)
         """
-        data = record_to_json(record, include_id=False, include_type=True)
+        data = _record_to_json(record, include_id=False, include_type=True)
         result, dummy = self._post('user/v1/zones/{0}/records'.format(zone_id, record.id), data=data, expected=[201])
-        return create_record_from_json(result['data'])
+        return _create_record_from_json(result['data'])
 
     def update_record(self, zone_id, record):
         """
@@ -378,10 +374,10 @@ class HostTechJSONAPI(HostTechAPI):
         @return The DNS record (DNSRecord)
         """
         if record.id is None:
-            raise HostTechAPIError('Need record ID to update record!')
-        data = record_to_json(record, include_id=False, include_type=False)
+            raise DNSAPIError('Need record ID to update record!')
+        data = _record_to_json(record, include_id=False, include_type=False)
         result, dummy = self._put('user/v1/zones/{0}/records/{1}'.format(zone_id, record.id), data=data, expected=[200])
-        return create_record_from_json(result['data'])
+        return _create_record_from_json(result['data'])
 
     def delete_record(self, zone_id, record):
         """
@@ -392,6 +388,6 @@ class HostTechJSONAPI(HostTechAPI):
         @return True in case of success (boolean)
         """
         if record.id is None:
-            raise HostTechAPIError('Need record ID to delete record!')
+            raise DNSAPIError('Need record ID to delete record!')
         dummy, info = self._delete('user/v1/zones/{0}/records/{1}'.format(zone_id, record.id), must_have_content=False, expected=[204, 404])
         return info['status'] == 204
