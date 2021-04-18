@@ -98,13 +98,13 @@ def _record_to_json(record, include_id=False, include_type=True):
         result['id'] = record.id
 
     if record.type == 'A':
-        result['name'] = record.prefix
+        result['name'] = record.prefix or ''
         result['ipv4'] = record.target
     elif record.type == 'AAAA':
-        result['name'] = record.prefix
+        result['name'] = record.prefix or ''
         result['ipv6'] = record.target
     elif record.type == 'CAA':
-        result['name'] = record.prefix
+        result['name'] = record.prefix or ''
         try:
             flag, tag, value = record.target.split(' ', 2)
             result['flag'] = flag
@@ -115,10 +115,10 @@ def _record_to_json(record, include_id=False, include_type=True):
                 'Cannot split {0} record "{1}" into flag, tag and value: {2}'.format(
                     record.type, record.target, e))
     elif record.type == 'CNAME':
-        result['name'] = record.prefix
+        result['name'] = record.prefix or ''
         result['cname'] = record.target
     elif record.type == 'MX':
-        result['ownername'] = record.prefix
+        result['ownername'] = record.prefix or ''
         try:
             pref, name = record.target.split(' ', 1)
             result['pref'] = int(pref)
@@ -128,7 +128,7 @@ def _record_to_json(record, include_id=False, include_type=True):
                 'Cannot split {0} record "{1}" into integer preference and name: {2}'.format(
                     record.type, record.target, e))
     elif record.type == 'NS':
-        result['ownername'] = record.prefix
+        result['ownername'] = record.prefix or ''
         result['targetname'] = record.target
     elif record.type == 'PTR':
         try:
@@ -140,7 +140,7 @@ def _record_to_json(record, include_id=False, include_type=True):
                 'Cannot split {0} record "{1}" into origin and name: {2}'.format(
                     record.type, record.target, e))
     elif record.type == 'SRV':
-        result['service'] = record.prefix
+        result['service'] = record.prefix or ''
         try:
             priority, weight, port, target = record.target.split(' ', 3)
             result['priority'] = int(priority)
@@ -152,10 +152,10 @@ def _record_to_json(record, include_id=False, include_type=True):
                 'Cannot split {0} record "{1}" into integer priority, integer weight, integer port and target: {2}'.format(
                     record.type, record.target, e))
     elif record.type == 'TXT':
-        result['name'] = record.prefix
+        result['name'] = record.prefix or ''
         result['text'] = record.target
     elif record.type == 'TLSA':
-        result['name'] = record.prefix
+        result['name'] = record.prefix or ''
         result['text'] = record.target
     else:
         raise DNSAPIError('Cannot serialize unknown record type: {0}'.format(record.type))
