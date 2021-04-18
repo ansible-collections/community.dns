@@ -11,7 +11,7 @@ except ImportError:
     pass
 
 
-DEFAULT_ENTRIES = [
+WSDL_DEFAULT_ENTRIES = [
     (125, 42, 'A', '', '1.2.3.4', 3600, None, None),
     (126, 42, 'A', '*', '1.2.3.5', 3600, None, None),
     (127, 42, 'AAAA', '', '2001:1:2::3', 3600, None, None),
@@ -20,6 +20,82 @@ DEFAULT_ENTRIES = [
     (130, 42, 'NS', '', 'ns3.hostserv.eu', 10800, None, None),
     (131, 42, 'NS', '', 'ns2.hostserv.eu', 10800, None, None),
     (132, 42, 'NS', '', 'ns1.hostserv.eu', 10800, None, None),
+]
+
+JSON_DEFAULT_ENTRIES = [
+    # (125, 42, 'A', '', '1.2.3.4', 3600, None, None),
+    {
+        'id': 125,
+        'type': 'A',
+        'name': '',
+        'ipv4': '1.2.3.4',
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (126, 42, 'A', '*', '1.2.3.5', 3600, None, None),
+    {
+        'id': 126,
+        'type': 'A',
+        'name': '*',
+        'ipv4': '1.2.3.5',
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (127, 42, 'AAAA', '', '2001:1:2::3', 3600, None, None),
+    {
+        'id': 127,
+        'type': 'AAAA',
+        'name': '',
+        'ipv6': '2001:1:2::3',
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (128, 42, 'AAAA', '*', '2001:1:2::4', 3600, None, None),
+    {
+        'id': 128,
+        'type': 'AAAA',
+        'name': '*',
+        'ipv6': '2001:1:2::4',
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (129, 42, 'MX', '', 'example.com', 3600, None, '10'),
+    {
+        'id': 129,
+        'type': 'MX',
+        'ownername': '',
+        'name': 'example.com',
+        'pref': 10,
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (130, 42, 'NS', '', 'ns3.hostserv.eu', 10800, None, None),
+    {
+        'id': 130,
+        'type': 'NS',
+        'ownername': '',
+        'targetname': 'ns3.hostserv.eu',
+        'ttl': 10800,
+        'comment': '',
+    },
+    # (131, 42, 'NS', '', 'ns2.hostserv.eu', 10800, None, None),
+    {
+        'id': 131,
+        'type': 'NS',
+        'ownername': '',
+        'targetname': 'ns2.hostserv.eu',
+        'ttl': 10800,
+        'comment': '',
+    },
+    # (132, 42, 'NS', '', 'ns1.hostserv.eu', 10800, None, None),
+    {
+        'id': 132,
+        'type': 'NS',
+        'ownername': '',
+        'targetname': 'ns1.hostserv.eu',
+        'ttl': 10800,
+        'comment': '',
+    },
 ]
 
 
@@ -44,30 +120,30 @@ def validate_wsdl_call(conditions):
     return predicate
 
 
-def get_value(root, name):
+def get_wsdl_value(root, name):
     for auth in root.iter(name):
         return auth
     raise Exception('Cannot find child "{0}" in node {1}: {2}'.format(name, root, lxml.etree.tostring(root)))
 
 
-def expect_authentication(username, password):
+def expect_wsdl_authentication(username, password):
     def predicate(content, header, body):
-        auth = get_value(header, lxml.etree.QName('auth', 'authenticate').text)
-        assert get_value(auth, 'UserName').text == username
-        assert get_value(auth, 'Password').text == password
+        auth = get_wsdl_value(header, lxml.etree.QName('auth', 'authenticate').text)
+        assert get_wsdl_value(auth, 'UserName').text == username
+        assert get_wsdl_value(auth, 'Password').text == password
         return True
 
     return predicate
 
 
-def check_nil(node):
+def check_wsdl_nil(node):
     nil_flag = node.get(lxml.etree.QName('http://www.w3.org/2001/XMLSchema-instance', 'nil'))
     if nil_flag != 'true':
         print(nil_flag)
     assert nil_flag == 'true'
 
 
-def check_value(node, value, type=None):
+def check_wsdl_value(node, value, type=None):
     if type is not None:
         type_text = node.get(lxml.etree.QName('http://www.w3.org/2001/XMLSchema-instance', 'type'))
         assert type_text is not None, 'Cannot find type in {0}: {1}'.format(node, lxml.etree.tostring(node))
@@ -85,30 +161,30 @@ def check_value(node, value, type=None):
     assert node.text == value
 
 
-def find_map_entry(map_root, key_name, allow_non_existing=False):
+def find_xml_map_entry(map_root, key_name, allow_non_existing=False):
     for map_entry in map_root.iter('item'):
-        key = get_value(map_entry, 'key')
-        value = get_value(map_entry, 'value')
+        key = get_wsdl_value(map_entry, 'key')
+        value = get_wsdl_value(map_entry, 'value')
         if key.text == key_name:
-            check_value(key, key_name, type=('http://www.w3.org/2001/XMLSchema', 'string'))
+            check_wsdl_value(key, key_name, type=('http://www.w3.org/2001/XMLSchema', 'string'))
             return value
     if allow_non_existing:
         return None
     raise Exception('Cannot find map entry with key "{0}" in node {1}: {2}'.format(key_name, map_root, lxml.etree.tostring(map_root)))
 
 
-def expect_value(path, value, type=None):
+def expect_wsdl_value(path, value, type=None):
     def predicate(content, header, body):
         node = body
         for entry in path:
-            node = get_value(node, entry)
-        check_value(node, value, type=type)
+            node = get_wsdl_value(node, entry)
+        check_wsdl_value(node, value, type=type)
         return True
 
     return predicate
 
 
-def add_answer_start_lines(lines):
+def add_wsdl_answer_start_lines(lines):
     lines.extend([
         '<?xml version="1.0" encoding="UTF-8"?>\n',
         '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"'
@@ -127,14 +203,14 @@ def add_answer_start_lines(lines):
     ])
 
 
-def add_answer_end_lines(lines):
+def add_wsdl_answer_end_lines(lines):
     lines.extend([
         '</SOAP-ENV:Body>',
         '</SOAP-ENV:Envelope>'
     ])
 
 
-def add_dns_record_lines(lines, entry, tag_name):
+def add_wsdl_dns_record_lines(lines, entry, tag_name):
     lines.extend([
         '<{tag_name} xsi:type="ns2:Map">'.format(tag_name=tag_name),
         '<item><key xsi:type="xsd:string">id</key><value xsi:type="xsd:int">{value}</value></item>'.format(value=entry[0]),
@@ -155,9 +231,9 @@ def add_dns_record_lines(lines, entry, tag_name):
     lines.append('</{tag_name}>'.format(tag_name=tag_name))
 
 
-def create_zones_answer(zone_id, zone_name, entries):
+def create_wsdl_zones_answer(zone_id, zone_name, entries):
     lines = []
-    add_answer_start_lines(lines)
+    add_wsdl_answer_start_lines(lines)
     lines.extend([
         '<ns1:getZoneResponse>',
         '<return xsi:type="ns2:Map">',
@@ -179,15 +255,40 @@ def create_zones_answer(zone_id, zone_name, entries):
         '<item><key xsi:type="xsd:string">records</key><value SOAP-ENC:arrayType="ns2:Map[{count}]" xsi:type="SOAP-ENC:Array">'.format(
             count=len(entries)))
     for entry in entries:
-        add_dns_record_lines(lines, entry, 'item')
+        add_wsdl_dns_record_lines(lines, entry, 'item')
     lines.extend([
         '</value>',
         '</item>',
         '</return>',
         '</ns1:getZoneResponse>',
     ])
-    add_answer_end_lines(lines)
+    add_wsdl_answer_end_lines(lines)
     return ''.join(lines)
 
 
-DEFAULT_ZONE_RESULT = create_zones_answer(42, 'example.com', DEFAULT_ENTRIES)
+WSDL_DEFAULT_ZONE_RESULT = create_wsdl_zones_answer(42, 'example.com', WSDL_DEFAULT_ENTRIES)
+
+JSON_ZONE_LIST_RESULT = {
+    "data": [
+        {
+            "id": 42,
+            "name": "example.com",
+            "email": "test@example.com",
+            "ttl": 10800,
+            "nameserver": "ns1.hosttech.ch",
+            "dnssec": False,
+        },
+    ],
+}
+
+JSON_ZONE_GET_RESULT = {
+    "data": {
+        "id": 42,
+        "name": "example.com",
+        "email": "test@example.com",
+        "ttl": 10800,
+        "nameserver": "ns1.hosttech.ch",
+        "dnssec": False,
+        "records": JSON_DEFAULT_ENTRIES,
+    }
+}

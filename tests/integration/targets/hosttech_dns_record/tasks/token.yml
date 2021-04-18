@@ -1,0 +1,105 @@
+---
+- name: Get all NS records
+  hosttech_dns_record_info:
+    zone: '{{ test_zone }}'
+    record: '{{ test_zone }}'
+    type: NS
+    hosttech_token: '{{ hosttech_token }}'
+  register: result
+
+- debug:
+    var: result
+
+- assert:
+    that:
+      - result.set
+
+- name: Ensure that test record is not present
+  hosttech_dns_record:
+    state: present
+    zone: '{{ test_zone }}'
+    record: '{{ test_record }}'
+    type: A
+    ttl: 600
+    value: []
+    overwrite: true
+    hosttech_token: '{{ hosttech_token }}'
+
+- block:
+
+  - name: Get test record
+    hosttech_dns_record_info:
+      zone: '{{ test_zone }}'
+      record: '{{ test_record }}'
+      type: A
+      hosttech_token: '{{ hosttech_token }}'
+    register: rec
+
+  - assert:
+      that:
+        - not rec.set
+
+  - name: Create test record
+    hosttech_dns_record:
+      state: present
+      zone: '{{ test_zone }}'
+      record: '{{ test_record }}'
+      type: A
+      ttl: 600
+      value:
+        - 1.2.3.4
+        - 1.2.3.5
+        - 1.2.3.6
+      overwrite: true
+      hosttech_token: '{{ hosttech_token }}'
+
+  - name: Modify test record
+    hosttech_dns_record:
+      state: present
+      zone: '{{ test_zone }}'
+      record: '{{ test_record }}'
+      type: A
+      ttl: 600
+      value:
+        - 1.2.3.4
+        - 1.2.3.7
+      overwrite: true
+      hosttech_token: '{{ hosttech_token }}'
+
+  - name: Get test record
+    hosttech_dns_record_info:
+      zone: '{{ test_zone }}'
+      record: '{{ test_record }}'
+      type: A
+      hosttech_token: '{{ hosttech_token }}'
+    register: rec
+
+  - assert:
+      that:
+        - rec.set
+        - rec.set.record == test_record
+        - rec.set.type == 'A'
+        - rec.set.ttl == 600
+        - rec.set.value | length == 2
+
+  - name: Delete test record
+    hosttech_dns_record:
+      state: absent
+      zone: '{{ test_zone }}'
+      record: '{{ rec.set.record }}'
+      ttl: '{{ rec.set.ttl }}'
+      type: '{{ rec.set.type }}'
+      value: '{{ rec.set.value }}'
+      hosttech_token: '{{ hosttech_token }}'
+
+  always:
+  - name: Ensure that test record is not present
+    hosttech_dns_record:
+      state: present
+      zone: '{{ test_zone }}'
+      record: '{{ test_record }}'
+      type: A
+      ttl: 600
+      value: []
+      overwrite: true
+      hosttech_token: '{{ hosttech_token }}'

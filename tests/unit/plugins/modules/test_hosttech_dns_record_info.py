@@ -8,6 +8,11 @@ import pytest
 
 from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import patch
 
+from ansible_collections.community.internal_test_tools.tests.unit.utils.fetch_url_module_framework import (
+    BaseTestModule,
+    FetchUrlCall,
+)
+
 from ansible_collections.community.internal_test_tools.tests.unit.utils.open_url_framework import (
     OpenUrlCall,
     OpenUrlProxy,
@@ -24,30 +29,38 @@ from ansible_collections.community.dns.plugins.modules import hosttech_dns_recor
 
 # This import is needed so patching below works
 import ansible_collections.community.dns.plugins.module_utils.wsdl
+import ansible_collections.community.dns.plugins.module_utils.hosttech.json_api
 
 from .helper import (
-    expect_authentication,
-    expect_value,
+    expect_wsdl_authentication,
+    expect_wsdl_value,
     validate_wsdl_call,
-    DEFAULT_ZONE_RESULT,
+    WSDL_DEFAULT_ZONE_RESULT,
+    JSON_ZONE_GET_RESULT,
+    JSON_ZONE_LIST_RESULT,
 )
 
-lxmletree = pytest.importorskip("lxml.etree")
+try:
+    import lxml.etree
+    HAS_LXML_ETREE = True
+except ImportError:
+    HAS_LXML_ETREE = False
 
 
-class TestHosttechDNSRecordInfo(ModuleTestCase):
+@pytest.mark.skipif(not HAS_LXML_ETREE, reason="Need lxml.etree for WSDL tests")
+class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
     def test_get_single(self):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -75,14 +88,14 @@ class TestHosttechDNSRecordInfo(ModuleTestCase):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -120,14 +133,14 @@ class TestHosttechDNSRecordInfo(ModuleTestCase):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -175,7 +188,151 @@ class TestHosttechDNSRecordInfo(ModuleTestCase):
             'record': 'example.com',
             'ttl': 3600,
             'type': 'MX',
-            'value': ['example.com'],
+            'value': ['10 example.com'],
+        }
+        assert sets[5] == {
+            'record': 'example.com',
+            'ttl': 10800,
+            'type': 'NS',
+            'value': ['ns3.hostserv.eu', 'ns2.hostserv.eu', 'ns1.hostserv.eu'],
+        }
+
+
+class TestHosttechDNSRecordInfoJSON(BaseTestModule):
+    MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hosttech_dns_record_info.AnsibleModule'
+    MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.hosttech.json_api.fetch_url'
+
+    def test_get_single(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record_info, {
+            'hosttech_token': 'foo',
+            'zone': 'example.com',
+            'record': 'example.com',
+            'type': 'A',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+        ])
+        print(result)
+        assert result['changed'] is False
+        assert 'set' in result
+        assert result['set']['record'] == 'example.com'
+        assert result['set']['ttl'] == 3600
+        assert result['set']['type'] == 'A'
+        assert result['set']['value'] == ['1.2.3.4']
+        assert 'sets' not in result
+
+    def test_get_all_for_one_record(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record_info, {
+            'hosttech_token': 'foo',
+            'what': 'all_types_for_record',
+            'zone': 'example.com',
+            'record': '*.example.com',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+        ])
+        print(result)
+        assert result['changed'] is False
+        assert 'set' not in result
+        assert 'sets' in result
+        sets = result['sets']
+        assert len(sets) == 2
+        assert sets[0] == {
+            'record': '*.example.com',
+            'ttl': 3600,
+            'type': 'A',
+            'value': ['1.2.3.5'],
+        }
+        assert sets[1] == {
+            'record': '*.example.com',
+            'ttl': 3600,
+            'type': 'AAAA',
+            'value': ['2001:1:2::4'],
+        }
+
+    def test_get_all(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record_info, {
+            'hosttech_token': 'foo',
+            'what': 'all_records',
+            'zone': 'example.com.',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+        ])
+        print(result)
+        assert result['changed'] is False
+        assert 'set' not in result
+        assert 'sets' in result
+        sets = result['sets']
+        assert len(sets) == 6
+        assert sets[0] == {
+            'record': '*.example.com',
+            'ttl': 3600,
+            'type': 'A',
+            'value': ['1.2.3.5'],
+        }
+        assert sets[1] == {
+            'record': '*.example.com',
+            'ttl': 3600,
+            'type': 'AAAA',
+            'value': ['2001:1:2::4'],
+        }
+        assert sets[2] == {
+            'record': 'example.com',
+            'ttl': 3600,
+            'type': 'A',
+            'value': ['1.2.3.4'],
+        }
+        assert sets[3] == {
+            'record': 'example.com',
+            'ttl': 3600,
+            'type': 'AAAA',
+            'value': ['2001:1:2::3'],
+        }
+        assert sets[4] == {
+            'record': 'example.com',
+            'ttl': 3600,
+            'type': 'MX',
+            'value': ['10 example.com'],
         }
         assert sets[5] == {
             'record': 'example.com',

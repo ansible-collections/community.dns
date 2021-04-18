@@ -17,12 +17,20 @@ requirements:
 options:
     hosttech_username:
         description:
-        - The username for the Hosttech API user.
-        required: yes
+          - The username for the Hosttech API user.
+          - If provided, I(hosttech_password) must also be provided.
+          - Mutually exclusive with I(hosttech_token).
         type: str
     hosttech_password:
         description:
-        - The password for the Hosttech API user.
-        required: yes
+          - The password for the Hosttech API user.
+          - If provided, I(hosttech_password) must also be provided.
+          - Mutually exclusive with I(hosttech_token).
         type: str
+    hosttech_token:
+        description:
+          - The password for the Hosttech API user.
+          - Mutually exclusive with I(hosttech_username) and I(hosttech_password).
+        type: str
+        version_added: 0.2.0
 '''
