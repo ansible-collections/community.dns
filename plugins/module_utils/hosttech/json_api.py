@@ -207,8 +207,8 @@ class HostTechJSONAPI(ZoneRecordAPI):
             if status < 200 or status >= 300:
                 more = self._extract_error_message(result)
                 raise DNSAPIError(
-                    'Expected successful HTTP status for {1} {2}, but got HTTP status {3}{4}'.format(
-                        ', '.join(['{0}'.format(e) for e in expected]), method, url, status, more))
+                    'Expected successful HTTP status for {0} {1}, but got HTTP status {2}{3}'.format(
+                        method, url, status, more))
 
     def _process_json_result(self, response, info, must_have_content=True, method='GET', expected=None):
         if isinstance(must_have_content, (list, tuple)):
@@ -226,7 +226,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
         if content_type != 'application/json':
             if must_have_content:
                 raise DNSAPIError(
-                    '{0} {1} did not yield JSON data, but HTTP status code {2} with Content-Type "{2}" and data: {3}'.format(
+                    '{0} {1} did not yield JSON data, but HTTP status code {2} with Content-Type "{3}" and data: {4}'.format(
                         method, info['url'], info['status'], content_type, to_native(content)))
             self._validate(result=content, info=info, expected=expected, method=method)
             return None, info
@@ -361,7 +361,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
         @return The created DNS record (DNSRecord)
         """
         data = _record_to_json(record, include_id=False, include_type=True)
-        result, dummy = self._post('user/v1/zones/{0}/records'.format(zone_id, record.id), data=data, expected=[201])
+        result, dummy = self._post('user/v1/zones/{0}/records'.format(zone_id), data=data, expected=[201])
         return _create_record_from_json(result['data'])
 
     def update_record(self, zone_id, record):
