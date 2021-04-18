@@ -359,6 +359,7 @@ def run_module():
     if module.params.get('state') == 'absent':
         if not mismatch:
             to_delete.extend(records)
+            after = []
 
     # Is there nothing to change?
     if len(to_create) == 0 and len(to_delete) == 0 and len(to_change) == 0:
