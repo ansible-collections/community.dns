@@ -26,118 +26,123 @@ from ansible_collections.community.dns.plugins.modules import hosttech_dns_recor
 import ansible_collections.community.dns.plugins.module_utils.wsdl
 
 from .helper import (
-    add_answer_end_lines,
-    add_answer_start_lines,
-    add_dns_record_lines,
-    check_nil,
-    check_value,
-    expect_authentication,
-    expect_value,
-    find_map_entry,
-    get_value,
+    add_wsdl_answer_end_lines,
+    add_wsdl_answer_start_lines,
+    add_wsdl_dns_record_lines,
+    check_wsdl_nil,
+    check_wsdl_value,
+    expect_wsdl_authentication,
+    expect_wsdl_value,
+    find_xml_map_entry,
+    get_wsdl_value,
     validate_wsdl_call,
-    DEFAULT_ENTRIES,
-    DEFAULT_ZONE_RESULT,
+    WSDL_DEFAULT_ENTRIES,
+    WSDL_DEFAULT_ZONE_RESULT,
 )
 
-lxmletree = pytest.importorskip("lxml.etree")
+try:
+    import lxml.etree
+    HAS_LXML_ETREE = True
+except ImportError:
+    HAS_LXML_ETREE = False
 
 
-def check_record(record_data, entry):
-    check_value(find_map_entry(record_data, 'type'), entry[2], type=('http://www.w3.org/2001/XMLSchema', 'string'))
-    prefix = find_map_entry(record_data, 'prefix')
+def check_wsdl_record(record_data, entry):
+    check_wsdl_value(find_xml_map_entry(record_data, 'type'), entry[2], type=('http://www.w3.org/2001/XMLSchema', 'string'))
+    prefix = find_xml_map_entry(record_data, 'prefix')
     if entry[3]:
-        check_value(prefix, entry[3], type=('http://www.w3.org/2001/XMLSchema', 'string'))
+        check_wsdl_value(prefix, entry[3], type=('http://www.w3.org/2001/XMLSchema', 'string'))
     elif prefix is not None:
-        check_nil(prefix)
-    check_value(find_map_entry(record_data, 'target'), entry[4], type=('http://www.w3.org/2001/XMLSchema', 'string'))
-    check_value(find_map_entry(record_data, 'ttl'), str(entry[5]), type=('http://www.w3.org/2001/XMLSchema', 'int'))
+        check_wsdl_nil(prefix)
+    check_wsdl_value(find_xml_map_entry(record_data, 'target'), entry[4], type=('http://www.w3.org/2001/XMLSchema', 'string'))
+    check_wsdl_value(find_xml_map_entry(record_data, 'ttl'), str(entry[5]), type=('http://www.w3.org/2001/XMLSchema', 'int'))
     if entry[6] is None:
-        comment = find_map_entry(record_data, 'comment', allow_non_existing=True)
+        comment = find_xml_map_entry(record_data, 'comment', allow_non_existing=True)
         if comment is not None:
-            check_nil(comment)
+            check_wsdl_nil(comment)
     else:
-        check_value(find_map_entry(record_data, 'comment'), entry[6], type=('http://www.w3.org/2001/XMLSchema', 'string'))
+        check_wsdl_value(find_xml_map_entry(record_data, 'comment'), entry[6], type=('http://www.w3.org/2001/XMLSchema', 'string'))
     if entry[7] is None:
-        check_nil(find_map_entry(record_data, 'priority'))
+        check_wsdl_nil(find_xml_map_entry(record_data, 'priority'))
     else:
-        check_value(find_map_entry(record_data, 'priority'), entry[7], type=('http://www.w3.org/2001/XMLSchema', 'string'))
+        check_wsdl_value(find_xml_map_entry(record_data, 'priority'), entry[7], type=('http://www.w3.org/2001/XMLSchema', 'string'))
 
 
-def validate_add_request(zone, entry):
+def validate_wsdl_add_request(zone, entry):
     def predicate(content, header, body):
-        fn_data = get_value(body, lxmletree.QName('https://ns1.hosttech.eu/public/api', 'addRecord').text)
-        check_value(get_value(fn_data, 'search'), zone, type=('http://www.w3.org/2001/XMLSchema', 'string'))
-        check_record(get_value(fn_data, 'recorddata'), entry)
+        fn_data = get_wsdl_value(body, lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'addRecord').text)
+        check_wsdl_value(get_wsdl_value(fn_data, 'search'), zone, type=('http://www.w3.org/2001/XMLSchema', 'string'))
+        check_wsdl_record(get_wsdl_value(fn_data, 'recorddata'), entry)
         return True
 
     return predicate
 
 
-def validate_update_request(entry):
+def validate_wsdl_update_request(entry):
     def predicate(content, header, body):
-        fn_data = get_value(body, lxmletree.QName('https://ns1.hosttech.eu/public/api', 'updateRecord').text)
-        check_value(get_value(fn_data, 'recordId'), str(entry[0]), type=('http://www.w3.org/2001/XMLSchema', 'int'))
-        check_record(get_value(fn_data, 'recorddata'), entry)
+        fn_data = get_wsdl_value(body, lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'updateRecord').text)
+        check_wsdl_value(get_wsdl_value(fn_data, 'recordId'), str(entry[0]), type=('http://www.w3.org/2001/XMLSchema', 'int'))
+        check_wsdl_record(get_wsdl_value(fn_data, 'recorddata'), entry)
         return True
 
     return predicate
 
 
-def validate_del_request(entry):
+def validate_wsdl_del_request(entry):
     def predicate(content, header, body):
-        fn_data = get_value(body, lxmletree.QName('https://ns1.hosttech.eu/public/api', 'deleteRecord').text)
-        check_value(get_value(fn_data, 'recordId'), str(entry[0]), type=('http://www.w3.org/2001/XMLSchema', 'int'))
+        fn_data = get_wsdl_value(body, lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'deleteRecord').text)
+        check_wsdl_value(get_wsdl_value(fn_data, 'recordId'), str(entry[0]), type=('http://www.w3.org/2001/XMLSchema', 'int'))
         return True
 
     return predicate
 
 
-def create_add_result(entry):
+def create_wsdl_add_result(entry):
     lines = []
-    add_answer_start_lines(lines)
+    add_wsdl_answer_start_lines(lines)
     lines.append('<ns1:addRecordResponse>')
-    add_dns_record_lines(lines, entry, 'return')
+    add_wsdl_dns_record_lines(lines, entry, 'return')
     lines.append('</ns1:addRecordResponse>')
-    add_answer_end_lines(lines)
+    add_wsdl_answer_end_lines(lines)
     return ''.join(lines)
 
 
-def create_update_result(entry):
+def create_wsdl_update_result(entry):
     lines = []
-    add_answer_start_lines(lines)
+    add_wsdl_answer_start_lines(lines)
     lines.append('<ns1:updateRecordResponse>')
-    add_dns_record_lines(lines, entry, 'return')
+    add_wsdl_dns_record_lines(lines, entry, 'return')
     lines.append('</ns1:updateRecordResponse>')
-    add_answer_end_lines(lines)
+    add_wsdl_answer_end_lines(lines)
     return ''.join(lines)
 
 
-def create_del_result(success):
+def create_wsdl_del_result(success):
     lines = []
-    add_answer_start_lines(lines)
+    add_wsdl_answer_start_lines(lines)
     lines.extend([
         '<ns1:deleteRecordResponse>',
         '<return xsi:type="xsd:boolean">{success}</return>'.format(success='true' if success else 'false'),
         '</ns1:deleteRecordResponse>',
     ])
-    add_answer_end_lines(lines)
+    add_wsdl_answer_end_lines(lines)
     return ''.join(lines)
 
 
-class TestHosttechDNSRecord(ModuleTestCase):
+@pytest.mark.skipif(not HAS_LXML_ETREE, reason="Need lxml.etree for WSDL tests")
+class TestHosttechDNSRecordWSDL(ModuleTestCase):
     def test_idempotency_present(self):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -164,14 +169,14 @@ class TestHosttechDNSRecord(ModuleTestCase):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -198,14 +203,14 @@ class TestHosttechDNSRecord(ModuleTestCase):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -232,14 +237,14 @@ class TestHosttechDNSRecord(ModuleTestCase):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -266,14 +271,14 @@ class TestHosttechDNSRecord(ModuleTestCase):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -297,24 +302,24 @@ class TestHosttechDNSRecord(ModuleTestCase):
         assert e.value.args[0]['changed'] is False
 
     def test_absent(self):
-        record = DEFAULT_ENTRIES[0]
+        record = WSDL_DEFAULT_ENTRIES[0]
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                validate_del_request(record),
+                expect_wsdl_authentication('foo', 'bar'),
+                validate_wsdl_del_request(record),
             ]))
-            .result_str(create_del_result(True)),
+            .result_str(create_wsdl_del_result(True)),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -341,14 +346,14 @@ class TestHosttechDNSRecord(ModuleTestCase):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -377,20 +382,20 @@ class TestHosttechDNSRecord(ModuleTestCase):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                validate_add_request('42', new_entry),
+                expect_wsdl_authentication('foo', 'bar'),
+                validate_wsdl_add_request('42', new_entry),
             ]))
-            .result_str(create_add_result(new_entry)),
+            .result_str(create_wsdl_add_result(new_entry)),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -417,14 +422,14 @@ class TestHosttechDNSRecord(ModuleTestCase):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleFailJson) as e:
@@ -455,26 +460,26 @@ class TestHosttechDNSRecord(ModuleTestCase):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                validate_del_request(del_entry),
+                expect_wsdl_authentication('foo', 'bar'),
+                validate_wsdl_del_request(del_entry),
             ]))
-            .result_str(create_del_result(True)),
+            .result_str(create_wsdl_del_result(True)),
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                validate_update_request(update_entry),
+                expect_wsdl_authentication('foo', 'bar'),
+                validate_wsdl_update_request(update_entry),
             ]))
-            .result_str(create_update_result(update_entry)),
+            .result_str(create_wsdl_update_result(update_entry)),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:

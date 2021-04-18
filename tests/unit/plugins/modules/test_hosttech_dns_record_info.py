@@ -26,28 +26,33 @@ from ansible_collections.community.dns.plugins.modules import hosttech_dns_recor
 import ansible_collections.community.dns.plugins.module_utils.wsdl
 
 from .helper import (
-    expect_authentication,
-    expect_value,
+    expect_wsdl_authentication,
+    expect_wsdl_value,
     validate_wsdl_call,
-    DEFAULT_ZONE_RESULT,
+    WSDL_DEFAULT_ZONE_RESULT,
 )
 
-lxmletree = pytest.importorskip("lxml.etree")
+try:
+    import lxml.etree
+    HAS_LXML_ETREE = True
+except ImportError:
+    HAS_LXML_ETREE = False
 
 
-class TestHosttechDNSRecordInfo(ModuleTestCase):
+@pytest.mark.skipif(not HAS_LXML_ETREE, reason="Need lxml.etree for WSDL tests")
+class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
     def test_get_single(self):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -75,14 +80,14 @@ class TestHosttechDNSRecordInfo(ModuleTestCase):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -120,14 +125,14 @@ class TestHosttechDNSRecordInfo(ModuleTestCase):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
-                expect_authentication('foo', 'bar'),
-                expect_value(
-                    [lxmletree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
                     'example.com',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(DEFAULT_ZONE_RESULT),
+            .result_str(WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
