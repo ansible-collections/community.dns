@@ -176,7 +176,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
     def _build_url(self, url, query=None):
         return '{0}{1}{2}'.format(self._api, url, ('?' + urlencode(query)) if query else '')
 
-    def _extract_message(self, result):
+    def _extract_error_message(self, result):
         if result is None:
             return ''
         if isinstance(result, dict):
@@ -186,7 +186,11 @@ class HostTechJSONAPI(ZoneRecordAPI):
             if 'errors' in result:
                 if isinstance(result['errors'], dict):
                     for k, v in result['errors'].items():
+                        if isinstance(v, list):
+                            v = '; '.join(v)
                         res = '{0} (field "{1}": {2})'.format(res, k, v)
+            if res:
+                return res
         return ' with data: {0}'.format(result)
 
     def _validate(self, response=None, result=None, info=None, expected=None, method='GET'):
@@ -198,8 +202,6 @@ class HostTechJSONAPI(ZoneRecordAPI):
         if expected is not None:
             if status not in expected:
                 more = self._extract_error_message(result)
-                if result is not None:
-                    more = ' with data: {0}'.format(result)
                 raise DNSAPIError(
                     'Expected HTTP status {0} for {1} {2}, but got HTTP status {3}{4}'.format(
                         ', '.join(['{0}'.format(e) for e in expected]), method, url, status, more))
@@ -240,7 +242,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
             return None, info
         # Decode content as JSON
         try:
-            result = self._module.from_json(content.decode('utf8')), info
+            result = self._module.from_json(content.decode('utf8'))
         except Exception:
             if must_have_content:
                 raise DNSAPIError(
@@ -249,7 +251,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
             self._validate(result=content, info=info, expected=expected, method=method)
             return None, info
         self._validate(result=result, info=info, expected=expected, method=method)
-        return result
+        return result, info
 
     def _get(self, url, query=None, must_have_content=True, expected=None):
         full_url = self._build_url(url, query)
