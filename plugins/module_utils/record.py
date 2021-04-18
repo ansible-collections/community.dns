@@ -61,6 +61,9 @@ class DNSRecord(object):
             data.append('comment: {0}'.format(self.comment))
         return 'DNSRecord(' + ', '.join(data) + ')'
 
+    def __repr__(self):
+        return self.__str__()
+
 
 def format_records_for_output(records, record_name):
     ttls = set([record.ttl for record in records]),

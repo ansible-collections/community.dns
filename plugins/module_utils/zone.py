@@ -27,3 +27,6 @@ class DNSZone(object):
         for record in self.records:
             data.append('record: {0}'.format(str(record)))
         return 'DNSZone(\n' + ',\n'.join(['  ' + line for line in data]) + '\n)'
+
+    def __repr__(self):
+        return self.__str__()
