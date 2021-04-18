@@ -45,7 +45,6 @@ def create_record_from_json(source, type=None):
 
     name = source.get('name')
     target = None
-    priority = None
     if result.type == 'A':
         target = source['ipv4']
     elif result.type == 'AAAA':
@@ -56,8 +55,7 @@ def create_record_from_json(source, type=None):
         target = source['cname']
     elif result.type == 'MX':
         name = source['ownername']
-        priority = source['pref']
-        target = source['name']
+        target = '{0} {1}'.format(source['pref'], source['name'])
     elif result.type == 'NS':
         name = source['ownername']
         target = source['targetname']
@@ -66,8 +64,7 @@ def create_record_from_json(source, type=None):
         target = '{0} {1}'.format(source['origin'], source['name'])
     elif result.type == 'SRV':
         name = source['service']
-        priority = source['priority']
-        target = '{0} {1} {2}'.format(source['weight'], source['port'], source['target'])
+        target = '{0} {1} {2} {3}'.format(source['priority'], source['weight'], source['port'], source['target'])
     elif result.type == 'TXT':
         target = source['text']
     elif result.type == 'TLSA':
@@ -77,7 +74,6 @@ def create_record_from_json(source, type=None):
 
     result.prefix = name
     result.target = target
-    result.priority = priority
     return result
 
 
@@ -108,31 +104,52 @@ def record_to_json(record, include_id=False, include_type=True):
         result['ipv6'] = record.target
     elif record.type == 'CAA':
         result['name'] = record.prefix
-        flag, tag, value = record.target.split(' ', 2)
-        result['flag'] = flag
-        result['tag'] = tag
-        result['value'] = value
+        try:
+            flag, tag, value = record.target.split(' ', 2)
+            result['flag'] = flag
+            result['tag'] = tag
+            result['value'] = value
+        except Exception as e:
+            raise HostTechAPIError(
+                'Cannot split {0} record "{1}" into flag, tag and value: {2}'.format(
+                    record.type, record.target, e))
     elif record.type == 'CNAME':
         result['name'] = record.prefix
         result['cname'] = record.target
     elif record.type == 'MX':
         result['ownername'] = record.prefix
-        result['pref'] = record.priority
-        result['name'] = record.target
+        try:
+            pref, name = record.target.split(' ', 1)
+            result['pref'] = int(pref)
+            result['name'] = name
+        except Exception as e:
+            raise HostTechAPIError(
+                'Cannot split {0} record "{1}" into integer preference and name: {2}'.format(
+                    record.type, record.target, e))
     elif record.type == 'NS':
         result['ownername'] = record.prefix
         result['targetname'] = record.target
     elif record.type == 'PTR':
-        origin, name = record.target.split(' ', 1)
-        result['origin'] = origin
-        result['name'] = name
+        try:
+            origin, name = record.target.split(' ', 1)
+            result['origin'] = origin
+            result['name'] = name
+        except Exception as e:
+            raise HostTechAPIError(
+                'Cannot split {0} record "{1}" into origin and name: {2}'.format(
+                    record.type, record.target, e))
     elif record.type == 'SRV':
         result['service'] = record.prefix
-        result['priority'] = record.priority
-        weight, port, target = record.target.split(' ', 2)
-        result['weight'] = int(weight)
-        result['port'] = int(port)
-        result['target'] = target
+        try:
+            priority, weight, port, target = record.target.split(' ', 3)
+            result['priority'] = int(priority)
+            result['weight'] = int(weight)
+            result['port'] = int(port)
+            result['target'] = target
+        except Exception as e:
+            raise HostTechAPIError(
+                'Cannot split {0} record "{1}" into integer priority, integer weight, integer port and target: {2}'.format(
+                    record.type, record.target, e))
     elif record.type == 'TXT':
         result['name'] = record.prefix
         result['text'] = record.target

@@ -299,12 +299,7 @@ def run_module():
     # Parse records
     values = []
     value_in = module.params.get('value')
-    for value in value_in:
-        if type_in in ('PTR', 'MX'):
-            priority, value = value.split(' ', 1)
-            values.append((int(priority), value))
-        else:
-            values.append((None, value))
+    values = value_in[:]
 
     # Compare records
     ttl_in = module.params.get('ttl')
@@ -316,7 +311,7 @@ def run_module():
             mismatch = True
             mismatch_records.append(record)
             continue
-        val = (record.priority, record.target)
+        val = record.target
         if val in values:
             values.remove(val)
             keep_records.append(record)
@@ -341,7 +336,7 @@ def run_module():
                 to_delete.extend(mismatch_records)
             else:
                 module.fail_json(msg="Record already exists with different value. Set 'overwrite' to replace it")
-        for priority, target in values:
+        for target in values:
             if to_delete:
                 # If there's a record to delete, change it to new record
                 record = to_delete.pop()
@@ -353,7 +348,6 @@ def run_module():
             record.prefix = prefix
             record.type = type_in
             record.ttl = ttl_in
-            record.priority = priority
             record.target = target
             after.append(record)
     if module.params.get('state') == 'absent':

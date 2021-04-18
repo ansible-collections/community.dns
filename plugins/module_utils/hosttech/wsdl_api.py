@@ -40,9 +40,11 @@ def create_record_from_encoding(source, type=None):
     result.id = source['id']
     result.type = source.get('type', type)
     result.prefix = source.get('prefix')
-    result.target = source.get('target')
     result.ttl = int(source['ttl']) if source['ttl'] is not None else None
-    result.priority = source.get('priority')
+    if result.type in ('PTR', 'MX'):
+        result.target = '{0} {1}'.format(source.get('priority'), source.get('target'))
+    else:
+        result.target = source.get('target')
     return result
 
 
@@ -63,8 +65,18 @@ def encode_record(record, include_id=False):
         'prefix': record.prefix,
         'target': record.target,
         'ttl': record.ttl,
-        'priority': record.priority,
     }
+    if record.type in ('PTR', 'MX'):
+        try:
+            priority, target = record.target.split(' ', 1)
+            result['priority'] = int(priority)
+            result['target'] = target
+        except Exception as e:
+            raise HostTechAPIError(
+                'Cannot split {0} record "{1}" into integer priority and target: {2}'.format(
+                    record.type, record.target, e))
+    else:
+        result['priority'] = None
     if include_id:
         result['id'] = record.id
     return result
