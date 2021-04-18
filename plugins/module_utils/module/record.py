@@ -124,7 +124,7 @@ def run_module(module, create_api):
             record.target = target
             after.append(record)
     if module.params.get('state') == 'absent':
-        if not mismatch:
+        if not mismatch or module.params.get('overwrite'):
             to_delete.extend(records)
             after = []
 
