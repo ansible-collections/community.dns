@@ -29,6 +29,7 @@ from ansible_collections.community.dns.plugins.modules import hosttech_dns_recor
 
 # This import is needed so patching below works
 import ansible_collections.community.dns.plugins.module_utils.wsdl
+import ansible_collections.community.dns.plugins.module_utils.hosttech.json_api
 
 from .helper import (
     expect_wsdl_authentication,

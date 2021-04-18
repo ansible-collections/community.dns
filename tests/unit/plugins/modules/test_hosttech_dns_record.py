@@ -29,6 +29,7 @@ from ansible_collections.community.dns.plugins.modules import hosttech_dns_recor
 
 # This import is needed so patching below works
 import ansible_collections.community.dns.plugins.module_utils.wsdl
+import ansible_collections.community.dns.plugins.module_utils.hosttech.json_api
 
 from .helper import (
     add_wsdl_answer_end_lines,
@@ -43,6 +44,9 @@ from .helper import (
     validate_wsdl_call,
     WSDL_DEFAULT_ENTRIES,
     WSDL_DEFAULT_ZONE_RESULT,
+    JSON_DEFAULT_ENTRIES,
+    JSON_ZONE_GET_RESULT,
+    JSON_ZONE_LIST_RESULT,
 )
 
 try:
@@ -519,6 +523,409 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
             'value': ['ns1.hostserv.eu', 'ns2.hostserv.eu', 'ns3.hostserv.eu'],
         }
         assert e.value.args[0]['diff']['after'] == {
+            'record': 'example.com',
+            'type': 'NS',
+            'ttl': 10800,
+            'value': ['ns1.hostserv.eu', 'ns4.hostserv.eu'],
+        }
+
+
+class TestHosttechDNSRecordJSON(BaseTestModule):
+    MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hosttech_dns_record.AnsibleModule'
+    MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.hosttech.json_api.fetch_url'
+
+    def test_idempotency_present(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'present',
+            'zone': 'example.com',
+            'record': 'example.com',
+            'type': 'MX',
+            'ttl': 3600,
+            'value': [
+                '10 example.com',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+        ])
+
+        print(result)
+        assert result['changed'] is False
+
+    def test_idempotency_absent_value(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'absent',
+            'zone': 'example.com',
+            'record': '*.example.com',
+            'type': 'A',
+            'ttl': 3600,
+            'value': [
+                '1.2.3.6',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+        ])
+
+        print(result)
+        assert result['changed'] is False
+
+    def test_idempotency_absent_ttl(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'absent',
+            'zone': 'example.com',
+            'record': '*.example.com',
+            'type': 'A',
+            'ttl': 1800,
+            'value': [
+                '1.2.3.5',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+        ])
+
+        print(result)
+        assert result['changed'] is False
+
+    def test_idempotency_absent_type(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'absent',
+            'zone': 'example.com',
+            'record': 'example.com',
+            'type': 'CAA',
+            'ttl': 3600,
+            'value': [
+                'something',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+        ])
+
+        print(result)
+        assert result['changed'] is False
+
+    def test_idempotency_absent_record(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'absent',
+            'zone': 'example.com.',
+            'record': 'somewhere.example.com.',
+            'type': 'A',
+            'ttl': 3600,
+            'value': [
+                '1.2.3.6',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+        ])
+
+        print(result)
+        assert result['changed'] is False
+
+    def test_absent(self, mocker):
+        record = JSON_DEFAULT_ENTRIES[0]
+        result = self.run_module_success(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'absent',
+            'zone': 'example.com',
+            'record': record['name'] + 'example.com',
+            'type': record['type'],
+            'ttl': record['ttl'],
+            'value': [
+                record['ipv4'],
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+            FetchUrlCall('DELETE', 204)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/{0}'.format(record['id']))
+            .result_str(''),
+        ])
+
+        print(result)
+        assert result['changed'] is True
+
+    def test_change_add_one_check_mode(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'present',
+            'zone': 'example.com',
+            'record': 'example.com',
+            'type': 'CAA',
+            'ttl': 3600,
+            'value': [
+                'test',
+            ],
+            '_ansible_check_mode': True,
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+        ])
+
+        print(result)
+        assert result['changed'] is True
+
+    def test_change_add_one(self, mocker):
+        new_entry = (131, 42, 'CAA', '', 'test', 3600, None, None)
+        result = self.run_module_success(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'present',
+            'zone': 'example.com',
+            'record': 'example.com',
+            'type': 'CAA',
+            'ttl': 3600,
+            'value': [
+                '128 issue letsencrypt.org xxx',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+            FetchUrlCall('POST', 201)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'CAA')
+            .expect_json_value(['ttl'], 3600)
+            .expect_json_value(['comment'], '')
+            .expect_json_value(['name'], '')
+            .expect_json_value(['flag'], '128')
+            .expect_json_value(['tag'], 'issue')
+            .expect_json_value(['value'], 'letsencrypt.org xxx')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'data': {
+                    'id': 133,
+                    'type': 'CAA',
+                    'name': '',
+                    'flag': '128',
+                    'tag': 'issue',
+                    'value': 'letsencrypt.org xxx',
+                    'ttl': 3600,
+                    'comment': '',
+                },
+            }),
+        ])
+
+        print(result)
+        assert result['changed'] is True
+
+    def test_change_modify_list_fail(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'present',
+            'zone': 'example.com',
+            'record': 'example.com',
+            'type': 'NS',
+            'ttl': 10800,
+            'value': [
+                'ns1.hostserv.eu',
+                'ns4.hostserv.eu',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+        ])
+
+        print(result)
+        assert result['msg'] == "Record already exists with different value. Set 'overwrite' to replace it"
+
+    def test_change_modify_list(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'present',
+            'zone': 'example.com',
+            'record': 'example.com',
+            'type': 'NS',
+            'ttl': 10800,
+            'value': [
+                'ns1.hostserv.eu',
+                'ns4.hostserv.eu',
+            ],
+            'overwrite': True,
+            '_ansible_diff': True,
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+            FetchUrlCall('DELETE', 204)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/130')
+            .result_str(''),
+            FetchUrlCall('PUT', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/131')
+            .expect_json_value_absent(['id'])
+            .expect_json_value_absent(['type'])
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['comment'], '')
+            .expect_json_value(['ownername'], '')
+            .expect_json_value(['targetname'], 'ns4.hostserv.eu')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'data': {
+                    'id': 131,
+                    'type': 'NS',
+                    'ownername': '',
+                    'targetname': 'ns4.hostserv.eu',
+                    'ttl': 10800,
+                    'comment': '',
+                },
+            }),
+        ])
+
+        print(result)
+        assert result['changed'] is True
+        assert 'diff' in result
+        assert 'before' in result['diff']
+        assert 'after' in result['diff']
+        assert result['diff']['before'] == {
+            'record': 'example.com',
+            'type': 'NS',
+            'ttl': 10800,
+            'value': ['ns1.hostserv.eu', 'ns2.hostserv.eu', 'ns3.hostserv.eu'],
+        }
+        assert result['diff']['after'] == {
             'record': 'example.com',
             'type': 'NS',
             'ttl': 10800,
