@@ -3,6 +3,8 @@
 # Copyright (c) 2017-2021 Felix Fontein
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
+# The API documentation can be found here: https://api.ns1.hosttech.eu/api/documentation/
+
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -23,6 +25,7 @@ from ansible_collections.community.dns.plugins.module_utils.zone import (
 )
 
 from ansible_collections.community.dns.plugins.module_utils.hosttech.errors import (
+    HostTechError,
     HostTechAPIError,
     HostTechAPIAuthError,
 )
@@ -153,33 +156,69 @@ class HostTechJSONAPI(HostTechAPI):
         self._token = token
         self._debug = debug
 
-    def _announce(self, msg):
-        if self._debug:
-            pass
-            # q.q('{0} {1} {2}'.format('=' * 4, msg, '=' * 40))
-
     def _build_url(self, url, query=None):
         return '{0}{1}{2}'.format(self._api, url, ('?' + urlencode(query)) if query else '')
 
-    def _execute(self, command, result_name, acceptable_types):
-        if self._debug:
-            pass
-            # q.q('Request: {0}'.format(command))
-        # TODO implement!
-
-    def _process_json_result(self, response, info, full_url, must_have_content=True):
+    def _process_json_result(self, response, info, must_have_content=True, method='GET'):
+        # Read content
         try:
             content = response.read()
         except AttributeError:
             content = info.pop('body', None)
+        # Check Content-Type header
+        content_type = info.get('content-type')
+        for k, v in info.items():
+            if k.lower() == 'content-type':
+                content_type = v
+        if content_type != 'application/json':
+            if must_have_content:
+                raise HostTechAPIError(
+                    '{0} {1} did not yield JSON data, but HTTP status code {2} with Content-Type "{2}" and data: {3}'.format(
+                        method, info['url'], info['status'], content_type, to_native(content)))
+            return None, info
+        # Decode content as JSON
         try:
             return self._module.from_json(content.decode('utf8')), info
         except Exception:
             if must_have_content:
-                self._module.fail_json(
-                    'GET {0} did not yield JSON data, but HTTP status code {1} with data: {2}'.format(
-                        full_url, info['status'], to_native(content)))
+                raise HostTechAPIError(
+                    '{0} {1} did not yield JSON data, but HTTP status code {2} with data: {3}'.format(
+                        method, info['url'], info['status'], to_native(content)))
             return None, info
+
+    def _extract_message(self, result):
+        if result is None:
+            return ''
+        if isinstance(result, dict):
+            res = ''
+            if 'message' in result:
+                res = '{0} with message "{1}"'.format(res, result['message'])
+            if 'errors' in result:
+                if isinstance(result['errors'], dict):
+                    for k, v in result['errors'].items():
+                        res = '{0} (field "{1}": {2})'.format(res, k, v)
+        return ' with data: {0}'.format(result)
+
+    def _validate(self, response=None, result=None, info=None, expected=None, method='GET'):
+        if info is None:
+            raise HostTechError('Internal error: info needs to be provided')
+        status = info['status']
+        url = info['url']
+        # Check expected status
+        if expected is not None:
+            if status not in expected:
+                more = self._extract_error_message(result)
+                if result is not None:
+                    more = ' with data: {0}'.format(result)
+                raise HostTechAPIError(
+                    'Expected HTTP status {0} for {1} {2}, but got HTTP status {3}{4}'.format(
+                        ', '.join(['{0}'.format(e) for e in expected]), method, url, status, more))
+        else:
+            if status < 200 or status >= 300:
+                more = self._extract_error_message(result)
+                raise HostTechAPIError(
+                    'Expected successful HTTP status for {1} {2}, but got HTTP status {3}{4}'.format(
+                        ', '.join(['{0}'.format(e) for e in expected]), method, url, status, more))
 
     def _get(self, url, query=None, must_have_content=True):
         full_url = self._build_url(url, query)
@@ -191,7 +230,7 @@ class HostTechJSONAPI(HostTechAPI):
             authorization='Bearer {token}'.format(token=self._token),
         )
         response, info = fetch_url(self._module, full_url, headers=headers)
-        return self._process_json_result(response, info, full_url, must_have_content=must_have_content)
+        return self._process_json_result(response, info, must_have_content=must_have_content, method='GET')
 
     def _post(self, url, data=None, query=None, must_have_content=True):
         full_url = self._build_url(url, query)
@@ -207,7 +246,7 @@ class HostTechJSONAPI(HostTechAPI):
             headers['content-type'] = 'application/json'
             encoded_data = json.dumps(data).encode('utf-8')
         response, info = fetch_url(self._module, full_url, headers=headers, method='POST', data=encoded_data)
-        return self._process_json_result(response, info, full_url, must_have_content=must_have_content)
+        return self._process_json_result(response, info, must_have_content=must_have_content, method='POST')
 
     def _put(self, url, data=None, query=None, must_have_content=True):
         full_url = self._build_url(url, query)
@@ -223,7 +262,7 @@ class HostTechJSONAPI(HostTechAPI):
             headers['content-type'] = 'application/json'
             encoded_data = json.dumps(data).encode('utf-8')
         response, info = fetch_url(self._module, full_url, headers=headers, method='PUT', data=encoded_data)
-        return self._process_json_result(response, info, full_url, must_have_content=must_have_content)
+        return self._process_json_result(response, info, must_have_content=must_have_content, method='PUT')
 
     def _delete(self, url, query=None, must_have_content=True):
         full_url = self._build_url(url, query)
@@ -235,7 +274,7 @@ class HostTechJSONAPI(HostTechAPI):
             authorization='Bearer {token}'.format(token=self._token),
         )
         response, info = fetch_url(self._module, full_url, headers=headers, method='DELETE')
-        # TODO check status 204
+        self._validate(response=response, info=info, expected=[204], method='DELETE')
 
     def _list_pagination(self, url, query=None):
         result = []
@@ -246,14 +285,15 @@ class HostTechJSONAPI(HostTechAPI):
             query_['limit'] = block_size
             query_['offset'] = offset
             res, info = self._get(url, query_, must_have_content=True)
+            self._validate(result=res, info=info, expected=[200], method='GET')
             result.extend(res['data'])
             if len(res) < block_size:
                 return result
             offset += block_size
 
     def _get_zone_by_id(self, zone_id):
-        self._announce('get zone by id')
         result, info = self._get('user/v1/zones/{0}'.format(zone_id))
+        self._validate(result=result, info=info, expected=[200], method='GET')
         return create_zone_from_json(result['data'])
 
     def get_zone(self, search):
@@ -263,7 +303,6 @@ class HostTechJSONAPI(HostTechAPI):
         @param search: The search string, i.e. a zone name or ID (string)
         @return The zone information (DNSZone)
         """
-        self._announce('get zone')
         result = self._list_pagination('user/v1/zones', query=dict(query=search))
         for zone in result:
             if zone['name'] == search or str(zone['id']) == search:
@@ -278,9 +317,9 @@ class HostTechJSONAPI(HostTechAPI):
         @param record: The DNS record (DNSRecord)
         @return The created DNS record (DNSRecord)
         """
-        self._announce('add record')
         data = record_to_json(record, include_id=False, include_type=True)
-        result, info = self._put('user/v1/zones/{0}/records'.format(zone_id, record.id), data=data)
+        result, info = self._post('user/v1/zones/{0}/records'.format(zone_id, record.id), data=data)
+        self._validate(result=result, info=info, expected=[201], method='POST')
 
     def update_record(self, zone_id, record):
         """
@@ -292,9 +331,9 @@ class HostTechJSONAPI(HostTechAPI):
         """
         if record.id is None:
             raise HostTechAPIError('Need record ID to update record!')
-        self._announce('update record')
         data = record_to_json(record, include_id=False, include_type=False)
         result, info = self._put('user/v1/zones/{0}/records/{1}'.format(zone_id, record.id), data=data)
+        self._validate(result=result, info=info, expected=[200], method='PUT')
 
     def delete_record(self, zone_id, record):
         """
@@ -306,5 +345,4 @@ class HostTechJSONAPI(HostTechAPI):
         """
         if record.id is None:
             raise HostTechAPIError('Need record ID to delete record!')
-        self._announce('delete record')
-        result, info = self._delete('user/v1/zones/{0}/records/{1}'.format(zone_id, record.id))
+        self._delete('user/v1/zones/{0}/records/{1}'.format(zone_id, record.id))
