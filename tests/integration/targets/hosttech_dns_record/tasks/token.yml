@@ -20,7 +20,7 @@
     zone: '{{ test_zone }}'
     record: '{{ test_record }}'
     type: A
-    ttl: 300
+    ttl: 600
     value: []
     overwrite: true
     hosttech_token: '{{ hosttech_token }}'
@@ -45,7 +45,7 @@
       zone: '{{ test_zone }}'
       record: '{{ test_record }}'
       type: A
-      ttl: 300
+      ttl: 600
       value:
         - 1.2.3.4
         - 1.2.3.5
@@ -59,7 +59,7 @@
       zone: '{{ test_zone }}'
       record: '{{ test_record }}'
       type: A
-      ttl: 300
+      ttl: 600
       value:
         - 1.2.3.4
         - 1.2.3.7
@@ -79,7 +79,7 @@
         - rec.set
         - rec.set.record == test_record
         - rec.set.type == 'A'
-        - rec.set.ttl == 300
+        - rec.set.ttl == 600
         - rec.set.value | length == 2
 
   - name: Delete test record
@@ -99,7 +99,7 @@
       zone: '{{ test_zone }}'
       record: '{{ test_record }}'
       type: A
-      ttl: 300
+      ttl: 600
       value: []
       overwrite: true
       hosttech_token: '{{ hosttech_token }}'
