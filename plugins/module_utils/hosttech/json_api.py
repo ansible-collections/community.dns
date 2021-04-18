@@ -67,7 +67,7 @@ def _create_record_from_json(source, type=None):
     else:
         raise DNSAPIError('Cannot parse unknown record type: {0}'.format(result.type))
 
-    result.prefix = name
+    result.prefix = name or None  # API returns '', we want None
     result.target = target
     return result
 
