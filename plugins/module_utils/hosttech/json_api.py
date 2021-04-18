@@ -218,6 +218,14 @@ class HostTechJSONAPI(ZoneRecordAPI):
             content = response.read()
         except AttributeError:
             content = info.pop('body', None)
+        # Check for unauthenticated
+        if info['status'] == 401:
+            message = 'Unauthorized (HTTP status 401)'
+            try:
+                message = '{0}: {1}'.format(message, self._module.from_json(content.decode('utf8'))['message'])
+            except Exception:
+                pass
+            raise DNSAPIAuthenticationError(message)
         # Check Content-Type header
         content_type = info.get('content-type')
         for k, v in info.items():

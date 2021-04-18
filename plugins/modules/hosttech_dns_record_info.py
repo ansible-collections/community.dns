@@ -122,7 +122,7 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech.api import 
     create_hosttech_api,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.module.record import (
+from ansible_collections.community.dns.plugins.module_utils.module.record_info import (
     run_module,
     create_module_argument_spec,
 )

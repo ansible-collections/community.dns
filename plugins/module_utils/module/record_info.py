@@ -9,6 +9,8 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 
+import traceback
+
 from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
 )
@@ -102,6 +104,6 @@ def run_module(module, create_api):
                 sets=data,
             )
     except DNSAPIAuthenticationError as e:
-        module.fail_json(msg='Cannot authenticate: {0}'.format(e), exception=e)
+        module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=str(e), exception=traceback.format_exc())
     except DNSAPIError as e:
-        module.fail_json(msg='Error: {0}'.format(e), error=str(e))
+        module.fail_json(msg='Error: {0}'.format(e), error=str(e), exception=traceback.format_exc())
