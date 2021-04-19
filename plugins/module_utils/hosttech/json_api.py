@@ -309,9 +309,8 @@ class HostTechJSONAPI(ZoneRecordAPI):
         response, info = fetch_url(self._module, full_url, headers=headers, method='DELETE')
         return self._process_json_result(response, info, must_have_content=must_have_content, method='DELETE', expected=expected)
 
-    def _list_pagination(self, url, query=None):
+    def _list_pagination(self, url, query=None, block_size=100):
         result = []
-        block_size = 100
         offset = 0
         while True:
             query_ = query.copy() if query else dict()
@@ -319,7 +318,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
             query_['offset'] = offset
             res, info = self._get(url, query_, must_have_content=True, expected=[200])
             result.extend(res['data'])
-            if len(res) < block_size:
+            if len(res['data']) < block_size:
                 return result
             offset += block_size
 

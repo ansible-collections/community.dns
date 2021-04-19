@@ -1,0 +1,60 @@
+# -*- coding: utf-8 -*-
+# (c) 2021, Felix Fontein <felix@fontein.de>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# Make coding more python3-ish
+from __future__ import absolute_import, division, print_function
+
+__metaclass__ = type
+
+
+import pytest
+
+from ansible_collections.community.dns.plugins.module_utils.record import (
+    DNSRecord,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.zone import (
+    DNSZone,
+    DNSZoneWithRecords,
+)
+
+
+def test_zone_str_repr():
+    Z1 = DNSZone('foo')
+    assert str(Z1) == 'DNSZone(name: foo)'
+    assert repr(Z1) == 'DNSZone(name: foo)'
+    Z2 = DNSZone('foo')
+    Z2.id = 42
+    assert str(Z2) == 'DNSZone(id: 42, name: foo)'
+    assert repr(Z2) == 'DNSZone(id: 42, name: foo)'
+
+
+def test_zone_with_records_str_repr():
+    Z1 = DNSZone('foo')
+    Z2 = DNSZone('foo')
+    Z2.id = 42
+    A1 = DNSRecord()
+    A1.prefix = None
+    A1.type = 'A'
+    A1.ttl = 300
+    A1.target = '1.2.3.4'
+    A2 = DNSRecord()
+    A2.id = 23
+    A2.prefix = 'bar'
+    A2.type = 'A'
+    A2.ttl = 1
+    A2.target = ''
+    A2.comment = 'test'
+    ZZ1 = DNSZoneWithRecords(Z1, [A1])
+    ZZ2 = DNSZoneWithRecords(Z2, [A1, A2])
+    assert str(ZZ1) == '(DNSZone(name: foo), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)])'
+    assert repr(ZZ1) == 'DNSZoneWithRecords(DNSZone(name: foo), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)])'
+    assert str(ZZ2) == (
+        '(DNSZone(id: 42, name: foo), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m),'
+        ' DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, comment: test)])'
+    )
+    assert repr(ZZ2) == (
+        'DNSZoneWithRecords(DNSZone(id: 42, name: foo), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m),'
+        ' DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, comment: test)])'
+    )
