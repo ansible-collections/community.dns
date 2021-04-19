@@ -27,6 +27,6 @@ def get_prefix(normalized_record, normalized_zone):
     if not normalized_record.endswith('.' + normalized_zone) and normalized_record != normalized_zone:
         raise DNSAPIError('Record must be in zone')
     if normalized_record == normalized_zone:
-        return None, normalized_record
+        return None
     else:
-        return normalized_record[:len(normalized_record) - len(normalized_zone) - 1], normalized_record
+        return normalized_record[:len(normalized_record) - len(normalized_zone) - 1]

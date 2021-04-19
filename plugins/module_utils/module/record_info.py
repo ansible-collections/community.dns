@@ -61,7 +61,8 @@ def run_module(module, create_api):
 
         if module.params.get('what') == 'single_record':
             # Extract prefix
-            prefix, record_in = get_prefix(normalize_dns_name(module.params.get('record')), zone_in)
+            record_in = normalize_dns_name(module.params.get('record'))
+            prefix = get_prefix(record_in, zone_in)
 
             # Find matching records
             type_in = module.params.get('type')
@@ -80,7 +81,7 @@ def run_module(module, create_api):
             # Extract prefix if necessary
             if module.params.get('what') == 'all_types_for_record':
                 check_prefix = True
-                prefix, dummy = get_prefix(normalize_dns_name(module.params.get('record')), zone_in)
+                prefix = get_prefix(normalize_dns_name(module.params.get('record')), zone_in)
             else:
                 check_prefix = False
                 prefix = None

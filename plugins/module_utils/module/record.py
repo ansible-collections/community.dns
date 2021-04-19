@@ -52,7 +52,7 @@ def run_module(module, create_api):
 
     try:
         # Convert record to prefix
-        prefix, dummy = get_prefix(record_in, zone_in)
+        prefix = get_prefix(record_in, zone_in)
         # Create API
         api = create_api()
         # Get zone information
