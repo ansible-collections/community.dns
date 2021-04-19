@@ -12,6 +12,14 @@ import pytest
 
 from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import MagicMock, patch
 
+from ansible_collections.community.dns.plugins.module_utils.record import (
+    DNSRecord,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
+    DNSAPIError,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.hosttech.json_api import (
     _create_record_from_json,
     _record_to_json,
@@ -79,6 +87,11 @@ def test_CAA():
     assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
 
+    record.target = '0\tissue letsencrypt.org'
+    with pytest.raises(DNSAPIError) as exc:
+        _record_to_json(record)
+    assert exc.value.args[0].startswith('Cannot split CAA record "0\tissue letsencrypt.org" into flag, tag and value: ')
+
 
 def test_CNAME():
     data = {
@@ -117,6 +130,16 @@ def test_MX():
     assert record.ttl == 3600
     assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
+
+    record.target = 'mail.example.com'
+    with pytest.raises(DNSAPIError) as exc:
+        _record_to_json(record)
+    assert exc.value.args[0].startswith('Cannot split MX record "mail.example.com" into integer preference and name: ')
+
+    record.target = 'x mail.example.com'
+    with pytest.raises(DNSAPIError) as exc:
+        _record_to_json(record)
+    assert exc.value.args[0].startswith('Cannot split MX record "x mail.example.com" into integer preference and name: ')
 
 
 def test_NS():
@@ -158,6 +181,11 @@ def test_PTR():
     assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
 
+    record.target = 'smtp.example.com'
+    with pytest.raises(DNSAPIError) as exc:
+        _record_to_json(record)
+    assert exc.value.args[0].startswith('Cannot split PTR record "smtp.example.com" into origin and name: ')
+
 
 def test_SRV():
     data = {
@@ -179,6 +207,30 @@ def test_SRV():
     assert record.ttl == 3600
     assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
+
+    record.target = '1 443 exchange.example.com'
+    with pytest.raises(DNSAPIError) as exc:
+        _record_to_json(record)
+    assert exc.value.args[0].startswith(
+        'Cannot split SRV record "1 443 exchange.example.com" into integer priority, integer weight, integer port and target: ')
+
+    record.target = 'x 1 443 exchange.example.com'
+    with pytest.raises(DNSAPIError) as exc:
+        _record_to_json(record)
+    assert exc.value.args[0].startswith(
+        'Cannot split SRV record "x 1 443 exchange.example.com" into integer priority, integer weight, integer port and target: ')
+
+    record.target = '0 x 443 exchange.example.com'
+    with pytest.raises(DNSAPIError) as exc:
+        _record_to_json(record)
+    assert exc.value.args[0].startswith(
+        'Cannot split SRV record "0 x 443 exchange.example.com" into integer priority, integer weight, integer port and target: ')
+
+    record.target = '0 1 x exchange.example.com'
+    with pytest.raises(DNSAPIError) as exc:
+        _record_to_json(record)
+    assert exc.value.args[0].startswith(
+        'Cannot split SRV record "0 1 x exchange.example.com" into integer priority, integer weight, integer port and target: ')
 
 
 def test_TXT():
@@ -219,6 +271,25 @@ def test_TLSA():
     assert _record_to_json(record, include_id=True) == data
 
 
+def test_unknown_records():
+    data = {
+        "id": 17,
+        "type": "unknown",
+        "name": "",
+        "ttl": 3600,
+        "comment": "my first record",
+    }
+    with pytest.raises(DNSAPIError) as exc:
+        _create_record_from_json(data)
+    assert exc.value.args[0] == 'Cannot parse unknown record type: unknown'
+
+    record = DNSRecord()
+    record.type = 'unknown'
+    with pytest.raises(DNSAPIError) as exc:
+        _record_to_json(record)
+    assert exc.value.args[0] == 'Cannot serialize unknown record type: unknown'
+
+
 def test_list_pagination():
     def get_1(url, query=None, must_have_content=True, expected=None):
         assert url == 'https://example.com'
@@ -256,3 +327,17 @@ def test_list_pagination():
     api._get = MagicMock(side_effect=get_2)
     result = api._list_pagination('https://example.com', query=dict(foo='bar'), block_size=2)
     assert result == ['bar', 'baz', 'foo']
+
+
+def test_update_id_missing():
+    api = HostTechJSONAPI(MagicMock(), '123')
+    with pytest.raises(DNSAPIError) as exc:
+        api.update_record(1, DNSRecord())
+    assert exc.value.args[0] == 'Need record ID to update record!'
+
+
+def test_update_id_delete():
+    api = HostTechJSONAPI(MagicMock(), '123')
+    with pytest.raises(DNSAPIError) as exc:
+        api.delete_record(1, DNSRecord())
+    assert exc.value.args[0] == 'Need record ID to delete record!'

@@ -266,7 +266,32 @@ def create_wsdl_zones_answer(zone_id, zone_name, entries):
     return ''.join(lines)
 
 
+def create_wsdl_zone_not_found_answer():
+    lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>\n',
+        '<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"'
+        ' xmlns:ns1="https://ns1.hosttech.eu/public/api"'
+        ' xmlns:xsd="http://www.w3.org/2001/XMLSchema"'
+        ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
+        ' xmlns:ns2="http://xml.apache.org/xml-soap"'
+        ' xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"'
+        ' SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">',
+        '<SOAP-ENV:Header>',
+        '<ns1:authenticateResponse>',
+        '<return xsi:type="xsd:boolean">true</return>',
+        '</ns1:authenticateResponse>',
+        '</SOAP-ENV:Header>',
+        '<SOAP-ENV:Fault>',
+        '<faultstring>zone not found</faultstring>'
+        '</SOAP-ENV:Fault>',
+        '</SOAP-ENV:Envelope>'
+    ]
+    return ''.join(lines)
+
+
 WSDL_DEFAULT_ZONE_RESULT = create_wsdl_zones_answer(42, 'example.com', WSDL_DEFAULT_ENTRIES)
+
+WSDL_ZONE_NOT_FOUND = create_wsdl_zone_not_found_answer()
 
 JSON_ZONE_LIST_RESULT = {
     "data": [

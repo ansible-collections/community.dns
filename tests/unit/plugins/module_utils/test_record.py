@@ -64,6 +64,7 @@ def test_format_records_for_output():
         'record': 'foo',
         'type': 'A',
         'ttl': 300,
+        'ttls': [300, 3600],
         'value': ['1.2.3.6', '1.2.3.4'],
     }
     assert format_records_for_output([A3], 'foo') == {
@@ -82,12 +83,14 @@ def test_format_records_for_output():
         'record': 'foo',
         'type': 'A',
         'ttl': 600,
+        'ttls': [600, 3600],
         'value': ['1.2.3.6', '::1'],
     }
     assert format_records_for_output([AAAA, A3], 'foo') == {
         'record': 'foo',
         'type': 'A',
         'ttl': 600,
+        'ttls': [600, 3600],
         'value': ['::1', '1.2.3.6'],
     }
 

@@ -22,7 +22,7 @@ from ansible_collections.community.internal_test_tools.tests.unit.plugins.module
     set_module_args,
     ModuleTestCase,
     AnsibleExitJson,
-    # AnsibleFailJson,
+    AnsibleFailJson,
 )
 
 from ansible_collections.community.dns.plugins.modules import hosttech_dns_record_info
@@ -36,6 +36,7 @@ from .helper import (
     expect_wsdl_value,
     validate_wsdl_call,
     WSDL_DEFAULT_ZONE_RESULT,
+    WSDL_ZONE_NOT_FOUND,
     JSON_ZONE_GET_RESULT,
     JSON_ZONE_LIST_RESULT,
 )
@@ -49,6 +50,35 @@ except ImportError:
 
 @pytest.mark.skipif(not HAS_LXML_ETREE, reason="Need lxml.etree for WSDL tests")
 class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
+    def test_unknown_zone(self):
+        open_url = OpenUrlProxy([
+            OpenUrlCall('POST', 200)
+            .expect_content_predicate(validate_wsdl_call([
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                    'example.org',
+                    ('http://www.w3.org/2001/XMLSchema', 'string')
+                ),
+            ]))
+            .result_str(WSDL_ZONE_NOT_FOUND),
+        ])
+        with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
+            with pytest.raises(AnsibleFailJson) as e:
+                set_module_args({
+                    'hosttech_username': 'foo',
+                    'hosttech_password': 'bar',
+                    'zone': 'example.org',
+                    'record': 'example.org',
+                    'type': 'A',
+                    '_ansible_remote_tmp': '/tmp/tmp',
+                    '_ansible_keep_remote_files': True,
+                })
+                hosttech_dns_record_info.main()
+
+        print(e.value.args[0])
+        assert e.value.args[0]['msg'] == 'Zone not found'
+
     def test_get_single(self):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
@@ -201,6 +231,68 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
 class TestHosttechDNSRecordInfoJSON(BaseTestModule):
     MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hosttech_dns_record_info.AnsibleModule'
     MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.hosttech.json_api.fetch_url'
+
+    def test_unknown_zone(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_record_info, {
+            'hosttech_token': 'foo',
+            'zone': 'example.org',
+            'record': 'example.org',
+            'type': 'A',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.org')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+        ])
+
+        print(result)
+        assert result['msg'] == 'Zone not found'
+
+    def test_auth_error(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_record_info, {
+            'hosttech_token': 'foo',
+            'zone': 'example.org',
+            'record': 'example.org',
+            'type': 'A',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 401)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.org')
+            .result_str(''),
+        ])
+
+        print(result)
+        assert result['msg'].startswith('Cannot authenticate: ')
+
+    def test_other_error(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_record_info, {
+            'hosttech_token': 'foo',
+            'zone': 'example.org',
+            'record': 'example.org',
+            'type': 'A',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.org')
+            .result_str(''),
+        ])
+
+        print(result)
+        assert result['msg'].startswith('Error: GET https://api.ns1.hosttech.eu/api/user/v1/zones?')
+        assert 'did not yield JSON data, but HTTP status code 500 with Content-Type' in result['msg']
 
     def test_get_single(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record_info, {

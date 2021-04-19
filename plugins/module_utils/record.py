@@ -62,11 +62,11 @@ class DNSRecord(object):
 
 
 def format_records_for_output(records, record_name):
-    ttls = set([record.ttl for record in records]),
+    ttls = sorted(set([record.ttl for record in records]))
     entry = {
         'record': record_name,
         'type': min([record.type for record in records]) if records else None,
-        'ttl': min(*list(ttls)) if records else None,
+        'ttl': ttls[0] if len(ttls) > 0 else None,
         'value': [record.target for record in records],
     }
     if len(ttls) > 1:
