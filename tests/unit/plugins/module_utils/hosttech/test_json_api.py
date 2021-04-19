@@ -211,22 +211,26 @@ def test_SRV():
     record.target = '1 443 exchange.example.com'
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
-    assert exc.value.args[0].startswith('Cannot split SRV record "1 443 exchange.example.com" into integer priority, integer weight, integer port and target: ')
+    assert exc.value.args[0].startswith(
+        'Cannot split SRV record "1 443 exchange.example.com" into integer priority, integer weight, integer port and target: ')
 
     record.target = 'x 1 443 exchange.example.com'
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
-    assert exc.value.args[0].startswith('Cannot split SRV record "x 1 443 exchange.example.com" into integer priority, integer weight, integer port and target: ')
+    assert exc.value.args[0].startswith(
+        'Cannot split SRV record "x 1 443 exchange.example.com" into integer priority, integer weight, integer port and target: ')
 
     record.target = '0 x 443 exchange.example.com'
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
-    assert exc.value.args[0].startswith('Cannot split SRV record "0 x 443 exchange.example.com" into integer priority, integer weight, integer port and target: ')
+    assert exc.value.args[0].startswith(
+        'Cannot split SRV record "0 x 443 exchange.example.com" into integer priority, integer weight, integer port and target: ')
 
     record.target = '0 1 x exchange.example.com'
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
-    assert exc.value.args[0].startswith('Cannot split SRV record "0 1 x exchange.example.com" into integer priority, integer weight, integer port and target: ')
+    assert exc.value.args[0].startswith(
+        'Cannot split SRV record "0 1 x exchange.example.com" into integer priority, integer weight, integer port and target: ')
 
 
 def test_TXT():
