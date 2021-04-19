@@ -17,7 +17,7 @@ class DNSZone(object):
         if self.id is not None:
             data.append('id: {0}'.format(self.id))
         data.append('name: {0}'.format(self.name))
-        return 'DNSZone(\n' + ',\n'.join(['  ' + line for line in data]) + '\n)'
+        return 'DNSZone(' + ', '.join(data) + ')'
 
     def __repr__(self):
         return self.__str__()
