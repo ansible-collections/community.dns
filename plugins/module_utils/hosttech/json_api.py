@@ -311,7 +311,6 @@ class HostTechJSONAPI(ZoneRecordAPI):
 
     def _list_pagination(self, url, query=None, block_size=100):
         result = []
-        block_size = block_size
         offset = 0
         while True:
             query_ = query.copy() if query else dict()
