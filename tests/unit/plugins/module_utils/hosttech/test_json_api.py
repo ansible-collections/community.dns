@@ -232,7 +232,7 @@ def test_list_pagination():
             return {'data': [query['offset']]}, {}
         else:
             return {'data': []}, {}
-    
+
     def get_2(url, query=None, must_have_content=True, expected=None):
         assert url == 'https://example.com'
         assert must_have_content is True
