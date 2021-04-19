@@ -45,6 +45,8 @@ def test_wsdl_missing():
         module.fail_json = MagicMock(side_effect=fake_fail)
         with pytest.raises(FailJsonException) as exc:
             api.create_hosttech_api(module)
-        assert exc.value.args[0]['msg'] == 'Needs lxml Python module (pip install lxml)'
+        # For Python 2.6, for some reason exc.value.args is an empty tuple...
+        if len(exc.value.args) > 0:
+            assert exc.value.args[0]['msg'] == 'Needs lxml Python module (pip install lxml)'
     finally:
         api.HAS_LXML_ETREE = old_value
