@@ -14,49 +14,50 @@ class ModuleDocFragment(object):
 options:
     state:
         description:
-        - Specifies the state of the resource record.
+          - Specifies the state of the resource record.
         required: true
         choices: ['present', 'absent']
         type: str
     zone:
         description:
-        - The DNS zone to modify.
-        - Exactly one of I(zone) and I(zone_id) must be specified.
+          - The DNS zone to modify.
+          - Exactly one of I(zone) and I(zone_id) must be specified.
         type: str
     zone_id:
         description:
-        - The ID of the DNS zone to modify.
-        - Exactly one of I(zone) and I(zone_id) must be specified.
+          - The ID of the DNS zone to modify.
+          - Exactly one of I(zone) and I(zone_id) must be specified.
+        version_added: 0.2.0
     record:
         description:
-        - The full DNS record to create or delete.
+          - The full DNS record to create or delete.
         required: true
         type: str
     ttl:
         description:
-        - The TTL to give the new record, in seconds.
+          - The TTL to give the new record, in seconds.
         default: 3600
         type: int
     type:
         description:
-        - The type of DNS record to create or delete.
+          - The type of DNS record to create or delete.
         required: true
         choices: ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
         type: str
     value:
         description:
-        - The new value when creating a DNS record.
-        - YAML lists or multiple comma-spaced values are allowed.
-        - When deleting a record all values for the record must be specified or it will
-          not be deleted.
+          - The new value when creating a DNS record.
+          - YAML lists or multiple comma-spaced values are allowed.
+          - When deleting a record all values for the record must be specified or it will
+            not be deleted.
         required: true
         type: list
         elements: str
     overwrite:
         description:
-        - If I(state=present), whether an existing record should be overwritten on create if values do not
-          match.
-        - If I(state=absent), whether existing records should be deleted if values do not match.
+          - If I(state=present), whether an existing record should be overwritten on create if values do not
+            match.
+          - If I(state=absent), whether existing records should be deleted if values do not match.
         default: false
         type: bool
 
