@@ -686,7 +686,31 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         ])
 
         print(result)
-        assert result['msg'].startswith('Cannot authenticate: ')
+        assert result['msg'] == 'Cannot authenticate: Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
+
+    def test_auth_error_forbidden(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'present',
+            'zone_id': 23,
+            'record': 'example.org',
+            'type': 'MX',
+            'ttl': 3600,
+            'value': [
+                '10 example.com',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 403)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/23')
+            .result_json(dict(message="")),
+        ])
+
+        print(result)
+        assert result['msg'] == 'Cannot authenticate: Forbidden: you do not have access to this resource (HTTP status 403)'
 
     def test_other_error(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_record, {
