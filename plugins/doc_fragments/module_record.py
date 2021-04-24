@@ -21,8 +21,12 @@ options:
     zone:
         description:
         - The DNS zone to modify.
-        required: true
+        - Exactly one of I(zone) and I(zone_id) must be specified.
         type: str
+    zone_id:
+        description:
+        - The ID of the DNS zone to modify.
+        - Exactly one of I(zone) and I(zone_id) must be specified.
     record:
         description:
         - The full DNS record to create or delete.

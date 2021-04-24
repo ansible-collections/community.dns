@@ -79,6 +79,35 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
         print(e.value.args[0])
         assert e.value.args[0]['msg'] == 'Zone not found'
 
+    def test_unknown_zone_id(self):
+        open_url = OpenUrlProxy([
+            OpenUrlCall('POST', 200)
+            .expect_content_predicate(validate_wsdl_call([
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                    '23',
+                    ('http://www.w3.org/2001/XMLSchema', 'string')
+                ),
+            ]))
+            .result_str(WSDL_ZONE_NOT_FOUND),
+        ])
+        with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
+            with pytest.raises(AnsibleFailJson) as e:
+                set_module_args({
+                    'hosttech_username': 'foo',
+                    'hosttech_password': 'bar',
+                    'zone_id': 23,
+                    'record': 'example.org',
+                    'type': 'A',
+                    '_ansible_remote_tmp': '/tmp/tmp',
+                    '_ansible_keep_remote_files': True,
+                })
+                hosttech_dns_record_info.main()
+
+        print(e.value.args[0])
+        assert e.value.args[0]['msg'] == 'Zone not found'
+
     def test_get_single(self):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
@@ -107,6 +136,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is False
+        assert e.value.args[0]['zone_id'] == 42
         assert 'set' in e.value.args[0]
         assert e.value.args[0]['set']['record'] == 'example.com'
         assert e.value.args[0]['set']['ttl'] == 3600
@@ -121,7 +151,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
                 expect_wsdl_authentication('foo', 'bar'),
                 expect_wsdl_value(
                     [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
-                    'example.com',
+                    '42',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
@@ -133,7 +163,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
                     'hosttech_username': 'foo',
                     'hosttech_password': 'bar',
                     'what': 'all_types_for_record',
-                    'zone': 'example.com',
+                    'zone_id': 42,
                     'record': '*.example.com',
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
@@ -142,6 +172,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is False
+        assert e.value.args[0]['zone_id'] == 42
         assert 'set' not in e.value.args[0]
         assert 'sets' in e.value.args[0]
         sets = e.value.args[0]['sets']
@@ -186,6 +217,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is False
+        assert e.value.args[0]['zone_id'] == 42
         assert 'set' not in e.value.args[0]
         assert 'sets' in e.value.args[0]
         sets = e.value.args[0]['sets']
@@ -248,6 +280,26 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .expect_query_values('query', 'example.org')
             .return_header('Content-Type', 'application/json')
             .result_json(JSON_ZONE_LIST_RESULT),
+        ])
+
+        print(result)
+        assert result['msg'] == 'Zone not found'
+
+    def test_unknown_zone(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_record_info, {
+            'hosttech_token': 'foo',
+            'zone_id': 23,
+            'record': 'example.org',
+            'type': 'A',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 404)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/23')
+            .return_header('Content-Type', 'application/json')
+            .result_json(dict(message="")),
         ])
 
         print(result)
@@ -319,6 +371,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         ])
         print(result)
         assert result['changed'] is False
+        assert result['zone_id'] == 42
         assert 'set' in result
         assert result['set']['record'] == 'example.com'
         assert result['set']['ttl'] == 3600
@@ -330,7 +383,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         result = self.run_module_success(mocker, hosttech_dns_record_info, {
             'hosttech_token': 'foo',
             'what': 'all_types_for_record',
-            'zone': 'example.com',
+            'zone': 'example.com.',
             'record': '*.example.com',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -351,6 +404,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         ])
         print(result)
         assert result['changed'] is False
+        assert result['zone_id'] == 42
         assert 'set' not in result
         assert 'sets' in result
         sets = result['sets']
@@ -372,17 +426,10 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         result = self.run_module_success(mocker, hosttech_dns_record_info, {
             'hosttech_token': 'foo',
             'what': 'all_records',
-            'zone': 'example.com.',
+            'zone_id': 42,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
-            FetchUrlCall('GET', 200)
-            .expect_header('accept', 'application/json')
-            .expect_header('authorization', 'Bearer foo')
-            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
-            .expect_query_values('query', 'example.com')
-            .return_header('Content-Type', 'application/json')
-            .result_json(JSON_ZONE_LIST_RESULT),
             FetchUrlCall('GET', 200)
             .expect_header('accept', 'application/json')
             .expect_header('authorization', 'Bearer foo')
@@ -392,6 +439,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         ])
         print(result)
         assert result['changed'] is False
+        assert result['zone_id'] == 42
         assert 'set' not in result
         assert 'sets' in result
         sets = result['sets']

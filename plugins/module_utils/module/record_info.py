@@ -30,11 +30,12 @@ from ._utils import (
 )
 
 
-def create_module_argument_spec():
+def create_module_argument_spec(zone_id_type='str'):
     return ArgumentSpec(
         argument_spec=dict(
             what=dict(type='str', choices=['single_record', 'all_types_for_record', 'all_records'], default='single_record'),
-            zone=dict(type='str', required=True),
+            zone=dict(type='str'),
+            zone_id=dict(type=zone_id_type),
             record=dict(type='str', default=None),
             type=dict(type='str', choices=['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA'], default=None),
         ),
@@ -42,23 +43,33 @@ def create_module_argument_spec():
             ('what', 'single_record', ['record', 'type']),
             ('what', 'all_types_for_record', ['record']),
         ],
+        required_one_of=[
+            ('zone', 'zone_id'),
+        ],
+        mutually_exclusive=[
+            ('zone', 'zone_id'),
+        ],
     )
 
 
 def run_module(module, create_api):
-    # Get zone and record
-    zone_in = module.params.get('zone').lower()
-    if zone_in[-1:] == '.':
-        zone_in = zone_in[:-1]
-
     try:
         # Create API
         api = create_api()
-        # Get zone information
-        zone = api.get_zone_with_records_by_name(zone_in)
-        if zone is None:
-            module.fail_json(msg='Zone not found')
 
+        # Get zone information
+        if module.params.get('zone') is not None:
+            zone_in = normalize_dns_name(module.params.get('zone'))
+            zone = api.get_zone_with_records_by_name(zone_in)
+            if zone is None:
+                module.fail_json(msg='Zone not found')
+        else:
+            zone = api.get_zone_with_records_by_id(module.params.get('zone_id'))
+            if zone is None:
+                module.fail_json(msg='Zone not found')
+            zone_in = normalize_dns_name(zone.zone.name)
+
+        # Retrieve requested information
         if module.params.get('what') == 'single_record':
             # Extract prefix
             record_in = normalize_dns_name(module.params.get('record'))
@@ -76,6 +87,7 @@ def run_module(module, create_api):
             module.exit_json(
                 changed=False,
                 set=data,
+                zone_id=zone.zone.id,
             )
         else:
             # Extract prefix if necessary
@@ -103,6 +115,7 @@ def run_module(module, create_api):
             module.exit_json(
                 changed=False,
                 sets=data,
+                zone_id=zone.zone.id,
             )
     except DNSAPIAuthenticationError as e:
         module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=str(e), exception=traceback.format_exc())

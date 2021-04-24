@@ -175,6 +175,40 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
         print(e.value.args[0])
         assert e.value.args[0]['msg'] == 'Zone not found'
 
+    def test_unknown_zone_id(self):
+        open_url = OpenUrlProxy([
+            OpenUrlCall('POST', 200)
+            .expect_content_predicate(validate_wsdl_call([
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                    '23',
+                    ('http://www.w3.org/2001/XMLSchema', 'string')
+                ),
+            ]))
+            .result_str(WSDL_ZONE_NOT_FOUND),
+        ])
+        with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
+            with pytest.raises(AnsibleFailJson) as e:
+                set_module_args({
+                    'hosttech_username': 'foo',
+                    'hosttech_password': 'bar',
+                    'state': 'present',
+                    'zone_id': 23,
+                    'record': 'example.org',
+                    'type': 'MX',
+                    'ttl': 3600,
+                    'value': [
+                        '10 example.com',
+                    ],
+                    '_ansible_remote_tmp': '/tmp/tmp',
+                    '_ansible_keep_remote_files': True,
+                })
+                hosttech_dns_record.main()
+
+        print(e.value.args[0])
+        assert e.value.args[0]['msg'] == 'Zone not found'
+
     def test_idempotency_present(self):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
@@ -208,6 +242,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is False
+        assert e.value.args[0]['zone_id'] == 42
 
     def test_idempotency_absent_value(self):
         open_url = OpenUrlProxy([
@@ -242,6 +277,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is False
+        assert e.value.args[0]['zone_id'] == 42
 
     def test_idempotency_absent_ttl(self):
         open_url = OpenUrlProxy([
@@ -276,6 +312,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is False
+        assert e.value.args[0]['zone_id'] == 42
 
     def test_idempotency_absent_type(self):
         open_url = OpenUrlProxy([
@@ -284,7 +321,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                 expect_wsdl_authentication('foo', 'bar'),
                 expect_wsdl_value(
                     [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
-                    'example.com',
+                    '42',
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
@@ -296,7 +333,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'hosttech_username': 'foo',
                     'hosttech_password': 'bar',
                     'state': 'absent',
-                    'zone': 'example.com',
+                    'zone_id': 42,
                     'record': 'example.com',
                     'type': 'CAA',
                     'ttl': 3600,
@@ -310,6 +347,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is False
+        assert e.value.args[0]['zone_id'] == 42
 
     def test_idempotency_absent_record(self):
         open_url = OpenUrlProxy([
@@ -344,6 +382,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is False
+        assert e.value.args[0]['zone_id'] == 42
 
     def test_absent(self):
         record = WSDL_DEFAULT_ENTRIES[0]
@@ -385,6 +424,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is True
+        assert e.value.args[0]['zone_id'] == 42
 
     def test_change_add_one_check_mode(self):
         open_url = OpenUrlProxy([
@@ -420,6 +460,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is True
+        assert e.value.args[0]['zone_id'] == 42
 
     def test_change_add_one(self):
         new_entry = (131, 42, 'CAA', '', 'test', 3600, None, None)
@@ -461,6 +502,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is True
+        assert e.value.args[0]['zone_id'] == 42
 
     def test_change_modify_list_fail(self):
         open_url = OpenUrlProxy([
@@ -548,6 +590,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is True
+        assert e.value.args[0]['zone_id'] == 42
         assert 'diff' in e.value.args[0]
         assert 'before' in e.value.args[0]['diff']
         assert 'after' in e.value.args[0]['diff']
@@ -590,6 +633,31 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             .expect_query_values('query', 'example.org')
             .return_header('Content-Type', 'application/json')
             .result_json(JSON_ZONE_LIST_RESULT),
+        ])
+
+        print(result)
+        assert result['msg'] == 'Zone not found'
+
+    def test_unknown_zone_id(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'present',
+            'zone_id': 23,
+            'record': 'example.org',
+            'type': 'MX',
+            'ttl': 3600,
+            'value': [
+                '10 example.com',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 404)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/23')
+            .return_header('Content-Type', 'application/json')
+            .result_json(dict(message="")),
         ])
 
         print(result)
@@ -677,6 +745,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         print(result)
         assert result['changed'] is False
+        assert result['zone_id'] == 42
 
     def test_idempotency_absent_value(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record, {
@@ -709,6 +778,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         print(result)
         assert result['changed'] is False
+        assert result['zone_id'] == 42
 
     def test_idempotency_absent_ttl(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record, {
@@ -741,6 +811,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         print(result)
         assert result['changed'] is False
+        assert result['zone_id'] == 42
 
     def test_idempotency_absent_type(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record, {
@@ -773,6 +844,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         print(result)
         assert result['changed'] is False
+        assert result['zone_id'] == 42
 
     def test_idempotency_absent_record(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record, {
@@ -805,6 +877,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         print(result)
         assert result['changed'] is False
+        assert result['zone_id'] == 42
 
     def test_absent(self, mocker):
         record = JSON_DEFAULT_ENTRIES[0]
@@ -843,12 +916,13 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         print(result)
         assert result['changed'] is True
+        assert result['zone_id'] == 42
 
     def test_change_add_one_check_mode(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record, {
             'hosttech_token': 'foo',
             'state': 'present',
-            'zone': 'example.com',
+            'zone_id': 42,
             'record': 'example.com',
             'type': 'CAA',
             'ttl': 3600,
@@ -862,13 +936,6 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             FetchUrlCall('GET', 200)
             .expect_header('accept', 'application/json')
             .expect_header('authorization', 'Bearer foo')
-            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
-            .expect_query_values('query', 'example.com')
-            .return_header('Content-Type', 'application/json')
-            .result_json(JSON_ZONE_LIST_RESULT),
-            FetchUrlCall('GET', 200)
-            .expect_header('accept', 'application/json')
-            .expect_header('authorization', 'Bearer foo')
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
             .return_header('Content-Type', 'application/json')
             .result_json(JSON_ZONE_GET_RESULT),
@@ -876,6 +943,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         print(result)
         assert result['changed'] is True
+        assert result['zone_id'] == 42
 
     def test_change_add_one(self, mocker):
         new_entry = (131, 42, 'CAA', '', 'test', 3600, None, None)
@@ -934,6 +1002,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         print(result)
         assert result['changed'] is True
+        assert result['zone_id'] == 42
 
     def test_change_modify_list_fail(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_record, {
@@ -1028,6 +1097,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         print(result)
         assert result['changed'] is True
+        assert result['zone_id'] == 42
         assert 'diff' in result
         assert 'before' in result['diff']
         assert 'after' in result['diff']

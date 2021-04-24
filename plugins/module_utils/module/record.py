@@ -31,34 +31,46 @@ from ._utils import (
 )
 
 
-def create_module_argument_spec():
+def create_module_argument_spec(zone_id_type='str'):
     return ArgumentSpec(
         argument_spec=dict(
             state=dict(type='str', choices=['present', 'absent'], required=True),
-            zone=dict(type='str', required=True),
+            zone=dict(type='str'),
+            zone_id=dict(type=zone_id_type),
             record=dict(type='str', required=True),
             ttl=dict(type='int', default=3600),
             type=dict(choices=['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA'], required=True),
             value=dict(required=True, type='list', elements='str'),
             overwrite=dict(default=False, type='bool'),
         ),
+        required_one_of=[
+            ('zone', 'zone_id'),
+        ],
+        mutually_exclusive=[
+            ('zone', 'zone_id'),
+        ],
     )
 
 
 def run_module(module, create_api):
-    # Get zone and record
-    zone_in = normalize_dns_name(module.params.get('zone'))
     record_in = normalize_dns_name(module.params.get('record'))
-
     try:
-        # Convert record to prefix
-        prefix = get_prefix(record_in, zone_in)
         # Create API
         api = create_api()
+
         # Get zone information
-        zone = api.get_zone_with_records_by_name(zone_in)
-        if zone is None:
-            module.fail_json(msg='Zone not found')
+        if module.params.get('zone') is not None:
+            zone_in = normalize_dns_name(module.params.get('zone'))
+            prefix = get_prefix(record_in, zone_in)
+            zone = api.get_zone_with_records_by_name(zone_in)
+            if zone is None:
+                module.fail_json(msg='Zone not found')
+        else:
+            zone = api.get_zone_with_records_by_id(module.params.get('zone_id'))
+            if zone is None:
+                module.fail_json(msg='Zone not found')
+            zone_in = normalize_dns_name(zone.zone.name)
+            prefix = get_prefix(record_in, zone_in)
 
         # Find matching records
         type_in = module.params.get('type')
@@ -128,7 +140,10 @@ def run_module(module, create_api):
 
         # Is there nothing to change?
         if len(to_create) == 0 and len(to_delete) == 0 and len(to_change) == 0:
-            module.exit_json(changed=False)
+            module.exit_json(
+                changed=False,
+                zone_id=zone.zone.id,
+            )
 
         # Actually do something
         if not module.check_mode:
@@ -139,7 +154,10 @@ def run_module(module, create_api):
             for record in to_create:
                 api.add_record(zone.zone.id, record)
 
-        result = dict(changed=True)
+        result = dict(
+            changed=True,
+            zone_id=zone.zone.id,
+        )
         if module._diff:
             result['diff'] = dict(
                 before=format_records_for_output(sorted(before, key=lambda record: record.target), record_in) if before else dict(),
