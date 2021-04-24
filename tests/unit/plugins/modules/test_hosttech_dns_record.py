@@ -596,12 +596,14 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
         assert 'after' in e.value.args[0]['diff']
         assert e.value.args[0]['diff']['before'] == {
             'record': 'example.com',
+            'prefix': None,
             'type': 'NS',
             'ttl': 10800,
             'value': ['ns1.hostserv.eu', 'ns2.hostserv.eu', 'ns3.hostserv.eu'],
         }
         assert e.value.args[0]['diff']['after'] == {
             'record': 'example.com',
+            'prefix': None,
             'type': 'NS',
             'ttl': 10800,
             'value': ['ns1.hostserv.eu', 'ns4.hostserv.eu'],
@@ -804,6 +806,39 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['changed'] is False
         assert result['zone_id'] == 42
 
+    def test_idempotency_absent_value_prefix(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'absent',
+            'zone': 'example.com',
+            'prefix': '*',
+            'type': 'A',
+            'ttl': 3600,
+            'value': [
+                '1.2.3.6',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+        ])
+
+        print(result)
+        assert result['changed'] is False
+        assert result['zone_id'] == 42
+
     def test_idempotency_absent_ttl(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record, {
             'hosttech_token': 'foo',
@@ -969,6 +1004,33 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['changed'] is True
         assert result['zone_id'] == 42
 
+    def test_change_add_one_check_mode_prefix(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'present',
+            'zone_id': 42,
+            'prefix': '',
+            'type': 'CAA',
+            'ttl': 3600,
+            'value': [
+                'test',
+            ],
+            '_ansible_check_mode': True,
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+        ])
+
+        print(result)
+        assert result['changed'] is True
+        assert result['zone_id'] == 42
+
     def test_change_add_one(self, mocker):
         new_entry = (131, 42, 'CAA', '', 'test', 3600, None, None)
         result = self.run_module_success(mocker, hosttech_dns_record, {
@@ -1009,6 +1071,65 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             .expect_json_value(['flag'], '128')
             .expect_json_value(['tag'], 'issue')
             .expect_json_value(['value'], 'letsencrypt.org xxx')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'data': {
+                    'id': 133,
+                    'type': 'CAA',
+                    'name': '',
+                    'flag': '128',
+                    'tag': 'issue',
+                    'value': 'letsencrypt.org xxx',
+                    'ttl': 3600,
+                    'comment': '',
+                },
+            }),
+        ])
+
+        print(result)
+        assert result['changed'] is True
+        assert result['zone_id'] == 42
+
+    def test_change_add_one_prefix(self, mocker):
+        new_entry = (131, 42, 'CAA', '', 'test', 3600, None, None)
+        result = self.run_module_success(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'present',
+            'zone': 'example.com',
+            'prefix': '',
+            'type': 'CAA',
+            'ttl': 3600,
+            'value': [
+                '128 issue letsencrypt.org',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+            FetchUrlCall('POST', 201)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'CAA')
+            .expect_json_value(['ttl'], 3600)
+            .expect_json_value(['comment'], '')
+            .expect_json_value(['name'], '')
+            .expect_json_value(['flag'], '128')
+            .expect_json_value(['tag'], 'issue')
+            .expect_json_value(['value'], 'letsencrypt.org')
             .return_header('Content-Type', 'application/json')
             .result_json({
                 'data': {
@@ -1127,12 +1248,14 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert 'after' in result['diff']
         assert result['diff']['before'] == {
             'record': 'example.com',
+            'prefix': None,
             'type': 'NS',
             'ttl': 10800,
             'value': ['ns1.hostserv.eu', 'ns2.hostserv.eu', 'ns3.hostserv.eu'],
         }
         assert result['diff']['after'] == {
             'record': 'example.com',
+            'prefix': None,
             'type': 'NS',
             'ttl': 10800,
             'value': ['ns1.hostserv.eu', 'ns4.hostserv.eu'],

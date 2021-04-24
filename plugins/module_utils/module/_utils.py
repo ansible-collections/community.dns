@@ -15,18 +15,29 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 
 
 def normalize_dns_name(name):
+    if name is None:
+        return name
     # Get zone and record.
     name = name.lower()
-    if name[-1:] == '.':
+    if name.endswith('.'):
         name = name[:-1]
     return name
 
 
-def get_prefix(normalized_record, normalized_zone):
+def get_prefix(normalized_zone, normalized_record=None, prefix=None):
+    # If normalized_record is not specified, use prefix
+    if normalized_record is None:
+        if prefix is not None:
+            if prefix.endswith('.'):
+                prefix = prefix[:-1]
+            prefix = prefix.lower()
+            if prefix == '':
+                prefix = None
+        return (prefix + '.' + normalized_zone) if prefix else normalized_zone, prefix
     # Convert record to prefix
     if not normalized_record.endswith('.' + normalized_zone) and normalized_record != normalized_zone:
         raise DNSAPIError('Record must be in zone')
     if normalized_record == normalized_zone:
-        return None
+        return normalized_record, None
     else:
-        return normalized_record[:len(normalized_record) - len(normalized_zone) - 1]
+        return normalized_record, normalized_record[:len(normalized_record) - len(normalized_zone) - 1]

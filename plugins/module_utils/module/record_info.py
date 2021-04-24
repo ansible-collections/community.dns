@@ -36,18 +36,21 @@ def create_module_argument_spec(zone_id_type='str'):
             what=dict(type='str', choices=['single_record', 'all_types_for_record', 'all_records'], default='single_record'),
             zone=dict(type='str'),
             zone_id=dict(type=zone_id_type),
-            record=dict(type='str', default=None),
+            record=dict(type='str'),
+            prefix=dict(type='str'),
             type=dict(type='str', choices=['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA'], default=None),
         ),
         required_if=[
-            ('what', 'single_record', ['record', 'type']),
-            ('what', 'all_types_for_record', ['record']),
+            ('what', 'single_record', ['type']),
+            ('what', 'single_record', ['record', 'prefix'], True),
+            ('what', 'all_types_for_record', ['record', 'prefix'], True),
         ],
         required_one_of=[
             ('zone', 'zone_id'),
         ],
         mutually_exclusive=[
             ('zone', 'zone_id'),
+            ('record', 'prefix'),
         ],
     )
 
@@ -73,7 +76,8 @@ def run_module(module, create_api):
         if module.params.get('what') == 'single_record':
             # Extract prefix
             record_in = normalize_dns_name(module.params.get('record'))
-            prefix = get_prefix(record_in, zone_in)
+            prefix_in = module.params.get('prefix')
+            record_in, prefix = get_prefix(normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in)
 
             # Find matching records
             type_in = module.params.get('type')
@@ -83,7 +87,7 @@ def run_module(module, create_api):
                     records.append(record)
 
             # Format output
-            data = format_records_for_output(records, record_in) if records else {}
+            data = format_records_for_output(records, record_in, prefix) if records else {}
             module.exit_json(
                 changed=False,
                 set=data,
@@ -93,7 +97,9 @@ def run_module(module, create_api):
             # Extract prefix if necessary
             if module.params.get('what') == 'all_types_for_record':
                 check_prefix = True
-                prefix = get_prefix(normalize_dns_name(module.params.get('record')), zone_in)
+                record_in = normalize_dns_name(module.params.get('record'))
+                prefix_in = module.params.get('prefix')
+                record_in, prefix = get_prefix(normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in)
             else:
                 check_prefix = False
                 prefix = None
@@ -111,7 +117,10 @@ def run_module(module, create_api):
                 record_list.append(record)
 
             # Format output
-            data = [format_records_for_output(record_list, record_name) for (record_name, dummy), record_list in sorted(records.items())]
+            data = [
+                format_records_for_output(record_list, record_name, record_list[0].prefix)
+                for (record_name, dummy), record_list in sorted(records.items())
+            ]
             module.exit_json(
                 changed=False,
                 sets=data,

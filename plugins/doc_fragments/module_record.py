@@ -31,8 +31,17 @@ options:
     record:
         description:
           - The full DNS record to create or delete.
-        required: true
+          - Exactly one of I(record) and I(prefix) must be specified.
         type: str
+    prefix:
+        description:
+          - The prefix of the DNS record.
+          - This is the part of I(record) before I(zone). For example, if the record to be modified is C(www.example.com)
+            for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the
+            prefix would be C('') (empty string).
+          - Exactly one of I(record) and I(prefix) must be specified.
+        type: str
+        version_added: 0.2.0
     ttl:
         description:
           - The TTL to give the new record, in seconds.

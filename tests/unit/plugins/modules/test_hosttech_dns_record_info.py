@@ -139,6 +139,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
         assert e.value.args[0]['zone_id'] == 42
         assert 'set' in e.value.args[0]
         assert e.value.args[0]['set']['record'] == 'example.com'
+        assert e.value.args[0]['set']['prefix'] is None
         assert e.value.args[0]['set']['ttl'] == 3600
         assert e.value.args[0]['set']['type'] == 'A'
         assert e.value.args[0]['set']['value'] == ['1.2.3.4']
@@ -179,12 +180,14 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
         assert len(sets) == 2
         assert sets[0] == {
             'record': '*.example.com',
+            'prefix': '*',
             'ttl': 3600,
             'type': 'A',
             'value': ['1.2.3.5'],
         }
         assert sets[1] == {
             'record': '*.example.com',
+            'prefix': '*',
             'ttl': 3600,
             'type': 'AAAA',
             'value': ['2001:1:2::4'],
@@ -224,36 +227,42 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
         assert len(sets) == 6
         assert sets[0] == {
             'record': '*.example.com',
+            'prefix': '*',
             'ttl': 3600,
             'type': 'A',
             'value': ['1.2.3.5'],
         }
         assert sets[1] == {
             'record': '*.example.com',
+            'prefix': '*',
             'ttl': 3600,
             'type': 'AAAA',
             'value': ['2001:1:2::4'],
         }
         assert sets[2] == {
             'record': 'example.com',
+            'prefix': None,
             'ttl': 3600,
             'type': 'A',
             'value': ['1.2.3.4'],
         }
         assert sets[3] == {
             'record': 'example.com',
+            'prefix': None,
             'ttl': 3600,
             'type': 'AAAA',
             'value': ['2001:1:2::3'],
         }
         assert sets[4] == {
             'record': 'example.com',
+            'prefix': None,
             'ttl': 3600,
             'type': 'MX',
             'value': ['10 example.com'],
         }
         assert sets[5] == {
             'record': 'example.com',
+            'prefix': None,
             'ttl': 10800,
             'type': 'NS',
             'value': ['ns3.hostserv.eu', 'ns2.hostserv.eu', 'ns1.hostserv.eu'],
@@ -393,16 +402,51 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         assert result['zone_id'] == 42
         assert 'set' in result
         assert result['set']['record'] == 'example.com'
+        assert result['set']['prefix'] is None
         assert result['set']['ttl'] == 3600
         assert result['set']['type'] == 'A'
         assert result['set']['value'] == ['1.2.3.4']
+        assert 'sets' not in result
+
+    def test_get_single_prefix(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record_info, {
+            'hosttech_token': 'foo',
+            'zone': 'example.com',
+            'prefix': '*',
+            'type': 'A',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+        ])
+        print(result)
+        assert result['changed'] is False
+        assert result['zone_id'] == 42
+        assert 'set' in result
+        assert result['set']['record'] == '*.example.com'
+        assert result['set']['prefix'] == '*'
+        assert result['set']['ttl'] == 3600
+        assert result['set']['type'] == 'A'
+        assert result['set']['value'] == ['1.2.3.5']
         assert 'sets' not in result
 
     def test_get_all_for_one_record(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record_info, {
             'hosttech_token': 'foo',
             'what': 'all_types_for_record',
-            'zone': 'example.com.',
+            'zone': 'example.com',
             'record': '*.example.com',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -430,15 +474,76 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         assert len(sets) == 2
         assert sets[0] == {
             'record': '*.example.com',
+            'prefix': '*',
             'ttl': 3600,
             'type': 'A',
             'value': ['1.2.3.5'],
         }
         assert sets[1] == {
             'record': '*.example.com',
+            'prefix': '*',
             'ttl': 3600,
             'type': 'AAAA',
             'value': ['2001:1:2::4'],
+        }
+
+    def test_get_all_for_one_record_prefix(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record_info, {
+            'hosttech_token': 'foo',
+            'what': 'all_types_for_record',
+            'zone': 'example.com.',
+            'prefix': '',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+        ])
+        print(result)
+        assert result['changed'] is False
+        assert result['zone_id'] == 42
+        assert 'set' not in result
+        assert 'sets' in result
+        sets = result['sets']
+        assert len(sets) == 4
+        assert sets[0] == {
+            'record': 'example.com',
+            'prefix': None,
+            'ttl': 3600,
+            'type': 'A',
+            'value': ['1.2.3.4'],
+        }
+        assert sets[1] == {
+            'record': 'example.com',
+            'prefix': None,
+            'ttl': 3600,
+            'type': 'AAAA',
+            'value': ['2001:1:2::3'],
+        }
+        assert sets[2] == {
+            'record': 'example.com',
+            'prefix': None,
+            'ttl': 3600,
+            'type': 'MX',
+            'value': ['10 example.com'],
+        }
+        assert sets[3] == {
+            'record': 'example.com',
+            'prefix': None,
+            'ttl': 10800,
+            'type': 'NS',
+            'value': ['ns3.hostserv.eu', 'ns2.hostserv.eu', 'ns1.hostserv.eu'],
         }
 
     def test_get_all(self, mocker):
@@ -465,36 +570,42 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         assert len(sets) == 6
         assert sets[0] == {
             'record': '*.example.com',
+            'prefix': '*',
             'ttl': 3600,
             'type': 'A',
             'value': ['1.2.3.5'],
         }
         assert sets[1] == {
             'record': '*.example.com',
+            'prefix': '*',
             'ttl': 3600,
             'type': 'AAAA',
             'value': ['2001:1:2::4'],
         }
         assert sets[2] == {
             'record': 'example.com',
+            'prefix': None,
             'ttl': 3600,
             'type': 'A',
             'value': ['1.2.3.4'],
         }
         assert sets[3] == {
             'record': 'example.com',
+            'prefix': None,
             'ttl': 3600,
             'type': 'AAAA',
             'value': ['2001:1:2::3'],
         }
         assert sets[4] == {
             'record': 'example.com',
+            'prefix': None,
             'ttl': 3600,
             'type': 'MX',
             'value': ['10 example.com'],
         }
         assert sets[5] == {
             'record': 'example.com',
+            'prefix': None,
             'ttl': 10800,
             'type': 'NS',
             'value': ['ns3.hostserv.eu', 'ns2.hostserv.eu', 'ns1.hostserv.eu'],
