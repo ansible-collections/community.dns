@@ -235,7 +235,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
             try:
                 body = self._module.from_json(content.decode('utf8'))
                 if body['message']:
-                    message = '{0}: {1}'.format(message, self._module.from_json(body['message'])
+                    message = '{0}: {1}'.format(message, body['message'])
             except Exception:
                 pass
             raise DNSAPIAuthenticationError(message)
