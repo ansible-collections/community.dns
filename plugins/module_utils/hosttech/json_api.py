@@ -181,7 +181,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
             return ''
         if isinstance(result, dict):
             res = ''
-            if 'message' in result:
+            if result.get('message'):
                 res = '{0} with message "{1}"'.format(res, result['message'])
             if 'errors' in result:
                 if isinstance(result['errors'], dict):
@@ -222,9 +222,20 @@ class HostTechJSONAPI(ZoneRecordAPI):
             content = info.pop('body', None)
         # Check for unauthenticated
         if info['status'] == 401:
-            message = 'Unauthorized (HTTP status 401)'
+            message = 'Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
             try:
-                message = '{0}: {1}'.format(message, self._module.from_json(content.decode('utf8'))['message'])
+                body = self._module.from_json(content.decode('utf8'))
+                if body['message']:
+                    message = '{0}: {1}'.format(message, body['message'])
+            except Exception:
+                pass
+            raise DNSAPIAuthenticationError(message)
+        if info['status'] == 403:
+            message = 'Forbidden: you do not have access to this resource (HTTP status 403)'
+            try:
+                body = self._module.from_json(content.decode('utf8'))
+                if body['message']:
+                    message = '{0}: {1}'.format(message, body['message'])
             except Exception:
                 pass
             raise DNSAPIAuthenticationError(message)

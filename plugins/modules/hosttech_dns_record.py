@@ -23,6 +23,10 @@ extends_documentation_fragment:
     - community.dns.hosttech
     - community.dns.module_record
 
+options:
+    zone_id:
+        type: int
+
 author:
     - Felix Fontein (@felixfontein)
 '''
@@ -181,7 +185,13 @@ EXAMPLES = '''
     hosttech_password: bar
 '''
 
-RETURN = ''' # '''
+RETURN = '''
+zone_id:
+    description: The ID of the zone.
+    type: int
+    returned: success
+    version_added: 0.2.0
+'''
 
 from ansible.module_utils.basic import AnsibleModule
 
@@ -198,7 +208,7 @@ from ansible_collections.community.dns.plugins.module_utils.module.record import
 
 def main():
     argument_spec = create_hosttech_argument_spec()
-    argument_spec.merge(create_module_argument_spec())
+    argument_spec.merge(create_module_argument_spec(zone_id_type='int'))
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
     run_module(module, lambda: create_hosttech_api(module))
 
