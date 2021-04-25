@@ -185,7 +185,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
                 res = '{0} with message "{1}"'.format(res, result['message'])
             if 'errors' in result:
                 if isinstance(result['errors'], dict):
-                    for k, v in result['errors'].items():
+                    for k, v in sorted(result['errors'].items()):
                         if isinstance(v, list):
                             v = '; '.join(v)
                         res = '{0} (field "{1}": {2})'.format(res, k, v)
