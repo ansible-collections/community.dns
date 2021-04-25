@@ -164,8 +164,14 @@ def run_module(module, create_api):
         )
         if module._diff:
             result['diff'] = dict(
-                before=format_records_for_output(sorted(before, key=lambda record: record.target), record_in, prefix) if before else [],
-                after=format_records_for_output(sorted(after, key=lambda record: record.target), record_in, prefix) if after else [],
+                before=(
+                    format_records_for_output(sorted(before, key=lambda record: record.target), record_in, prefix)
+                    if before else dict()
+                ),
+                after=(
+                    format_records_for_output(sorted(after, key=lambda record: record.target), record_in, prefix)
+                    if after else dict()
+                ),
             )
 
         module.exit_json(**result)
