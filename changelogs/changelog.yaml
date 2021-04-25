@@ -31,3 +31,39 @@ releases:
         name: remove_registrable_domain
         namespace: null
     release_date: '2021-04-07'
+  0.2.0:
+    changes:
+      breaking_changes:
+      - hosttech_* module_utils - completely rewrite and refactor to support new JSON
+        API and allow to re-use provider-independent module logic (https://github.com/ansible-collections/community.dns/pull/4).
+      bugfixes:
+      - Update Public Suffix List.
+      - hosttech_record - fix diff mode for ``state=absent`` (https://github.com/ansible-collections/community.dns/pull/4).
+      - hosttech_record_info - fix authentication error handling (https://github.com/ansible-collections/community.dns/pull/4).
+      major_changes:
+      - hosttech_* modules - support the new JSON API at https://api.ns1.hosttech.eu/api/documentation/
+        (https://github.com/ansible-collections/community.dns/pull/4).
+      minor_changes:
+      - hosttech_dns_record* modules - allow to specify ``prefix`` instead of ``record``
+        (https://github.com/ansible-collections/community.dns/pull/8).
+      - hosttech_dns_record* modules - allow to specify zone by ID with the ``zone_id``
+        parameter, alternatively to the ``zone`` parameter (https://github.com/ansible-collections/community.dns/pull/7).
+      - hosttech_dns_record* modules - return ``zone_id`` on success (https://github.com/ansible-collections/community.dns/pull/7).
+      - hosttech_dns_record* modules - support IDN domain names and prefixes (https://github.com/ansible-collections/community.dns/pull/9).
+      - hosttech_dns_record_info - also return ``prefix`` for a record set (https://github.com/ansible-collections/community.dns/pull/8).
+      - hosttech_record - allow to delete records without querying their content first
+        by specifying ``overwrite=true`` (https://github.com/ansible-collections/community.dns/pull/4).
+      release_summary: Major refactoring release, which adds a zone information module
+        and supports HostTech's new REST API.
+    fragments:
+    - 0.2.0.yml
+    - 7-hosttech-zone_id.yml
+    - 8-hosttech-prefix.yml
+    - 9-idn.yml
+    - rewrite.yml
+    - update-psl.yml
+    modules:
+    - description: Retrieve zone information in Hosttech DNS service
+      name: hosttech_dns_zone_info
+      namespace: ''
+    release_date: '2021-04-25'

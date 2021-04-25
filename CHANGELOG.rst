@@ -5,6 +5,46 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v0.2.0
+======
+
+Release Summary
+---------------
+
+Major refactoring release, which adds a zone information module and supports HostTech's new REST API.
+
+Major Changes
+-------------
+
+- hosttech_* modules - support the new JSON API at https://api.ns1.hosttech.eu/api/documentation/ (https://github.com/ansible-collections/community.dns/pull/4).
+
+Minor Changes
+-------------
+
+- hosttech_dns_record* modules - allow to specify ``prefix`` instead of ``record`` (https://github.com/ansible-collections/community.dns/pull/8).
+- hosttech_dns_record* modules - allow to specify zone by ID with the ``zone_id`` parameter, alternatively to the ``zone`` parameter (https://github.com/ansible-collections/community.dns/pull/7).
+- hosttech_dns_record* modules - return ``zone_id`` on success (https://github.com/ansible-collections/community.dns/pull/7).
+- hosttech_dns_record* modules - support IDN domain names and prefixes (https://github.com/ansible-collections/community.dns/pull/9).
+- hosttech_dns_record_info - also return ``prefix`` for a record set (https://github.com/ansible-collections/community.dns/pull/8).
+- hosttech_record - allow to delete records without querying their content first by specifying ``overwrite=true`` (https://github.com/ansible-collections/community.dns/pull/4).
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- hosttech_* module_utils - completely rewrite and refactor to support new JSON API and allow to re-use provider-independent module logic (https://github.com/ansible-collections/community.dns/pull/4).
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- hosttech_record - fix diff mode for ``state=absent`` (https://github.com/ansible-collections/community.dns/pull/4).
+- hosttech_record_info - fix authentication error handling (https://github.com/ansible-collections/community.dns/pull/4).
+
+New Modules
+-----------
+
+- community.dns.hosttech_dns_zone_info - Retrieve zone information in Hosttech DNS service
+
 v0.1.0
 ======
 
