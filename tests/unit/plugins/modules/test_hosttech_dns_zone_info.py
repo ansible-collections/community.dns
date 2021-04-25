@@ -49,7 +49,7 @@ except ImportError:
 
 
 @pytest.mark.skipif(not HAS_LXML_ETREE, reason="Need lxml.etree for WSDL tests")
-class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
+class TestHosttechDNSZoneInfoWSDL(ModuleTestCase):
     def test_unknown_zone(self):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
@@ -163,7 +163,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
         assert e.value.args[0]['zone_name'] == 'example.com'
 
 
-class TestHosttechDNSRecordInfoJSON(BaseTestModule):
+class TestHosttechDNSZoneInfoJSON(BaseTestModule):
     MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hosttech_dns_zone_info.AnsibleModule'
     MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.hosttech.json_api.fetch_url'
 
@@ -186,7 +186,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         print(result)
         assert result['msg'] == 'Zone not found'
 
-    def test_unknown_zone(self, mocker):
+    def test_unknown_zone_id(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_zone_info, {
             'hosttech_token': 'foo',
             'zone_id': 23,
