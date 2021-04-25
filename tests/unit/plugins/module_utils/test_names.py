@@ -11,6 +11,7 @@ __metaclass__ = type
 import pytest
 
 from ansible_collections.community.dns.plugins.module_utils.names import (
+    join_labels,
     only_alabels,
     normalize_label,
     split_into_labels,
@@ -48,6 +49,7 @@ def test_split_into_labels(domain, labels, tail):
     _labels, _tail = split_into_labels(domain)
     assert _labels == labels
     assert _tail == tail
+    assert join_labels(_labels, _tail) == domain
 
 
 TEST_LABEL_SPLIT_ERRORS = [
@@ -62,6 +64,23 @@ TEST_LABEL_SPLIT_ERRORS = [
 def test_split_into_labels_errors(domain):
     with pytest.raises(InvalidDomainName):
         split_into_labels(domain)
+
+
+TEST_LABEL_JOIN = [
+    ([], '', ''),
+    ([], '.', '.'),
+    (['a', 'b', 'c'], '', 'c.b.a'),
+    (['a', 'b', 'c'], '.', 'c.b.a.'),
+]
+
+
+@pytest.mark.parametrize("labels, tail, result", TEST_LABEL_JOIN)
+def test_join_labels(labels, tail, result):
+    domain = join_labels(labels, tail)
+    assert domain == result
+    _labels, _tail = split_into_labels(domain)
+    assert _labels == labels
+    assert _tail == tail
 
 
 TEST_LABEL_NORMALIZE = [

@@ -9,6 +9,12 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 
+from ansible_collections.community.dns.plugins.module_utils.names import (
+    split_into_labels,
+    join_labels,
+    normalize_label,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
 )
@@ -17,20 +23,15 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 def normalize_dns_name(name):
     if name is None:
         return name
-    # Get zone and record.
-    name = name.lower()
-    if name.endswith('.'):
-        name = name[:-1]
-    return name
+    labels, dummy = split_into_labels(name)
+    return join_labels([normalize_label(label) for label in labels])
 
 
 def get_prefix(normalized_zone, normalized_record=None, prefix=None):
     # If normalized_record is not specified, use prefix
     if normalized_record is None:
         if prefix is not None:
-            if prefix.endswith('.'):
-                prefix = prefix[:-1]
-            prefix = prefix.lower()
+            prefix = normalize_dns_name(prefix)
             if prefix == '':
                 prefix = None
         return (prefix + '.' + normalized_zone) if prefix else normalized_zone, prefix

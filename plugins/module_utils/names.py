@@ -52,6 +52,13 @@ def split_into_labels(domain):
     return result, tail
 
 
+def join_labels(labels, tail=''):
+    '''
+    Combines the result of split_into_labels() back into a domain name.
+    '''
+    return '.'.join(reversed(labels)) + tail
+
+
 def normalize_label(label):
     '''
     Normalize a domain label. Returns a lower-case alabel.
