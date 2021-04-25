@@ -64,7 +64,7 @@ def test_format_records_for_output():
     }
     assert format_records_for_output([A3, A1], 'foo', None) == {
         'record': 'foo',
-        'prefix': None,
+        'prefix': '',
         'type': 'A',
         'ttl': 300,
         'ttls': [300, 3600],
@@ -72,21 +72,21 @@ def test_format_records_for_output():
     }
     assert format_records_for_output([A3], 'foo', None) == {
         'record': 'foo',
-        'prefix': None,
+        'prefix': '',
         'type': 'A',
         'ttl': 3600,
         'value': ['1.2.3.6'],
     }
     assert format_records_for_output([AAAA], 'foo', None) == {
         'record': 'foo',
-        'prefix': None,
+        'prefix': '',
         'type': 'AAAA',
         'ttl': 600,
         'value': ['::1'],
     }
     assert format_records_for_output([A3, AAAA], 'foo', None) == {
         'record': 'foo',
-        'prefix': None,
+        'prefix': '',
         'type': 'A',
         'ttl': 600,
         'ttls': [600, 3600],
@@ -94,7 +94,7 @@ def test_format_records_for_output():
     }
     assert format_records_for_output([AAAA, A3], 'foo', None) == {
         'record': 'foo',
-        'prefix': None,
+        'prefix': '',
         'type': 'A',
         'ttl': 600,
         'ttls': [600, 3600],

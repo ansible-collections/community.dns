@@ -596,14 +596,14 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
         assert 'after' in e.value.args[0]['diff']
         assert e.value.args[0]['diff']['before'] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'type': 'NS',
             'ttl': 10800,
             'value': ['ns1.hostserv.eu', 'ns2.hostserv.eu', 'ns3.hostserv.eu'],
         }
         assert e.value.args[0]['diff']['after'] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'type': 'NS',
             'ttl': 10800,
             'value': ['ns1.hostserv.eu', 'ns4.hostserv.eu'],
@@ -1248,14 +1248,14 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert 'after' in result['diff']
         assert result['diff']['before'] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'type': 'NS',
             'ttl': 10800,
             'value': ['ns1.hostserv.eu', 'ns2.hostserv.eu', 'ns3.hostserv.eu'],
         }
         assert result['diff']['after'] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'type': 'NS',
             'ttl': 10800,
             'value': ['ns1.hostserv.eu', 'ns4.hostserv.eu'],

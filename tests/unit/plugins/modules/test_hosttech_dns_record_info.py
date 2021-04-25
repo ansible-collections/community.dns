@@ -139,7 +139,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
         assert e.value.args[0]['zone_id'] == 42
         assert 'set' in e.value.args[0]
         assert e.value.args[0]['set']['record'] == 'example.com'
-        assert e.value.args[0]['set']['prefix'] is None
+        assert e.value.args[0]['set']['prefix'] == ''
         assert e.value.args[0]['set']['ttl'] == 3600
         assert e.value.args[0]['set']['type'] == 'A'
         assert e.value.args[0]['set']['value'] == ['1.2.3.4']
@@ -241,28 +241,28 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
         }
         assert sets[2] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'ttl': 3600,
             'type': 'A',
             'value': ['1.2.3.4'],
         }
         assert sets[3] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'ttl': 3600,
             'type': 'AAAA',
             'value': ['2001:1:2::3'],
         }
         assert sets[4] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'ttl': 3600,
             'type': 'MX',
             'value': ['10 example.com'],
         }
         assert sets[5] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'ttl': 10800,
             'type': 'NS',
             'value': ['ns3.hostserv.eu', 'ns2.hostserv.eu', 'ns1.hostserv.eu'],
@@ -402,7 +402,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         assert result['zone_id'] == 42
         assert 'set' in result
         assert result['set']['record'] == 'example.com'
-        assert result['set']['prefix'] is None
+        assert result['set']['prefix'] == ''
         assert result['set']['ttl'] == 3600
         assert result['set']['type'] == 'A'
         assert result['set']['value'] == ['1.2.3.4']
@@ -519,28 +519,28 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         assert len(sets) == 4
         assert sets[0] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'ttl': 3600,
             'type': 'A',
             'value': ['1.2.3.4'],
         }
         assert sets[1] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'ttl': 3600,
             'type': 'AAAA',
             'value': ['2001:1:2::3'],
         }
         assert sets[2] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'ttl': 3600,
             'type': 'MX',
             'value': ['10 example.com'],
         }
         assert sets[3] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'ttl': 10800,
             'type': 'NS',
             'value': ['ns3.hostserv.eu', 'ns2.hostserv.eu', 'ns1.hostserv.eu'],
@@ -584,28 +584,28 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         }
         assert sets[2] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'ttl': 3600,
             'type': 'A',
             'value': ['1.2.3.4'],
         }
         assert sets[3] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'ttl': 3600,
             'type': 'AAAA',
             'value': ['2001:1:2::3'],
         }
         assert sets[4] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'ttl': 3600,
             'type': 'MX',
             'value': ['10 example.com'],
         }
         assert sets[5] == {
             'record': 'example.com',
-            'prefix': None,
+            'prefix': '',
             'ttl': 10800,
             'type': 'NS',
             'value': ['ns3.hostserv.eu', 'ns2.hostserv.eu', 'ns1.hostserv.eu'],

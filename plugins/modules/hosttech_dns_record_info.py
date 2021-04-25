@@ -64,7 +64,7 @@ set:
             type: str
             sample: sample.example.com
         prefix:
-            description: The record prefix, or C(none) if there is none.
+            description: The record prefix.
             type: str
             sample: sample
             version_added: 0.2.0
@@ -102,7 +102,7 @@ sets:
             type: str
             sample: sample.example.com
         prefix:
-            description: The record prefix, or C(none) if there is none.
+            description: The record prefix.
             type: str
             sample: sample
             version_added: 0.2.0
