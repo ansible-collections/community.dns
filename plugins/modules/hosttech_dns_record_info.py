@@ -63,6 +63,11 @@ set:
             description: The record name.
             type: str
             sample: sample.example.com
+        prefix:
+            description: The record prefix.
+            type: str
+            sample: sample
+            version_added: 0.2.0
         type:
             description: The DNS record type.
             type: str
@@ -96,6 +101,11 @@ sets:
             description: The record name.
             type: str
             sample: sample.example.com
+        prefix:
+            description: The record prefix.
+            type: str
+            sample: sample
+            version_added: 0.2.0
         type:
             description: The DNS record type.
             type: str

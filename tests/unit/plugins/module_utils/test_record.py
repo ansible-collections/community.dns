@@ -48,46 +48,53 @@ def test_format_records_for_output():
     AAAA.type = 'AAAA'
     AAAA.ttl = 600
     AAAA.target = '::1'
-    assert format_records_for_output([], 'foo') == {
+    assert format_records_for_output([], 'foo', '') == {
         'record': 'foo',
+        'prefix': '',
         'type': None,
         'ttl': None,
         'value': [],
     }
-    assert format_records_for_output([A1, A2], 'foo') == {
+    assert format_records_for_output([A1, A2], 'foo', 'bar') == {
         'record': 'foo',
+        'prefix': 'bar',
         'type': 'A',
         'ttl': 300,
         'value': ['1.2.3.4', '1.2.3.5'],
     }
-    assert format_records_for_output([A3, A1], 'foo') == {
+    assert format_records_for_output([A3, A1], 'foo', None) == {
         'record': 'foo',
+        'prefix': '',
         'type': 'A',
         'ttl': 300,
         'ttls': [300, 3600],
         'value': ['1.2.3.6', '1.2.3.4'],
     }
-    assert format_records_for_output([A3], 'foo') == {
+    assert format_records_for_output([A3], 'foo', None) == {
         'record': 'foo',
+        'prefix': '',
         'type': 'A',
         'ttl': 3600,
         'value': ['1.2.3.6'],
     }
-    assert format_records_for_output([AAAA], 'foo') == {
+    assert format_records_for_output([AAAA], 'foo', None) == {
         'record': 'foo',
+        'prefix': '',
         'type': 'AAAA',
         'ttl': 600,
         'value': ['::1'],
     }
-    assert format_records_for_output([A3, AAAA], 'foo') == {
+    assert format_records_for_output([A3, AAAA], 'foo', None) == {
         'record': 'foo',
+        'prefix': '',
         'type': 'A',
         'ttl': 600,
         'ttls': [600, 3600],
         'value': ['1.2.3.6', '::1'],
     }
-    assert format_records_for_output([AAAA, A3], 'foo') == {
+    assert format_records_for_output([AAAA, A3], 'foo', None) == {
         'record': 'foo',
+        'prefix': '',
         'type': 'A',
         'ttl': 600,
         'ttls': [600, 3600],

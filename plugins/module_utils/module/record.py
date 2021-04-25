@@ -37,7 +37,8 @@ def create_module_argument_spec(zone_id_type='str'):
             state=dict(type='str', choices=['present', 'absent'], required=True),
             zone=dict(type='str'),
             zone_id=dict(type=zone_id_type),
-            record=dict(type='str', required=True),
+            record=dict(type='str'),
+            prefix=dict(type='str'),
             ttl=dict(type='int', default=3600),
             type=dict(choices=['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA'], required=True),
             value=dict(required=True, type='list', elements='str'),
@@ -45,15 +46,18 @@ def create_module_argument_spec(zone_id_type='str'):
         ),
         required_one_of=[
             ('zone', 'zone_id'),
+            ('record', 'prefix'),
         ],
         mutually_exclusive=[
             ('zone', 'zone_id'),
+            ('record', 'prefix'),
         ],
     )
 
 
 def run_module(module, create_api):
     record_in = normalize_dns_name(module.params.get('record'))
+    prefix_in = module.params.get('prefix')
     try:
         # Create API
         api = create_api()
@@ -61,7 +65,7 @@ def run_module(module, create_api):
         # Get zone information
         if module.params.get('zone') is not None:
             zone_in = normalize_dns_name(module.params.get('zone'))
-            prefix = get_prefix(record_in, zone_in)
+            record_in, prefix = get_prefix(normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in)
             zone = api.get_zone_with_records_by_name(zone_in)
             if zone is None:
                 module.fail_json(msg='Zone not found')
@@ -70,7 +74,7 @@ def run_module(module, create_api):
             if zone is None:
                 module.fail_json(msg='Zone not found')
             zone_in = normalize_dns_name(zone.zone.name)
-            prefix = get_prefix(record_in, zone_in)
+            record_in, prefix = get_prefix(normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in)
 
         # Find matching records
         type_in = module.params.get('type')
@@ -160,8 +164,8 @@ def run_module(module, create_api):
         )
         if module._diff:
             result['diff'] = dict(
-                before=format_records_for_output(sorted(before, key=lambda record: record.target), record_in) if before else dict(),
-                after=format_records_for_output(sorted(after, key=lambda record: record.target), record_in) if after else dict(),
+                before=format_records_for_output(sorted(before, key=lambda record: record.target), record_in, prefix) if before else [],
+                after=format_records_for_output(sorted(after, key=lambda record: record.target), record_in, prefix) if after else [],
             )
 
         module.exit_json(**result)
