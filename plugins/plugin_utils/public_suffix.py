@@ -9,62 +9,11 @@ __metaclass__ = type
 import os.path
 import re
 
-from ansible.module_utils._text import to_text
+from ansible_collections.community.dns.plugins.module_utils.names import InvalidDomainName, split_into_labels, normalize_label
 
-
-_ONLY_ALABELS_MATCHER = re.compile(r'^[a-zA-Z0-9.-]*$')
 
 _BEGIN_SUBSET_MATCHER = re.compile(r'===BEGIN ([^=]*) DOMAINS===')
 _END_SUBSET_MATCHER = re.compile(r'===END ([^=]*) DOMAINS===')
-
-
-def only_alabels(domain):
-    '''
-    Check whether domain name has only alabels.
-    '''
-    return _ONLY_ALABELS_MATCHER.match(domain) is not None
-
-
-class InvalidDomainName(Exception):
-    '''
-    The provided domain name is not valid.
-    '''
-    pass
-
-
-def split_into_labels(domain):
-    '''
-    Split domain name to a list of labels. Start with the top-most label.
-
-    Returns a list of labels and a tail, which is either ``''`` or ``'.'``.
-    Raises ``InvalidDomainName`` if the domain name is not valid.
-    '''
-    result = []
-    index = len(domain)
-    tail = ''
-    if domain.endswith('.'):
-        index -= 1
-        tail = '.'
-    if index > 0:
-        while index >= 0:
-            next_index = domain.rfind('.', 0, index)
-            label = domain[next_index + 1:index]
-            if label == '' or label[0] == '-' or label[-1] == '-' or len(label) > 63:
-                raise InvalidDomainName(domain)
-            result.append(label)
-            index = next_index
-    return result, tail
-
-
-def normalize_label(label):
-    '''
-    Normalize a domain label. Returns a lower-case alabel.
-    '''
-    if label not in ('', '*') and not only_alabels(label):
-        # Convert ulabel to alabel
-        label = to_text(b'xn--' + to_text(label).encode('punycode'))
-    # Always convert to lower-case
-    return label.lower()
 
 
 class PublicSuffixEntry(object):
