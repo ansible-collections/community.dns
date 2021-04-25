@@ -30,7 +30,6 @@ class ZoneRecordAPI(object):
         @param name: The zone name (string)
         @return The zone information (DNSZone), or None if not found
         """
-        pass
 
     @abc.abstractmethod
     def get_zone_with_records_by_name(self, name):
@@ -40,7 +39,6 @@ class ZoneRecordAPI(object):
         @param name: The zone name (string)
         @return The zone information with records (DNSZoneWithRecords), or None if not found
         """
-        pass
 
     @abc.abstractmethod
     def get_zone_with_records_by_id(self, id):
@@ -50,7 +48,6 @@ class ZoneRecordAPI(object):
         @param id: The zone ID
         @return The zone information with records (DNSZoneWithRecords), or None if not found
         """
-        pass
 
     @abc.abstractmethod
     def add_record(self, zone_id, record):
@@ -61,7 +58,6 @@ class ZoneRecordAPI(object):
         @param record: The DNS record (DNSRecord)
         @return The created DNS record (DNSRecord)
         """
-        pass
 
     @abc.abstractmethod
     def update_record(self, zone_id, record):
@@ -72,7 +68,6 @@ class ZoneRecordAPI(object):
         @param record: The DNS record (DNSRecord)
         @return The DNS record (DNSRecord)
         """
-        pass
 
     @abc.abstractmethod
     def delete_record(self, zone_id, record):
@@ -83,4 +78,3 @@ class ZoneRecordAPI(object):
         @param record: The DNS record (DNSRecord)
         @return True in case of success (boolean)
         """
-        pass
