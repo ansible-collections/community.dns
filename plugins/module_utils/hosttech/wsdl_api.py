@@ -174,6 +174,16 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         zone = self.get_zone_with_records_by_name(name)
         return zone.zone if zone else None
 
+    def get_zone_by_id(self, id):
+        """
+        Given a zone ID, return the zone contents if found.
+
+        @param id: The zone ID
+        @return The zone information (DNSZone), or None if not found
+        """
+        zone = self.get_zone_with_records_by_id(id)
+        return zone.zone if zone else None
+
     def add_record(self, zone_id, record):
         """
         Adds a new record to an existing zone.
