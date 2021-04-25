@@ -37,8 +37,7 @@ EXAMPLES = '''
     zone: foo.com
     record: new.foo.com
     type: A
-    hosttech_username: foo
-    hosttech_password: bar
+    hosttech_token: access_token
   register: rec
 
 - name: Delete new.foo.com A record using the results from the above command
@@ -133,6 +132,7 @@ zone_id:
     description: The ID of the zone.
     type: int
     returned: success
+    sample: 23
     version_added: 0.2.0
 '''
 
