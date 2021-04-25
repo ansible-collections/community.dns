@@ -17,7 +17,7 @@ short_description: Add or delete entries in Hosttech DNS service
 version_added: 0.1.0
 
 description:
-    - "Creates and deletes DNS records in Hosttech DNS service U(https://ns1.hosttech.eu/public/api?wsdl)."
+    - "Creates and deletes DNS records in Hosttech DNS service."
 
 extends_documentation_fragment:
     - community.dns.hosttech
