@@ -18,6 +18,7 @@ Depends on the plugin or module used.
 - Modules:
   - `hosttech_dns_record`: create/update/delete DNS records with HostTech DNS.
   - `hosttech_dns_record_info`: retrieve information on DNS records from HostTech DNS.
+  - `hosttech_dns_zone_info`: retrieve zone information from HostTech DNS.
   - `wait_for_txt`: wait for TXT records to propagate to all name servers.
 - Filters:
   - `get_public_suffix`: given a domain name, returns the public suffix. For example, `"www.ansible.com" | community.dns.get_public_suffix == ".com"` and `"some.random.prefixes.ansible.co.uk" | community.dns.get_public_suffix == ".co.uk"`.

@@ -294,7 +294,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         print(result)
         assert result['msg'] == 'Zone not found'
 
-    def test_unknown_zone(self, mocker):
+    def test_unknown_zone_id(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_record_info, {
             'hosttech_token': 'foo',
             'zone_id': 23,

@@ -372,6 +372,18 @@ class HostTechJSONAPI(ZoneRecordAPI):
                 return _create_zone_from_json(zone)
         return None
 
+    def get_zone_by_id(self, id):
+        """
+        Given a zone ID, return the zone contents if found.
+
+        @param id: The zone ID
+        @return The zone information (DNSZone), or None if not found
+        """
+        result, info = self._get('user/v1/zones/{0}'.format(id), expected=[200, 404], must_have_content=[200])
+        if info['status'] == 404:
+            return None
+        return _create_zone_from_json(result['data'])
+
     def add_record(self, zone_id, record):
         """
         Adds a new record to an existing zone.

@@ -17,7 +17,7 @@ short_description: Add or delete entries in Hosttech DNS service
 version_added: 0.1.0
 
 description:
-    - "Creates and deletes DNS records in Hosttech DNS service U(https://ns1.hosttech.eu/public/api?wsdl)."
+    - "Creates and deletes DNS records in Hosttech DNS service."
 
 extends_documentation_fragment:
     - community.dns.hosttech
@@ -40,8 +40,7 @@ EXAMPLES = '''
     type: A
     ttl: 7200
     value: 1.1.1.1,2.2.2.2,3.3.3.3
-    hosttech_username: foo
-    hosttech_password: bar
+    hosttech_token: access_token
 
 - name: Update new.foo.com as an A record with a list of 3 IPs
   community.dns.hosttech_dns_record:
@@ -54,8 +53,7 @@ EXAMPLES = '''
       - 1.1.1.1
       - 2.2.2.2
       - 3.3.3.3
-    hosttech_username: foo
-    hosttech_password: bar
+    hosttech_token: access_token
 
 - name: Retrieve the details for new.foo.com
   community.dns.hosttech_dns_record_info:
@@ -86,8 +84,7 @@ EXAMPLES = '''
     type: AAAA
     ttl: 7200
     value: "::1"
-    hosttech_username: foo
-    hosttech_password: bar
+    hosttech_token: access_token
 
 - name: Add a TXT record
   community.dns.hosttech_dns_record:
@@ -121,8 +118,7 @@ EXAMPLES = '''
     value:
     - "128 issue letsencrypt.org"
     - "128 iodef mailto:webmaster@foo.com"
-    hosttech_username: foo
-    hosttech_password: bar
+    hosttech_token: access_token
 
 - name: Add an MX record
   community.dns.hosttech_dns_record:
@@ -133,8 +129,7 @@ EXAMPLES = '''
     ttl: 3600
     value:
     - "10 mail.foo.com"
-    hosttech_username: foo
-    hosttech_password: bar
+    hosttech_token: access_token
 
 - name: Add a CNAME record
   community.dns.hosttech_dns_record:
@@ -157,8 +152,7 @@ EXAMPLES = '''
     ttl: 3600
     value:
     - foo.foo.com
-    hosttech_username: foo
-    hosttech_password: bar
+    hosttech_token: access_token
 
 - name: Add an SPF record
   community.dns.hosttech_dns_record:
@@ -181,8 +175,7 @@ EXAMPLES = '''
     ttl: 3600
     value:
     - "10 100 3333 service.foo.com"
-    hosttech_username: foo
-    hosttech_password: bar
+    hosttech_token: access_token
 '''
 
 RETURN = '''
@@ -190,6 +183,7 @@ zone_id:
     description: The ID of the zone.
     type: int
     returned: success
+    sample: 23
     version_added: 0.2.0
 '''
 

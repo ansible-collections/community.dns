@@ -32,6 +32,15 @@ class ZoneRecordAPI(object):
         """
 
     @abc.abstractmethod
+    def get_zone_by_id(self, id):
+        """
+        Given a zone ID, return the zone contents if found.
+
+        @param id: The zone ID
+        @return The zone information (DNSZone), or None if not found
+        """
+
+    @abc.abstractmethod
     def get_zone_with_records_by_name(self, name):
         """
         Given a zone name, return the zone contents with records if found.
