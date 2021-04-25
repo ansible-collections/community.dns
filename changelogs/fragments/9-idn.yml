@@ -1,0 +1,2 @@
+minor_changes:
+- "hosttech_dns_record* modules - support IDN domain names and prefixes (https://github.com/ansible-collections/community.dns/pull/9)."
