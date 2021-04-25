@@ -2,7 +2,7 @@
 
 namespace: community
 name: dns
-version: 0.1.0
+version: 0.2.0
 readme: README.md
 authors:
   - Felix Fontein (github.com/felixfontein)
