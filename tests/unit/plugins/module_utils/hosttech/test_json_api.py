@@ -352,6 +352,7 @@ def test_extract_error_message():
     assert api._extract_error_message(dict()) == ' with data: {}'
     assert api._extract_error_message(dict(message='')) == " with data: {'message': ''}"
     assert api._extract_error_message(dict(message='foo')) == ' with message "foo"'
+    assert api._extract_error_message(dict(message='foo', errors='')) == ' with message "foo"'
     assert api._extract_error_message(dict(message='foo', errors=dict())) == ' with message "foo"'
     assert api._extract_error_message(dict(message='foo', errors=dict(bar='baz'))) == ' with message "foo" (field "bar": baz)'
     assert api._extract_error_message(dict(errors=dict(bar=['baz', 'bam'], arf='fra'))) == ' (field "arf": fra) (field "bar": baz; bam)'
@@ -363,12 +364,16 @@ def test_validate():
         api._validate()
     assert exc.value.args[0] == 'Internal error: info needs to be provided'
     api._validate(info=dict(status=200, url='https://example.com'))
+    api._validate(info=dict(status=200, url='https://example.com'), expected=[200])
     with pytest.raises(DNSAPIError) as exc:
         api._validate(info=dict(status=199, url='https://example.com'))
     assert exc.value.args[0] == 'Expected successful HTTP status for GET https://example.com, but got HTTP status 199'
     with pytest.raises(DNSAPIError) as exc:
         api._validate(info=dict(status=300, url='https://example.com'), method='PUT', result='foo')
     assert exc.value.args[0] == 'Expected successful HTTP status for PUT https://example.com, but got HTTP status 300 with data: foo'
+    with pytest.raises(DNSAPIError) as exc:
+        api._validate(info=dict(status=200, url='https://example.com'), expected=[201, 204], method='HEAD', result='foo')
+    assert exc.value.args[0] == 'Expected HTTP status 201, 204 for HEAD https://example.com, but got HTTP status 200 with data: foo'
 
 
 def test_process_json_result():
