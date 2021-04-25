@@ -1,4 +1,8 @@
 ---
+- name: Compute test record from prefix and zone
+  set_fact:
+    test_record: '{{ test_record_prefix ~ "." ~ test_zone }}'
+
 - name: Run tests with username and password
   include_tasks: username-password.yml
   when: hosttech_username is defined and hosttech_password is defined

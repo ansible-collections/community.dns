@@ -1,5 +1,17 @@
 ---
-- name: Get all NS records
+- name: (token) Get zone info
+  hosttech_dns_zone_info:
+    zone: '{{ test_zone }}'
+    hosttech_token: '{{ hosttech_token }}'
+  register: result_zone
+
+- name: (token) Get zone info by ID
+  hosttech_dns_zone_info:
+    zone_id: '{{ result_zone.zone_id }}'
+    hosttech_token: '{{ hosttech_token }}'
+  register: result_zone_id
+
+- name: (token) Get all NS records
   hosttech_dns_record_info:
     zone: '{{ test_zone }}'
     record: '{{ test_zone }}'
@@ -7,14 +19,22 @@
     hosttech_token: '{{ hosttech_token }}'
   register: result
 
-- debug:
+- name: (token) Output all records
+  debug:
     var: result
 
 - assert:
     that:
+      - result_zone == result_zone_id
+      - result_zone.zone_name == test_zone
+      - result_zone.zone_id == result.zone_id
       - result.set
 
-- name: Ensure that test record is not present
+- name: (token) Set zone ID
+  set_fact:
+    hosttech_zone_id: "{{ result.zone_id }}"
+
+- name: (token) Ensure that test record is not present
   hosttech_dns_record:
     state: present
     zone: '{{ test_zone }}'
@@ -27,9 +47,9 @@
 
 - block:
 
-  - name: Get test record
+  - name: (token) Get test record
     hosttech_dns_record_info:
-      zone: '{{ test_zone }}'
+      zone_id: '{{ hosttech_zone_id }}'
       record: '{{ test_record }}'
       type: A
       hosttech_token: '{{ hosttech_token }}'
@@ -39,7 +59,7 @@
       that:
         - not rec.set
 
-  - name: Create test record
+  - name: (token) Create test record
     hosttech_dns_record:
       state: present
       zone: '{{ test_zone }}'
@@ -53,11 +73,11 @@
       overwrite: true
       hosttech_token: '{{ hosttech_token }}'
 
-  - name: Modify test record
+  - name: (token) Modify test record
     hosttech_dns_record:
       state: present
       zone: '{{ test_zone }}'
-      record: '{{ test_record }}'
+      prefix: '{{ test_record_prefix }}'
       type: A
       ttl: 600
       value:
@@ -66,7 +86,7 @@
       overwrite: true
       hosttech_token: '{{ hosttech_token }}'
 
-  - name: Get test record
+  - name: (token) Get test record
     hosttech_dns_record_info:
       zone: '{{ test_zone }}'
       record: '{{ test_record }}'
@@ -82,10 +102,10 @@
         - rec.set.ttl == 600
         - rec.set.value | length == 2
 
-  - name: Delete test record
+  - name: (token) Delete test record
     hosttech_dns_record:
       state: absent
-      zone: '{{ test_zone }}'
+      zone_id: '{{ hosttech_zone_id }}'
       record: '{{ rec.set.record }}'
       ttl: '{{ rec.set.ttl }}'
       type: '{{ rec.set.type }}'
@@ -93,7 +113,7 @@
       hosttech_token: '{{ hosttech_token }}'
 
   always:
-  - name: Ensure that test record is not present
+  - name: (token) Ensure that test record is not present
     hosttech_dns_record:
       state: present
       zone: '{{ test_zone }}'
