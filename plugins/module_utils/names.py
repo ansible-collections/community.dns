@@ -11,14 +11,14 @@ import re
 from ansible.module_utils._text import to_text
 
 
-_ONLY_ALABELS_MATCHER = re.compile(r'^[a-zA-Z0-9.-]*$')
+_ASCII_PRINTABLE_MATCHER = re.compile(r'^[\x20-\x7e]*$')
 
 
-def only_alabels(domain):
+def is_ascii_label(domain):
     '''
-    Check whether domain name has only alabels.
+    Check whether domain name has only ASCII labels.
     '''
-    return _ONLY_ALABELS_MATCHER.match(domain) is not None
+    return _ASCII_PRINTABLE_MATCHER.match(domain) is not None
 
 
 class InvalidDomainName(Exception):
@@ -61,9 +61,11 @@ def join_labels(labels, tail=''):
 
 def normalize_label(label):
     '''
-    Normalize a domain label. Returns a lower-case alabel.
+    Normalize a domain label. Returns a lower-case ASCII label.
+
+    If a ulabel is provided, it is converted to an alabel.
     '''
-    if label not in ('', '*') and not only_alabels(label):
+    if not is_ascii_label(label):
         # Convert ulabel to alabel
         label = to_text(b'xn--' + to_text(label).encode('punycode'))
     # Always convert to lower-case
