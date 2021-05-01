@@ -25,6 +25,7 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 from ansible_collections.community.dns.plugins.module_utils.hosttech.json_api import (
     _create_record_from_json,
     _record_to_json,
+    _get_header_value,
     HostTechJSONAPI,
 )
 
@@ -290,6 +291,13 @@ def test_unknown_records():
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
     assert exc.value.args[0] == 'Cannot serialize unknown record type: unknown'
+
+
+def test_get_header_value():
+    assert _get_header_value({'Return-Type': 1}, 'return-type') == 1
+    assert _get_header_value({'Return-Type': 1}, 'Return-Type') == 1
+    assert _get_header_value({'return-Type': 1}, 'Return-type') == 1
+    assert _get_header_value({'return_type': 1}, 'Return-type') is None
 
 
 def test_list_pagination():
