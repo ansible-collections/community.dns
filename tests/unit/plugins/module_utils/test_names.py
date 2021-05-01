@@ -24,6 +24,7 @@ TEST_IS_ASCII_LABEL = [
     ('', True),
     ('ä', False),
     ('☹', False),
+    ('_dmarc', True),
 ]
 
 
