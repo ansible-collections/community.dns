@@ -379,7 +379,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         assert 'did not yield JSON data, but HTTP status code 500 with Content-Type' in result['msg']
 
     def test_too_many_retries(self, mocker):
-        sleep_values = [5, 10, 1, 1, 1, 60, 1, 1, 1.1, 3.1415]
+        sleep_values = [5, 10, 1, 1, 1, 60, 10, 1, 10, 3.1415]
 
         def sleep_check(delay):
             expected = sleep_values.pop(0)
@@ -421,13 +421,12 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
                 .return_header('Retry-After', '61')
                 .result_str(''),
                 FetchUrlCall('GET', 429)
-                .return_header('Retry-After', '1')
+                .return_header('Retry-After', 'foo')
                 .result_str(''),
                 FetchUrlCall('GET', 429)
                 .return_header('Retry-After', '0.9')
                 .result_str(''),
                 FetchUrlCall('GET', 429)
-                .return_header('Retry-After', '1.1')
                 .result_str(''),
                 FetchUrlCall('GET', 429)
                 .return_header('Retry-After', '3.1415')
