@@ -10,6 +10,7 @@ __metaclass__ = type
 
 
 import json
+import time
 
 from ansible.module_utils.six.moves.urllib.parse import urlencode
 from ansible.module_utils._text import to_native
@@ -163,6 +164,15 @@ def _record_to_json(record, include_id=False, include_type=True):
     return result
 
 
+def _get_header_value(info, header_name):
+    header_name = header_name.lower()
+    header_value = info.get(header_name)
+    for k, v in info.items():
+        if k.lower() == header_name:
+            header_value = v
+    return header_value
+
+
 class HostTechJSONAPI(ZoneRecordAPI):
     def __init__(self, module, token, api='https://api.ns1.hosttech.eu/api/', debug=False):
         """
@@ -240,10 +250,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
                 pass
             raise DNSAPIAuthenticationError(message)
         # Check Content-Type header
-        content_type = info.get('content-type')
-        for k, v in info.items():
-            if k.lower() == 'content-type':
-                content_type = v
+        content_type = _get_header_value(info, 'content-type')
         if content_type != 'application/json':
             if must_have_content:
                 raise DNSAPIError(
@@ -264,6 +271,25 @@ class HostTechJSONAPI(ZoneRecordAPI):
         self._validate(result=result, info=info, expected=expected, method=method)
         return result, info
 
+    def _request(self, url, **kwargs):
+        """Execute a HTTP request and handle common things like rate limiting."""
+        number_retries = 10
+        countdown = number_retries + 1
+        while True:
+            response, info = fetch_url(self._module, url, **kwargs)
+            countdown -= 1
+            if info['status'] == 429:
+                if countdown <= 0:
+                    break
+                try:
+                    retry_after = max(min(float(_get_header_value(info, 'retry-after')), 60), 1)
+                except (ValueError, TypeError):
+                    retry_after = 10
+                time.sleep(retry_after)
+                continue
+            return response, info
+        raise DNSAPIError('Stopping after {0} failed retries with 429 Too Many Attempts'.format(number_retries))
+
     def _get(self, url, query=None, must_have_content=True, expected=None):
         full_url = self._build_url(url, query)
         if self._debug:
@@ -273,7 +299,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
             accept='application/json',
             authorization='Bearer {token}'.format(token=self._token),
         )
-        response, info = fetch_url(self._module, full_url, headers=headers, method='GET')
+        response, info = self._request(full_url, headers=headers, method='GET')
         return self._process_json_result(response, info, must_have_content=must_have_content, method='GET', expected=expected)
 
     def _post(self, url, data=None, query=None, must_have_content=True, expected=None):
@@ -289,7 +315,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
         if data is not None:
             headers['content-type'] = 'application/json'
             encoded_data = json.dumps(data).encode('utf-8')
-        response, info = fetch_url(self._module, full_url, headers=headers, method='POST', data=encoded_data)
+        response, info = self._request(full_url, headers=headers, method='POST', data=encoded_data)
         return self._process_json_result(response, info, must_have_content=must_have_content, method='POST', expected=expected)
 
     def _put(self, url, data=None, query=None, must_have_content=True, expected=None):
@@ -305,7 +331,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
         if data is not None:
             headers['content-type'] = 'application/json'
             encoded_data = json.dumps(data).encode('utf-8')
-        response, info = fetch_url(self._module, full_url, headers=headers, method='PUT', data=encoded_data)
+        response, info = self._request(full_url, headers=headers, method='PUT', data=encoded_data)
         return self._process_json_result(response, info, must_have_content=must_have_content, method='PUT', expected=expected)
 
     def _delete(self, url, query=None, must_have_content=True, expected=None):
@@ -317,7 +343,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
             accept='application/json',
             authorization='Bearer {token}'.format(token=self._token),
         )
-        response, info = fetch_url(self._module, full_url, headers=headers, method='DELETE')
+        response, info = self._request(full_url, headers=headers, method='DELETE')
         return self._process_json_result(response, info, must_have_content=must_have_content, method='DELETE', expected=expected)
 
     def _list_pagination(self, url, query=None, block_size=100):

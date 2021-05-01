@@ -1,0 +1,2 @@
+minor_changes:
+- "hosttech_dns_* - handle ``419 Too Many Requests`` with proper rate limiting for JSON API (https://github.com/ansible-collections/community.dns/pull/14)."

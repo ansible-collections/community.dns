@@ -48,6 +48,10 @@ except ImportError:
     HAS_LXML_ETREE = False
 
 
+def mock_sleep(delay):
+    pass
+
+
 @pytest.mark.skipif(not HAS_LXML_ETREE, reason="Need lxml.etree for WSDL tests")
 class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
     def test_unknown_zone(self):
@@ -374,29 +378,106 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         assert result['msg'].startswith('Error: GET https://api.ns1.hosttech.eu/api/user/v1/zones?')
         assert 'did not yield JSON data, but HTTP status code 500 with Content-Type' in result['msg']
 
+    def test_too_many_retries(self, mocker):
+        sleep_values = [5, 10, 1, 1, 1, 60, 10, 1, 10, 3.1415]
+
+        def sleep_check(delay):
+            expected = sleep_values.pop(0)
+            assert delay == expected
+
+        with patch('time.sleep', sleep_check) as m:
+            result = self.run_module_failed(mocker, hosttech_dns_record_info, {
+                'hosttech_token': 'foo',
+                'zone': 'example.com',
+                'record': 'example.com',
+                'type': 'A',
+                '_ansible_remote_tmp': '/tmp/tmp',
+                '_ansible_keep_remote_files': True,
+            }, [
+                FetchUrlCall('GET', 429)
+                .expect_header('accept', 'application/json')
+                .expect_header('authorization', 'Bearer foo')
+                .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+                .expect_query_values('query', 'example.com')
+                .return_header('Retry-After', '5')
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .expect_header('accept', 'application/json')
+                .expect_header('authorization', 'Bearer foo')
+                .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+                .expect_query_values('query', 'example.com')
+                .return_header('Retry-After', '10')
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .return_header('Retry-After', '1')
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .return_header('Retry-After', '0')
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .return_header('Retry-After', '-1')
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .return_header('Retry-After', '61')
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .return_header('Retry-After', 'foo')
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .return_header('Retry-After', '0.9')
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .return_header('Retry-After', '3.1415')
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .return_header('Retry-After', '42')
+                .result_str(''),
+            ])
+        print(result)
+        print(sleep_values)
+        assert result['msg'] == 'Error: Stopping after 10 failed retries with 429 Too Many Attempts'
+        assert len(sleep_values) == 0
+
     def test_get_single(self, mocker):
-        result = self.run_module_success(mocker, hosttech_dns_record_info, {
-            'hosttech_token': 'foo',
-            'zone': 'example.com',
-            'record': 'example.com',
-            'type': 'A',
-            '_ansible_remote_tmp': '/tmp/tmp',
-            '_ansible_keep_remote_files': True,
-        }, [
-            FetchUrlCall('GET', 200)
-            .expect_header('accept', 'application/json')
-            .expect_header('authorization', 'Bearer foo')
-            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
-            .expect_query_values('query', 'example.com')
-            .return_header('Content-Type', 'application/json')
-            .result_json(JSON_ZONE_LIST_RESULT),
-            FetchUrlCall('GET', 200)
-            .expect_header('accept', 'application/json')
-            .expect_header('authorization', 'Bearer foo')
-            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
-            .return_header('Content-Type', 'application/json')
-            .result_json(JSON_ZONE_GET_RESULT),
-        ])
+        with patch('time.sleep', mock_sleep):
+            result = self.run_module_success(mocker, hosttech_dns_record_info, {
+                'hosttech_token': 'foo',
+                'zone': 'example.com',
+                'record': 'example.com',
+                'type': 'A',
+                '_ansible_remote_tmp': '/tmp/tmp',
+                '_ansible_keep_remote_files': True,
+            }, [
+                FetchUrlCall('GET', 429)
+                .expect_header('accept', 'application/json')
+                .expect_header('authorization', 'Bearer foo')
+                .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+                .expect_query_values('query', 'example.com')
+                .return_header('Retry-After', '5')
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .expect_header('accept', 'application/json')
+                .expect_header('authorization', 'Bearer foo')
+                .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+                .expect_query_values('query', 'example.com')
+                .return_header('Retry-After', '10')
+                .result_str(''),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('authorization', 'Bearer foo')
+                .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+                .expect_query_values('query', 'example.com')
+                .return_header('Content-Type', 'application/json')
+                .result_json(JSON_ZONE_LIST_RESULT),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('authorization', 'Bearer foo')
+                .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+                .return_header('Content-Type', 'application/json')
+                .result_json(JSON_ZONE_GET_RESULT),
+            ])
         print(result)
         assert result['changed'] is False
         assert result['zone_id'] == 42
