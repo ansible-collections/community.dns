@@ -12,14 +12,14 @@ import pytest
 
 from ansible_collections.community.dns.plugins.module_utils.names import (
     join_labels,
-    only_alabels,
+    is_ascii_label,
     normalize_label,
     split_into_labels,
     InvalidDomainName,
 )
 
 
-TEST_ONLY_ALABELS = [
+TEST_IS_ASCII_LABEL = [
     ('asdf', True),
     ('', True),
     ('ä', False),
@@ -27,9 +27,9 @@ TEST_ONLY_ALABELS = [
 ]
 
 
-@pytest.mark.parametrize("domain, result", TEST_ONLY_ALABELS)
-def test_only_alabels(domain, result):
-    assert only_alabels(domain) == result
+@pytest.mark.parametrize("domain, result", TEST_IS_ASCII_LABEL)
+def test_is_ascii_label(domain, result):
+    assert is_ascii_label(domain) == result
 
 
 TEST_LABEL_SPLIT = [
