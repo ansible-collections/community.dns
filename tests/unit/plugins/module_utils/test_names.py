@@ -89,6 +89,7 @@ TEST_LABEL_NORMALIZE = [
     ('*', '*'),
     ('foo', 'foo'),
     ('Foo', 'foo'),
+    ('_dmarc', '_dmarc'),
     (u'hëllö', 'xn--hll-jma1d'),
     (u'食狮', 'xn--85x722f'),
     (u'☺', 'xn--74h'),

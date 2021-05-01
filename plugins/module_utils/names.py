@@ -11,7 +11,7 @@ import re
 from ansible.module_utils._text import to_text
 
 
-_ASCII_PRINTABLE_MATCHER = re.compile(r'^[\x20-\x7e]+$')
+_ASCII_PRINTABLE_MATCHER = re.compile(r'^[\x20-\x7e]*$')
 
 
 def is_ascii_label(domain):
@@ -65,7 +65,7 @@ def normalize_label(label):
 
     If a ulabel is provided, it is converted to an alabel.
     '''
-    if label != '' and not is_ascii_label(label):
+    if not is_ascii_label(label):
         # Convert ulabel to alabel
         label = to_text(b'xn--' + to_text(label).encode('punycode'))
     # Always convert to lower-case
