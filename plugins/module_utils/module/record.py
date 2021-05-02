@@ -72,7 +72,9 @@ def run_module(module, create_api):
             zone = api.get_zone_with_records_by_name(zone_in, prefix=prefix, record_type=type_in)
             if zone is None:
                 module.fail_json(msg='Zone not found')
-        else:
+            zone_id = zone.zone.id
+            records = zone.records
+        elif record_in is not None:
             zone = api.get_zone_with_records_by_id(
                 module.params.get('zone_id'),
                 record_type=type_in,
@@ -82,9 +84,23 @@ def run_module(module, create_api):
                 module.fail_json(msg='Zone not found')
             zone_in = normalize_dns_name(zone.zone.name)
             record_in, prefix = get_prefix(normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in)
+            zone_id = zone.zone.id
+            records = zone.records
+        else:
+            zone_id = module.params.get('zone_id')
+            prefix = prefix_in or None
+            records = api.get_zone_records(
+                zone_id,
+                record_type=type_in,
+                prefix=prefix,
+            )
+            if records is None:
+                module.fail_json(msg='Zone not found')
+            zone_in = None
+            record_in = None
 
         # Find matching records
-        records = filter_records(zone.records, prefix=prefix)
+        records = filter_records(records, prefix=prefix)
 
         # Parse records
         values = []
@@ -149,21 +165,21 @@ def run_module(module, create_api):
         if len(to_create) == 0 and len(to_delete) == 0 and len(to_change) == 0:
             module.exit_json(
                 changed=False,
-                zone_id=zone.zone.id,
+                zone_id=zone_id,
             )
 
         # Actually do something
         if not module.check_mode:
             for record in to_delete:
-                api.delete_record(zone.zone.id, record)
+                api.delete_record(zone_id, record)
             for record in to_change:
-                api.update_record(zone.zone.id, record)
+                api.update_record(zone_id, record)
             for record in to_create:
-                api.add_record(zone.zone.id, record)
+                api.add_record(zone_id, record)
 
         result = dict(
             changed=True,
-            zone_id=zone.zone.id,
+            zone_id=zone_id,
         )
         if module._diff:
             result['diff'] = dict(

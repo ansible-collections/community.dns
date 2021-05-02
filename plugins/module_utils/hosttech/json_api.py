@@ -411,7 +411,7 @@ class HostTechJSONAPI(ZoneRecordAPI):
         query = dict()
         if record_type is not NOT_PROVIDED:
             query['type'] = record_type.upper()
-        result, info = self._get('user/v1/zones/{0}/records'.format(id), query=query, expected=[200, 404], must_have_content=[200])
+        result, info = self._get('user/v1/zones/{0}/records'.format(zone_id), query=query, expected=[200, 404], must_have_content=[200])
         if info['status'] == 404:
             return None
         return filter_records(

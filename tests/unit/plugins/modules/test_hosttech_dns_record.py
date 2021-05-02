@@ -48,6 +48,7 @@ from .helper import (
     JSON_DEFAULT_ENTRIES,
     JSON_ZONE_GET_RESULT,
     JSON_ZONE_LIST_RESULT,
+    JSON_ZONE_RECORDS_GET_RESULT,
 )
 
 try:
@@ -1022,9 +1023,10 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             FetchUrlCall('GET', 200)
             .expect_header('accept', 'application/json')
             .expect_header('authorization', 'Bearer foo')
-            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records', without_query=True)
+            .expect_query_values('type', 'CAA')
             .return_header('Content-Type', 'application/json')
-            .result_json(JSON_ZONE_GET_RESULT),
+            .result_json(JSON_ZONE_RECORDS_GET_RESULT),
         ])
 
         print(result)

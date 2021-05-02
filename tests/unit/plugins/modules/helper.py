@@ -317,3 +317,7 @@ JSON_ZONE_GET_RESULT = {
         "records": JSON_DEFAULT_ENTRIES,
     }
 }
+
+JSON_ZONE_RECORDS_GET_RESULT = {
+    "data": JSON_DEFAULT_ENTRIES,
+}
