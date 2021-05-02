@@ -99,7 +99,7 @@ def run_module(module, create_api):
             record['prefix'] = prefix
             key = (prefix, record['type'])
             if key in records_dict:
-                module.fail_json('Found multiple entries for record {record} and type {type}: index #{i1} and #{i2}'.format(
+                module.fail_json(msg='Found multiple entries for record {record} and type {type}: index #{i1} and #{i2}'.format(
                     record=record_name,
                     type=record['type'],
                     i1=records_dict[key][0],

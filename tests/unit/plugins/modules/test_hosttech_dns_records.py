@@ -570,10 +570,10 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
     def test_key_collision_error(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_records, {
             'hosttech_token': 'foo',
-            'zone': 'example.org',
+            'zone_id': 42,
             'records': [
                 {
-                    'record': 'test.example.org',
+                    'record': 'test.example.com',
                     'type': 'A',
                     'ignore': True,
                 },
@@ -586,17 +586,16 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
-            FetchUrlCall('GET', 500)
+            FetchUrlCall('GET', 200)
             .expect_header('accept', 'application/json')
             .expect_header('authorization', 'Bearer foo')
-            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
-            .expect_query_values('query', 'example.org')
-            .result_str(''),
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
         ])
 
         print(result)
-        assert result['msg'].startswith('Error: GET https://api.ns1.hosttech.eu/api/user/v1/zones?')
-        assert 'did not yield JSON data, but HTTP status code 500 with Content-Type' in result['msg']
+        assert result['msg'] == 'Found multiple entries for record test.example.com and type A: index #0 and #1'
 
     def test_idempotency_empty(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_records, {
