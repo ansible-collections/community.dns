@@ -1,1 +1,0 @@
-release_summary: Fixes bugs, adds rate limiting for Hosttech JSON API, and adds a new bulk synchronization module.

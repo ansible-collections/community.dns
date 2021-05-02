@@ -67,3 +67,25 @@ releases:
       name: hosttech_dns_zone_info
       namespace: ''
     release_date: '2021-04-25'
+  0.3.0:
+    changes:
+      bugfixes:
+      - Avoid converting ASCII labels which contain underscores or other printable
+        ASCII characters outside ``[a-zA-Z0-9-]`` to alabels during normalization
+        (https://github.com/ansible-collections/community.dns/pull/13).
+      - Updated Public Suffix List.
+      minor_changes:
+      - hosttech_dns_* - handle ``419 Too Many Requests`` with proper rate limiting
+        for JSON API (https://github.com/ansible-collections/community.dns/pull/14).
+      release_summary: Fixes bugs, adds rate limiting for Hosttech JSON API, and adds
+        a new bulk synchronization module.
+    fragments:
+    - 0.3.0.yml
+    - 13-alabel-confusion.yml
+    - 14-hosttech-json-rate-limiting.yml
+    - psl.yml
+    modules:
+    - description: Bulk synchronize DNS records in Hosttech DNS service
+      name: hosttech_dns_records
+      namespace: ''
+    release_date: '2021-05-02'

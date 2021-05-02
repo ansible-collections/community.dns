@@ -5,6 +5,30 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v0.3.0
+======
+
+Release Summary
+---------------
+
+Fixes bugs, adds rate limiting for Hosttech JSON API, and adds a new bulk synchronization module.
+
+Minor Changes
+-------------
+
+- hosttech_dns_* - handle ``419 Too Many Requests`` with proper rate limiting for JSON API (https://github.com/ansible-collections/community.dns/pull/14).
+
+Bugfixes
+--------
+
+- Avoid converting ASCII labels which contain underscores or other printable ASCII characters outside ``[a-zA-Z0-9-]`` to alabels during normalization (https://github.com/ansible-collections/community.dns/pull/13).
+- Updated Public Suffix List.
+
+New Modules
+-----------
+
+- community.dns.hosttech_dns_records - Bulk synchronize DNS records in Hosttech DNS service
+
 v0.2.0
 ======
 
