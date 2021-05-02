@@ -28,7 +28,9 @@ from ansible_collections.community.dns.plugins.module_utils.zone import (
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
     DNSAPIAuthenticationError,
+    NOT_PROVIDED,
     ZoneRecordAPI,
+    filter_records,
 )
 
 
@@ -45,7 +47,7 @@ def _create_record_from_encoding(source, type=None):
     return result
 
 
-def _create_zone_from_encoding(source):
+def _create_zone_from_encoding(source, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
     zone = DNSZone(source['name'])
     zone.id = source['id']
     # zone.email = source.get('email')
@@ -53,7 +55,14 @@ def _create_zone_from_encoding(source):
     # zone.nameserver = source['nameserver']
     # zone.serial = source['serial']
     # zone.template = source.get('template')
-    return DNSZoneWithRecords(zone, [_create_record_from_encoding(record) for record in source['records']])
+    return DNSZoneWithRecords(
+        zone,
+        filter_records(
+            [_create_record_from_encoding(record) for record in source['records']],
+            prefix=prefix,
+            record_type=record_type,
+        ),
+    )
 
 
 def _encode_record(record, include_id=False):
@@ -136,18 +145,21 @@ class HostTechWSDLAPI(ZoneRecordAPI):
             # q.q('Result: {0}; extracted type {1}'.format(result, type(res)))
         raise DNSAPIError('Result has unexpected type {0} (expecting {1})!'.format(type(res), acceptable_types))
 
-    def get_zone_with_records_by_name(self, name):
+    def get_zone_with_records_by_name(self, name, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
         """
         Given a zone name, return the zone contents with records if found.
 
         @param name: The zone name (string)
+        @param prefix: The prefix to filter for, if provided. Since None is a valid value,
+                       the special constant NOT_PROVIDED indicates that we are not filtering.
+        @param record_type: The record type to filter for, if provided
         @return The zone information with records (DNSZoneWithRecords), or None if not found
         """
         self._announce('get zone')
         command = self._prepare()
         command.add_simple_command('getZone', sZoneName=name)
         try:
-            return _create_zone_from_encoding(self._execute(command, 'getZoneResponse', dict))
+            return _create_zone_from_encoding(self._execute(command, 'getZoneResponse', dict), prefix=prefix, record_type=record_type)
         except WSDLError as exc:
             if exc.error_origin == 'server' and exc.error_message == 'zone not found':
                 return None
@@ -155,14 +167,30 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         except WSDLNetworkError as exc:
             raise_from(DNSAPIError('Network error while getting zone: {0}'.format(to_native(exc))), exc)
 
-    def get_zone_with_records_by_id(self, id):
+    def get_zone_with_records_by_id(self, id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
         """
         Given a zone ID, return the zone contents with records if found.
 
         @param id: The zone ID
+        @param prefix: The prefix to filter for, if provided. Since None is a valid value,
+                       the special constant NOT_PROVIDED indicates that we are not filtering.
+        @param record_type: The record type to filter for, if provided
         @return The zone information with records (DNSZoneWithRecords), or None if not found
         """
-        return self.get_zone_with_records_by_name(str(id))
+        return self.get_zone_with_records_by_name(str(id), prefix=prefix, record_type=record_type)
+
+    def get_zone_records(self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
+        """
+        Given a zone ID, return a list of records, optionally filtered by the provided criteria.
+
+        @param zone_id: The zone ID
+        @param prefix: The prefix to filter for, if provided. Since None is a valid value,
+                       the special constant NOT_PROVIDED indicates that we are not filtering.
+        @param record_type: The record type to filter for, if provided
+        @return A list of DNSrecord objects, or None if zone was not found
+        """
+        result = self.get_zone_with_records_by_id(zone_id, prefix=prefix, record_type=record_type)
+        return result.records if result is not None else None
 
     def get_zone_by_name(self, name):
         """

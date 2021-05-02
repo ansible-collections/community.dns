@@ -22,6 +22,7 @@ from ansible_collections.community.dns.plugins.module_utils.record import (
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
     DNSAPIAuthenticationError,
+    NOT_PROVIDED,
 )
 
 from ._utils import (
@@ -56,6 +57,21 @@ def create_module_argument_spec(zone_id_type='str'):
 
 
 def run_module(module, create_api):
+    filter_record_type = NOT_PROVIDED
+    filter_prefix = NOT_PROVIDED
+    needs_zone_name = False
+    if module.params.get('what') == 'single_record':
+        filter_record_type = module.params.get('type')
+        if module.params.get('prefix') is not None:
+            filter_prefix = module.params.get('prefix') or None
+        else:
+            needs_zone_name = True
+    elif module.params.get('what') == 'all_types_for_record':
+        if module.params.get('prefix') is not None:
+            filter_prefix = module.params.get('prefix') or None
+        else:
+            needs_zone_name = True
+
     try:
         # Create API
         api = create_api()
@@ -63,11 +79,11 @@ def run_module(module, create_api):
         # Get zone information
         if module.params.get('zone') is not None:
             zone_in = normalize_dns_name(module.params.get('zone'))
-            zone = api.get_zone_with_records_by_name(zone_in)
+            zone = api.get_zone_with_records_by_name(zone_in, prefix=filter_prefix, record_type=filter_record_type)
             if zone is None:
                 module.fail_json(msg='Zone not found')
         else:
-            zone = api.get_zone_with_records_by_id(module.params.get('zone_id'))
+            zone = api.get_zone_with_records_by_id(module.params.get('zone_id'), prefix=filter_prefix, record_type=filter_record_type)
             if zone is None:
                 module.fail_json(msg='Zone not found')
             zone_in = normalize_dns_name(zone.zone.name)
@@ -80,10 +96,9 @@ def run_module(module, create_api):
             record_in, prefix = get_prefix(normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in)
 
             # Find matching records
-            type_in = module.params.get('type')
             records = []
             for record in zone.records:
-                if record.prefix == prefix and record.type == type_in:
+                if record.prefix == prefix:
                     records.append(record)
 
             # Format output
