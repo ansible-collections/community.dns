@@ -11,6 +11,14 @@ class ModuleDocFragment(object):
 
     # Standard files documentation fragment
     DOCUMENTATION = r'''
+description:
+    - The module allows to set, modify and delete multiple DNS records at once.
+    - With the I(purge) option, it is also possible to delete existing records
+      that are not mentioned in the module parameters. With this, it is possible
+      to synchronize the expected state of a DNS zone with the expected state.
+    - "It is possible to ignore certain records by specifying I(ignore: true) for
+       that record."
+
 options:
     zone:
         description:
