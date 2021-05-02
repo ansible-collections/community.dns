@@ -42,6 +42,7 @@ def create_module_argument_spec(zone_id_type='str'):
             records=dict(
                 type='list',
                 elements='dict',
+                required=True,
                 options=dict(
                     record=dict(type='str'),
                     prefix=dict(type='str'),
