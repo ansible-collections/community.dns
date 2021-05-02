@@ -567,6 +567,37 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['msg'].startswith('Error: GET https://api.ns1.hosttech.eu/api/user/v1/zones?')
         assert 'did not yield JSON data, but HTTP status code 500 with Content-Type' in result['msg']
 
+    def test_key_collision_error(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_records, {
+            'hosttech_token': 'foo',
+            'zone': 'example.org',
+            'records': [
+                {
+                    'record': 'test.example.org',
+                    'type': 'A',
+                    'ignore': True,
+                },
+                {
+                    'prefix': 'test',
+                    'type': 'A',
+                    'value': ['1.2.3.4'],
+                },
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.org')
+            .result_str(''),
+        ])
+
+        print(result)
+        assert result['msg'].startswith('Error: GET https://api.ns1.hosttech.eu/api/user/v1/zones?')
+        assert 'did not yield JSON data, but HTTP status code 500 with Content-Type' in result['msg']
+
     def test_idempotency_empty(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_records, {
             'hosttech_token': 'foo',
@@ -650,15 +681,13 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
                 },
                 {
                     'record': 'example.com',
-                    'ttl': 3600,
                     'type': 'MX',
-                    'value': ['10 example.com'],
+                    'ignore': True,
                 },
                 {
                     'record': 'example.com',
-                    'ttl': 10800,
                     'type': 'NS',
-                    'value': ['ns3.hostserv.eu', 'ns2.hostserv.eu', 'ns1.hostserv.eu'],
+                    'ignore': True,
                 },
             ],
             '_ansible_diff': True,
@@ -1172,6 +1201,186 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
                     'prefix': '',
                     'type': 'NS',
                     'ttl': 10800,
+                    'value': ['ns1.hostserv.eu', 'ns4.hostserv.eu'],
+                },
+            ],
+        }
+
+    def test_change_modify_list_ttl(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_records, {
+            'hosttech_token': 'foo',
+            'zone': 'example.com',
+            'records': [
+                {
+                    'record': 'example.com',
+                    'type': 'NS',
+                    'ttl': 3600,
+                    'value': [
+                        'ns1.hostserv.eu',
+                        'ns4.hostserv.eu',
+                    ],
+                },
+            ],
+            '_ansible_diff': True,
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(JSON_ZONE_GET_RESULT),
+            FetchUrlCall('DELETE', 204)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/130')
+            .result_str(''),
+            FetchUrlCall('PUT', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/132')
+            .expect_json_value_absent(['id'])
+            .expect_json_value_absent(['type'])
+            .expect_json_value(['ttl'], 3600)
+            .expect_json_value(['comment'], '')
+            .expect_json_value(['ownername'], '')
+            .expect_json_value(['targetname'], 'ns1.hostserv.eu')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'data': {
+                    'id': 130,
+                    'type': 'NS',
+                    'ownername': '',
+                    'targetname': 'ns4.hostserv.eu',
+                    'ttl': 3600,
+                    'comment': '',
+                },
+            }),
+            FetchUrlCall('PUT', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/131')
+            .expect_json_value_absent(['id'])
+            .expect_json_value_absent(['type'])
+            .expect_json_value(['ttl'], 3600)
+            .expect_json_value(['comment'], '')
+            .expect_json_value(['ownername'], '')
+            .expect_json_value(['targetname'], 'ns4.hostserv.eu')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'data': {
+                    'id': 131,
+                    'type': 'NS',
+                    'ownername': '',
+                    'targetname': 'ns4.hostserv.eu',
+                    'ttl': 3600,
+                    'comment': '',
+                },
+            }),
+        ])
+
+        print(result)
+        assert result['changed'] is True
+        assert result['zone_id'] == 42
+        assert 'diff' in result
+        assert 'before' in result['diff']
+        assert 'after' in result['diff']
+        assert result['diff']['before'] == {
+            'records': [
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.5'],
+                },
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::3'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'MX',
+                    'value': ['10 example.com'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 10800,
+                    'type': 'NS',
+                    'value': ['ns3.hostserv.eu', 'ns2.hostserv.eu', 'ns1.hostserv.eu'],
+                },
+            ],
+        }
+        assert result['diff']['after'] == {
+            'records': [
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.5'],
+                },
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::3'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'MX',
+                    'value': ['10 example.com'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'type': 'NS',
+                    'ttl': 3600,
                     'value': ['ns1.hostserv.eu', 'ns4.hostserv.eu'],
                 },
             ],

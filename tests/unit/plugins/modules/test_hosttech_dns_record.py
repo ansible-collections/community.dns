@@ -210,6 +210,40 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
         print(e.value.args[0])
         assert e.value.args[0]['msg'] == 'Zone not found'
 
+    def test_unknown_zone_id_prefix(self):
+        open_url = OpenUrlProxy([
+            OpenUrlCall('POST', 200)
+            .expect_content_predicate(validate_wsdl_call([
+                expect_wsdl_authentication('foo', 'bar'),
+                expect_wsdl_value(
+                    [lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'getZone').text, 'sZoneName'],
+                    '23',
+                    ('http://www.w3.org/2001/XMLSchema', 'string')
+                ),
+            ]))
+            .result_str(WSDL_ZONE_NOT_FOUND),
+        ])
+        with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
+            with pytest.raises(AnsibleFailJson) as e:
+                set_module_args({
+                    'hosttech_username': 'foo',
+                    'hosttech_password': 'bar',
+                    'state': 'present',
+                    'zone_id': 23,
+                    'prefix': '',
+                    'type': 'MX',
+                    'ttl': 3600,
+                    'value': [
+                        '10 example.com',
+                    ],
+                    '_ansible_remote_tmp': '/tmp/tmp',
+                    '_ansible_keep_remote_files': True,
+                })
+                hosttech_dns_record.main()
+
+        print(e.value.args[0])
+        assert e.value.args[0]['msg'] == 'Zone not found'
+
     def test_idempotency_present(self):
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
@@ -666,6 +700,32 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         print(result)
         assert result['msg'] == 'Zone not found'
 
+    def test_unknown_zone_id_prefix(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_record, {
+            'hosttech_token': 'foo',
+            'state': 'present',
+            'zone_id': 23,
+            'prefix': '',
+            'type': 'MX',
+            'ttl': 3600,
+            'value': [
+                '10 example.com',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 404)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/23/records', without_query=True)
+            .expect_query_values('type', 'MX')
+            .return_header('Content-Type', 'application/json')
+            .result_json(dict(message="")),
+        ])
+
+        print(result)
+        assert result['msg'] == 'Zone not found'
+
     def test_auth_error(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_record, {
             'hosttech_token': 'foo',
@@ -1016,6 +1076,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'value': [
                 'test',
             ],
+            '_ansible_diff': True,
             '_ansible_check_mode': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -1032,6 +1093,16 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         print(result)
         assert result['changed'] is True
         assert result['zone_id'] == 42
+        assert 'diff' in result
+        assert 'before' in result['diff']
+        assert 'after' in result['diff']
+        assert result['diff']['before'] == {}
+        assert result['diff']['after'] == {
+            'prefix': '',
+            'type': 'CAA',
+            'ttl': 3600,
+            'value': ['test'],
+        }
 
     def test_change_add_one(self, mocker):
         new_entry = (131, 42, 'CAA', '', 'test', 3600, None, None)
