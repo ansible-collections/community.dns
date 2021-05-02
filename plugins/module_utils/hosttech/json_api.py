@@ -28,7 +28,9 @@ from ansible_collections.community.dns.plugins.module_utils.zone import (
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
     DNSAPIAuthenticationError,
+    NOT_PROVIDED,
     ZoneRecordAPI,
+    filter_records,
 )
 
 
@@ -82,10 +84,15 @@ def _create_zone_from_json(source):
     return zone
 
 
-def _create_zone_with_records_from_json(source):
+def _create_zone_with_records_from_json(source, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
     return DNSZoneWithRecords(
         _create_zone_from_json(source),
-        [_create_record_from_json(record) for record in source['records']])
+        filter_records(
+            [_create_record_from_json(record) for record in source['records']],
+            prefix=prefix,
+            record_type=record_type,
+        ),
+    )
 
 
 def _record_to_json(record, include_id=False, include_type=True):
@@ -359,31 +366,59 @@ class HostTechJSONAPI(ZoneRecordAPI):
                 return result
             offset += block_size
 
-    def get_zone_with_records_by_id(self, id):
+    def get_zone_with_records_by_id(self, id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
         """
         Given a zone ID, return the zone contents with records if found.
 
         @param id: The zone ID
+        @param prefix: The prefix to filter for, if provided. Since None is a valid value,
+                       the special constant NOT_PROVIDED indicates that we are not filtering.
+        @param record_type: The record type to filter for, if provided
         @return The zone information with records (DNSZoneWithRecords), or None if not found
         """
         result, info = self._get('user/v1/zones/{0}'.format(id), expected=[200, 404], must_have_content=[200])
         if info['status'] == 404:
             return None
-        return _create_zone_with_records_from_json(result['data'])
+        return _create_zone_with_records_from_json(result['data'], prefix=prefix, record_type=record_type)
 
-    def get_zone_with_records_by_name(self, name):
+    def get_zone_with_records_by_name(self, name, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
         """
         Given a zone name, return the zone contents with records if found.
 
         @param name: The zone name (string)
+        @param prefix: The prefix to filter for, if provided. Since None is a valid value,
+                       the special constant NOT_PROVIDED indicates that we are not filtering.
+        @param record_type: The record type to filter for, if provided
         @return The zone information with records (DNSZoneWithRecords), or None if not found
         """
         result = self._list_pagination('user/v1/zones', query=dict(query=name))
         for zone in result:
             if zone['name'] == name:
                 result, info = self._get('user/v1/zones/{0}'.format(zone['id']), expected=[200])
-                return _create_zone_with_records_from_json(result['data'])
+                return _create_zone_with_records_from_json(result['data'], prefix=prefix, record_type=record_type)
         return None
+
+    def get_zone_records(self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
+        """
+        Given a zone ID, return a list of records, optionally filtered by the provided criteria.
+
+        @param zone_id: The zone ID
+        @param prefix: The prefix to filter for, if provided. Since None is a valid value,
+                       the special constant NOT_PROVIDED indicates that we are not filtering.
+        @param record_type: The record type to filter for, if provided
+        @return A list of DNSrecord objects, or None if zone was not found
+        """
+        query = dict()
+        if record_type is not NOT_PROVIDED:
+            query['type'] = record_type.upper()
+        result, info = self._get('user/v1/zones/{0}/records'.format(zone_id), query=query, expected=[200, 404], must_have_content=[200])
+        if info['status'] == 404:
+            return None
+        return filter_records(
+            [_create_record_from_json(record) for record in result['data']],
+            prefix=prefix,
+            record_type=record_type,
+        )
 
     def get_zone_by_name(self, name):
         """
