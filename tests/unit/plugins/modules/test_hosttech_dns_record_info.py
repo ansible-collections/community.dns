@@ -295,7 +295,6 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .result_json(JSON_ZONE_LIST_RESULT),
         ])
 
-        print(result)
         assert result['msg'] == 'Zone not found'
 
     def test_unknown_zone_id(self, mocker):
@@ -315,7 +314,6 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .result_json(dict(message="")),
         ])
 
-        print(result)
         assert result['msg'] == 'Zone not found'
 
     def test_auth_error(self, mocker):
@@ -335,7 +333,6 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .result_str(''),
         ])
 
-        print(result)
         assert result['msg'] == 'Cannot authenticate: Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
 
     def test_auth_error_forbidden(self, mocker):
@@ -354,7 +351,6 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .result_json(dict(message="")),
         ])
 
-        print(result)
         assert result['msg'] == 'Cannot authenticate: Forbidden: you do not have access to this resource (HTTP status 403)'
 
     def test_other_error(self, mocker):
@@ -374,7 +370,6 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .result_str(''),
         ])
 
-        print(result)
         assert result['msg'].startswith('Error: GET https://api.ns1.hosttech.eu/api/user/v1/zones?')
         assert 'did not yield JSON data, but HTTP status code 500 with Content-Type' in result['msg']
 
@@ -435,7 +430,6 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
                 .return_header('Retry-After', '42')
                 .result_str(''),
             ])
-        print(result)
         print(sleep_values)
         assert result['msg'] == 'Error: Stopping after 10 failed retries with 429 Too Many Attempts'
         assert len(sleep_values) == 0
@@ -478,7 +472,6 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
                 .return_header('Content-Type', 'application/json')
                 .result_json(JSON_ZONE_GET_RESULT),
             ])
-        print(result)
         assert result['changed'] is False
         assert result['zone_id'] == 42
         assert 'set' in result
@@ -512,7 +505,6 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .return_header('Content-Type', 'application/json')
             .result_json(JSON_ZONE_GET_RESULT),
         ])
-        print(result)
         assert result['changed'] is False
         assert result['zone_id'] == 42
         assert 'set' in result
@@ -546,7 +538,6 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .return_header('Content-Type', 'application/json')
             .result_json(JSON_ZONE_GET_RESULT),
         ])
-        print(result)
         assert result['changed'] is False
         assert result['zone_id'] == 42
         assert 'set' not in result
@@ -591,7 +582,6 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .return_header('Content-Type', 'application/json')
             .result_json(JSON_ZONE_GET_RESULT),
         ])
-        print(result)
         assert result['changed'] is False
         assert result['zone_id'] == 42
         assert 'set' not in result
@@ -642,7 +632,6 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .return_header('Content-Type', 'application/json')
             .result_json(JSON_ZONE_GET_RESULT),
         ])
-        print(result)
         assert result['changed'] is False
         assert result['zone_id'] == 42
         assert 'set' not in result
