@@ -15,7 +15,7 @@ tags:
   - community
   - dns
 repository: https://github.com/ansible-collections/community.dns
-#documentation: https://github.com/ansible-collection-migration/community.dns/tree/main/docs
+documentation: https://ansible.fontein.de/collections/community/dns/
 homepage: https://github.com/ansible-collections/community.dns
 issues: https://github.com/ansible-collections/community.dns/issues
 build_ignore:
