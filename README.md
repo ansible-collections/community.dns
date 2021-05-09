@@ -6,6 +6,8 @@
 
 This repository contains the `community.dns` Ansible Collection. The collection includes plugins and modules to work with DNS.
 
+Please note that this collection does **not** support Windows targets.
+
 ## Tested with Ansible
 
 Tested with the current Ansible 2.9, ansible-base 2.10 and ansible-core 2.11 releases and the current development version of ansible-core. Ansible versions before 2.9.10 are not supported.
