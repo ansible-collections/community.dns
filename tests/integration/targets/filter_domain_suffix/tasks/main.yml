@@ -12,6 +12,7 @@
       - "'ëçãmplê' | community.dns.get_public_suffix(normalize_result=True) == 'xn--mpl-llatwb'"
       - "'www.example.cloudfront.net' | community.dns.get_public_suffix(icann_only=false) == '.cloudfront.net'"
       - "'www.example.cloudfront.net' | community.dns.get_public_suffix(icann_only=true) == '.net'"
+      - "'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63' | community.dns.get_public_suffix == ''"
 
 - name: "Test remove_public_suffix filter"
   assert:
@@ -27,6 +28,7 @@
       - "'no.known.suffixafdlkjsaflkjsaflkjslkjfds' | community.dns.remove_public_suffix(keep_unknown_suffix=False) == 'no.known.suffixafdlkjsaflkjsaflkjslkjfds'"
       - "'www.example.cloudfront.net' | community.dns.remove_public_suffix(icann_only=false) == 'www.example'"
       - "'www.example.cloudfront.net' | community.dns.remove_public_suffix(icann_only=true) == 'www.example.cloudfront'"
+      - "'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63' | community.dns.remove_public_suffix == 'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63'"
 
 - name: "Test get_registrable_domain filter"
   assert:
@@ -44,6 +46,7 @@
       - "'ëçãmplê.com' | community.dns.get_registrable_domain(normalize_result=True) == 'xn--mpl-llatwb.com'"
       - "'www.example.cloudfront.net' | community.dns.get_registrable_domain(icann_only=false) == 'example.cloudfront.net'"
       - "'www.example.cloudfront.net' | community.dns.get_registrable_domain(icann_only=true) == 'cloudfront.net'"
+      - "'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63' | community.dns.get_registrable_domain == ''"
 
 - name: "Test remove_registrable_domain filter"
   assert:
@@ -64,3 +67,4 @@
       - "'some.invalid.example' | community.dns.remove_registrable_domain(keep_unknown_suffix=False) == 'some.invalid.example'"
       - "'www.example.cloudfront.net' | community.dns.remove_registrable_domain(icann_only=false) == 'www'"
       - "'www.example.cloudfront.net' | community.dns.remove_registrable_domain(icann_only=true) == 'www.example'"
+      - "'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63' | community.dns.remove_registrable_domain == 'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63'"
