@@ -289,6 +289,88 @@ def create_wsdl_zone_not_found_answer():
     return ''.join(lines)
 
 
+def check_wsdl_record(record_data, entry):
+    check_wsdl_value(find_xml_map_entry(record_data, 'type'), entry[2], type=('http://www.w3.org/2001/XMLSchema', 'string'))
+    prefix = find_xml_map_entry(record_data, 'prefix')
+    if entry[3]:
+        check_wsdl_value(prefix, entry[3], type=('http://www.w3.org/2001/XMLSchema', 'string'))
+    elif prefix is not None:
+        check_wsdl_nil(prefix)
+    check_wsdl_value(find_xml_map_entry(record_data, 'target'), entry[4], type=('http://www.w3.org/2001/XMLSchema', 'string'))
+    check_wsdl_value(find_xml_map_entry(record_data, 'ttl'), str(entry[5]), type=('http://www.w3.org/2001/XMLSchema', 'int'))
+    if entry[6] is None:
+        comment = find_xml_map_entry(record_data, 'comment', allow_non_existing=True)
+        if comment is not None:
+            check_wsdl_nil(comment)
+    else:
+        check_wsdl_value(find_xml_map_entry(record_data, 'comment'), entry[6], type=('http://www.w3.org/2001/XMLSchema', 'string'))
+    if entry[7] is None:
+        check_wsdl_nil(find_xml_map_entry(record_data, 'priority'))
+    else:
+        check_wsdl_value(find_xml_map_entry(record_data, 'priority'), entry[7], type=('http://www.w3.org/2001/XMLSchema', 'string'))
+
+
+def validate_wsdl_add_request(zone, entry):
+    def predicate(content, header, body):
+        fn_data = get_wsdl_value(body, lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'addRecord').text)
+        check_wsdl_value(get_wsdl_value(fn_data, 'search'), zone, type=('http://www.w3.org/2001/XMLSchema', 'string'))
+        check_wsdl_record(get_wsdl_value(fn_data, 'recorddata'), entry)
+        return True
+
+    return predicate
+
+
+def validate_wsdl_update_request(entry):
+    def predicate(content, header, body):
+        fn_data = get_wsdl_value(body, lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'updateRecord').text)
+        check_wsdl_value(get_wsdl_value(fn_data, 'recordId'), str(entry[0]), type=('http://www.w3.org/2001/XMLSchema', 'int'))
+        check_wsdl_record(get_wsdl_value(fn_data, 'recorddata'), entry)
+        return True
+
+    return predicate
+
+
+def validate_wsdl_del_request(entry):
+    def predicate(content, header, body):
+        fn_data = get_wsdl_value(body, lxml.etree.QName('https://ns1.hosttech.eu/public/api', 'deleteRecord').text)
+        check_wsdl_value(get_wsdl_value(fn_data, 'recordId'), str(entry[0]), type=('http://www.w3.org/2001/XMLSchema', 'int'))
+        return True
+
+    return predicate
+
+
+def create_wsdl_add_result(entry):
+    lines = []
+    add_wsdl_answer_start_lines(lines)
+    lines.append('<ns1:addRecordResponse>')
+    add_wsdl_dns_record_lines(lines, entry, 'return')
+    lines.append('</ns1:addRecordResponse>')
+    add_wsdl_answer_end_lines(lines)
+    return ''.join(lines)
+
+
+def create_wsdl_update_result(entry):
+    lines = []
+    add_wsdl_answer_start_lines(lines)
+    lines.append('<ns1:updateRecordResponse>')
+    add_wsdl_dns_record_lines(lines, entry, 'return')
+    lines.append('</ns1:updateRecordResponse>')
+    add_wsdl_answer_end_lines(lines)
+    return ''.join(lines)
+
+
+def create_wsdl_del_result(success):
+    lines = []
+    add_wsdl_answer_start_lines(lines)
+    lines.extend([
+        '<ns1:deleteRecordResponse>',
+        '<return xsi:type="xsd:boolean">{success}</return>'.format(success='true' if success else 'false'),
+        '</ns1:deleteRecordResponse>',
+    ])
+    add_wsdl_answer_end_lines(lines)
+    return ''.join(lines)
+
+
 WSDL_DEFAULT_ZONE_RESULT = create_wsdl_zones_answer(42, 'example.com', WSDL_DEFAULT_ENTRIES)
 
 WSDL_ZONE_NOT_FOUND = create_wsdl_zone_not_found_answer()
