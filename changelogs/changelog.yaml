@@ -89,3 +89,12 @@ releases:
       name: hosttech_dns_records
       namespace: ''
     release_date: '2021-05-02'
+  1.0.0:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      release_summary: First stable release.
+    fragments:
+    - 1.0.0.yml
+    - update-psl.yml
+    release_date: '2021-05-09'
