@@ -143,10 +143,20 @@ jobs:
           - 3.7
           - 3.8
           - 3.9
+          - "3.10"
         exclude:
           # Because ansible-test doesn't support python3.9 for Ansible 2.9
           - ansible: stable-2.9
             python: 3.9
+          # Because ansible-test doesn't support python3.10 for Ansible 2.9
+          - ansible: stable-2.9
+            python: "3.10"
+          # Because ansible-test doesn't support python3.10 for ansible-base 2.10
+          - ansible: stable-2.10
+            python: "3.10"
+          # Because ansible-test doesn't support python3.10 for ansible-core 2.11
+          - ansible: stable-2.11
+            python: "3.10"
 
     steps:
       - name: Check out code
