@@ -70,9 +70,6 @@ jobs:
       - name: Install ansible-core
         run: pip install https://github.com/ansible/ansible/archive/devel.tar.gz --disable-pip-version-check
 
-      - name: Install fake-ansible
-        run: pip install https://github.com/felixfontein/fake-ansible/archive/main.tar.gz --disable-pip-version-check
-
       - name: Install galaxy-importer
         run: pip install galaxy-importer --disable-pip-version-check
 
