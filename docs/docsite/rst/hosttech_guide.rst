@@ -8,10 +8,10 @@ The modules support both the old `WSDL-based API <https://ns1.hosttech.eu/public
 
 The collection provides four modules for working with HostTech DNS:
 
-- ``community.dns.hosttech_dns_record``: create/update/delete DNS records
-- ``community.dns.hosttech_dns_record_info``: retrieve information on DNS records
-- ``community.dns.hosttech_dns_records``: bulk synchronize DNS records
-- ``community.dns.hosttech_dns_zone_info``: retrieve zone information
+- :ref:`community.dns.hosttech_dns_record <ansible_collections.community.dns.hosttech_dns_record_module>`: create/update/delete DNS records
+- :ref:`community.dns.hosttech_dns_record_info <ansible_collections.community.dns.hosttech_dns_record_info_module>`: retrieve information on DNS records
+- :ref:`community.dns.hosttech_dns_records <ansible_collections.community.dns.hosttech_dns_records_module>`: bulk synchronize DNS records
+- :ref:`community.dns.hosttech_dns_zone_info <ansible_collections.community.dns.hosttech_dns_zone_info_module>`: retrieve zone information
 
 Authentication, Requirements and APIs
 -------------------------------------
@@ -54,7 +54,7 @@ In the examples in this guide, we will leave the authentication options away. Pl
 Working with DNS zones
 ----------------------
 
-The ``community.dns.hosttech_dns_zone_info`` module allows to query information on a zone. The zone can be identified both by its name and by its ID (which is an integer):
+The :ref:`community.dns.hosttech_dns_zone_info module <ansible_collections.community.dns.hosttech_dns_zone_info_module>` allows to query information on a zone. The zone can be identified both by its name and by its ID (which is an integer):
 
 .. code-block:: yaml+jinja
 
@@ -83,7 +83,7 @@ Working with DNS records
 Querying DNS records
 ~~~~~~~~~~~~~~~~~~~~
 
-The ``community.dns.hosttech_dns_record_info`` module allows to query DNS records from the API. It can be used to query a single record:
+The :ref:`community.dns.hosttech_dns_record_info module <ansible_collections.community.dns.hosttech_dns_record_info_module>` allows to query DNS records from the API. It can be used to query a single record:
 
 .. code-block:: yaml+jinja
 
@@ -153,7 +153,7 @@ Finally you can query all records for a zone:
 Creating and updating DNS records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``community.dns.hosttech_dns_record`` module allows to set, update and remove DNS records. Setting and updating can be done as follows:
+The :ref:`community.dns.hosttech_dns_record module <ansible_collections.community.dns.hosttech_dns_record_module>` allows to set, update and remove DNS records. Setting and updating can be done as follows:
 
 .. code-block:: yaml+jinja
 
@@ -201,7 +201,7 @@ In the second example, ``overwrite: true`` is not present, but an explicit value
 Bulk synchronization of DNS records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you want to set/update multiple records at once, or even make sure that the precise set of records you are providing are present and nothing else, you can use the ``community.dns.hosttech_dns_records`` module.
+If you want to set/update multiple records at once, or even make sure that the precise set of records you are providing are present and nothing else, you can use the :ref:`community.dns.hosttech_dns_records module <ansible_collections.community.dns.hosttech_dns_records_module>`.
 
 The following example shows up to set/update multiple records at once:
 
