@@ -1,0 +1,10 @@
+{
+    "include_symlinks": true,
+    "prefixes": [
+        "plugins/"
+    ],
+    "exclude_prefixes": [
+        "plugins/public_suffix_list.dat"
+    ],
+    "output": "path-message"
+}

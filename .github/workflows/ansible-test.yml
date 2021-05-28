@@ -4,7 +4,7 @@ on:
   push:
   pull_request:
   # Run CI once per day (at 06:00 UTC)
-  # This ensures that even if there haven't been commits that we are still testing against latest version of ansible-test for each ansible-base version
+  # This ensures that even if there haven't been commits that we are still testing against latest version of ansible-test for each ansible-core version
   schedule:
     - cron: '0 6 * * *'
 env:
@@ -48,7 +48,7 @@ jobs:
           python-version: 3.8
 
       # Install the head of the given branch (devel, stable-2.10)
-      - name: Install ansible-base (${{ matrix.ansible }})
+      - name: Install ansible-core (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
 
       # run ansible-test sanity inside of Docker.
@@ -89,7 +89,7 @@ jobs:
           # will run on all python versions it supports.
           python-version: 3.8
 
-      - name: Install ansible-base (${{ matrix.ansible }})
+      - name: Install ansible-core (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
 
       # OPTIONAL If your unit test requires Python libraries from other collections
@@ -171,7 +171,7 @@ jobs:
           # will run on all python versions it supports.
           python-version: 3.8
 
-      - name: Install ansible-base (${{ matrix.ansible }})
+      - name: Install ansible-core (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
 
       # OPTIONAL If your integration test requires Python libraries or modules from other collections
