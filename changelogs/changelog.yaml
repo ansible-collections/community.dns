@@ -98,3 +98,12 @@ releases:
     - 1.0.0.yml
     - update-psl.yml
     release_date: '2021-05-09'
+  1.0.1:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      release_summary: Regular maintenance release.
+    fragments:
+    - 1.0.1.yml
+    - update-psl.yml
+    release_date: '2021-06-05'
