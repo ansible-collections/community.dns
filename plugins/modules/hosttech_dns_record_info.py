@@ -36,6 +36,11 @@ attributes:
 
 author:
     - Felix Fontein (@felixfontein)
+
+seealso:
+    - module: community.dns.hosttech_dns_record_set_info
+    - plugin: community.dns.hosttech_dns_records
+      plugin_type: inventory
 '''
 
 EXAMPLES = '''
@@ -57,7 +62,7 @@ records:
     description: The list of fetched records.
     type: list
     elements: dict
-    returned: success and I(what) is not C(single_record)
+    returned: success and O(what) is not V(single_record)
     contains:
         record:
             description: The record name.

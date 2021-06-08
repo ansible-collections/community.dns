@@ -36,7 +36,7 @@ HostTech currently has two APIs for working with DNS records: the old WSDL-based
 JSON REST API
 ~~~~~~~~~~~~~
 
-To use the JSON REST API, you need to create a API token. You can manage API tokens in the "DNS Editor" in the "API" section. You must provide the token to the ``hosttech_token`` option of the modules:
+To use the JSON REST API, you need to create a API token. You can manage API tokens in the "DNS Editor" in the "API" section. You must provide the token to the :ansopt:`hosttech_token` option of the modules:
 
 .. code-block:: yaml+jinja
 
@@ -49,7 +49,7 @@ In the examples in this guide, we will leave the authentication options away. Pl
 WSDL API
 ~~~~~~~~
 
-To use the WSDL API, you need to set API credentials. These can be found and changed in the "Servercenter" and there in the "Solutions" section under settings for the "DNS Tool". The username is fixed, but the password can be changed. The credentials must be provided to the ``hosttech_username`` and ``hosttech_password`` options of the modules.
+To use the WSDL API, you need to set API credentials. These can be found and changed in the "Servercenter" and there in the "Solutions" section under settings for the "DNS Tool". The username is fixed, but the password can be changed. The credentials must be provided to the :ansopt:`hosttech_username` and :ansopt:`hosttech_password` options of the modules.
 
 You also need to install the `lxml Python module <https://pypi.org/project/lxml/>`_ to work with the WSDL API. This can be done before using the modules:
 
@@ -129,7 +129,7 @@ Working with DNS records
 
 .. note::
 
-  By default, TXT record values returned and accepted by the modules and plugins in this collection are unquoted. This means that  you do not have to add double quotes (``"``), and escape double quotes (as ``\"``) and backslashes (as ``\\``). All modules and plugins which work with DNS records support the ``txt_transformation`` option which allows to configure this behavior.
+  By default, TXT record values returned and accepted by the modules and plugins in this collection are unquoted. This means that  you do not have to add double quotes (``"``), and escape double quotes (as ``\"``) and backslashes (as ``\\``). All modules and plugins which work with DNS records support the :ansopt:`community.dns.hosttech_dns_record_set#module:txt_transformation` option which allows to configure this behavior.
 
 Querying DNS records and record sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -161,7 +161,7 @@ The :ref:`community.dns.hosttech_dns_record_set_info module <ansible_collections
         msg: There is no A record for www.example.com
       when: not result.set
 
-In all examples in this section, you can replace ``zone_name: example.com`` by ``zone_id: 42`` with the zone's integer ID.
+In all examples in this section, you can replace :ansopt:`community.dns.hosttech_dns_record_set_info#module:zone_name=example.com` by :ansopt:`community.dns.hosttech_dns_record_set_info#module:zone_id=42` with the zone's integer ID.
 
 You can also query a list of all record sets for a record name or prefix:
 
@@ -224,7 +224,7 @@ The :ref:`community.dns.hosttech_dns_record module <ansible_collections.communit
         value: 1.1.1.1
         ttl: 300
 
-To delete records, simply use ``state: absent``. Records will be matched by record name and type, and the TTL will be ignored:
+To delete records, simply use :ansopt:`community.dns.hosttech_dns_record#module:state=absent`. Records will be matched by record name and type, and the TTL will be ignored:
 
 .. code-block:: yaml+jinja
 
@@ -258,9 +258,9 @@ The :ref:`community.dns.hosttech_dns_record_set module <ansible_collections.comm
           - 1.1.1.1
           - 8.8.8.8
 
-If you want to assert that a record has a certain value, set ``on_existing: keep``. Using ``keep_and_warn`` instead will emit a warning if this happens, and ``keep_and_fail`` will make the module fail.
+If you want to assert that a record has a certain value, set :ansopt:`community.dns.hosttech_dns_record_set#module:on_existing=keep`. Using :ansval:`keep_and_warn` instead will emit a warning if this happens, and :ansval:`keep_and_fail` will make the module fail.
 
-To delete values, you can either overwrite the values with value ``[]``, or use ``state: absent``:
+To delete values, you can either overwrite the values with value :ansval:`[]`, or use :ansopt:`community.dns.hosttech_dns_record_set#module:state=absent`:
 
 .. code-block:: yaml+jinja
 
@@ -290,7 +290,7 @@ To delete values, you can either overwrite the values with value ``[]``, or use 
         value:
           - '::1'
 
-In the third example, ``on_existing: keep_and_fail`` is present and an explicit value and TTL are given. This makes the module remove the current value only if there's a AAAA record for ``www.example.com`` whose current value is ``::1`` and whose TTL is 300. If another value is set, the module will not make any change, but fail. This can be useful to not accidentally remove values you do not want to change. To issue a warning instead of failing, use ``on_existing: keep_and_warn``, and to simply not do a change without any indication of this situation, use ``on_existing: keep``.
+In the third example, :ansopt:`community.dns.hosttech_dns_record_set#module:on_existing=keep_and_fail` is present and an explicit value and TTL are given. This makes the module remove the current value only if there's a AAAA record for ``www.example.com`` whose current value is ``::1`` and whose TTL is 300. If another value is set, the module will not make any change, but fail. This can be useful to not accidentally remove values you do not want to change. To issue a warning instead of failing, use :ansopt:`community.dns.hosttech_dns_record_set#module:on_existing=keep_and_warn`, and to simply not do a change without any indication of this situation, use :ansopt:`community.dns.hosttech_dns_record_set#module:on_existing=keep`.
 
 Bulk synchronization of DNS record sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -304,7 +304,7 @@ The following example shows up to set/update multiple records at once:
     - name: Make sure that multiple records are present
       community.dns.hosttech_dns_record_sets:
         zone_name: example.com
-        records:
+        record_sets:
           - prefix: www
             type: A
             value:
@@ -315,7 +315,7 @@ The following example shows up to set/update multiple records at once:
             value:
               - '::1'
 
-The next example shows how to make sure that only the given records are available and all other records are deleted. Note that for the ``type: NS`` record we used ``ignore: true``, which allows us to skip the value. It tells the module that it should not touch the ``NS`` record for ``example.com``.
+The next example shows how to make sure that only the given records are available and all other records are deleted. Note that for the :ansopt:`community.dns.hosttech_dns_record_sets#module:record_sets[].type=NS` record we used :ansopt:`community.dns.hosttech_dns_record_sets#module:record_sets[].ignore=true`, which allows us to skip the value. It tells the module that it should not touch the ``NS`` record for ``example.com``.
 
 .. code-block:: yaml+jinja
 
@@ -323,7 +323,7 @@ The next example shows how to make sure that only the given records are availabl
       community.dns.hosttech_dns_record_sets:
         zone_name: example.com
         prune: true
-        records:
+        record_sets:
           - prefix: www
             type: A
             value:

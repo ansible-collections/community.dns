@@ -19,20 +19,20 @@ options:
     hosttech_username:
         description:
           - The username for the Hosttech API user.
-          - If provided, I(hosttech_password) must also be provided.
-          - Mutually exclusive with I(hosttech_token).
+          - If provided, O(hosttech_password) must also be provided.
+          - Mutually exclusive with O(hosttech_token).
         type: str
     hosttech_password:
         description:
           - The password for the Hosttech API user.
-          - If provided, I(hosttech_username) must also be provided.
-          - Mutually exclusive with I(hosttech_token).
+          - If provided, O(hosttech_username) must also be provided.
+          - Mutually exclusive with O(hosttech_token).
         type: str
     hosttech_token:
         description:
           - The password for the Hosttech API user.
-          - Mutually exclusive with I(hosttech_username) and I(hosttech_password).
-          - Since community.dns 1.2.0, the alias I(api_token) can be used.
+          - Mutually exclusive with O(hosttech_username) and O(hosttech_password).
+          - Since community.dns 1.2.0, the alias O(ignore:api_token) can be used.
         aliases:
           - api_token
         type: str
@@ -97,17 +97,19 @@ options:
             record:
                 description:
                   - The full DNS record to create or delete.
-                  - Exactly one of I(record) and I(prefix) must be specified.
+                  - Exactly one of O(record_sets[].record) and O(record_sets[].prefix)
+                      must be specified.
                 type: str
             prefix:
                 description:
                   - The prefix of the DNS record.
-                  - This is the part of I(record) before I(zone_name). For example,
-                      if the record to be modified is C(www.example.com) for the zone
-                      C(example.com), the prefix is C(www). If the record in this
-                      example would be C(example.com), the prefix would be C('') (empty
-                      string).
-                  - Exactly one of I(record) and I(prefix) must be specified.
+                  - This is the part of O(record_sets[].record) before O(zone_name).
+                      For example, if the record to be modified is C(www.example.com)
+                      for the zone C(example.com), the prefix is V(www). If the record
+                      in this example would be C(example.com), the prefix would be
+                      V('') (empty string).
+                  - Exactly one of O(record_sets[].record) and O(record_sets[].prefix)
+                      must be specified.
                 type: str
             ttl:
                 description:
@@ -136,13 +138,13 @@ options:
                   - YAML lists or multiple comma-spaced values are allowed.
                   - When deleting a record all values for the record must be specified
                       or it will not be deleted.
-                  - Must be specified if I(ignore=false).
+                  - Must be specified if O(record_sets[].ignore=false).
                 type: list
                 elements: str
             ignore:
                 description:
-                  - If set to C(true), I(value) will be ignored.
-                  - This is useful when I(prune=true), but you do not want certain
+                  - If set to V(true), O(record_sets[].value) will be ignored.
+                  - This is useful when O(prune=true), but you do not want certain
                       entries to be removed without having to know their current value.
                 type: bool
                 default: false

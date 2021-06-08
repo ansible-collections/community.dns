@@ -45,23 +45,23 @@ The filters also allow additional options (keyword arguments):
 
 :keep_unknown_suffix:
 
-  A boolean with default value ``true``. This treats unknown TLDs as valid public suffixes. So for example the public suffix of ``example.tlddoesnotexist`` is ``.tlddoesnotexist`` if this is ``true``. If set to ``false``, it will return an empty string in this case. This option corresponds to whether the global wildcard rule ``*`` in the Public Suffix List is used or not.
+  A boolean with default value :ansval:`true`. This treats unknown TLDs as valid public suffixes. So for example the public suffix of :ansval:`example.tlddoesnotexist` is ``.tlddoesnotexist`` if this is :ansval:`true`. If set to :ansval:`false`, it will return an empty string in this case. This option corresponds to whether the global wildcard rule ``*`` in the Public Suffix List is used or not.
 
 :icann_only:
 
-  A boolean with default value ``false``. This controls whether only entries from the ICANN section of the Public Suffix List are used, or also entries from the Private section. For example, ``.co.uk`` is in the ICANN section, but ``github.io`` is in the Private section.
+  A boolean with default value :ansval:`false`. This controls whether only entries from the ICANN section of the Public Suffix List are used, or also entries from the Private section. For example, ``.co.uk`` is in the ICANN section, but ``github.io`` is in the Private section.
 
 :normalize_result:
 
-  (Only for :ref:`community.dns.get_public_suffix <ansible_collections.community.dns.get_public_suffix_filter>`) A boolean with default value ``false``. This controls whether the result is reconstructed from the normalized name used during lookup. During normalization, ulabels are converted to alabels, and every label is converted to lowercase. For example, the ulabel ``ëçãmplê`` is converted to ``xn--mpl-llatwb`` (puny-code), and ``Example.COM`` is converted to ``example.com``.
+  (Only for :ref:`community.dns.get_public_suffix <ansible_collections.community.dns.get_public_suffix_filter>`) A boolean with default value :ansval:`false`. This controls whether the result is reconstructed from the normalized name used during lookup. During normalization, ulabels are converted to alabels, and every label is converted to lowercase. For example, the ulabel :ansval:`ëçãmplê` is converted to ``xn--mpl-llatwb`` (puny-code), and :ansval:`Example.COM` is converted to ``example.com``.
 
 :keep_leading_period:
 
-  (Only for :ref:`community.dns.get_public_suffix <ansible_collections.community.dns.get_public_suffix_filter>`) A boolean with default value ``true``. This controls whether the leading period of a public suffix is preserved or not.
+  (Only for :ref:`community.dns.get_public_suffix <ansible_collections.community.dns.get_public_suffix_filter>`) A boolean with default value :ansval:`true`. This controls whether the leading period of a public suffix is preserved or not.
 
 :keep_trailing_period:
 
-  (Only for :ref:`community.dns.remove_public_suffix <ansible_collections.community.dns.remove_public_suffix_filter>`) A boolean with default value ``false``. This controls whether the trailing period of the prefix (that is, the part before the public suffix) is preserved or not.
+  (Only for :ref:`community.dns.remove_public_suffix <ansible_collections.community.dns.remove_public_suffix_filter>`) A boolean with default value :ansval:`false`. This controls whether the trailing period of the prefix (that is, the part before the public suffix) is preserved or not.
 
 Working with registrable domain names
 -------------------------------------
@@ -85,20 +85,20 @@ The filters also allow additional options (keyword arguments):
 
 :keep_unknown_suffix:
 
-  A boolean with default value ``true``. This treats unknown TLDs as valid public suffixes. So for example the public suffix of ``example.tlddoesnotexist`` is ``.tlddoesnotexist`` if this is ``true``, and hence the registrable domain of ``www.example.tlddoesnotexist`` is ``example.tlddoesnotexist``. If set to ``false``, the registrable domain of ``www.example.tlddoesnotexist`` is ``tlddoesnotexist``. This option corresponds to whether the global wildcard rule ``*`` in the Public Suffix List is used or not.
+  A boolean with default value :ansval:`true`. This treats unknown TLDs as valid public suffixes. So for example the public suffix of :ansval:`example.tlddoesnotexist` is ``.tlddoesnotexist`` if this is :ansval:`true`, and hence the registrable domain of :ansval:`www.example.tlddoesnotexist` is ``example.tlddoesnotexist``. If set to :ansval:`false`, the registrable domain of :ansval:`www.example.tlddoesnotexist` is ``tlddoesnotexist``. This option corresponds to whether the global wildcard rule ``*`` in the Public Suffix List is used or not.
 
 :icann_only:
 
-  A boolean with default value ``false``. This controls whether only entries from the ICANN section of the Public Suffix List are used, or also entries from the Private section. For example, ``.co.uk`` is in the ICANN section, but ``github.io`` is in the Private section.
+  A boolean with default value :ansval:`false`. This controls whether only entries from the ICANN section of the Public Suffix List are used, or also entries from the Private section. For example, ``.co.uk`` is in the ICANN section, but ``github.io`` is in the Private section.
 
 :only_if_registerable:
 
-  A boolean with default value ``true``. This controls the behavior in case there is no label in front of the public suffix. This is the case if the DNS name itself is a public suffix. If set to ``false``, in this case the public suffix is treated as a registrable domain. If set to ``true`` (default), the registrable domain of a public suffix is interpreted as an empty string.
+  A boolean with default value :ansval:`true`. This controls the behavior in case there is no label in front of the public suffix. This is the case if the DNS name itself is a public suffix. If set to :ansval:`false`, in this case the public suffix is treated as a registrable domain. If set to :ansval:`true` (default), the registrable domain of a public suffix is interpreted as an empty string.
 
 :normalize_result:
 
-  (Only for :ref:`community.dns.get_registrable_domain <ansible_collections.community.dns.get_registrable_domain_filter>`) A boolean with default value ``false``. This controls whether the result is reconstructed from the normalized name used during lookup. During normalization, ulabels are converted to alabels, and every label is converted to lowercase. For example, the ulabel ``ëçãmplê`` is converted to ``xn--mpl-llatwb`` (puny-code), and ``Example.COM`` is converted to ``example.com``.
+  (Only for :ref:`community.dns.get_registrable_domain <ansible_collections.community.dns.get_registrable_domain_filter>`) A boolean with default value :ansval:`false`. This controls whether the result is reconstructed from the normalized name used during lookup. During normalization, ulabels are converted to alabels, and every label is converted to lowercase. For example, the ulabel :ansval:`ëçãmplê` is converted to ``xn--mpl-llatwb`` (puny-code), and :ansval:`Example.COM` is converted to ``example.com``.
 
 :keep_trailing_period:
 
-  (Only for :ref:`community.dns.remove_registrable_domain <ansible_collections.community.dns.remove_registrable_domain_filter>`) A boolean with default value ``false``. This controls whether the trailing period of the prefix (that is, the part before the registrable domain) is preserved or not.
+  (Only for :ref:`community.dns.remove_registrable_domain <ansible_collections.community.dns.remove_registrable_domain_filter>`) A boolean with default value :ansval:`false`. This controls whether the trailing period of the prefix (that is, the part before the registrable domain) is preserved or not.

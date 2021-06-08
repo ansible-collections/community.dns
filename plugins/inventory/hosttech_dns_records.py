@@ -47,7 +47,7 @@ extends_documentation_fragment:
     - community.dns.options.record_transformation
 
 notes:
-    - The provider-specific I(hosttech_username), I(hosttech_password), and I(hosttech_token) options can be templated.
+    - The provider-specific O(hosttech_username), O(hosttech_password), and O(hosttech_token) options can be templated.
 
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>

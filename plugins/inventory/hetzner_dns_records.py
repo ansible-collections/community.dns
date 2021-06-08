@@ -39,7 +39,7 @@ extends_documentation_fragment:
     - community.dns.options.record_transformation
 
 notes:
-    - The provider-specific I(hetzner_token) option can be templated.
+    - The provider-specific O(hetzner_token) option can be templated.
 
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>

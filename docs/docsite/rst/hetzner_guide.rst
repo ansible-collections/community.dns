@@ -33,7 +33,7 @@ It also provides an inventory plugin:
 Authentication
 --------------
 
-To use Hetzner's API, you need to create an API token. You can manage API tokens in the "API tokens" menu entry in your user menu in the `DNS Console <https://dns.hetzner.com/>`_. You must provide the token to the ``hetzner_token`` option of the modules, its alias ``api_token``, or pass it on in the ``HETZNER_DNS_TOKEN`` environment variable:
+To use Hetzner's API, you need to create an API token. You can manage API tokens in the "API tokens" menu entry in your user menu in the `DNS Console <https://dns.hetzner.com/>`_. You must provide the token to the :ansopt:`hetzner_token` option of the modules, its alias :ansopt:`api_token`, or pass it on in the :envvar:`HETZNER_DNS_TOKEN` environment variable:
 
 .. code-block:: yaml+jinja
 
@@ -105,7 +105,7 @@ Working with DNS records
 
 .. note::
 
-  By default, TXT record values returned and accepted by the modules and plugins in this collection are unquoted. This means that  you do not have to add double quotes (``"``), and escape double quotes (as ``\"``) and backslashes (as ``\\``). All modules and plugins which work with DNS records support the ``txt_transformation`` option which allows to configure this behavior.
+  By default, TXT record values returned and accepted by the modules and plugins in this collection are unquoted. This means that  you do not have to add double quotes (``"``), and escape double quotes (as ``\"``) and backslashes (as ``\\``). All modules and plugins which work with DNS records support the :ansopt:`community.dns.hetzner_dns_record_set#module:txt_transformation` option which allows to configure this behavior.
 
 Querying DNS records and record sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -137,7 +137,7 @@ The :ref:`community.dns.hetzner_dns_record_set_info module <ansible_collections.
         msg: There is no A record for www.example.com
       when: not result.set
 
-In all examples in this section, you can replace ``zone_name=example.com`` by ``zone_id=aBcDeFgHiJlMnOpQrStUvW`` with the zone's ID string.
+In all examples in this section, you can replace :ansopt:`community.dns.hetzner_dns_record_set_info#module:zone_name=example.com` by :ansopt:`community.dns.hetzner_dns_record_set_info#module:zone_id=aBcDeFgHiJlMnOpQrStUvW` with the zone's ID string.
 
 You can also query a list of all record sets for a record name or prefix:
 
@@ -200,7 +200,7 @@ The :ref:`community.dns.hetzner_dns_record module <ansible_collections.community
         value: 1.1.1.1
         ttl: 300
 
-To delete records, simply use ``state=absent``. Records will be matched by record name and type, and the TTL will be ignored:
+To delete records, simply use :ansopt:`community.dns.hetzner_dns_record#module:state=absent`. Records will be matched by record name and type, and the TTL will be ignored:
 
 .. code-block:: yaml+jinja
 
@@ -234,9 +234,9 @@ The :ref:`community.dns.hetzner_dns_record_set module <ansible_collections.commu
           - 1.1.1.1
           - 8.8.8.8
 
-If you want to assert that a record has a certain value, set ``on_existing=keep``. Using ``keep_and_warn`` instead will emit a warning if this happens, and ``keep_and_fail`` will make the module fail.
+If you want to assert that a record has a certain value, set :ansopt:`community.dns.hetzner_dns_record_set#module:on_existing=keep`. Using :ansval:`keep_and_warn` instead will emit a warning if this happens, and :ansval:`keep_and_fail` will make the module fail.
 
-To delete values, you can either overwrite the values with value ``[]``, or use ``state=absent``:
+To delete values, you can either overwrite the values with value :ansval:`[]`, or use :ansopt:`community.dns.hetzner_dns_record_set#module:state=absent`:
 
 .. code-block:: yaml+jinja
 
@@ -266,7 +266,7 @@ To delete values, you can either overwrite the values with value ``[]``, or use 
         value:
           - '::1'
 
-In the third example, ``on_existing=keep_and_fail`` is present and an explicit value and TTL are given. This makes the module remove the current value only if there's a AAAA record for ``www.example.com`` whose current value is ``::1`` and whose TTL is 300. If another value is set, the module will not make any change, but fail. This can be useful to not accidentally remove values you do not want to change. To issue a warning instead of failing, use ``on_existing=keep_and_warn``, and to simply not do a change without any indication of this situation, use ``on_existing=keep``.
+In the third example, :ansopt:`community.dns.hetzner_dns_record_set#module:on_existing=keep_and_fail` is present and an explicit value and TTL are given. This makes the module remove the current value only if there's a AAAA record for ``www.example.com`` whose current value is ``::1`` and whose TTL is 300. If another value is set, the module will not make any change, but fail. This can be useful to not accidentally remove values you do not want to change. To issue a warning instead of failing, use :ansopt:`community.dns.hetzner_dns_record_set#module:on_existing=keep_and_warn`, and to simply not do a change without any indication of this situation, use :ansopt:`community.dns.hetzner_dns_record_set#module:on_existing=keep`.
 
 Bulk synchronization of DNS record sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -280,7 +280,7 @@ The following example shows up to set/update multiple records at once:
     - name: Make sure that multiple records are present
       community.dns.hetzner_dns_record_sets:
         zone_name: example.com
-        records:
+        record_sets:
           - prefix: www
             type: A
             value:
@@ -291,7 +291,7 @@ The following example shows up to set/update multiple records at once:
             value:
               - '::1'
 
-The next example shows how to make sure that only the given records are available and all other records are deleted. Note that for the ``type=NS`` record we used ``ignore=true``, which allows us to skip the value. It tells the module that it should not touch the ``NS`` record for ``example.com``.
+The next example shows how to make sure that only the given records are available and all other records are deleted. Note that for the :ansopt:`community.dns.hetzner_dns_record_sets#module:record_sets[].type=NS` record we used :ansopt:`community.dns.hetzner_dns_record_sets#module:record_sets[].ignore=true`, which allows us to skip the value. It tells the module that it should not touch the ``NS`` record for ``example.com``.
 
 .. code-block:: yaml+jinja
 
@@ -299,7 +299,7 @@ The next example shows how to make sure that only the given records are availabl
       community.dns.hetzner_dns_record_sets:
         zone_name: example.com
         prune: true
-        records:
+        record_sets:
           - prefix: www
             type: A
             value:
@@ -330,14 +330,14 @@ The `markuman.hetzner_dns collection <https://galaxy.ansible.com/markuman/hetzne
 
 .. note::
 
-  When working with TXT records, please look at the ``txt_transformation`` option. By default, the modules and plugins in this collection use **unquoted** values (you do not have to add double quotes and escape double quotes and backslashes), while the modules and plugins in ``markuman.hetzner_dns`` use partially quoted values. You can switch behavior of the ``community.dns`` modules by passing ``txt_transformation=api`` or ``txt_transformation=quoted``.
+  When working with TXT records, please look at the :ansopt:`community.dns.hetzner_dns_record_set#module:txt_transformation` option. By default, the modules and plugins in this collection use **unquoted** values (you do not have to add double quotes and escape double quotes and backslashes), while the modules and plugins in ``markuman.hetzner_dns`` use partially quoted values. You can switch behavior of the ``community.dns`` modules by passing :ansopt:`community.dns.hetzner_dns_record_set#module:txt_transformation=api` or :ansopt:`community.dns.hetzner_dns_record_set#module:txt_transformation=quoted`.
 
 The markuman.hetzner_dns.record module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``markuman.hetzner_dns.zone_info`` module can be replaced by the :ref:`community.dns.hetzner_dns_record module <ansible_collections.community.dns.hetzner_dns_record_module>` and the :ref:`community.dns.hetzner_dns_record_set module <ansible_collections.community.dns.hetzner_dns_record_set_module>`, depending on what it is used for.
 
-When creating, updating or removing single records, the :ref:`community.dns.hetzner_dns_record module <ansible_collections.community.dns.hetzner_dns_record_module>` should be used. This is the case when ``purge=false`` is specified (the default value). Note that ``replace``, ``overwrite`` and ``solo`` are aliases of ``purge``.
+When creating, updating or removing single records, the :ref:`community.dns.hetzner_dns_record module <ansible_collections.community.dns.hetzner_dns_record_module>` should be used. This is the case when :ansopt:`purge=false` is specified (the default value). Note that :ansopt:`replace`, :ansopt:`overwrite` and :ansopt:`solo` are aliases of :ansopt:`purge`.
 
 .. code-block:: yaml+jinja
 
@@ -410,7 +410,7 @@ When the ``markuman.hetzner_dns.record`` module is in replace mode, it should be
         # or keep the following option:
         txt_transformation: api
 
-When deleting a record, it depends on whether ``value`` is specified or not. If ``value`` is specified, the module is deleting a single DNS record, and the :ref:`community.dns.hetzner_dns_record module <ansible_collections.community.dns.hetzner_dns_record_module>` should be used:
+When deleting a record, it depends on whether :ansopt:`value` is specified or not. If :ansopt:`value` is specified, the module is deleting a single DNS record, and the :ref:`community.dns.hetzner_dns_record module <ansible_collections.community.dns.hetzner_dns_record_module>` should be used:
 
 .. code-block:: yaml+jinja
 
@@ -440,7 +440,7 @@ When deleting a record, it depends on whether ``value`` is specified or not. If 
         # or keep the following option:
         txt_transformation: api
 
-When ``value`` is not specified, the ``markuman.hetzner_dns.record`` module will delete all records for this prefix and type. In that case, it operates on a record set and the :ref:`community.dns.hetzner_dns_record_set module <ansible_collections.community.dns.hetzner_dns_record_set_module>` should be used:
+When :ansopt:`value` is not specified, the ``markuman.hetzner_dns.record`` module will delete all records for this prefix and type. In that case, it operates on a record set and the :ref:`community.dns.hetzner_dns_record_set module <ansible_collections.community.dns.hetzner_dns_record_set_module>` should be used:
 
 .. code-block:: yaml+jinja
 
@@ -463,20 +463,20 @@ When ``value`` is not specified, the ``markuman.hetzner_dns.record`` module will
         # 'type' does not change:
         type: A
 
-A last step is replacing the deprecated alias ``name`` of ``prefix`` by ``prefix``. This can be done later though, if you do not mind the deprecation warnings.
+A last step is replacing the deprecated alias :ansopt:`community.dns.hetzner_dns_record_set#module:name` of :ansopt:`community.dns.hetzner_dns_record_set#module:prefix` by :ansopt:`community.dns.hetzner_dns_record_set#module:prefix`. This can be done later though, if you do not mind the deprecation warnings.
 
 The markuman.hetzner_dns.record_info module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``markuman.hetzner_dns.record_info`` module can be replaced by the :ref:`community.dns.hetzner_dns_record_info module <ansible_collections.community.dns.hetzner_dns_record_info_module>`. The main difference is that instead of by the ``filters`` option, the output is controlled by the ``what`` option (choices ``single_record``, ``all_types_for_record``, and ``all_records``), the ``type`` option (needed when ``what=single_record``), and the ``record`` and ``prefix`` options (needed when ``what`` is not ``all_records``).
+The ``markuman.hetzner_dns.record_info`` module can be replaced by the :ref:`community.dns.hetzner_dns_record_info module <ansible_collections.community.dns.hetzner_dns_record_info_module>`. The main difference is that instead of by the :ansopt:`filters` option, the output is controlled by the :ansopt:`community.dns.hetzner_dns_record_info#module:what` option (choices :ansval:`single_record`, :ansval:`all_types_for_record`, and :ansval:`all_records`), the :ansopt:`community.dns.hetzner_dns_record_info#module:type` option (needed when :ansopt:`community.dns.hetzner_dns_record_info#module:what=single_record`), and the :ansopt:`community.dns.hetzner_dns_record_info#module:record` and :ansopt:`community.dns.hetzner_dns_record_info#module:prefix` options (needed when :ansopt:`community.dns.hetzner_dns_record_info#module:what` is not :ansval:`all_records`).
 
 The markuman.hetzner_dns.zone_info module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``markuman.hetzner_dns.zone_info`` module can be replaced by the :ref:`community.dns.hetzner_dns_zone_info module <ansible_collections.community.dns.hetzner_dns_zone_info_module>`. The main differences are:
 
-1. The parameter ``name`` must be changed to ``zone_name`` or ``zone``.
-2. The return value ``zone_info`` no longer has the ``name`` and ``id`` entries. Use the return values ``zone_name`` and ``zone_id`` instead.
+1. The parameter :ansopt:`name` must be changed to :ansopt:`community.dns.hetzner_dns_zone_info#module:zone_name` or :ansopt:`community.dns.hetzner_dns_zone_info#module:zone`.
+2. The return value :ansretval:`community.dns.hetzner_dns_zone_info#module:zone_info` no longer has the ``name`` and ``id`` entries. Use the return values :ansretval:`community.dns.hetzner_dns_zone_info#module:zone_name` and :ansretval:`community.dns.hetzner_dns_zone_info#module:zone_id` instead.
 
 The markuman.hetzner_dns.inventory inventory plugin
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
