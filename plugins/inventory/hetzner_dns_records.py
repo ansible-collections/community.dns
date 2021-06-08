@@ -28,6 +28,10 @@ notes:
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
     - Felix Fontein (@felixfontein)
+
+seealso:
+    - module: community.dns.hetzner_dns_record_set_info
+    - module: community.dns.hetzner_dns_record_info
 '''
 
 from ansible_collections.community.dns.plugins.module_utils.http import (

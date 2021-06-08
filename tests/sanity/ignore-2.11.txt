@@ -1,1 +1,5 @@
+plugins/modules/hetzner_dns_record_info.py validate-modules:invalid-documentation
+plugins/modules/hetzner_dns_record_set_info.py validate-modules:invalid-documentation
+plugins/modules/hosttech_dns_record_info.py validate-modules:invalid-documentation
+plugins/modules/hosttech_dns_record_set_info.py validate-modules:invalid-documentation
 plugins/public_suffix_list.dat no-smart-quotes
