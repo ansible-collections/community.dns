@@ -12,7 +12,7 @@ import pytest
 
 lxmletree = pytest.importorskip("lxml.etree")
 
-from ansible.module_utils._text import to_native
+from ansible.module_utils.common.text.converters import to_native
 
 from ansible_collections.community.dns.plugins.module_utils.wsdl import (
     Parser,
