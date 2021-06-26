@@ -9,7 +9,7 @@ __metaclass__ = type
 import traceback
 
 from ansible.module_utils.basic import missing_required_lib
-from ansible.module_utils._text import to_text
+from ansible.module_utils.common.text.converters import to_text
 
 try:
     import dns
