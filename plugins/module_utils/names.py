@@ -8,7 +8,7 @@ __metaclass__ = type
 
 import re
 
-from ansible.module_utils._text import to_text
+from ansible.module_utils.common.text.converters import to_text
 
 
 _ASCII_PRINTABLE_MATCHER = re.compile(r'^[\x20-\x7e]*$')
