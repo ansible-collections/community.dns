@@ -107,3 +107,16 @@ releases:
     - 1.0.1.yml
     - update-psl.yml
     release_date: '2021-06-05'
+  1.1.0:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      minor_changes:
+      - Avoid internal ansible-core module_utils in favor of equivalent public API
+        available since at least Ansible 2.9 (https://github.com/ansible-collections/community.dns/pull/24).
+      release_summary: Regular maintenance release.
+    fragments:
+    - 1.1.0.yml
+    - ansible-core-_text.yml
+    - update-psl.yml
+    release_date: '2021-07-06'

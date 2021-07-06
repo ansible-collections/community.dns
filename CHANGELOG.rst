@@ -5,6 +5,24 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v1.1.0
+======
+
+Release Summary
+---------------
+
+Regular maintenance release.
+
+Minor Changes
+-------------
+
+- Avoid internal ansible-core module_utils in favor of equivalent public API available since at least Ansible 2.9 (https://github.com/ansible-collections/community.dns/pull/24).
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+
 v1.0.1
 ======
 
