@@ -106,8 +106,8 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         @param name: The zone name (string)
         @return The zone information (DNSZone), or None if not found
         """
-        result = self._list_pagination('v1/zones', data_key='zones', query=dict(name=name))
-        for zone in result:
+        result, info = self._get('v1/zones', expected=[200, 404], query=dict(name=name))
+        for zone in result['zones']:
             if zone.get('name') == name:
                 return _create_zone_from_json(zone)
         return None
