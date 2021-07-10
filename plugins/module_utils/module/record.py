@@ -163,10 +163,20 @@ def run_module(module, create_api):
 
         # Is there nothing to change?
         if len(to_create) == 0 and len(to_delete) == 0 and len(to_change) == 0:
-            module.exit_json(
+            result = dict(
                 changed=False,
                 zone_id=zone_id,
             )
+            if module._diff:
+                before_after = (
+                    format_records_for_output(sorted(before, key=lambda record: record.target), record_in, prefix)
+                    if before else dict()
+                )
+                result['diff'] = dict(
+                    before=before_after,
+                    after=before_after,
+                )
+            module.exit_json(**result)
 
         # Actually do something
         if not module.check_mode:
