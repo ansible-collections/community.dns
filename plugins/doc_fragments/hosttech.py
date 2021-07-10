@@ -31,6 +31,9 @@ options:
         description:
           - The password for the Hosttech API user.
           - Mutually exclusive with I(hosttech_username) and I(hosttech_password).
+          - Since community.dns 1.2.0, the alias I(api_token) can be used.
+        aliases:
+          - api_token
         type: str
         version_added: 0.2.0
 '''
