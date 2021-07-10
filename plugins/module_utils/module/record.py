@@ -33,7 +33,9 @@ from ._utils import (
 )
 
 
-def create_module_argument_spec(zone_id_type='str'):
+def create_module_argument_spec(zone_id_type='str', record_types=None):
+    if record_types is None:
+        record_types = ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
     return ArgumentSpec(
         argument_spec=dict(
             state=dict(type='str', choices=['present', 'absent'], required=True),
@@ -42,7 +44,7 @@ def create_module_argument_spec(zone_id_type='str'):
             record=dict(type='str'),
             prefix=dict(type='str'),
             ttl=dict(type='int', default=3600),
-            type=dict(choices=['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA'], required=True),
+            type=dict(choices=record_types, required=True),
             value=dict(required=True, type='list', elements='str'),
             overwrite=dict(default=False, type='bool'),
         ),

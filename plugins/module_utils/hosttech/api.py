@@ -28,6 +28,9 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech.json_api im
 )
 
 
+SUPPORTED_RECORD_TYPES = ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
+
+
 def create_hosttech_argument_spec():
     return ArgumentSpec(
         argument_spec=dict(

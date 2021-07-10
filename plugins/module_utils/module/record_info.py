@@ -31,7 +31,9 @@ from ._utils import (
 )
 
 
-def create_module_argument_spec(zone_id_type='str'):
+def create_module_argument_spec(zone_id_type='str', record_types=None):
+    if record_types is None:
+        record_types = ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
     return ArgumentSpec(
         argument_spec=dict(
             what=dict(type='str', choices=['single_record', 'all_types_for_record', 'all_records'], default='single_record'),
@@ -39,7 +41,7 @@ def create_module_argument_spec(zone_id_type='str'):
             zone_id=dict(type=zone_id_type),
             record=dict(type='str'),
             prefix=dict(type='str'),
-            type=dict(type='str', choices=['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA'], default=None),
+            type=dict(type='str', choices=record_types, default=None),
         ),
         required_if=[
             ('what', 'single_record', ['type']),

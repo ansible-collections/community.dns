@@ -39,6 +39,9 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 )
 
 
+SUPPORTED_RECORD_TYPES = ['A', 'AAAA', 'NS', 'MX', 'CNAME', 'RP', 'TXT', 'SOA', 'HINFO', 'SRV', 'DANE', 'TLSA', 'DS', 'CAA']
+
+
 def _create_zone_from_json(source):
     zone = DNSZone(source['name'])
     zone.id = source['id']

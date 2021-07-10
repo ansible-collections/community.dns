@@ -26,6 +26,49 @@ extends_documentation_fragment:
 options:
     zone_id:
         type: int
+    records:
+        suboptions:
+            type:
+                choices: ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
+        # The following madness is needed because of the primitive merging of docs fragments:
+                description:
+                  - The type of DNS record to create or delete.
+                required: true
+                type: str
+            record:
+                description:
+                  - The full DNS record to create or delete.
+                  - Exactly one of I(record) and I(prefix) must be specified.
+                type: str
+            prefix:
+                description:
+                  - The prefix of the DNS record.
+                  - This is the part of I(record) before I(zone). For example, if the record to be modified is C(www.example.com)
+                    for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the
+                    prefix would be C('') (empty string).
+                  - Exactly one of I(record) and I(prefix) must be specified.
+                type: str
+            ttl:
+                description:
+                  - The TTL to give the new record, in seconds.
+                default: 3600
+                type: int
+            value:
+                description:
+                  - The new value when creating a DNS record.
+                  - YAML lists or multiple comma-spaced values are allowed.
+                  - When deleting a record all values for the record must be specified or it will
+                    not be deleted.
+                  - Must be specified if I(ignore=false).
+                type: list
+                elements: str
+            ignore:
+                description:
+                  - If set to C(true), I(value) will be ignored.
+                  - This is useful when I(prune=true), but you do not want certain entries to be removed
+                    without having to know their current value.
+                type: bool
+                default: false
 
 author:
     - Felix Fontein (@felixfontein)
@@ -86,6 +129,7 @@ zone_id:
 from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
+    SUPPORTED_RECORD_TYPES,
     create_hosttech_argument_spec,
     create_hosttech_api,
 )
@@ -98,7 +142,7 @@ from ansible_collections.community.dns.plugins.module_utils.module.records impor
 
 def main():
     argument_spec = create_hosttech_argument_spec()
-    argument_spec.merge(create_module_argument_spec(zone_id_type='int'))
+    argument_spec.merge(create_module_argument_spec(zone_id_type='int', record_types=SUPPORTED_RECORD_TYPES))
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
     run_module(module, lambda: create_hosttech_api(module))
 

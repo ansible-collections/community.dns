@@ -26,6 +26,8 @@ extends_documentation_fragment:
 options:
     zone_id:
         type: int
+    type:
+        choices: ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
 
 author:
     - Felix Fontein (@felixfontein)
@@ -190,6 +192,7 @@ zone_id:
 from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
+    SUPPORTED_RECORD_TYPES,
     create_hosttech_argument_spec,
     create_hosttech_api,
 )
@@ -202,7 +205,7 @@ from ansible_collections.community.dns.plugins.module_utils.module.record import
 
 def main():
     argument_spec = create_hosttech_argument_spec()
-    argument_spec.merge(create_module_argument_spec(zone_id_type='int'))
+    argument_spec.merge(create_module_argument_spec(zone_id_type='int', record_types=SUPPORTED_RECORD_TYPES))
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
     run_module(module, lambda: create_hosttech_api(module))
 

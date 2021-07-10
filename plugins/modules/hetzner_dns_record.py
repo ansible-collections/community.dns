@@ -26,6 +26,8 @@ extends_documentation_fragment:
 options:
     zone_id:
         type: str
+    type:
+        choices: ['A', 'AAAA', 'NS', 'MX', 'CNAME', 'RP', 'TXT', 'SOA', 'HINFO', 'SRV', 'DANE', 'TLSA', 'DS', 'CAA']
 
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
@@ -185,6 +187,7 @@ zone_id:
 from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
+    SUPPORTED_RECORD_TYPES,
     create_hetzner_argument_spec,
     create_hetzner_api,
 )
@@ -197,7 +200,7 @@ from ansible_collections.community.dns.plugins.module_utils.module.record import
 
 def main():
     argument_spec = create_hetzner_argument_spec()
-    argument_spec.merge(create_module_argument_spec(zone_id_type='str'))
+    argument_spec.merge(create_module_argument_spec(zone_id_type='str', record_types=SUPPORTED_RECORD_TYPES))
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
     run_module(module, lambda: create_hetzner_api(module))
 
