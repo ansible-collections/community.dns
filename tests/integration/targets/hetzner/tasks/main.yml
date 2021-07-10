@@ -1,6 +1,420 @@
 ---
-- name: Get zone info
-  hetzner_dns_zone_info:
-    zone: '{{ hetzner_test_zone }}'
-    hetzner_token: '{{ hetzner_token }}'
-  register: result_zone
+- name: Basic tests
+  block:
+    - name: Test gracefull error handling
+      hetzner_dns_record:
+        zone: none_existing
+        prefix: dns_ansible_collection
+        state: present
+        value: "osuv.de."
+        type: CNAME
+        ttl: 300
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+      ignore_errors: yes
+
+    - name: verify graceful error handling
+      assert:
+        that:
+          - RECORD is not changed
+          - RECORD is failed
+          - 'RECORD.msg == "Zone not found"'
+
+    - name: fetch zone info
+      hetzner_dns_zone_info:
+        zone: "{{ hetzner_test_zone }}"
+        hetzner_token: "{{ hetzner_token }}"
+      register: ZONES
+
+    - name: fetch zone info must also work in check_mode
+      hetzner_dns_zone_info:
+        zone: "{{ hetzner_test_zone }}"
+        hetzner_token: "{{ hetzner_token }}"
+      check_mode: yes
+      register: ZONES
+
+    - name: add record
+      hetzner_dns_record:
+        zone_id: "{{ ZONES.zone_id }}"
+        prefix: dns_ansible_collection
+        state: present
+        value: "{{ hetzner_test_zone }}."
+        type: CNAME
+        ttl: 300
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+
+    - name: assert add record 1
+      assert:
+        that:
+          - RECORD is changed
+          # - RECORD.record_info.record.ttl == 300
+          # - RECORD.record_info | count == 1
+
+    - name: fetch record info
+      hetzner_dns_record_info:
+        prefix: dns_ansible_collection
+        type: CNAME
+        zone: "{{ hetzner_test_zone }}"
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+
+    - debug:
+        msg: "{{ RECORD }}"
+
+    - name: assert add record 2
+      assert:
+        that:
+          - RECORD.set.ttl == 300
+          - RECORD.set.type == 'CNAME'
+          - RECORD.set.value == [hetzner_test_zone ~ "."]
+
+    - name: fetch record info must also work in check_mode
+      hetzner_dns_record_info:
+        prefix: dns_ansible_collection
+        type: CNAME
+        zone: "{{ hetzner_test_zone }}"
+        hetzner_token: "{{ hetzner_token }}"
+      check_mode: yes
+
+    - name: add record no change
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: dns_ansible_collection
+        state: present
+        value: "{{ hetzner_test_zone }}."
+        type: CNAME
+        ttl: 300
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+      diff: true
+
+    - debug:
+        var: RECORD
+
+    - name: assert add record no change
+      assert:
+        that:
+          - RECORD is not changed
+          - RECORD.diff.before.ttl == 300
+          - RECORD.diff.after.ttl == 300
+          - RECORD.diff.after.value | count == 1
+
+    - name: modify record change in check_mode
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: dns_ansible_collection
+        state: present
+        value: "{{ hetzner_test_zone }}."
+        type: CNAME
+        ttl: 60
+        overwrite: true
+        hetzner_token: "{{ hetzner_token }}"
+      check_mode: yes
+      register: RECORD
+      diff: true
+
+    - name: assert change record check_mode
+      assert:
+        that:
+          - RECORD is changed
+          - RECORD.diff.before.ttl == 300
+          - RECORD.diff.after.ttl == 60
+          - RECORD.diff.after.value | count == 1
+
+    - name: modify record change
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: dns_ansible_collection
+        state: present
+        value: "{{ hetzner_test_zone }}."
+        type: CNAME
+        ttl: 60
+        overwrite: true
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+      diff: true
+
+    - name: assert change record
+      assert:
+        that:
+          - RECORD is changed
+          - RECORD.diff.before.ttl == 300
+          - RECORD.diff.after.ttl == 60
+          - RECORD.diff.after.value | count == 1
+
+    - name: delete record
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: dns_ansible_collection
+        type: CNAME
+        state: absent
+        overwrite: true
+        value: []
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+
+    - name: assert delete record
+      assert:
+        that:
+          - RECORD is changed
+
+    - name: delete record no change
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: dns_ansible_collection
+        type: CNAME
+        state: absent
+        value: []
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+
+    - name: assert delete record
+      assert:
+        that:
+          - RECORD is not changed
+
+    - name: add single A record
+      hetzner_dns_record:
+        zone_id: "{{ ZONES.zone_id }}"
+        prefix: dns_ansible_collection
+        state: present
+        value:
+          - 1.1.1.1
+        type: A
+        ttl: 60
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+
+    - name: append A record
+      hetzner_dns_record:
+        zone_id: "{{ ZONES.zone_id }}"
+        prefix: dns_ansible_collection
+        state: present
+        value:
+          - 1.1.1.1
+          - 8.8.8.8
+        type: A
+        ttl: 60
+        overwrite: true
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+
+    - name: append A record
+      hetzner_dns_record:
+        zone_id: "{{ ZONES.zone_id }}"
+        prefix: dns_ansible_collection
+        state: present
+        value:
+          - 1.1.1.1
+          - 8.8.8.8
+          - 8.8.4.4
+        type: A
+        ttl: 60
+        overwrite: true
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+
+    - name: fetch record info
+      hetzner_dns_record_info:
+        prefix: dns_ansible_collection
+        type: A
+        zone: "{{ hetzner_test_zone }}"
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+
+    - name: assert 3 A records
+      assert:
+        that:
+          - RECORD.set.value | count == 3
+
+    - name: delete single A record
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: dns_ansible_collection
+        state: present
+        value:
+          - 1.1.1.1
+          - 8.8.4.4
+        type: A
+        overwrite: true
+        hetzner_token: "{{ hetzner_token }}"
+
+    - name: fetch record info
+      hetzner_dns_record_info:
+        prefix: dns_ansible_collection
+        type: A
+        zone: "{{ hetzner_test_zone }}"
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+
+    - name: assert 2 A records
+      assert:
+        that:
+          - RECORD.set.value | count == 2
+
+    - name: delete all A records
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: dns_ansible_collection
+        type: A
+        state: absent
+        value: []
+        overwrite: true
+        hetzner_token: "{{ hetzner_token }}"
+
+    - name: fetch record info
+      hetzner_dns_record_info:
+        prefix: dns_ansible_collection
+        type: A
+        zone: "{{ hetzner_test_zone }}"
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+
+    - name: assert 0 A records
+      assert:
+        that:
+          - RECORD.set == {}
+
+    - name: add record
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: website1
+        state: present
+        type: A
+        value:
+          - 127.0.0.1
+        hetzner_token: "{{ hetzner_token }}"
+
+    - name: replace record
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: website1
+        state: present
+        type: A
+        value:
+          - 127.0.0.2
+        overwrite: true
+        hetzner_token: "{{ hetzner_token }}"
+
+    - name: fetch record info
+      hetzner_dns_record_info:
+        prefix: website1
+        type: A
+        zone: "{{ hetzner_test_zone }}"
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+
+    - debug:
+        msg: "{{ RECORD }}"
+
+    - name: assert 1 A record
+      assert:
+        that:
+          - RECORD.set.ttl == 3600
+          - RECORD.set.type == 'A'
+          - RECORD.set.value | count == 1
+          - RECORD.set.value[0] == '127.0.0.2'
+
+    - name: append record website1
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: website1
+        state: present
+        type: A
+        value:
+          - 127.0.0.2
+          - 127.0.0.1
+        overwrite: true
+        hetzner_token: "{{ hetzner_token }}"
+
+    - name: fetch record info
+      hetzner_dns_record_info:
+        prefix: website1
+        type: A
+        zone: "{{ hetzner_test_zone }}"
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+
+    - name: assert 2 A record
+      assert:
+        that:
+          - RECORD.set.value | count == 2
+
+    - name: replace all
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: website1
+        state: present
+        type: A
+        value:
+          - 8.8.8.8
+        overwrite: true
+        hetzner_token: "{{ hetzner_token }}"
+
+    - name: fetch record info
+      hetzner_dns_record_info:
+        prefix: website1
+        type: A
+        zone: "{{ hetzner_test_zone }}"
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+
+    - name: assert 1 A record
+      assert:
+        that:
+          - RECORD.set.value | count == 1
+
+    - name: remove all records website1
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: website1
+        type: A
+        state: absent
+        value: []
+        overwrite: true
+        hetzner_token: "{{ hetzner_token }}"
+
+    - name: fetch record info
+      hetzner_dns_record_info:
+        prefix: website1
+        type: A
+        zone: "{{ hetzner_test_zone }}"
+        hetzner_token: "{{ hetzner_token }}"
+      register: RECORD
+
+    - name: assert 0 A records
+      assert:
+        that:
+          - RECORD.set == {}
+
+  always:
+    - name: always delete CNAME record
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: dns_ansible_collection
+        type: CNAME
+        state: present
+        overwrite: true
+        value: []
+        hetzner_token: "{{ hetzner_token }}"
+
+    - name: always delete A record
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: dns_ansible_collection
+        type: A
+        state: present
+        overwrite: true
+        value: []
+        hetzner_token: "{{ hetzner_token }}"
+
+    - name: always delete A record
+      hetzner_dns_record:
+        zone: "{{ hetzner_test_zone }}"
+        prefix: website1
+        type: A
+        state: present
+        overwrite: true
+        value: []
+        hetzner_token: "{{ hetzner_token }}"
