@@ -52,8 +52,6 @@ class TestHetznerDNSZoneInfoJSON(BaseTestModule):
             .expect_header('auth-api-token', 'foo')
             .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
             .expect_query_values('name', 'example.org')
-            .expect_query_values('page', '1')
-            .expect_query_values('per_page', '100')
             .return_header('Content-Type', 'application/json; charset=utf-8')
             .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
         ])
@@ -89,8 +87,6 @@ class TestHetznerDNSZoneInfoJSON(BaseTestModule):
             .expect_header('auth-api-token', 'foo')
             .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
             .expect_query_values('name', 'example.org')
-            .expect_query_values('per_page', '100')
-            .expect_query_values('page', '1')
             .result_str(''),
         ])
 
@@ -124,8 +120,6 @@ class TestHetznerDNSZoneInfoJSON(BaseTestModule):
             .expect_header('auth-api-token', 'foo')
             .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
             .expect_query_values('name', 'example.org')
-            .expect_query_values('per_page', '100')
-            .expect_query_values('page', '1')
             .result_str(''),
         ])
 
@@ -144,8 +138,6 @@ class TestHetznerDNSZoneInfoJSON(BaseTestModule):
             .expect_header('auth-api-token', 'foo')
             .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
             .expect_query_values('name', 'example.com')
-            .expect_query_values('per_page', '100')
-            .expect_query_values('page', '1')
             .return_header('Content-Type', 'application/json; charset=utf-8')
             .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
         ])
