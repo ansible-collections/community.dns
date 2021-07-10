@@ -1,0 +1,172 @@
+# (c) 2021 Felix Fontein <felix@fontein.de>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
+import pytest
+
+from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import patch
+
+from ansible_collections.community.internal_test_tools.tests.unit.utils.fetch_url_module_framework import (
+    BaseTestModule,
+    FetchUrlCall,
+)
+
+from ansible_collections.community.internal_test_tools.tests.unit.utils.open_url_framework import (
+    OpenUrlCall,
+    OpenUrlProxy,
+)
+
+from ansible_collections.community.internal_test_tools.tests.unit.plugins.modules.utils import (
+    set_module_args,
+    ModuleTestCase,
+    AnsibleExitJson,
+    AnsibleFailJson,
+)
+
+from ansible_collections.community.dns.plugins.modules import hetzner_dns_zone_info
+
+# These imports are needed so patching below works
+import ansible_collections.community.dns.plugins.module_utils.json_api_helper
+
+from .hetzner import (
+    HETZNER_JSON_ZONE_GET_RESULT,
+    HETZNER_JSON_ZONE_LIST_RESULT,
+)
+
+
+class TestHetznerDNSZoneInfoJSON(BaseTestModule):
+    MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hetzner_dns_zone_info.AnsibleModule'
+    MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.json_api_helper.fetch_url'
+
+    def test_unknown_zone(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_zone_info, {
+            'hetzner_token': 'foo',
+            'zone': 'example.org',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.org')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json; charset=utf-8')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+        ])
+
+        assert result['msg'] == 'Zone not found'
+
+    def test_unknown_zone_id(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_zone_info, {
+            'hetzner_token': 'foo',
+            'zone_id': '23',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 404)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones/23')
+            .return_header('Content-Type', 'application/json; charset=utf-8')
+            .result_json(dict(message="")),
+        ])
+
+        assert result['msg'] == 'Zone not found'
+
+    def test_auth_error(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_zone_info, {
+            'hetzner_token': 'foo',
+            'zone': 'example.org',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 401)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.org')
+            .expect_query_values('per_page', '100')
+            .expect_query_values('page', '1')
+            .result_str(''),
+        ])
+
+        assert result['msg'] == 'Cannot authenticate: Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
+
+    def test_auth_error_forbidden(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_zone_info, {
+            'hetzner_token': 'foo',
+            'zone_id': '23',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 403)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones/23')
+            .result_json(dict(message="")),
+        ])
+
+        assert result['msg'] == 'Cannot authenticate: Forbidden: you do not have access to this resource (HTTP status 403)'
+
+    def test_other_error(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_zone_info, {
+            'hetzner_token': 'foo',
+            'zone': 'example.org',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.org')
+            .expect_query_values('per_page', '100')
+            .expect_query_values('page', '1')
+            .result_str(''),
+        ])
+
+        assert result['msg'].startswith('Error: GET https://dns.hetzner.com/api/v1/zones?')
+        assert 'did not yield JSON data, but HTTP status code 500 with Content-Type' in result['msg']
+
+    def test_get(self, mocker):
+        result = self.run_module_success(mocker, hetzner_dns_zone_info, {
+            'hetzner_token': 'foo',
+            'zone': 'example.com',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .expect_query_values('per_page', '100')
+            .expect_query_values('page', '1')
+            .return_header('Content-Type', 'application/json; charset=utf-8')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+        ])
+        assert result['changed'] is False
+        assert result['zone_id'] == '42'
+        assert result['zone_name'] == 'example.com'
+
+    def test_get_id(self, mocker):
+        result = self.run_module_success(mocker, hetzner_dns_zone_info, {
+            'hetzner_token': 'foo',
+            'zone_id': '42',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones/42')
+            .return_header('Content-Type', 'application/json; charset=utf-8')
+            .result_json(HETZNER_JSON_ZONE_GET_RESULT),
+        ])
+        assert result['changed'] is False
+        assert result['zone_id'] == '42'
+        assert result['zone_name'] == 'example.com'

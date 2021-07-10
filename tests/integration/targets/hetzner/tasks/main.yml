@@ -1,0 +1,6 @@
+---
+- name: Get zone info
+  hetzner_dns_zone_info:
+    zone: '{{ hetzner_test_zone }}'
+    hetzner_token: '{{ hetzner_token }}'
+  register: result_zone

@@ -31,14 +31,14 @@ from ansible_collections.community.dns.plugins.modules import hosttech_dns_recor
 import ansible_collections.community.dns.plugins.module_utils.wsdl
 import ansible_collections.community.dns.plugins.module_utils.json_api_helper
 
-from .helper import (
+from .hosttech import (
     expect_wsdl_authentication,
     expect_wsdl_value,
     validate_wsdl_call,
-    WSDL_DEFAULT_ZONE_RESULT,
-    WSDL_ZONE_NOT_FOUND,
-    JSON_ZONE_GET_RESULT,
-    JSON_ZONE_LIST_RESULT,
+    HOSTTECH_WSDL_DEFAULT_ZONE_RESULT,
+    HOSTTECH_WSDL_ZONE_NOT_FOUND,
+    HOSTTECH_JSON_ZONE_GET_RESULT,
+    HOSTTECH_JSON_ZONE_LIST_RESULT,
 )
 
 try:
@@ -65,7 +65,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(WSDL_ZONE_NOT_FOUND),
+            .result_str(HOSTTECH_WSDL_ZONE_NOT_FOUND),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleFailJson) as e:
@@ -94,7 +94,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(WSDL_ZONE_NOT_FOUND),
+            .result_str(HOSTTECH_WSDL_ZONE_NOT_FOUND),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleFailJson) as e:
@@ -123,7 +123,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(WSDL_DEFAULT_ZONE_RESULT),
+            .result_str(HOSTTECH_WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -160,7 +160,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(WSDL_DEFAULT_ZONE_RESULT),
+            .result_str(HOSTTECH_WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -208,7 +208,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
                     ('http://www.w3.org/2001/XMLSchema', 'string')
                 ),
             ]))
-            .result_str(WSDL_DEFAULT_ZONE_RESULT),
+            .result_str(HOSTTECH_WSDL_DEFAULT_ZONE_RESULT),
         ])
         with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
             with pytest.raises(AnsibleExitJson) as e:
@@ -292,7 +292,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
             .expect_query_values('query', 'example.org')
             .return_header('Content-Type', 'application/json')
-            .result_json(JSON_ZONE_LIST_RESULT),
+            .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
         ])
 
         assert result['msg'] == 'Zone not found'
@@ -464,13 +464,13 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
                 .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
                 .expect_query_values('query', 'example.com')
                 .return_header('Content-Type', 'application/json')
-                .result_json(JSON_ZONE_LIST_RESULT),
+                .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
                 FetchUrlCall('GET', 200)
                 .expect_header('accept', 'application/json')
                 .expect_header('authorization', 'Bearer foo')
                 .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
                 .return_header('Content-Type', 'application/json')
-                .result_json(JSON_ZONE_GET_RESULT),
+                .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
             ])
         assert result['changed'] is False
         assert result['zone_id'] == 42
@@ -497,13 +497,13 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
             .expect_query_values('query', 'example.com')
             .return_header('Content-Type', 'application/json')
-            .result_json(JSON_ZONE_LIST_RESULT),
+            .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
             FetchUrlCall('GET', 200)
             .expect_header('accept', 'application/json')
             .expect_header('authorization', 'Bearer foo')
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
             .return_header('Content-Type', 'application/json')
-            .result_json(JSON_ZONE_GET_RESULT),
+            .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
         ])
         assert result['changed'] is False
         assert result['zone_id'] == 42
@@ -530,13 +530,13 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
             .expect_query_values('query', 'example.com')
             .return_header('Content-Type', 'application/json')
-            .result_json(JSON_ZONE_LIST_RESULT),
+            .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
             FetchUrlCall('GET', 200)
             .expect_header('accept', 'application/json')
             .expect_header('authorization', 'Bearer foo')
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
             .return_header('Content-Type', 'application/json')
-            .result_json(JSON_ZONE_GET_RESULT),
+            .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
         ])
         assert result['changed'] is False
         assert result['zone_id'] == 42
@@ -574,13 +574,13 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
             .expect_query_values('query', 'example.com')
             .return_header('Content-Type', 'application/json')
-            .result_json(JSON_ZONE_LIST_RESULT),
+            .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
             FetchUrlCall('GET', 200)
             .expect_header('accept', 'application/json')
             .expect_header('authorization', 'Bearer foo')
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
             .return_header('Content-Type', 'application/json')
-            .result_json(JSON_ZONE_GET_RESULT),
+            .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
         ])
         assert result['changed'] is False
         assert result['zone_id'] == 42
@@ -630,7 +630,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             .expect_header('authorization', 'Bearer foo')
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
             .return_header('Content-Type', 'application/json')
-            .result_json(JSON_ZONE_GET_RESULT),
+            .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
         ])
         assert result['changed'] is False
         assert result['zone_id'] == 42
