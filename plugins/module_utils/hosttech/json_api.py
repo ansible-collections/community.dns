@@ -9,13 +9,6 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 
-import json
-import time
-
-from ansible.module_utils.six.moves.urllib.parse import urlencode
-from ansible.module_utils.common.text.converters import to_native
-from ansible.module_utils.urls import fetch_url
-
 from ansible_collections.community.dns.plugins.module_utils.json_api_helper import (
     JSONAPIHelper,
 )
@@ -31,7 +24,6 @@ from ansible_collections.community.dns.plugins.module_utils.zone import (
 
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
-    DNSAPIAuthenticationError,
     NOT_PROVIDED,
     ZoneRecordAPI,
     filter_records,
@@ -187,7 +179,7 @@ def _get_header_value(info, header_name):
 class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
     def __init__(self, module, token, api='https://api.ns1.hosttech.eu/api/', debug=False):
         """
-        Create a new HostTech API instance with given username and password.
+        Create a new HostTech API instance with given API token.
         """
         JSONAPIHelper.__init__(self, module, token, api=api, debug=debug)
 

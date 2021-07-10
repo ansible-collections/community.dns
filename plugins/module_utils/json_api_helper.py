@@ -4,8 +4,6 @@
 # Copyright (c) 2020 Markus Bergholz <markuman+spambelongstogoogle@gmail.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-# The API documentation can be found here: https://api.ns1.hosttech.eu/api/documentation/
-
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
@@ -17,21 +15,9 @@ from ansible.module_utils.six.moves.urllib.parse import urlencode
 from ansible.module_utils.common.text.converters import to_native
 from ansible.module_utils.urls import fetch_url
 
-from ansible_collections.community.dns.plugins.module_utils.record import (
-    DNSRecord,
-)
-
-from ansible_collections.community.dns.plugins.module_utils.zone import (
-    DNSZone,
-    DNSZoneWithRecords,
-)
-
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
     DNSAPIAuthenticationError,
-    NOT_PROVIDED,
-    ZoneRecordAPI,
-    filter_records,
 )
 
 ERROR_CODES = {
@@ -56,9 +42,9 @@ def _get_header_value(info, header_name):
 
 
 class JSONAPIHelper(object):
-    def __init__(self, module, token, api='https://api.ns1.hosttech.eu/api/', debug=False):
+    def __init__(self, module, token, api, debug=False):
         """
-        Create a new HostTech API instance with given username and password.
+        Create a new JSON API helper instance with given API key.
         """
         self._api = api
         self._module = module
