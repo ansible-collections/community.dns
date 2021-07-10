@@ -6,6 +6,7 @@ version: 1.2.0
 readme: README.md
 authors:
   - Felix Fontein (github.com/felixfontein)
+  - Markus Bergholz (github.com/markuman)
 description: Plugins and modules for working with DNS
 license:
   - GPL-3.0-or-later
@@ -15,6 +16,7 @@ tags:
   - community
   - dns
   - hosttech
+  - hetzner
 repository: https://github.com/ansible-collections/community.dns
 documentation: https://ansible.fontein.de/collections/community/dns/
 homepage: https://github.com/ansible-collections/community.dns
