@@ -29,7 +29,7 @@ ERROR_CODES = {
     409: "Conflict",
     422: "Unprocessable entity"
 }
-UNKNOWN_ERROR = "Unkown Error"
+UNKNOWN_ERROR = "Unknown Error"
 
 
 def _get_header_value(info, header_name):

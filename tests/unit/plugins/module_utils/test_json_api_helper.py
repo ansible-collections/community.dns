@@ -1,0 +1,78 @@
+# -*- coding: utf-8 -*-
+# (c) 2021, Felix Fontein <felix@fontein.de>
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+# Make coding more python3-ish
+from __future__ import absolute_import, division, print_function
+
+__metaclass__ = type
+
+
+import json
+
+import pytest
+
+from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import MagicMock, patch
+
+from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
+    DNSAPIError,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.json_api_helper import (
+    _get_header_value,
+    JSONAPIHelper,
+)
+
+
+def test_get_header_value():
+    assert _get_header_value({'Return-Type': 1}, 'return-type') == 1
+    assert _get_header_value({'Return-Type': 1}, 'Return-Type') == 1
+    assert _get_header_value({'return-Type': 1}, 'Return-type') == 1
+    assert _get_header_value({'return_type': 1}, 'Return-type') is None
+
+
+def test_extract_error_message():
+    api = JSONAPIHelper(MagicMock(), '123', 'https://example.com')
+    assert api._extract_error_message(None) == ''
+    assert api._extract_error_message('foo') == ' with data: foo'
+    assert api._extract_error_message(dict()) == ' with data: {}'
+    assert api._extract_error_message(dict(message='')) == " with data: {'message': ''}"
+    assert api._extract_error_message(dict(message='foo')) == " with data: {'message': 'foo'}"
+
+
+def test_process_json_result():
+    module = MagicMock()
+    module.from_json = json.loads
+    api = JSONAPIHelper(module, '123', 'https://example.com')
+    with pytest.raises(DNSAPIError) as exc:
+        api._process_json_result(response=None, info=dict(status=401, url='https://example.com'))
+    assert exc.value.args[0] == 'Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
+    with pytest.raises(DNSAPIError) as exc:
+        api._process_json_result(response=None, info=dict(status=401, url='https://example.com', body='{"message": ""}'.encode('utf-8')))
+    assert exc.value.args[0] == 'Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
+    with pytest.raises(DNSAPIError) as exc:
+        api._process_json_result(response=None, info=dict(status=401, url='https://example.com', body='{"message": "foo"}'.encode('utf-8')))
+    assert exc.value.args[0] == 'Unauthorized: the authentication parameters are incorrect (HTTP status 401): foo'
+    with pytest.raises(DNSAPIError) as exc:
+        api._process_json_result(response=None, info=dict(status=403, url='https://example.com'))
+    assert exc.value.args[0] == 'Forbidden: you do not have access to this resource (HTTP status 403)'
+    with pytest.raises(DNSAPIError) as exc:
+        api._process_json_result(response=None, info=dict(status=403, url='https://example.com', body='{"message": ""}'.encode('utf-8')))
+    assert exc.value.args[0] == 'Forbidden: you do not have access to this resource (HTTP status 403)'
+    with pytest.raises(DNSAPIError) as exc:
+        api._process_json_result(response=None, info=dict(status=403, url='https://example.com', body='{"message": "foo"}'.encode('utf-8')))
+    assert exc.value.args[0] == 'Forbidden: you do not have access to this resource (HTTP status 403): foo'
+    info = dict(status=200, url='https://example.com', body='not JSON'.encode('utf-8'))
+    info['content-TYPE'] = 'application/json'
+    with pytest.raises(DNSAPIError) as exc:
+        api._process_json_result(response=None, info=info)
+    print(exc.value.args[0])
+    assert exc.value.args[0] == 'GET https://example.com did not yield JSON data, but HTTP status code 200 with data: not JSON'
+    info = dict(status=200, url='https://example.com', body='not JSON'.encode('utf-8'))
+    info['Content-type'] = 'application/json'
+    r, i = api._process_json_result(response=None, info=info, must_have_content=False)
+    print(repr(r), i)
+    assert r is None
+    info = dict(status=200, url='https://example.com')
+    info['Content-type'] = 'application/json'
+    assert i == info
