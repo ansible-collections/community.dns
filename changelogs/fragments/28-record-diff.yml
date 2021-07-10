@@ -1,0 +1,2 @@
+minor_changes:
+- "hosttech_dns_record - in ``diff`` mode, also return ``diff`` data structure when ``changed`` is ``false`` (https://github.com/ansible-collections/community.dns/pull/28)."
