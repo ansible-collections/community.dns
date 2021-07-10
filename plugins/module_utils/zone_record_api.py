@@ -11,6 +11,10 @@ import abc
 
 from ansible.module_utils import six
 
+from ansible_collections.community.dns.plugins.module_utils.zone import (
+    DNSZoneWithRecords,
+)
+
 
 class DNSAPIError(Exception):
     pass
@@ -47,7 +51,6 @@ class ZoneRecordAPI(object):
         @return The zone information (DNSZone), or None if not found
         """
 
-    @abc.abstractmethod
     def get_zone_with_records_by_name(self, name, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
         """
         Given a zone name, return the zone contents with records if found.
@@ -58,8 +61,11 @@ class ZoneRecordAPI(object):
         @param record_type: The record type to filter for, if provided
         @return The zone information with records (DNSZoneWithRecords), or None if not found
         """
+        zone = self.get_zone_by_name(name)
+        if zone is None:
+            return None
+        return DNSZoneWithRecords(zone, self.get_zone_records(zone.id, prefix=prefix, record_type=record_type))
 
-    @abc.abstractmethod
     def get_zone_with_records_by_id(self, id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
         """
         Given a zone ID, return the zone contents with records if found.
@@ -70,6 +76,10 @@ class ZoneRecordAPI(object):
         @param record_type: The record type to filter for, if provided
         @return The zone information with records (DNSZoneWithRecords), or None if not found
         """
+        zone = self.get_zone_by_id(id)
+        if zone is None:
+            return None
+        return DNSZoneWithRecords(zone, self.get_zone_records(zone.id, prefix=prefix, record_type=record_type))
 
     @abc.abstractmethod
     def get_zone_records(self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):

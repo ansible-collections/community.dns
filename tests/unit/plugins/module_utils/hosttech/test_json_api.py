@@ -25,7 +25,6 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 from ansible_collections.community.dns.plugins.module_utils.hosttech.json_api import (
     _create_record_from_json,
     _record_to_json,
-    _get_header_value,
     HostTechJSONAPI,
 )
 
@@ -293,13 +292,6 @@ def test_unknown_records():
     assert exc.value.args[0] == 'Cannot serialize unknown record type: unknown'
 
 
-def test_get_header_value():
-    assert _get_header_value({'Return-Type': 1}, 'return-type') == 1
-    assert _get_header_value({'Return-Type': 1}, 'Return-Type') == 1
-    assert _get_header_value({'return-Type': 1}, 'Return-type') == 1
-    assert _get_header_value({'return_type': 1}, 'Return-type') is None
-
-
 def test_list_pagination():
     def get_1(url, query=None, must_have_content=True, expected=None):
         assert url == 'https://example.com'
@@ -364,59 +356,3 @@ def test_extract_error_message():
     assert api._extract_error_message(dict(message='foo', errors=dict())) == ' with message "foo"'
     assert api._extract_error_message(dict(message='foo', errors=dict(bar='baz'))) == ' with message "foo" (field "bar": baz)'
     assert api._extract_error_message(dict(errors=dict(bar=['baz', 'bam'], arf='fra'))) == ' (field "arf": fra) (field "bar": baz; bam)'
-
-
-def test_validate():
-    api = HostTechJSONAPI(MagicMock(), '123')
-    with pytest.raises(DNSAPIError) as exc:
-        api._validate()
-    assert exc.value.args[0] == 'Internal error: info needs to be provided'
-    api._validate(info=dict(status=200, url='https://example.com'))
-    api._validate(info=dict(status=200, url='https://example.com'), expected=[200])
-    with pytest.raises(DNSAPIError) as exc:
-        api._validate(info=dict(status=199, url='https://example.com'))
-    assert exc.value.args[0] == 'Expected successful HTTP status for GET https://example.com, but got HTTP status 199'
-    with pytest.raises(DNSAPIError) as exc:
-        api._validate(info=dict(status=300, url='https://example.com'), method='PUT', result='foo')
-    assert exc.value.args[0] == 'Expected successful HTTP status for PUT https://example.com, but got HTTP status 300 with data: foo'
-    with pytest.raises(DNSAPIError) as exc:
-        api._validate(info=dict(status=200, url='https://example.com'), expected=[201, 204], method='HEAD', result='foo')
-    assert exc.value.args[0] == 'Expected HTTP status 201, 204 for HEAD https://example.com, but got HTTP status 200 with data: foo'
-
-
-def test_process_json_result():
-    module = MagicMock()
-    module.from_json = json.loads
-    api = HostTechJSONAPI(module, '123')
-    with pytest.raises(DNSAPIError) as exc:
-        api._process_json_result(response=None, info=dict(status=401, url='https://example.com'))
-    assert exc.value.args[0] == 'Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
-    with pytest.raises(DNSAPIError) as exc:
-        api._process_json_result(response=None, info=dict(status=401, url='https://example.com', body='{"message": ""}'.encode('utf-8')))
-    assert exc.value.args[0] == 'Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
-    with pytest.raises(DNSAPIError) as exc:
-        api._process_json_result(response=None, info=dict(status=401, url='https://example.com', body='{"message": "foo"}'.encode('utf-8')))
-    assert exc.value.args[0] == 'Unauthorized: the authentication parameters are incorrect (HTTP status 401): foo'
-    with pytest.raises(DNSAPIError) as exc:
-        api._process_json_result(response=None, info=dict(status=403, url='https://example.com'))
-    assert exc.value.args[0] == 'Forbidden: you do not have access to this resource (HTTP status 403)'
-    with pytest.raises(DNSAPIError) as exc:
-        api._process_json_result(response=None, info=dict(status=403, url='https://example.com', body='{"message": ""}'.encode('utf-8')))
-    assert exc.value.args[0] == 'Forbidden: you do not have access to this resource (HTTP status 403)'
-    with pytest.raises(DNSAPIError) as exc:
-        api._process_json_result(response=None, info=dict(status=403, url='https://example.com', body='{"message": "foo"}'.encode('utf-8')))
-    assert exc.value.args[0] == 'Forbidden: you do not have access to this resource (HTTP status 403): foo'
-    info = dict(status=200, url='https://example.com', body='not JSON'.encode('utf-8'))
-    info['content-TYPE'] = 'application/json'
-    with pytest.raises(DNSAPIError) as exc:
-        api._process_json_result(response=None, info=info)
-    print(exc.value.args[0])
-    assert exc.value.args[0] == 'GET https://example.com did not yield JSON data, but HTTP status code 200 with data: not JSON'
-    info = dict(status=200, url='https://example.com', body='not JSON'.encode('utf-8'))
-    info['Content-type'] = 'application/json'
-    r, i = api._process_json_result(response=None, info=info, must_have_content=False)
-    print(repr(r), i)
-    assert r is None
-    info = dict(status=200, url='https://example.com')
-    info['Content-type'] = 'application/json'
-    assert i == info
