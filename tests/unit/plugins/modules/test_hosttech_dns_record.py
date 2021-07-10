@@ -723,6 +723,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'value': [
                 '10 example.com',
             ],
+            '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -743,6 +744,14 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         assert result['changed'] is False
         assert result['zone_id'] == 42
+        assert result['diff']['before'] == {
+            'record': 'example.com',
+            'prefix': '',
+            'type': 'MX',
+            'ttl': 3600,
+            'value': ['10 example.com'],
+        }
+        assert result['diff']['before'] == result['diff']['after']
 
     def test_idempotency_absent_value(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record, {
@@ -755,6 +764,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'value': [
                 '1.2.3.6',
             ],
+            '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -775,6 +785,14 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         assert result['changed'] is False
         assert result['zone_id'] == 42
+        assert result['diff']['before'] == {
+            'record': '*.example.com',
+            'prefix': '*',
+            'type': 'A',
+            'ttl': 3600,
+            'value': ['1.2.3.5'],
+        }
+        assert result['diff']['before'] == result['diff']['after']
 
     def test_idempotency_absent_value_prefix(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record, {
