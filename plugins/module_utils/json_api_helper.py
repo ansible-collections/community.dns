@@ -108,7 +108,7 @@ class JSONAPIHelper(object):
             raise DNSAPIAuthenticationError(message)
         # Check Content-Type header
         content_type = _get_header_value(info, 'content-type')
-        if content_type != 'application/json' and not content_type.startswith('application/json;'):
+        if content_type != 'application/json' and (content_type is None or not content_type.startswith('application/json;')):
             if must_have_content:
                 raise DNSAPIError(
                     '{0} {1} did not yield JSON data, but HTTP status code {2} with Content-Type "{3}" and data: {4}'.format(

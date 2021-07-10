@@ -27,9 +27,9 @@ from ansible_collections.community.internal_test_tools.tests.unit.plugins.module
 
 from ansible_collections.community.dns.plugins.modules import hosttech_dns_record
 
-# This import is needed so patching below works
+# These imports are needed so patching below works
 import ansible_collections.community.dns.plugins.module_utils.wsdl
-import ansible_collections.community.dns.plugins.module_utils.hosttech.json_api
+import ansible_collections.community.dns.plugins.module_utils.json_api_helper
 
 from .helper import (
     expect_wsdl_authentication,
@@ -564,7 +564,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
 
 class TestHosttechDNSRecordJSON(BaseTestModule):
     MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hosttech_dns_record.AnsibleModule'
-    MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.hosttech.json_api.fetch_url'
+    MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.json_api_helper.fetch_url'
 
     def test_unknown_zone(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_record, {
