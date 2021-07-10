@@ -1,4 +1,6 @@
 ---
+# Template for Hosttech DNS tests:
+
 test_zone: ...
 test_record_prefix: ...  # must not be empty!
 # Specify username/password:
