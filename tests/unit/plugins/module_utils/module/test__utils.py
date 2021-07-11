@@ -12,6 +12,10 @@ import pytest
 
 from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import MagicMock, patch
 
+from ansible_collections.community.dns.plugins.module_utils.provider import (
+    DefaultProviderInformation,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
 )
@@ -31,15 +35,18 @@ def test_normalize_dns_name():
 
 
 def test_get_prefix():
-    assert get_prefix(normalized_zone='example.com', normalized_record='example.com') == ('example.com', None)
-    assert get_prefix(normalized_zone='example.com', normalized_record='www.example.com') == ('www.example.com', 'www')
-    assert get_prefix(normalized_zone='example.com') == ('example.com', None)
-    assert get_prefix(normalized_zone='example.com', prefix='') == ('example.com', None)
-    assert get_prefix(normalized_zone='example.com', prefix='.') == ('example.com', None)
-    assert get_prefix(normalized_zone='example.com', prefix='www') == ('www.example.com', 'www')
-    assert get_prefix(normalized_zone='example.com', prefix='www.') == ('www.example.com', 'www')
-    assert get_prefix(normalized_zone='example.com', prefix='wWw.') == ('www.example.com', 'www')
+    provider_information = DefaultProviderInformation()
+    assert get_prefix(
+        normalized_zone='example.com', normalized_record='example.com', provider_information=provider_information) == ('example.com', None)
+    assert get_prefix(
+        normalized_zone='example.com', normalized_record='www.example.com', provider_information=provider_information) == ('www.example.com', 'www')
+    assert get_prefix(normalized_zone='example.com', provider_information=provider_information) == ('example.com', None)
+    assert get_prefix(normalized_zone='example.com', prefix='', provider_information=provider_information) == ('example.com', None)
+    assert get_prefix(normalized_zone='example.com', prefix='.', provider_information=provider_information) == ('example.com', None)
+    assert get_prefix(normalized_zone='example.com', prefix='www', provider_information=provider_information) == ('www.example.com', 'www')
+    assert get_prefix(normalized_zone='example.com', prefix='www.', provider_information=provider_information) == ('www.example.com', 'www')
+    assert get_prefix(normalized_zone='example.com', prefix='wWw.', provider_information=provider_information) == ('www.example.com', 'www')
     with pytest.raises(DNSAPIError):
-        get_prefix(normalized_zone='example.com', normalized_record='example.org')
+        get_prefix(normalized_zone='example.com', normalized_record='example.org', provider_information=provider_information)
     with pytest.raises(DNSAPIError):
-        get_prefix(normalized_zone='example.com', normalized_record='wwwexample.com')
+        get_prefix(normalized_zone='example.com', normalized_record='wwwexample.com', provider_information=provider_information)

@@ -65,6 +65,7 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
     create_hosttech_argument_spec,
     create_hosttech_api,
+    create_hosttech_provider_information,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.module.zone_info import (
@@ -74,10 +75,11 @@ from ansible_collections.community.dns.plugins.module_utils.module.zone_info imp
 
 
 def main():
+    provider_information = create_hosttech_provider_information()
     argument_spec = create_hosttech_argument_spec()
-    argument_spec.merge(create_module_argument_spec(zone_id_type='int'))
+    argument_spec.merge(create_module_argument_spec(zone_id_type='int', provider_information=provider_information))
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
-    run_module(module, lambda: create_hosttech_api(module))
+    run_module(module, lambda: create_hosttech_api(module), provider_information=provider_information)
 
 
 if __name__ == '__main__':

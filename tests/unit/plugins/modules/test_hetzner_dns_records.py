@@ -256,7 +256,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'value': ['1.2.3.4'],
                 },
                 {
-                    'prefix': '',
+                    'prefix': '@',
                     'ttl': 3600,
                     'type': 'AAAA',
                     'value': [],

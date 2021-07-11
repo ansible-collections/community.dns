@@ -15,6 +15,10 @@ from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
 )
 
+from ansible_collections.community.dns.plugins.module_utils.provider import (
+    DefaultProviderInformation,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.record import (
     DNSRecord,
     format_records_for_output,
@@ -33,9 +37,9 @@ from ._utils import (
 )
 
 
-def create_module_argument_spec(zone_id_type='str', record_types=None):
-    if record_types is None:
-        record_types = ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
+def create_module_argument_spec(zone_id_type='str', provider_information=None):
+    if provider_information is None:
+        provider_information = DefaultProviderInformation()
     return ArgumentSpec(
         argument_spec=dict(
             zone=dict(type='str'),
@@ -49,7 +53,7 @@ def create_module_argument_spec(zone_id_type='str', record_types=None):
                     record=dict(type='str'),
                     prefix=dict(type='str'),
                     ttl=dict(type='int', default=3600),
-                    type=dict(choices=record_types, required=True),
+                    type=dict(choices=provider_information.get_supported_record_types(), required=True),
                     value=dict(type='list', elements='str'),
                     ignore=dict(type='bool', default=False),
                 ),
@@ -67,7 +71,12 @@ def create_module_argument_spec(zone_id_type='str', record_types=None):
     )
 
 
-def run_module(module, create_api):
+def run_module(module, create_api, provider_information=None):
+    if provider_information is None:
+        module.deprecate(
+            'provider_information must always be passed to create_module_argument_spec and run_module',
+            version='2.0.0', collection_name='community.dns')
+        provider_information = DefaultProviderInformation()
     try:
         # Create API
         api = create_api()
@@ -94,9 +103,10 @@ def run_module(module, create_api):
         records_dict = dict()
         for index, record in enumerate(records):
             record = record.copy()
-            record_name = record.pop('record')
-            prefix = record['prefix'] or None
-            record_name, prefix = get_prefix(normalized_zone=zone_in, normalized_record=record_name, prefix=prefix)
+            record_name = record['record']
+            prefix = record['prefix']
+            record_name, prefix = get_prefix(
+                normalized_zone=zone_in, normalized_record=record_name, prefix=prefix, provider_information=provider_information)
             record['record'] = record_name
             record['prefix'] = prefix
             key = (prefix, record['type'])

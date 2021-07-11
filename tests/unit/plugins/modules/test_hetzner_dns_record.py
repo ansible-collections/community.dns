@@ -478,7 +478,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'hetzner_token': 'foo',
             'state': 'present',
             'zone_id': '42',
-            'prefix': '',
+            'prefix': '@',
             'type': 'CAA',
             'ttl': 3600,
             'value': [

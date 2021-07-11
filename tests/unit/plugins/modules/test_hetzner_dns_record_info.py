@@ -341,7 +341,7 @@ class TestHetznerDNSRecordInfoJSON(BaseTestModule):
             'hetzner_token': 'foo',
             'what': 'all_types_for_record',
             'zone': 'example.com.',
-            'prefix': '',
+            'prefix': '@',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [

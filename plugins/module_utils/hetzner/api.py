@@ -21,6 +21,10 @@ from ansible_collections.community.dns.plugins.module_utils.json_api_helper impo
     JSONAPIHelper,
 )
 
+from ansible_collections.community.dns.plugins.module_utils.provider import (
+    ProviderInformation,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.record import (
     DNSRecord,
 )
@@ -37,9 +41,6 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
     ZoneRecordAPI,
     filter_records,
 )
-
-
-SUPPORTED_RECORD_TYPES = ['A', 'AAAA', 'NS', 'MX', 'CNAME', 'RP', 'TXT', 'SOA', 'HINFO', 'SRV', 'DANE', 'TLSA', 'DS', 'CAA']
 
 
 def _create_zone_from_json(source):
@@ -186,6 +187,30 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
             raise DNSAPIError('Need record ID to delete record!')
         dummy, info = self._delete('v1/records/{id}'.format(id=record.id), must_have_content=False, expected=[200, 404])
         return info['status'] == 200
+
+
+class HetznerProviderInformation(ProviderInformation):
+    def get_supported_record_types(self):
+        """
+        Return a list of supported record types.
+        """
+        return ['A', 'AAAA', 'NS', 'MX', 'CNAME', 'RP', 'TXT', 'SOA', 'HINFO', 'SRV', 'DANE', 'TLSA', 'DS', 'CAA']
+
+    def normalize_prefix(self, prefix):
+        """
+        Given a prefix (string or None), return its normalized form.
+
+        The result should always be None for the trivial prefix, and a non-zero length DNS name
+        for a non-trivial prefix.
+
+        If a provider supports other identifiers for the trivial prefix, such as '@', this
+        function needs to convert them to None as well.
+        """
+        return None if prefix in ('@', '') else prefix
+
+
+def create_hetzner_provider_information():
+    return HetznerProviderInformation()
 
 
 def create_hetzner_argument_spec():

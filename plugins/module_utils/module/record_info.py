@@ -15,6 +15,10 @@ from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
 )
 
+from ansible_collections.community.dns.plugins.module_utils.provider import (
+    DefaultProviderInformation,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.record import (
     format_records_for_output,
 )
@@ -31,9 +35,9 @@ from ._utils import (
 )
 
 
-def create_module_argument_spec(zone_id_type='str', record_types=None):
-    if record_types is None:
-        record_types = ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
+def create_module_argument_spec(zone_id_type='str', provider_information=None):
+    if provider_information is None:
+        provider_information = DefaultProviderInformation()
     return ArgumentSpec(
         argument_spec=dict(
             what=dict(type='str', choices=['single_record', 'all_types_for_record', 'all_records'], default='single_record'),
@@ -41,7 +45,7 @@ def create_module_argument_spec(zone_id_type='str', record_types=None):
             zone_id=dict(type=zone_id_type),
             record=dict(type='str'),
             prefix=dict(type='str'),
-            type=dict(type='str', choices=record_types, default=None),
+            type=dict(type='str', choices=provider_information.get_supported_record_types(), default=None),
         ),
         required_if=[
             ('what', 'single_record', ['type']),
@@ -58,19 +62,24 @@ def create_module_argument_spec(zone_id_type='str', record_types=None):
     )
 
 
-def run_module(module, create_api):
+def run_module(module, create_api, provider_information=None):
+    if provider_information is None:
+        module.deprecate(
+            'provider_information must always be passed to create_module_argument_spec and run_module',
+            version='2.0.0', collection_name='community.dns')
+        provider_information = DefaultProviderInformation()
     filter_record_type = NOT_PROVIDED
     filter_prefix = NOT_PROVIDED
     needs_zone_name = False
     if module.params.get('what') == 'single_record':
         filter_record_type = module.params.get('type')
         if module.params.get('prefix') is not None:
-            filter_prefix = module.params.get('prefix') or None
+            filter_prefix = provider_information.normalize_prefix(module.params.get('prefix'))
         else:
             needs_zone_name = True
     elif module.params.get('what') == 'all_types_for_record':
         if module.params.get('prefix') is not None:
-            filter_prefix = module.params.get('prefix') or None
+            filter_prefix = provider_information.normalize_prefix(module.params.get('prefix'))
         else:
             needs_zone_name = True
 
@@ -95,7 +104,8 @@ def run_module(module, create_api):
             # Extract prefix
             record_in = normalize_dns_name(module.params.get('record'))
             prefix_in = module.params.get('prefix')
-            record_in, prefix = get_prefix(normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in)
+            record_in, prefix = get_prefix(
+                normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in, provider_information=provider_information)
 
             # Find matching records
             records = []
@@ -116,7 +126,8 @@ def run_module(module, create_api):
                 check_prefix = True
                 record_in = normalize_dns_name(module.params.get('record'))
                 prefix_in = module.params.get('prefix')
-                record_in, prefix = get_prefix(normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in)
+                record_in, prefix = get_prefix(
+                    normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in, provider_information=provider_information)
             else:
                 check_prefix = False
                 prefix = None
