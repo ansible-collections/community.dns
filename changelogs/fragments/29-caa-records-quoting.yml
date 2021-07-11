@@ -1,0 +1,2 @@
+bugfixes:
+- "hosttech_dns_record - correctly handle quoting in CAA records for JSON API (https://github.com/ansible-collections/community.dns/pull/29)."

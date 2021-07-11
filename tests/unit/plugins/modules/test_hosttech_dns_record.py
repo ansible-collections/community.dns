@@ -290,7 +290,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'type': 'CAA',
                     'ttl': 3600,
                     'value': [
-                        'something',
+                        '0 issue "letsencrypt.org"',
                     ],
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
@@ -402,7 +402,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'type': 'CAA',
                     'ttl': 3600,
                     'value': [
-                        'test',
+                        '0 issue "letsencrypt.org"',
                     ],
                     '_ansible_check_mode': True,
                     '_ansible_remote_tmp': '/tmp/tmp',
@@ -415,7 +415,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
         assert e.value.args[0]['zone_id'] == 42
 
     def test_change_add_one(self):
-        new_entry = (131, 42, 'CAA', 'foo', 'test', 3600, None, None)
+        new_entry = (131, 42, 'CAA', 'foo', '0 issue "letsencrypt.org"', 3600, None, None)
         open_url = OpenUrlProxy([
             OpenUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
@@ -445,7 +445,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'type': 'CAA',
                     'ttl': 3600,
                     'value': [
-                        'test',
+                        '0 issue "letsencrypt.org"',
                     ],
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
@@ -867,7 +867,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'type': 'CAA',
             'ttl': 3600,
             'value': [
-                'something',
+                '0 issue "letsencrypt.org"',
             ],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -969,7 +969,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'type': 'CAA',
             'ttl': 3600,
             'value': [
-                'test',
+                '0 issue "letsencrypt.org"',
             ],
             '_ansible_check_mode': True,
             '_ansible_remote_tmp': '/tmp/tmp',
@@ -995,7 +995,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'type': 'CAA',
             'ttl': 3600,
             'value': [
-                'test',
+                '0 issue "letsencrypt.org"',
             ],
             '_ansible_diff': True,
             '_ansible_check_mode': True,
@@ -1021,7 +1021,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'prefix': '',
             'type': 'CAA',
             'ttl': 3600,
-            'value': ['test'],
+            'value': ['0 issue "letsencrypt.org"'],
         }
 
     def test_change_add_one(self, mocker):
@@ -1033,7 +1033,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'type': 'CAA',
             'ttl': 3600,
             'value': [
-                '128 issue letsencrypt.org xxx',
+                '128 issue "letsencrypt.org xxx"',
             ],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -1090,7 +1090,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'type': 'CAA',
             'ttl': 3600,
             'value': [
-                '128 issue letsencrypt.org',
+                '128 issue "letsencrypt.org"',
             ],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -1147,7 +1147,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'type': 'CAA',
             'ttl': 3600,
             'value': [
-                '128 issue letsencrypt.org',
+                '128 issue "letsencrypt.org"',
             ],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,

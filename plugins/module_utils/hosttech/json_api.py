@@ -44,7 +44,7 @@ def _create_record_from_json(source, type=None):
     elif result.type == 'AAAA':
         target = source['ipv6']
     elif result.type == 'CAA':
-        target = '{0} {1} {2}'.format(source['flag'], source['tag'], source['value'])
+        target = '{0} {1} "{2}"'.format(source['flag'], source['tag'], source['value'])
     elif result.type == 'CNAME':
         target = source['cname']
     elif result.type == 'MX':
@@ -111,6 +111,8 @@ def _record_to_json(record, include_id=False, include_type=True):
         result['name'] = record.prefix or ''
         try:
             flag, tag, value = record.target.split(' ', 2)
+            if value.startswith('"') and value.endswith('"'):
+                value = value[1:-1]
             result['flag'] = flag
             result['tag'] = tag
             result['value'] = value
