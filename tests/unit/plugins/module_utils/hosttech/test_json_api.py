@@ -90,7 +90,7 @@ def test_CAA():
     assert _record_to_json(record, include_id=True) == data
 
     # We also accept versions without quotes:
-    record.target == '0 issue letsencrypt.org'
+    record.target = '0 issue letsencrypt.org'
     assert _record_to_json(record, include_id=True) == data
 
     record.target = '0\tissue "letsencrypt.org"'
