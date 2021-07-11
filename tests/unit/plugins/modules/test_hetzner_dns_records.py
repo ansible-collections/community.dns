@@ -414,7 +414,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'type': 'CAA',
                     'ttl': 3600,
                     'value': [
-                        'test',
+                        '0 issue "letsencrypt.org"',
                     ],
                 },
             ],
@@ -452,7 +452,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'type': 'CAA',
                     'ttl': 3600,
                     'value': [
-                        'test',
+                        '0 issue "letsencrypt.org"',
                     ],
                 },
             ],
@@ -490,7 +490,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'type': 'CAA',
                     'ttl': 3600,
                     'value': [
-                        '128 issue letsencrypt.org xxx',
+                        '128 issue "letsencrypt.org xxx"',
                     ],
                 },
             ],
@@ -522,14 +522,14 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .expect_json_value(['ttl'], 3600)
             .expect_json_value(['zone_id'], '42')
             .expect_json_value(['name'], '@')
-            .expect_json_value(['value'], '128 issue letsencrypt.org xxx')
+            .expect_json_value(['value'], '128 issue "letsencrypt.org xxx"')
             .return_header('Content-Type', 'application/json')
             .result_json({
                 'record': {
                     'id': '133',
                     'type': 'CAA',
                     'name': '@',
-                    'value': '128 issue letsencrypt.org xxx',
+                    'value': '128 issue "letsencrypt.org xxx"',
                     'ttl': 3600,
                     'zone_id': '42',
                 },
@@ -549,7 +549,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'type': 'CAA',
                     'ttl': 3600,
                     'value': [
-                        '128 issue letsencrypt.org',
+                        '128 issue "letsencrypt.org"',
                     ],
                 },
             ],
@@ -581,14 +581,14 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .expect_json_value(['ttl'], 3600)
             .expect_json_value(['zone_id'], '42')
             .expect_json_value(['name'], '@')
-            .expect_json_value(['value'], '128 issue letsencrypt.org')
+            .expect_json_value(['value'], '128 issue "letsencrypt.org"')
             .return_header('Content-Type', 'application/json')
             .result_json({
                 'record': {
                     'id': '133',
                     'type': 'CAA',
                     'name': '@',
-                    'value': '128 issue letsencrypt.org',
+                    'value': '128 issue "letsencrypt.org"',
                     'ttl': 3600,
                     'zone_id': '42',
                 },
@@ -608,7 +608,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'type': 'CAA',
                     'ttl': 3600,
                     'value': [
-                        '128 issue letsencrypt.org',
+                        '128 issue "letsencrypt.org"',
                     ],
                 },
             ],
@@ -640,14 +640,14 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .expect_json_value(['ttl'], 3600)
             .expect_json_value(['zone_id'], '42')
             .expect_json_value(['name'], 'xn--74h')
-            .expect_json_value(['value'], '128 issue letsencrypt.org')
+            .expect_json_value(['value'], '128 issue "letsencrypt.org"')
             .return_header('Content-Type', 'application/json')
             .result_json({
                 'record': {
                     'id': '133',
                     'type': 'CAA',
                     'name': 'xn--74h',
-                    'value': '128 issue letsencrypt.org',
+                    'value': '128 issue "letsencrypt.org"',
                     'ttl': 3600,
                     'zone_id': '42',
                 },
