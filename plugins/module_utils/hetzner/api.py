@@ -87,14 +87,16 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
             'Auth-API-Token': self._token,
         }
 
-    def _list_pagination(self, url, data_key, query=None, block_size=100):
+    def _list_pagination(self, url, data_key, query=None, block_size=100, accept_404=False):
         result = []
         page = 1
         while True:
             query_ = query.copy() if query else dict()
             query_['per_page'] = block_size
             query_['page'] = page
-            res, info = self._get(url, query_, must_have_content=True, expected=[200])
+            res, info = self._get(url, query_, must_have_content=[200], expected=[200, 404] if accept_404 and page == 1 else [200])
+            if accept_404 and page == 1 and info['status'] == 404:
+                return None
             result.extend(res[data_key])
             if 'meta' not in res and page == 1:
                 return result
@@ -137,7 +139,9 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         @param record_type: The record type to filter for, if provided
         @return A list of DNSrecord objects, or None if zone was not found
         """
-        result = self._list_pagination('v1/records', data_key='records', query=dict(zone_id=zone_id))
+        result = self._list_pagination('v1/records', data_key='records', query=dict(zone_id=zone_id), accept_404=True)
+        if result is None:
+            return None
         return filter_records(
             [_create_record_from_json(record) for record in result],
             prefix=prefix,

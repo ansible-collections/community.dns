@@ -32,7 +32,7 @@ from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
 def test_list_pagination():
     def get_1(url, query=None, must_have_content=True, expected=None):
         assert url == 'https://example.com'
-        assert must_have_content is True
+        assert must_have_content == [200]
         assert expected == [200]
         assert query is not None
         assert len(query) == 2
@@ -49,7 +49,7 @@ def test_list_pagination():
                         'total_entries': 2,
                     },
                 },
-            }, {}
+            }, {'status': 200}
         else:
             return {
                 'data': [],
@@ -61,12 +61,12 @@ def test_list_pagination():
                         'total_entries': 2,
                     },
                 },
-            }, {}
+            }, {'status': 200}
 
     def get_2(url, query=None, must_have_content=True, expected=None):
         assert url == 'https://example.com'
-        assert must_have_content is True
-        assert expected == [200]
+        assert must_have_content == [200]
+        assert expected == ([200, 404] if query['page'] == 1 else [200])
         assert query is not None
         assert len(query) == 3
         assert query['foo'] == 'bar'
@@ -83,7 +83,7 @@ def test_list_pagination():
                         'total_entries': 3,
                     },
                 },
-            }, {}
+            }, {'status': 200}
         else:
             return {
                 'foobar': ['foo'],
@@ -95,17 +95,31 @@ def test_list_pagination():
                         'total_entries': 3,
                     },
                 },
-            }, {}
+            }, {'status': 200}
+
+    def get_3(url, query=None, must_have_content=True, expected=None):
+        assert url == 'https://example.com'
+        assert must_have_content == [200]
+        assert expected == [200, 404]
+        assert query is not None
+        assert len(query) == 2
+        assert query['per_page'] == 100
+        assert query['page'] == 1
+        return None, {'status': 404}
 
     api = HetznerAPI(MagicMock(), '123')
 
     api._get = MagicMock(side_effect=get_1)
-    result = api._list_pagination('https://example.com', 'data', block_size=1)
+    result = api._list_pagination('https://example.com', 'data', block_size=1, accept_404=False)
     assert result == [1, 2]
 
     api._get = MagicMock(side_effect=get_2)
-    result = api._list_pagination('https://example.com', 'foobar', query=dict(foo='bar'), block_size=2)
+    result = api._list_pagination('https://example.com', 'foobar', query=dict(foo='bar'), block_size=2, accept_404=True)
     assert result == ['bar', 'baz', 'foo']
+
+    api._get = MagicMock(side_effect=get_3)
+    result = api._list_pagination('https://example.com', 'baz', accept_404=True)
+    assert result is None
 
 
 def test_update_id_missing():
