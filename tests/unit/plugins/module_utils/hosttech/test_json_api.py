@@ -84,15 +84,19 @@ def test_CAA():
     assert record.id == 12
     assert record.type == 'CAA'
     assert record.prefix is None
-    assert record.target == '0 issue letsencrypt.org'
+    assert record.target == '0 issue "letsencrypt.org"'
     assert record.ttl == 3600
     assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
 
-    record.target = '0\tissue letsencrypt.org'
+    # We also accept versions without quotes:
+    record.target = '0 issue letsencrypt.org'
+    assert _record_to_json(record, include_id=True) == data
+
+    record.target = '0\tissue "letsencrypt.org"'
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
-    assert exc.value.args[0].startswith('Cannot split CAA record "0\tissue letsencrypt.org" into flag, tag and value: ')
+    assert exc.value.args[0].startswith('Cannot split CAA record "0\tissue "letsencrypt.org"" into flag, tag and value: ')
 
 
 def test_CNAME():
