@@ -21,13 +21,9 @@ description:
 
 extends_documentation_fragment:
     - community.dns.hetzner
+    - community.dns.hetzner.zone_id_type
+    - community.dns.hetzner.zone_choices
     - community.dns.module_record_set
-
-options:
-    zone_id:
-        type: str
-    type:
-        choices: ['A', 'AAAA', 'NS', 'MX', 'CNAME', 'RP', 'TXT', 'SOA', 'HINFO', 'SRV', 'DANE', 'TLSA', 'DS', 'CAA']
 
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
