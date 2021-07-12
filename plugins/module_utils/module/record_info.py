@@ -15,10 +15,6 @@ from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.provider import (
-    DefaultProviderInformation,
-)
-
 from ansible_collections.community.dns.plugins.module_utils.record import (
     format_records_for_output,
 )
@@ -35,9 +31,7 @@ from ._utils import (
 )
 
 
-def create_module_argument_spec(zone_id_type='str', provider_information=None):
-    if provider_information is None:
-        provider_information = DefaultProviderInformation()
+def create_module_argument_spec(zone_id_type='str', provider_information):
     return ArgumentSpec(
         argument_spec=dict(
             what=dict(type='str', choices=['single_record', 'all_types_for_record', 'all_records'], default='single_record'),
@@ -62,12 +56,7 @@ def create_module_argument_spec(zone_id_type='str', provider_information=None):
     )
 
 
-def run_module(module, create_api, provider_information=None):
-    if provider_information is None:
-        module.deprecate(
-            'provider_information must always be passed to create_module_argument_spec and run_module',
-            version='2.0.0', collection_name='community.dns')
-        provider_information = DefaultProviderInformation()
+def run_module(module, create_api, provider_information):
     filter_record_type = NOT_PROVIDED
     filter_prefix = NOT_PROVIDED
     needs_zone_name = False

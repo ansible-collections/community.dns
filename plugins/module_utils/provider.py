@@ -34,4 +34,5 @@ class ProviderInformation(object):
 
 
 class DefaultProviderInformation(ProviderInformation):
+    # This should mainly be used for tests, and not for anything else.
     pass

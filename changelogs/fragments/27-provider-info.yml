@@ -1,0 +1,2 @@
+breaking_changes:
+- "When using the internal modules API, now a provider information object must be passed (https://github.com/ansible-collections/community.dns/pull/27)."
