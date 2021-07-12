@@ -1,2 +1,6 @@
 breaking_changes:
-- "The hosttech_dns_record and hosttech_dns_records modules have been renamed to hosttech_dns_record_set and hosttech_dns_record_sets, respectively (https://github.com/ansible-collections/community.dns/pull/31)."
+- "The hosttech_dns_record module has been renamed to hosttech_dns_record_set (https://github.com/ansible-collections/community.dns/pull/31)."
+deprecated_features:
+- "The hosttech_dns_records module has been renamed to hosttech_dns_record_sets. The old name will stop working in community.dns 3.0.0 (https://github.com/ansible-collections/community.dns/pull/31)."
+minor_changes:
+- "The hosttech_dns_records module has been renamed to hosttech_dns_record_sets (https://github.com/ansible-collections/community.dns/pull/31)."
