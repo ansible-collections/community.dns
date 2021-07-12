@@ -37,7 +37,7 @@ def create_module_argument_spec(zone_id_type, provider_information):
     return ArgumentSpec(
         argument_spec=dict(
             state=dict(type='str', choices=['present', 'absent'], required=True),
-            zone=dict(type='str'),
+            zone_name=dict(type='str', aliases=['zone']),
             zone_id=dict(type=zone_id_type),
             record=dict(type='str'),
             prefix=dict(type='str'),
@@ -47,11 +47,11 @@ def create_module_argument_spec(zone_id_type, provider_information):
             on_existing=dict(type='str', default='replace', choices=['replace', 'keep_and_fail', 'keep_and_warn', 'keep']),
         ),
         required_one_of=[
-            ('zone', 'zone_id'),
+            ('zone_name', 'zone_id'),
             ('record', 'prefix'),
         ],
         mutually_exclusive=[
-            ('zone', 'zone_id'),
+            ('zone_name', 'zone_id'),
             ('record', 'prefix'),
         ],
         required_if=[
@@ -72,8 +72,8 @@ def run_module(module, create_api, provider_information):
         api = create_api()
 
         # Get zone information
-        if module.params.get('zone') is not None:
-            zone_in = normalize_dns_name(module.params.get('zone'))
+        if module.params.get('zone_name') is not None:
+            zone_in = normalize_dns_name(module.params.get('zone_name'))
             record_in, prefix = get_prefix(
                 normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in, provider_information=provider_information)
             zone = api.get_zone_with_records_by_name(zone_in, prefix=prefix, record_type=type_in)

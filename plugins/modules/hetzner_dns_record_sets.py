@@ -47,7 +47,7 @@ EXAMPLES = '''
         ttl: 7200
         value:
           - "::1"
-      - zone: foo.com
+      - record: foo.com
         type: TXT
         value:
           - test

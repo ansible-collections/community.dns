@@ -48,7 +48,7 @@ class TestHetznerDNSRecordInfoJSON(BaseTestModule):
     def test_unknown_zone(self, mocker):
         result = self.run_module_failed(mocker, hetzner_dns_record_info, {
             'hetzner_token': 'foo',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             'record': 'example.org',
             'type': 'A',
             '_ansible_remote_tmp': '/tmp/tmp',
@@ -87,7 +87,7 @@ class TestHetznerDNSRecordInfoJSON(BaseTestModule):
     def test_auth_error(self, mocker):
         result = self.run_module_failed(mocker, hetzner_dns_record_info, {
             'hetzner_token': 'foo',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             'record': 'example.org',
             'type': 'A',
             '_ansible_remote_tmp': '/tmp/tmp',
@@ -124,7 +124,7 @@ class TestHetznerDNSRecordInfoJSON(BaseTestModule):
     def test_other_error(self, mocker):
         result = self.run_module_failed(mocker, hetzner_dns_record_info, {
             'hetzner_token': 'foo',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             'record': 'example.org',
             'type': 'A',
             '_ansible_remote_tmp': '/tmp/tmp',
@@ -151,7 +151,7 @@ class TestHetznerDNSRecordInfoJSON(BaseTestModule):
         with patch('time.sleep', sleep_check) as m:
             result = self.run_module_failed(mocker, hetzner_dns_record_info, {
                 'hetzner_token': 'foo',
-                'zone': 'example.com',
+                'zone_name': 'example.com',
                 'record': 'example.com',
                 'type': 'A',
                 '_ansible_remote_tmp': '/tmp/tmp',
@@ -206,7 +206,7 @@ class TestHetznerDNSRecordInfoJSON(BaseTestModule):
         with patch('time.sleep', mock_sleep):
             result = self.run_module_success(mocker, hetzner_dns_record_info, {
                 'hetzner_token': 'foo',
-                'zone': 'example.com',
+                'zone_name': 'example.com',
                 'record': 'example.com',
                 'type': 'A',
                 '_ansible_remote_tmp': '/tmp/tmp',
@@ -256,7 +256,7 @@ class TestHetznerDNSRecordInfoJSON(BaseTestModule):
     def test_get_single_prefix(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_info, {
             'hetzner_token': 'foo',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'prefix': '*',
             'type': 'A',
             '_ansible_remote_tmp': '/tmp/tmp',
@@ -293,7 +293,7 @@ class TestHetznerDNSRecordInfoJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_info, {
             'hetzner_token': 'foo',
             'what': 'all_types_for_record',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record': '*.example.com',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -340,7 +340,7 @@ class TestHetznerDNSRecordInfoJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_info, {
             'hetzner_token': 'foo',
             'what': 'all_types_for_record',
-            'zone': 'example.com.',
+            'zone_name': 'example.com.',
             'prefix': '@',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,

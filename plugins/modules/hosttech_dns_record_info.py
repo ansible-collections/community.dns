@@ -32,7 +32,7 @@ author:
 EXAMPLES = '''
 - name: Retrieve the details for new.foo.com
   community.dns.hosttech_dns_record_info:
-    zone: foo.com
+    zone_name: foo.com
     record: new.foo.com
     type: A
     hosttech_token: access_token
@@ -41,7 +41,7 @@ EXAMPLES = '''
 - name: Delete new.foo.com A record using the results from the above command
   community.dns.hosttech_dns_record:
     state: absent
-    zone: foo.com
+    zone_name: foo.com
     record: "{{ rec.set.record }}"
     ttl: "{{ rec.set.ttl }}"
     type: "{{ rec.set.type }}"

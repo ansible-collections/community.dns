@@ -1,7 +1,7 @@
 ---
 - name: (token) Get zone info
   hosttech_dns_zone_info:
-    zone: '{{ test_zone }}'
+    zone_name: '{{ test_zone }}'
     hosttech_token: '{{ hosttech_token }}'
   register: result_zone
 
@@ -13,7 +13,7 @@
 
 - name: (token) Get all NS records
   hosttech_dns_record_info:
-    zone: '{{ test_zone }}'
+    zone_name: '{{ test_zone }}'
     record: '{{ test_zone }}'
     type: NS
     hosttech_token: '{{ hosttech_token }}'
@@ -37,7 +37,7 @@
 - name: (token) Ensure that test record is not present
   hosttech_dns_record_set:
     state: present
-    zone: '{{ test_zone }}'
+    zone_name: '{{ test_zone }}'
     record: '{{ test_record }}'
     type: A
     ttl: 600
@@ -61,7 +61,7 @@
   - name: (token) Create test record
     hosttech_dns_record_set:
       state: present
-      zone: '{{ test_zone }}'
+      zone_name: '{{ test_zone }}'
       record: '{{ test_record }}'
       type: A
       ttl: 600
@@ -74,7 +74,7 @@
   - name: (token) Modify test record
     hosttech_dns_record_set:
       state: present
-      zone: '{{ test_zone }}'
+      zone_name: '{{ test_zone }}'
       prefix: '{{ test_record_prefix }}'
       type: A
       ttl: 600
@@ -85,7 +85,7 @@
 
   - name: (token) Get test record
     hosttech_dns_record_info:
-      zone: '{{ test_zone }}'
+      zone_name: '{{ test_zone }}'
       record: '{{ test_record }}'
       type: A
       hosttech_token: '{{ hosttech_token }}'
@@ -114,7 +114,7 @@
   - name: (token) Ensure that test record is not present
     hosttech_dns_record_set:
       state: absent
-      zone: '{{ test_zone }}'
+      zone_name: '{{ test_zone }}'
       record: '{{ test_record }}'
       type: A
       ttl: 600

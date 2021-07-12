@@ -60,7 +60,7 @@ The :ref:`community.dns.hosttech_dns_zone_info module <ansible_collections.commu
 
     - name: Query zone information by name
       community.dns.hosttech_dns_zone_info:
-        zone: example.com
+        zone_name: example.com
       register: result
 
     - name: Query zone information by name
@@ -89,7 +89,7 @@ The :ref:`community.dns.hosttech_dns_record_info module <ansible_collections.com
 
     - name: Query single record
       community.dns.hosttech_dns_record_info:
-        zone: example.com
+        zone_name: example.com
         type: A  # IPv4 addresses
         what: single_record  # default value
         # Either specify a record name:
@@ -110,7 +110,7 @@ The :ref:`community.dns.hosttech_dns_record_info module <ansible_collections.com
         msg: There is no A record for www.example.com
       when: not result.set
 
-In all examples in this section, you can replace ``zone: example.com`` by ``zone_id: 42`` with the zone's integer ID.
+In all examples in this section, you can replace ``zone_name: example.com`` by ``zone_id: 42`` with the zone's integer ID.
 
 You can also query a list of all records for a record name or prefix:
 
@@ -118,7 +118,7 @@ You can also query a list of all records for a record name or prefix:
 
     - name: Query all records for www.example.com
       community.dns.hosttech_dns_record_info:
-        zone: example.com
+        zone_name: example.com
         what: all_types_for_record
         # Either specify a record name:
         record: www.example.com
@@ -139,7 +139,7 @@ Finally you can query all records for a zone:
 
     - name: Query all records for a zone
       community.dns.hosttech_dns_record_info:
-        zone: example.com
+        zone_name: example.com
         what: all_records
       register: result
 
@@ -160,7 +160,7 @@ The :ref:`community.dns.hosttech_dns_record module <ansible_collections.communit
     - name: Make sure record is set to the given value
       community.dns.hosttech_dns_record:
         state: present
-        zone: example.com
+        zone_name: example.com
         type: A  # IPv4 addresses
         # Either specify a record name:
         record: www.example.com
@@ -179,21 +179,21 @@ To delete values, you can either overwrite the values with value ``[]``, or use 
     - name: Remove A values for www.example.com
       community.dns.hosttech_dns_record:
         state: present
-        zone: example.com
+        zone_name: example.com
         type: A  # IPv4 addresses
         record: www.example.com
         value: []
 
     - name: Remove TXT values for www.example.com
       community.dns.hosttech_dns_record:
-        zone: example.com
+        zone_name: example.com
         type: TXT
         prefix: www
         state: absent
 
     - name: Remove specific AAAA values for www.example.com
       community.dns.hosttech_dns_record:
-        zone: example.com
+        zone_name: example.com
         type: AAAA  # IPv6 addresses
         prefix: www
         state: absent
@@ -215,7 +215,7 @@ The following example shows up to set/update multiple records at once:
 
     - name: Make sure that multiple records are present
       community.dns.hosttech_dns_records:
-        zone: example.com
+        zone_name: example.com
         records:
           - prefix: www
             type: A
@@ -233,7 +233,7 @@ The next example shows how to make sure that only the given records are availabl
 
     - name: Make sure that multiple records are present
       community.dns.hosttech_dns_records:
-        zone: example.com
+        zone_name: example.com
         prune: true
         records:
           - prefix: www

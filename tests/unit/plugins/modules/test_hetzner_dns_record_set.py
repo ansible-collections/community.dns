@@ -46,7 +46,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'present',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             'record': 'example.org',
             'type': 'MX',
             'ttl': 3600,
@@ -122,7 +122,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'present',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             'record': 'example.org',
             'type': 'MX',
             'ttl': 3600,
@@ -148,7 +148,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'present',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             'record': 'example.org',
             'type': 'MX',
             'ttl': 3600,
@@ -173,7 +173,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'present',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record': 'example.com',
             'type': 'MX',
             'ttl': 3600,
@@ -217,7 +217,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'absent',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record': '*.example.com',
             'type': 'A',
             'ttl': 3600,
@@ -262,7 +262,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'absent',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'prefix': '*',
             'type': 'A',
             'ttl': 3600,
@@ -298,7 +298,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'absent',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record': '*.example.com',
             'type': 'A',
             'ttl': 1800,
@@ -334,7 +334,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'absent',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record': 'example.com',
             'type': 'CAA',
             'ttl': 3600,
@@ -370,7 +370,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'absent',
-            'zone': 'example.com.',
+            'zone_name': 'example.com.',
             'record': 'somewhere.example.com.',
             'type': 'A',
             'ttl': 3600,
@@ -407,7 +407,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'absent',
-            'zone': 'example.com.',
+            'zone_name': 'example.com.',
             'record': 'somewhere.example.com.',
             'type': 'A',
             'ttl': 3600,
@@ -444,7 +444,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'absent',
-            'zone': 'example.com.',
+            'zone_name': 'example.com.',
             'record': 'somewhere.example.com.',
             'type': 'A',
             'ttl': 3600,
@@ -480,7 +480,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'absent',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record': ((record['name'] + '.') if record['name'] != '@' else '') + 'example.com',
             'type': record['type'],
             'ttl': record['ttl'],
@@ -595,7 +595,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'present',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record': 'example.com',
             'type': 'CAA',
             'ttl': 3600,
@@ -651,7 +651,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'present',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'prefix': '',
             'type': 'CAA',
             'ttl': 3600,
@@ -707,7 +707,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'present',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'prefix': '☺',
             'type': 'CAA',
             'ttl': 3600,
@@ -763,7 +763,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'present',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record': 'example.com',
             'type': 'NS',
             'ttl': 10800,
@@ -799,7 +799,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'present',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record': 'example.com',
             'type': 'NS',
             'ttl': 10800,
@@ -849,7 +849,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'present',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record': 'example.com',
             'type': 'NS',
             'ttl': 10800,
@@ -899,7 +899,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'present',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record': 'example.com',
             'type': 'NS',
             'ttl': 10800,

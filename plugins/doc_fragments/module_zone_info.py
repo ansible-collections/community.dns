@@ -12,15 +12,17 @@ class ModuleDocFragment(object):
     # Standard files documentation fragment
     DOCUMENTATION = r'''
 options:
-    zone:
+    zone_name:
         description:
-          - The DNS zone to modify.
-          - Exactly one of I(zone) and I(zone_id) must be specified.
+          - The DNS zone to query.
+          - Exactly one of I(zone_name) and I(zone_id) must be specified.
         type: str
+        aliases:
+          - zone
     zone_id:
         description:
-          - The ID of the DNS zone to modify.
-          - Exactly one of I(zone) and I(zone_id) must be specified.
+          - The ID of the DNS zone to query.
+          - Exactly one of I(zone_name) and I(zone_id) must be specified.
         version_added: 0.2.0
 
 notes:

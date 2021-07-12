@@ -34,7 +34,7 @@ author:
 EXAMPLES = '''
 - name: Retrieve details for foo.com zone
   community.dns.hosttech_dns_zone_info:
-    zone: foo.com
+    zone_name: foo.com
     hosttech_username: foo
     hosttech_password: bar
   register: rec

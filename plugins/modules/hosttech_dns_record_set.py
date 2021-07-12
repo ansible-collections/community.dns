@@ -34,7 +34,7 @@ EXAMPLES = '''
 - name: Add new.foo.com as an A record with 3 IPs
   community.dns.hosttech_dns_record_set:
     state: present
-    zone: foo.com
+    zone_name: foo.com
     record: new.foo.com
     type: A
     ttl: 7200
@@ -44,7 +44,7 @@ EXAMPLES = '''
 - name: Update new.foo.com as an A record with a list of 3 IPs
   community.dns.hosttech_dns_record_set:
     state: present
-    zone: foo.com
+    zone_name: foo.com
     record: new.foo.com
     type: A
     ttl: 7200
@@ -56,7 +56,7 @@ EXAMPLES = '''
 
 - name: Retrieve the details for new.foo.com
   community.dns.hosttech_dns_record_info:
-    zone: foo.com
+    zone_name: foo.com
     record: new.foo.com
     type: A
     hosttech_username: foo
@@ -66,7 +66,7 @@ EXAMPLES = '''
 - name: Delete new.foo.com A record using the results from the facts retrieval command
   community.dns.hosttech_dns_record_set:
     state: absent
-    zone: foo.com
+    zone_name: foo.com
     record: "{{ rec.set.record }}"
     ttl: "{{ rec.set.ttl }}"
     type: "{{ rec.set.type }}"
@@ -78,7 +78,7 @@ EXAMPLES = '''
   # Note that because there are colons in the value that the IPv6 address must be quoted!
   community.dns.hosttech_dns_record_set:
     state: present
-    zone: foo.com
+    zone_name: foo.com
     record: localhost.foo.com
     type: AAAA
     ttl: 7200
@@ -88,7 +88,7 @@ EXAMPLES = '''
 - name: Add a TXT record
   community.dns.hosttech_dns_record_set:
     state: present
-    zone: foo.com
+    zone_name: foo.com
     record: localhost.foo.com
     type: TXT
     ttl: 7200
@@ -99,7 +99,7 @@ EXAMPLES = '''
 - name: Remove the TXT record
   community.dns.hosttech_dns_record_set:
     state: absent
-    zone: foo.com
+    zone_name: foo.com
     record: localhost.foo.com
     type: TXT
     ttl: 7200
@@ -110,7 +110,7 @@ EXAMPLES = '''
 - name: Add a CAA record
   community.dns.hosttech_dns_record_set:
     state: present
-    zone: foo.com
+    zone_name: foo.com
     record: foo.com
     type: CAA
     ttl: 3600
@@ -122,7 +122,7 @@ EXAMPLES = '''
 - name: Add an MX record
   community.dns.hosttech_dns_record_set:
     state: present
-    zone: foo.com
+    zone_name: foo.com
     record: foo.com
     type: MX
     ttl: 3600
@@ -133,7 +133,7 @@ EXAMPLES = '''
 - name: Add a CNAME record
   community.dns.hosttech_dns_record_set:
     state: present
-    zone: bla.foo.com
+    zone_name: bla.foo.com
     record: foo.com
     type: CNAME
     ttl: 3600
@@ -145,7 +145,7 @@ EXAMPLES = '''
 - name: Add a PTR record
   community.dns.hosttech_dns_record_set:
     state: present
-    zone: foo.foo.com
+    zone_name: foo.foo.com
     record: foo.com
     type: PTR
     ttl: 3600
@@ -156,7 +156,7 @@ EXAMPLES = '''
 - name: Add an SPF record
   community.dns.hosttech_dns_record_set:
     state: present
-    zone: foo.com
+    zone_name: foo.com
     record: foo.com
     type: SPF
     ttl: 3600
@@ -168,7 +168,7 @@ EXAMPLES = '''
 - name: Add a PTR record
   community.dns.hosttech_dns_record_set:
     state: present
-    zone: foo.com
+    zone_name: foo.com
     record: foo.com
     type: PTR
     ttl: 3600

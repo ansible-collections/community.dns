@@ -20,15 +20,17 @@ options:
         choices: ['single_record', 'all_types_for_record', 'all_records']
         default: single_record
         type: str
-    zone:
+    zone_name:
         description:
           - The DNS zone to modify.
           - Exactly one of I(zone) and I(zone_id) must be specified.
         type: str
+        aliases:
+          - zone
     zone_id:
         description:
           - The ID of the DNS zone to modify.
-          - Exactly one of I(zone) and I(zone_id) must be specified.
+          - Exactly one of I(zone_name) and I(zone_id) must be specified.
         version_added: 0.2.0
     record:
         description:
@@ -38,7 +40,7 @@ options:
     prefix:
         description:
           - The prefix of the DNS record.
-          - This is the part of I(record) before I(zone). For example, if the record to be modified is C(www.example.com)
+          - This is the part of I(record) before I(zone_name). For example, if the record to be modified is C(www.example.com)
             for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the
             prefix would be C('') (empty string).
           - If I(what) is C(single_record) or C(all_types_for_record), exactly one of I(record) and I(prefix) is required.

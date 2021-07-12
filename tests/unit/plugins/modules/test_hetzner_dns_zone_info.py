@@ -43,7 +43,7 @@ class TestHetznerDNSZoneInfoJSON(BaseTestModule):
     def test_unknown_zone(self, mocker):
         result = self.run_module_failed(mocker, hetzner_dns_zone_info, {
             'hetzner_token': 'foo',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -78,7 +78,7 @@ class TestHetznerDNSZoneInfoJSON(BaseTestModule):
     def test_auth_error(self, mocker):
         result = self.run_module_failed(mocker, hetzner_dns_zone_info, {
             'hetzner_token': 'foo',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -111,7 +111,7 @@ class TestHetznerDNSZoneInfoJSON(BaseTestModule):
     def test_other_error(self, mocker):
         result = self.run_module_failed(mocker, hetzner_dns_zone_info, {
             'hetzner_token': 'foo',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -129,7 +129,7 @@ class TestHetznerDNSZoneInfoJSON(BaseTestModule):
     def test_get(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_zone_info, {
             'hetzner_token': 'foo',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [

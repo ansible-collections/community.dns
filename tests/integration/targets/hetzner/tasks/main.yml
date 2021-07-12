@@ -3,7 +3,7 @@
   block:
     - name: Test gracefull error handling
       hetzner_dns_record_set:
-        zone: none_existing
+        zone_name: none_existing
         prefix: dns_ansible_collection
         state: present
         value: "osuv.de."
@@ -22,13 +22,13 @@
 
     - name: fetch zone info
       hetzner_dns_zone_info:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
       register: ZONES
 
     - name: fetch zone info must also work in check_mode
       hetzner_dns_zone_info:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
       check_mode: yes
       register: ZONES
@@ -56,7 +56,7 @@
       hetzner_dns_record_info:
         prefix: dns_ansible_collection
         type: CNAME
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
 
@@ -74,13 +74,13 @@
       hetzner_dns_record_info:
         prefix: dns_ansible_collection
         type: CNAME
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
       check_mode: yes
 
     - name: add record no change
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: dns_ansible_collection
         state: present
         value: "{{ hetzner_test_zone }}."
@@ -103,7 +103,7 @@
 
     - name: modify record change in check_mode
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: dns_ansible_collection
         state: present
         value: "{{ hetzner_test_zone }}."
@@ -124,7 +124,7 @@
 
     - name: modify record change
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: dns_ansible_collection
         state: present
         value: "{{ hetzner_test_zone }}."
@@ -144,7 +144,7 @@
 
     - name: delete record
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: dns_ansible_collection
         type: CNAME
         state: absent
@@ -158,7 +158,7 @@
 
     - name: delete record no change
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: dns_ansible_collection
         type: CNAME
         state: absent
@@ -214,7 +214,7 @@
       hetzner_dns_record_info:
         prefix: dns_ansible_collection
         type: A
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
 
@@ -225,7 +225,7 @@
 
     - name: delete single A record
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: dns_ansible_collection
         state: present
         value:
@@ -238,7 +238,7 @@
       hetzner_dns_record_info:
         prefix: dns_ansible_collection
         type: A
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
 
@@ -249,7 +249,7 @@
 
     - name: delete all A records
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: dns_ansible_collection
         type: A
         state: absent
@@ -259,7 +259,7 @@
       hetzner_dns_record_info:
         prefix: dns_ansible_collection
         type: A
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
 
@@ -270,7 +270,7 @@
 
     - name: add record
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: website1
         state: present
         type: A
@@ -281,7 +281,7 @@
 
     - name: replace record
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: website1
         state: present
         type: A
@@ -293,7 +293,7 @@
       hetzner_dns_record_info:
         prefix: website1
         type: A
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
 
@@ -310,7 +310,7 @@
 
     - name: append record website1
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: website1
         state: present
         type: A
@@ -323,7 +323,7 @@
       hetzner_dns_record_info:
         prefix: website1
         type: A
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
 
@@ -334,7 +334,7 @@
 
     - name: replace all
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: website1
         state: present
         type: A
@@ -346,7 +346,7 @@
       hetzner_dns_record_info:
         prefix: website1
         type: A
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
 
@@ -357,7 +357,7 @@
 
     - name: remove all records website1
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: website1
         type: A
         state: absent
@@ -367,7 +367,7 @@
       hetzner_dns_record_info:
         prefix: website1
         type: A
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
 
@@ -379,7 +379,7 @@
   always:
     - name: always delete CNAME record
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: dns_ansible_collection
         type: CNAME
         state: present
@@ -388,7 +388,7 @@
 
     - name: always delete A record
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: dns_ansible_collection
         type: A
         state: present
@@ -397,7 +397,7 @@
 
     - name: always delete A record
       hetzner_dns_record_set:
-        zone: "{{ hetzner_test_zone }}"
+        zone_name: "{{ hetzner_test_zone }}"
         prefix: website1
         type: A
         state: present

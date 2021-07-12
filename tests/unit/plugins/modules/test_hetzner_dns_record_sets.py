@@ -45,7 +45,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
     def test_unknown_zone(self, mocker):
         result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -82,7 +82,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
     def test_auth_error(self, mocker):
         result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -117,7 +117,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
     def test_other_error(self, mocker):
         result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -202,7 +202,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
     def test_idempotency_present(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record_sets': [
                 {
                     'record': 'example.com',
@@ -240,7 +240,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
     def test_removal_prune(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'prune': 'true',
             'record_sets': [
                 {
@@ -483,7 +483,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
     def test_change_add_one(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record_sets': [
                 {
                     'record': 'example.com',
@@ -542,7 +542,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
     def test_change_add_one_prefix(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record_sets': [
                 {
                     'prefix': '',
@@ -601,7 +601,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
     def test_change_add_one_idn_prefix(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record_sets': [
                 {
                     'prefix': '☺',
@@ -660,7 +660,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
     def test_change_modify_list(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record_sets': [
                 {
                     'record': 'example.com',
@@ -856,7 +856,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
     def test_change_modify_list_ttl(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record_sets': [
                 {
                     'record': 'example.com',
