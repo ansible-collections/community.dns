@@ -43,7 +43,7 @@ def create_module_argument_spec(zone_id_type, provider_information):
             prefix=dict(type='str'),
             ttl=dict(type='int', default=3600),
             type=dict(choices=provider_information.get_supported_record_types(), required=True),
-            value=dict(required=True, type='list', elements='str'),
+            value=dict(type='list', elements='str'),
             overwrite=dict(default=False, type='bool'),
         ),
         required_one_of=[
@@ -53,6 +53,10 @@ def create_module_argument_spec(zone_id_type, provider_information):
         mutually_exclusive=[
             ('zone', 'zone_id'),
             ('record', 'prefix'),
+        ],
+        required_if=[
+            ('state', 'present', ['value']),
+            ('overwrite', False, ['value']),
         ],
     )
 
@@ -106,7 +110,7 @@ def run_module(module, create_api, provider_information):
 
         # Parse records
         values = []
-        value_in = module.params.get('value')
+        value_in = module.params.get('value') or []
         values = value_in[:]
 
         # Compare records

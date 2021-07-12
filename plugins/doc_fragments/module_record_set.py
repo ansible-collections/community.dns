@@ -58,7 +58,7 @@ options:
           - YAML lists or multiple comma-spaced values are allowed.
           - When deleting a record all values for the record must be specified or it will
             not be deleted.
-        required: true
+          - Must be specified if I(state=present) or I(overwrite=false).
         type: list
         elements: str
     overwrite:
