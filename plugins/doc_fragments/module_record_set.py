@@ -45,6 +45,7 @@ options:
     ttl:
         description:
           - The TTL to give the new record, in seconds.
+          - Will be ignored if I(state=absent) and I(overwrite=true).
         default: 3600
         type: int
     type:
@@ -59,6 +60,7 @@ options:
           - When deleting a record all values for the record must be specified or it will
             not be deleted.
           - Must be specified if I(state=present) or I(overwrite=false).
+          - Will be ignored if I(state=absent) and I(overwrite=true).
         type: list
         elements: str
     overwrite:
