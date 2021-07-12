@@ -1,0 +1,5 @@
+release_summary: >
+  Last minor 1.x.0 version.
+  The 2.0.0 version will have some backwards incompatible changes to the ``hosttech_dns_record``
+  and ``hosttech_dns_records`` modules which will require user intervention. These changes should
+  result in a better UX.
