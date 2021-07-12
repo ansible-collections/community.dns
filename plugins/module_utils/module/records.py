@@ -33,7 +33,7 @@ from ._utils import (
 )
 
 
-def create_module_argument_spec(zone_id_type='str', provider_information):
+def create_module_argument_spec(zone_id_type, provider_information):
     return ArgumentSpec(
         argument_spec=dict(
             zone=dict(type='str'),

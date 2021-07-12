@@ -31,7 +31,7 @@ from ._utils import (
 )
 
 
-def create_module_argument_spec(zone_id_type='str', provider_information):
+def create_module_argument_spec(zone_id_type, provider_information):
     return ArgumentSpec(
         argument_spec=dict(
             what=dict(type='str', choices=['single_record', 'all_types_for_record', 'all_records'], default='single_record'),

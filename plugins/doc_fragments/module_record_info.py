@@ -48,7 +48,6 @@ options:
         description:
           - The type of DNS record to retrieve.
           - Required if I(what) is C(single_record).
-        choices: ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
         type: str
 
 notes:
