@@ -44,7 +44,7 @@ def create_module_argument_spec(zone_id_type, provider_information):
             ttl=dict(type='int', default=3600),
             type=dict(choices=provider_information.get_supported_record_types(), required=True),
             value=dict(type='list', elements='str'),
-            overwrite=dict(default=True, type='bool'),
+            on_existing=dict(type='str', default='replace', choices=['replace', 'keep_and_fail', 'keep_and_warn', 'keep']),
         ),
         required_one_of=[
             ('zone', 'zone_id'),
@@ -56,7 +56,9 @@ def create_module_argument_spec(zone_id_type, provider_information):
         ],
         required_if=[
             ('state', 'present', ['value']),
-            ('overwrite', False, ['value']),
+            ('on_existing', 'keep_and_fail', ['value']),
+            ('on_existing', 'keep_and_warn', ['value']),
+            ('on_existing', 'keep', ['value']),
         ],
     )
 
@@ -141,60 +143,58 @@ def run_module(module, create_api, provider_information):
         to_create = []
         to_delete = []
         to_change = []
+        on_existing = module.params.get('on_existing')
+        no_mod = False
         if module.params.get('state') == 'present':
             if records and mismatch:
                 # Mismatch: user wants to overwrite?
-                if module.params.get('overwrite'):
+                if on_existing == 'replace':
                     to_delete.extend(mismatch_records)
-                else:
-                    module.fail_json(msg="Record already exists with different value. Set 'overwrite' to replace it")
-            for target in values:
-                if to_delete:
-                    # If there's a record to delete, change it to new record
-                    record = to_delete.pop()
-                    to_change.append(record)
-                else:
-                    # Otherwise create new record
-                    record = DNSRecord()
-                    to_create.append(record)
-                record.prefix = prefix
-                record.type = type_in
-                record.ttl = ttl_in
-                record.target = target
-                after.append(record)
+                elif on_existing == 'keep_and_fail':
+                    module.fail_json(msg="Record already exists with different value. Set on_existing=replace to replace it")
+                elif on_existing == 'keep_and_warn':
+                    module.warn("Record already exists with different value. Set on_existing=replace to replace it")
+                    no_mod = True
+                else:  # on_existing == 'keep'
+                    no_mod = True
+            if no_mod:
+                after = before[:]
+            else:
+                for target in values:
+                    if to_delete:
+                        # If there's a record to delete, change it to new record
+                        record = to_delete.pop()
+                        to_change.append(record)
+                    else:
+                        # Otherwise create new record
+                        record = DNSRecord()
+                        to_create.append(record)
+                    record.prefix = prefix
+                    record.type = type_in
+                    record.ttl = ttl_in
+                    record.target = target
+                    after.append(record)
         if module.params.get('state') == 'absent':
-            if not mismatch or module.params.get('overwrite'):
+            if mismatch:
+                # Mismatch: user wants to overwrite?
+                if on_existing == 'replace':
+                    no_mod = False
+                elif on_existing == 'keep_and_fail':
+                    module.fail_json(msg="Record already exists with different value. Set on_existing=replace to remove it")
+                elif on_existing == 'keep_and_warn':
+                    module.warn("Record already exists with different value. Set on_existing=replace to remove it")
+                    no_mod = True
+                else:  # on_existing == 'keep'
+                    no_mod = True
+            if no_mod:
+                after = before[:]
+            else:
                 to_delete.extend(records)
                 after = []
 
-        # Is there nothing to change?
-        if len(to_create) == 0 and len(to_delete) == 0 and len(to_change) == 0:
-            result = dict(
-                changed=False,
-                zone_id=zone_id,
-            )
-            if module._diff:
-                before_after = (
-                    format_records_for_output(sorted(before, key=lambda record: record.target), record_in, prefix)
-                    if before else dict()
-                )
-                result['diff'] = dict(
-                    before=before_after,
-                    after=before_after,
-                )
-            module.exit_json(**result)
-
-        # Actually do something
-        if not module.check_mode:
-            for record in to_delete:
-                api.delete_record(zone_id, record)
-            for record in to_change:
-                api.update_record(zone_id, record)
-            for record in to_create:
-                api.add_record(zone_id, record)
-
+        # Compose result
         result = dict(
-            changed=True,
+            changed=False,
             zone_id=zone_id,
         )
         if module._diff:
@@ -208,6 +208,18 @@ def run_module(module, create_api, provider_information):
                     if after else dict()
                 ),
             )
+
+        # Determine whether there's something to do
+        if len(to_create) > 0 or len(to_delete) > 0 or len(to_change) > 0:
+            # Actually do something
+            result['changed'] = True
+            if not module.check_mode:
+                for record in to_delete:
+                    api.delete_record(zone_id, record)
+                for record in to_change:
+                    api.update_record(zone_id, record)
+                for record in to_create:
+                    api.add_record(zone_id, record)
 
         module.exit_json(**result)
     except DNSAPIAuthenticationError as e:

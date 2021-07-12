@@ -170,7 +170,7 @@ The :ref:`community.dns.hosttech_dns_record module <ansible_collections.communit
           - 1.1.1.1
           - 8.8.8.8
 
-If you want to assert that a record has a certain value (and fail if it already has a different value), set ``overwrite: false``.
+If you want to assert that a record has a certain value, set ``on_existing: keep``. Using ``keep_and_warn`` instead will emit a warning if this happens, and ``keep_and_fail`` will make the module fail.
 
 To delete values, you can either overwrite the values with value ``[]``, or use ``state: absent``:
 
@@ -197,12 +197,12 @@ To delete values, you can either overwrite the values with value ``[]``, or use 
         type: AAAA  # IPv6 addresses
         prefix: www
         state: absent
+        on_existing: keep_and_fail
         ttl: 300
-        overwrite: false
         value:
           - '::1'
 
-In the third example, ``overwrite: false`` is present and an explicit value and TTL are given. This makes the module remove the current value only if there's a AAAA record for ``www.example.com`` whose current value is ``::1`` and whose TTL is 300. If another value is set, the module will not make any change, but fail. This can be useful to not accidentally remove values you do not want to change.
+In the third example, ``on_existing: keep_and_fail`` is present and an explicit value and TTL are given. This makes the module remove the current value only if there's a AAAA record for ``www.example.com`` whose current value is ``::1`` and whose TTL is 300. If another value is set, the module will not make any change, but fail. This can be useful to not accidentally remove values you do not want to change. To issue a warning instead of failing, use ```on_existing: keep_and_warn``, and to simply not do a change without any indication of this situation, use ``on_existing: keep``.
 
 Bulk synchronization of DNS records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

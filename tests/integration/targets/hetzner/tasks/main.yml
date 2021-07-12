@@ -42,7 +42,7 @@
         type: CNAME
         ttl: 300
         hetzner_token: "{{ hetzner_token }}"
-        overwrite: false
+        on_existing: keep_and_fail
       register: RECORD
 
     - name: assert add record 1
@@ -179,7 +179,7 @@
           - 1.1.1.1
         type: A
         ttl: 60
-        overwrite: false
+        on_existing: keep_and_fail
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
 
@@ -276,7 +276,7 @@
         type: A
         value:
           - 127.0.0.1
-        overwrite: false
+        on_existing: keep_and_fail
         hetzner_token: "{{ hetzner_token }}"
 
     - name: replace record

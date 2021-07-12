@@ -1,6 +1,10 @@
 breaking_changes:
 - "The hosttech_dns_record module has been renamed to hosttech_dns_record_set (https://github.com/ansible-collections/community.dns/pull/31)."
-- "hosttech_dns_record_set - the default value of the ``overwrite`` option changed from ``false`` to ``true`` (https://github.com/ansible-collections/community.dns/pull/31)."
+- "hosttech_dns_record_set - the option ``overwrite`` was replaced by a new option ``on_existing``.
+   Specifying ``overwrite=true`` is equivalent to ``on_existing=replace`` (the new default).
+   Specifying ``overwrite=false`` with ``state=present`` is equivalent to ``on_existing=keep_and_fail``,
+   and specifying ``overwrite=false`` with ``state=absent`` is equivalent to ``on_existing=keep``
+   (https://github.com/ansible-collections/community.dns/pull/31)."
 deprecated_features:
 - "The hosttech_dns_records module has been renamed to hosttech_dns_record_sets. The old name will stop working in community.dns 3.0.0 (https://github.com/ansible-collections/community.dns/pull/31)."
 minor_changes:
