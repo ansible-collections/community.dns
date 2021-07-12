@@ -25,7 +25,7 @@ from ansible_collections.community.internal_test_tools.tests.unit.plugins.module
     AnsibleFailJson,
 )
 
-from ansible_collections.community.dns.plugins.modules import hetzner_dns_records
+from ansible_collections.community.dns.plugins.modules import hetzner_dns_record_sets
 
 # These imports are needed so patching below works
 import ansible_collections.community.dns.plugins.module_utils.wsdl
@@ -39,11 +39,11 @@ from .hetzner import (
 
 
 class TestHetznerDNSRecordJSON(BaseTestModule):
-    MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hetzner_dns_records.AnsibleModule'
+    MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hetzner_dns_record_sets.AnsibleModule'
     MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.json_api_helper.fetch_url'
 
     def test_unknown_zone(self, mocker):
-        result = self.run_module_failed(mocker, hetzner_dns_records, {
+        result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.org',
             'records': [],
@@ -62,7 +62,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['msg'] == 'Zone not found'
 
     def test_unknown_zone_id(self, mocker):
-        result = self.run_module_failed(mocker, hetzner_dns_records, {
+        result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone_id': 23,
             'records': [],
@@ -80,7 +80,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['msg'] == 'Zone not found'
 
     def test_auth_error(self, mocker):
-        result = self.run_module_failed(mocker, hetzner_dns_records, {
+        result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.org',
             'records': [],
@@ -98,7 +98,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['msg'] == 'Cannot authenticate: Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
 
     def test_auth_error_forbidden(self, mocker):
-        result = self.run_module_failed(mocker, hetzner_dns_records, {
+        result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone_id': 23,
             'records': [],
@@ -115,7 +115,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['msg'] == 'Cannot authenticate: Forbidden: you do not have access to this resource (HTTP status 403)'
 
     def test_other_error(self, mocker):
-        result = self.run_module_failed(mocker, hetzner_dns_records, {
+        result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.org',
             'records': [],
@@ -134,7 +134,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert 'did not yield JSON data, but HTTP status code 500 with Content-Type' in result['msg']
 
     def test_key_collision_error(self, mocker):
-        result = self.run_module_failed(mocker, hetzner_dns_records, {
+        result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone_id': '42',
             'records': [
@@ -172,7 +172,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['msg'] == 'Found multiple entries for record test.example.com and type A: index #0 and #1'
 
     def test_idempotency_empty(self, mocker):
-        result = self.run_module_success(mocker, hetzner_dns_records, {
+        result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone_id': '42',
             'records': [],
@@ -200,7 +200,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == '42'
 
     def test_idempotency_present(self, mocker):
-        result = self.run_module_success(mocker, hetzner_dns_records, {
+        result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.com',
             'records': [
@@ -238,7 +238,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == '42'
 
     def test_removal_prune(self, mocker):
-        result = self.run_module_success(mocker, hetzner_dns_records, {
+        result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.com',
             'prune': 'true',
@@ -405,7 +405,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         }
 
     def test_change_add_one_check_mode(self, mocker):
-        result = self.run_module_success(mocker, hetzner_dns_records, {
+        result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone_id': '42',
             'records': [
@@ -443,7 +443,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == '42'
 
     def test_change_add_one_check_mode_prefix(self, mocker):
-        result = self.run_module_success(mocker, hetzner_dns_records, {
+        result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone_id': '42',
             'records': [
@@ -481,7 +481,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == '42'
 
     def test_change_add_one(self, mocker):
-        result = self.run_module_success(mocker, hetzner_dns_records, {
+        result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.com',
             'records': [
@@ -540,7 +540,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == '42'
 
     def test_change_add_one_prefix(self, mocker):
-        result = self.run_module_success(mocker, hetzner_dns_records, {
+        result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.com',
             'records': [
@@ -599,7 +599,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == '42'
 
     def test_change_add_one_idn_prefix(self, mocker):
-        result = self.run_module_success(mocker, hetzner_dns_records, {
+        result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.com',
             'records': [
@@ -658,7 +658,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == '42'
 
     def test_change_modify_list(self, mocker):
-        result = self.run_module_success(mocker, hetzner_dns_records, {
+        result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.com',
             'records': [
@@ -854,7 +854,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         }
 
     def test_change_modify_list_ttl(self, mocker):
-        result = self.run_module_success(mocker, hetzner_dns_records, {
+        result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.com',
             'records': [
