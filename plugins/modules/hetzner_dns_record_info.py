@@ -14,7 +14,7 @@ module: hetzner_dns_record_info
 
 short_description: Retrieve entries in Hetzner DNS service
 
-version_added: 1.2.0
+version_added: 2.0.0
 
 description:
     - "Retrieves DNS records in Hetzner DNS service."

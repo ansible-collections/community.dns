@@ -14,7 +14,7 @@ module: hetzner_dns_zone_info
 
 short_description: Retrieve zone information in Hetzner DNS service
 
-version_added: 1.2.0
+version_added: 2.0.0
 
 description:
     - "Retrieves zone information in Hetzner DNS service."

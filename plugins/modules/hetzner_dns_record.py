@@ -14,7 +14,7 @@ module: hetzner_dns_record
 
 short_description: Add or delete entries in Hetzner DNS service
 
-version_added: 1.2.0
+version_added: 2.0.0
 
 description:
     - "Creates and deletes DNS records in Hetzner DNS service."

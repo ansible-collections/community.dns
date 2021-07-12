@@ -14,7 +14,7 @@ module: hetzner_dns_records
 
 short_description: Bulk synchronize DNS records in Hetzner DNS service
 
-version_added: 1.2.0
+version_added: 2.0.0
 
 description:
     - Bulk synchronize DNS records in Hetzner DNS service.
