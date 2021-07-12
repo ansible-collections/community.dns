@@ -35,7 +35,7 @@
     hosttech_zone_id: "{{ result.zone_id }}"
 
 - name: (token) Ensure that test record is not present
-  hosttech_dns_record:
+  hosttech_dns_record_set:
     state: present
     zone: '{{ test_zone }}'
     record: '{{ test_record }}'
@@ -60,7 +60,7 @@
         - not rec.set
 
   - name: (token) Create test record
-    hosttech_dns_record:
+    hosttech_dns_record_set:
       state: present
       zone: '{{ test_zone }}'
       record: '{{ test_record }}'
@@ -74,7 +74,7 @@
       hosttech_token: '{{ hosttech_token }}'
 
   - name: (token) Modify test record
-    hosttech_dns_record:
+    hosttech_dns_record_set:
       state: present
       zone: '{{ test_zone }}'
       prefix: '{{ test_record_prefix }}'
@@ -103,7 +103,7 @@
         - rec.set.value | length == 2
 
   - name: (token) Delete test record
-    hosttech_dns_record:
+    hosttech_dns_record_set:
       state: absent
       zone_id: '{{ hosttech_zone_id }}'
       record: '{{ rec.set.record }}'
@@ -114,7 +114,7 @@
 
   always:
   - name: (token) Ensure that test record is not present
-    hosttech_dns_record:
+    hosttech_dns_record_set:
       state: present
       zone: '{{ test_zone }}'
       record: '{{ test_record }}'

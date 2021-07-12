@@ -10,7 +10,7 @@ __metaclass__ = type
 
 DOCUMENTATION = '''
 ---
-module: hetzner_dns_records
+module: hetzner_dns_record_sets
 
 short_description: Bulk synchronize DNS records in Hetzner DNS service
 
@@ -21,7 +21,7 @@ description:
 
 extends_documentation_fragment:
     - community.dns.hetzner
-    - community.dns.module_records
+    - community.dns.module_record_sets
 
 options:
     zone_id:
@@ -78,7 +78,7 @@ author:
 
 EXAMPLES = '''
 - name: Make sure some records exist and have the expected values
-  community.dns.hetzner_dns_records:
+  community.dns.hetzner_dns_record_sets:
     zone: foo.com
     records:
       - prefix: new
@@ -100,7 +100,7 @@ EXAMPLES = '''
 
 - name: Synchronize DNS zone with a fixed set of records
   # If a record exists that is not mentioned here, it will be deleted
-  community.dns.hetzner_dns_records:
+  community.dns.hetzner_dns_record_sets:
     zone_id: 23
     purge: true
     records:
@@ -135,7 +135,7 @@ from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
     create_hetzner_provider_information,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.module.records import (
+from ansible_collections.community.dns.plugins.module_utils.module.record_sets import (
     create_module_argument_spec,
     run_module,
 )

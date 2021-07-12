@@ -10,18 +10,19 @@ __metaclass__ = type
 
 DOCUMENTATION = '''
 ---
-module: hosttech_dns_records
+module: hosttech_dns_record_sets
 
 short_description: Bulk synchronize DNS records in Hosttech DNS service
 
-version_added: 0.3.0
+version_added: 2.0.0
 
 description:
     - Bulk synchronize DNS records in Hosttech DNS service.
+    - This module replaces C(hosttech_dns_records) from community.dns before 2.0.0.
 
 extends_documentation_fragment:
     - community.dns.hosttech
-    - community.dns.module_records
+    - community.dns.module_record_sets
 
 options:
     zone_id:
@@ -77,7 +78,7 @@ author:
 
 EXAMPLES = '''
 - name: Make sure some records exist and have the expected values
-  community.dns.hosttech_dns_records:
+  community.dns.hosttech_dns_record_sets:
     zone: foo.com
     records:
       - prefix: new
@@ -99,7 +100,7 @@ EXAMPLES = '''
 
 - name: Synchronize DNS zone with a fixed set of records
   # If a record exists that is not mentioned here, it will be deleted
-  community.dns.hosttech_dns_records:
+  community.dns.hosttech_dns_record_sets:
     zone_id: 23
     purge: true
     records:
@@ -134,7 +135,7 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech.api import 
     create_hosttech_provider_information,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.module.records import (
+from ansible_collections.community.dns.plugins.module_utils.module.record_sets import (
     create_module_argument_spec,
     run_module,
 )
