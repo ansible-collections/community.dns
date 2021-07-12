@@ -11,6 +11,10 @@ from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
 )
 
+from ansible_collections.community.dns.plugins.module_utils.provider import (
+    ProviderInformation,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.wsdl import (
     HAS_LXML_ETREE,
 )
@@ -26,6 +30,30 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech.wsdl_api im
 from ansible_collections.community.dns.plugins.module_utils.hosttech.json_api import (
     HostTechJSONAPI,
 )
+
+
+class HosttechProviderInformation(ProviderInformation):
+    def get_supported_record_types(self):
+        """
+        Return a list of supported record types.
+        """
+        return ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
+
+    def normalize_prefix(self, prefix):
+        """
+        Given a prefix (string or None), return its normalized form.
+
+        The result should always be None for the trivial prefix, and a non-zero length DNS name
+        for a non-trivial prefix.
+
+        If a provider supports other identifiers for the trivial prefix, such as '@', this
+        function needs to convert them to None as well.
+        """
+        return prefix or None
+
+
+def create_hosttech_provider_information():
+    return HosttechProviderInformation()
 
 
 def create_hosttech_argument_spec():

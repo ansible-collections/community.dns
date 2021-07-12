@@ -11,7 +11,7 @@ except ImportError:
     pass
 
 
-WSDL_DEFAULT_ENTRIES = [
+HOSTTECH_WSDL_DEFAULT_ENTRIES = [
     (125, 42, 'A', '', '1.2.3.4', 3600, None, None),
     (126, 42, 'A', '*', '1.2.3.5', 3600, None, None),
     (127, 42, 'AAAA', '', '2001:1:2::3', 3600, None, None),
@@ -22,7 +22,7 @@ WSDL_DEFAULT_ENTRIES = [
     (132, 42, 'NS', '', 'ns1.hostserv.eu', 10800, None, None),
 ]
 
-JSON_DEFAULT_ENTRIES = [
+HOSTTECH_JSON_DEFAULT_ENTRIES = [
     # (125, 42, 'A', '', '1.2.3.4', 3600, None, None),
     {
         'id': 125,
@@ -371,11 +371,11 @@ def create_wsdl_del_result(success):
     return ''.join(lines)
 
 
-WSDL_DEFAULT_ZONE_RESULT = create_wsdl_zones_answer(42, 'example.com', WSDL_DEFAULT_ENTRIES)
+HOSTTECH_WSDL_DEFAULT_ZONE_RESULT = create_wsdl_zones_answer(42, 'example.com', HOSTTECH_WSDL_DEFAULT_ENTRIES)
 
-WSDL_ZONE_NOT_FOUND = create_wsdl_zone_not_found_answer()
+HOSTTECH_WSDL_ZONE_NOT_FOUND = create_wsdl_zone_not_found_answer()
 
-JSON_ZONE_LIST_RESULT = {
+HOSTTECH_JSON_ZONE_LIST_RESULT = {
     "data": [
         {
             "id": 42,
@@ -388,7 +388,7 @@ JSON_ZONE_LIST_RESULT = {
     ],
 }
 
-JSON_ZONE_GET_RESULT = {
+HOSTTECH_JSON_ZONE_GET_RESULT = {
     "data": {
         "id": 42,
         "name": "example.com",
@@ -396,10 +396,10 @@ JSON_ZONE_GET_RESULT = {
         "ttl": 10800,
         "nameserver": "ns1.hosttech.ch",
         "dnssec": False,
-        "records": JSON_DEFAULT_ENTRIES,
+        "records": HOSTTECH_JSON_DEFAULT_ENTRIES,
     }
 }
 
-JSON_ZONE_RECORDS_GET_RESULT = {
-    "data": JSON_DEFAULT_ENTRIES,
+HOSTTECH_JSON_ZONE_RECORDS_GET_RESULT = {
+    "data": HOSTTECH_JSON_DEFAULT_ENTRIES,
 }

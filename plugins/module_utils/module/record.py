@@ -33,7 +33,7 @@ from ._utils import (
 )
 
 
-def create_module_argument_spec(zone_id_type='str'):
+def create_module_argument_spec(zone_id_type, provider_information):
     return ArgumentSpec(
         argument_spec=dict(
             state=dict(type='str', choices=['present', 'absent'], required=True),
@@ -42,7 +42,7 @@ def create_module_argument_spec(zone_id_type='str'):
             record=dict(type='str'),
             prefix=dict(type='str'),
             ttl=dict(type='int', default=3600),
-            type=dict(choices=['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA'], required=True),
+            type=dict(choices=provider_information.get_supported_record_types(), required=True),
             value=dict(required=True, type='list', elements='str'),
             overwrite=dict(default=False, type='bool'),
         ),
@@ -57,7 +57,7 @@ def create_module_argument_spec(zone_id_type='str'):
     )
 
 
-def run_module(module, create_api):
+def run_module(module, create_api, provider_information):
     record_in = normalize_dns_name(module.params.get('record'))
     prefix_in = module.params.get('prefix')
     type_in = module.params.get('type')
@@ -68,7 +68,8 @@ def run_module(module, create_api):
         # Get zone information
         if module.params.get('zone') is not None:
             zone_in = normalize_dns_name(module.params.get('zone'))
-            record_in, prefix = get_prefix(normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in)
+            record_in, prefix = get_prefix(
+                normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in, provider_information=provider_information)
             zone = api.get_zone_with_records_by_name(zone_in, prefix=prefix, record_type=type_in)
             if zone is None:
                 module.fail_json(msg='Zone not found')
@@ -78,17 +79,18 @@ def run_module(module, create_api):
             zone = api.get_zone_with_records_by_id(
                 module.params.get('zone_id'),
                 record_type=type_in,
-                prefix=(prefix_in or None) if prefix_in is not None else NOT_PROVIDED,
+                prefix=provider_information.normalize_prefix(prefix_in) if prefix_in is not None else NOT_PROVIDED,
             )
             if zone is None:
                 module.fail_json(msg='Zone not found')
             zone_in = normalize_dns_name(zone.zone.name)
-            record_in, prefix = get_prefix(normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in)
+            record_in, prefix = get_prefix(
+                normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in, provider_information=provider_information)
             zone_id = zone.zone.id
             records = zone.records
         else:
             zone_id = module.params.get('zone_id')
-            prefix = prefix_in or None
+            prefix = provider_information.normalize_prefix(prefix_in)
             records = api.get_zone_records(
                 zone_id,
                 record_type=type_in,

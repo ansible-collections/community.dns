@@ -33,7 +33,7 @@ from ._utils import (
 )
 
 
-def create_module_argument_spec(zone_id_type='str'):
+def create_module_argument_spec(zone_id_type, provider_information):
     return ArgumentSpec(
         argument_spec=dict(
             zone=dict(type='str'),
@@ -47,7 +47,7 @@ def create_module_argument_spec(zone_id_type='str'):
                     record=dict(type='str'),
                     prefix=dict(type='str'),
                     ttl=dict(type='int', default=3600),
-                    type=dict(choices=['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA'], required=True),
+                    type=dict(choices=provider_information.get_supported_record_types(), required=True),
                     value=dict(type='list', elements='str'),
                     ignore=dict(type='bool', default=False),
                 ),
@@ -65,7 +65,7 @@ def create_module_argument_spec(zone_id_type='str'):
     )
 
 
-def run_module(module, create_api):
+def run_module(module, create_api, provider_information):
     try:
         # Create API
         api = create_api()
@@ -92,9 +92,10 @@ def run_module(module, create_api):
         records_dict = dict()
         for index, record in enumerate(records):
             record = record.copy()
-            record_name = record.pop('record')
-            prefix = record['prefix'] or None
-            record_name, prefix = get_prefix(normalized_zone=zone_in, normalized_record=record_name, prefix=prefix)
+            record_name = record['record']
+            prefix = record['prefix']
+            record_name, prefix = get_prefix(
+                normalized_zone=zone_in, normalized_record=record_name, prefix=prefix, provider_information=provider_information)
             record['record'] = record_name
             record['prefix'] = prefix
             key = (prefix, record['type'])

@@ -26,11 +26,10 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 
 from ._utils import (
     normalize_dns_name,
-    get_prefix,
 )
 
 
-def create_module_argument_spec(zone_id_type='str'):
+def create_module_argument_spec(zone_id_type, provider_information):
     return ArgumentSpec(
         argument_spec=dict(
             zone=dict(type='str'),
@@ -45,7 +44,7 @@ def create_module_argument_spec(zone_id_type='str'):
     )
 
 
-def run_module(module, create_api):
+def run_module(module, create_api, provider_information):
     try:
         # Create API
         api = create_api()

@@ -10,40 +10,40 @@ __metaclass__ = type
 
 DOCUMENTATION = '''
 ---
-module: hosttech_dns_zone_info
+module: hetzner_dns_zone_info
 
-short_description: Retrieve zone information in Hosttech DNS service
+short_description: Retrieve zone information in Hetzner DNS service
 
-version_added: 0.2.0
+version_added: 2.0.0
 
 description:
-    - "Retrieves zone information in Hosttech DNS service."
+    - "Retrieves zone information in Hetzner DNS service."
 
 extends_documentation_fragment:
-    - community.dns.hosttech
+    - community.dns.hetzner
     - community.dns.module_zone_info
 
 options:
     zone_id:
-        type: int
+        type: str
 
 author:
+    - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
     - Felix Fontein (@felixfontein)
 '''
 
 EXAMPLES = '''
 - name: Retrieve details for foo.com zone
-  community.dns.hosttech_dns_zone_info:
+  community.dns.hetzner_dns_zone_info:
     zone: foo.com
-    hosttech_username: foo
-    hosttech_password: bar
+    hetzner_token: access_token
   register: rec
 
 - name: Retrieve details for zone 23
-  community.dns.hosttech_dns_record:
+  community.dns.hetzner_dns_record:
     state: absent
     zone_id: 23
-    hosttech_token: access_token
+    hetzner_token: access_token
 '''
 
 RETURN = '''
@@ -55,17 +55,17 @@ zone_name:
 
 zone_id:
     description: The ID of the zone.
-    type: int
+    type: str
     returned: success
     sample: 23
 '''
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
-    create_hosttech_argument_spec,
-    create_hosttech_api,
-    create_hosttech_provider_information,
+from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
+    create_hetzner_argument_spec,
+    create_hetzner_api,
+    create_hetzner_provider_information,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.module.zone_info import (
@@ -75,11 +75,11 @@ from ansible_collections.community.dns.plugins.module_utils.module.zone_info imp
 
 
 def main():
-    provider_information = create_hosttech_provider_information()
-    argument_spec = create_hosttech_argument_spec()
-    argument_spec.merge(create_module_argument_spec(zone_id_type='int', provider_information=provider_information))
+    provider_information = create_hetzner_provider_information()
+    argument_spec = create_hetzner_argument_spec()
+    argument_spec.merge(create_module_argument_spec(zone_id_type='str', provider_information=provider_information))
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
-    run_module(module, lambda: create_hosttech_api(module), provider_information=provider_information)
+    run_module(module, lambda: create_hetzner_api(module), provider_information=provider_information)
 
 
 if __name__ == '__main__':

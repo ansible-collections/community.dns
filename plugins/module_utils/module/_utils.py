@@ -27,13 +27,11 @@ def normalize_dns_name(name):
     return join_labels([normalize_label(label) for label in labels])
 
 
-def get_prefix(normalized_zone, normalized_record=None, prefix=None):
+def get_prefix(normalized_zone, provider_information, normalized_record=None, prefix=None):
     # If normalized_record is not specified, use prefix
     if normalized_record is None:
         if prefix is not None:
-            prefix = normalize_dns_name(prefix)
-            if prefix == '':
-                prefix = None
+            prefix = provider_information.normalize_prefix(normalize_dns_name(prefix))
         return (prefix + '.' + normalized_zone) if prefix else normalized_zone, prefix
     # Convert record to prefix
     if not normalized_record.endswith('.' + normalized_zone) and normalized_record != normalized_zone:
