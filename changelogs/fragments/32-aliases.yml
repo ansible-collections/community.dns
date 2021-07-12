@@ -1,0 +1,2 @@
+minor_changes:
+- "hosttech_dns_* modules - rename ``zone`` parameter to ``zone_name``. The old name ``zone`` can still be used as an alias (https://github.com/ansible-collections/community.dns/pull/32)."

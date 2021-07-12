@@ -36,7 +36,7 @@ from ._utils import (
 def create_module_argument_spec(zone_id_type, provider_information):
     return ArgumentSpec(
         argument_spec=dict(
-            zone=dict(type='str'),
+            zone_name=dict(type='str', aliases=['zone']),
             zone_id=dict(type=zone_id_type),
             prune=dict(type='bool', default=False),
             record_sets=dict(
@@ -58,10 +58,10 @@ def create_module_argument_spec(zone_id_type, provider_information):
             ),
         ),
         required_one_of=[
-            ('zone', 'zone_id'),
+            ('zone_name', 'zone_id'),
         ],
         mutually_exclusive=[
-            ('zone', 'zone_id'),
+            ('zone_name', 'zone_id'),
         ],
     )
 
@@ -72,8 +72,8 @@ def run_module(module, create_api, provider_information):
         api = create_api()
 
         # Get zone information
-        if module.params['zone'] is not None:
-            zone_in = normalize_dns_name(module.params['zone'])
+        if module.params['zone_name'] is not None:
+            zone_in = normalize_dns_name(module.params['zone_name'])
             zone = api.get_zone_with_records_by_name(zone_in)
             if zone is None:
                 module.fail_json(msg='Zone not found')

@@ -72,7 +72,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
                 set_module_args({
                     'hosttech_username': 'foo',
                     'hosttech_password': 'bar',
-                    'zone': 'example.org',
+                    'zone_name': 'example.org',
                     'record': 'example.org',
                     'type': 'A',
                     '_ansible_remote_tmp': '/tmp/tmp',
@@ -130,7 +130,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
                 set_module_args({
                     'hosttech_username': 'foo',
                     'hosttech_password': 'bar',
-                    'zone': 'example.com',
+                    'zone_name': 'example.com',
                     'record': 'example.com',
                     'type': 'A',
                     '_ansible_remote_tmp': '/tmp/tmp',
@@ -216,7 +216,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
                     'hosttech_username': 'foo',
                     'hosttech_password': 'bar',
                     'what': 'all_records',
-                    'zone': 'example.com.',
+                    'zone_name': 'example.com.',
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
@@ -280,7 +280,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
     def test_unknown_zone(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_record_info, {
             'hosttech_token': 'foo',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             'record': 'example.org',
             'type': 'A',
             '_ansible_remote_tmp': '/tmp/tmp',
@@ -319,7 +319,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
     def test_auth_error(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_record_info, {
             'hosttech_token': 'foo',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             'record': 'example.org',
             'type': 'A',
             '_ansible_remote_tmp': '/tmp/tmp',
@@ -356,7 +356,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
     def test_other_error(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_record_info, {
             'hosttech_token': 'foo',
-            'zone': 'example.org',
+            'zone_name': 'example.org',
             'record': 'example.org',
             'type': 'A',
             '_ansible_remote_tmp': '/tmp/tmp',
@@ -383,7 +383,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         with patch('time.sleep', sleep_check) as m:
             result = self.run_module_failed(mocker, hosttech_dns_record_info, {
                 'hosttech_token': 'foo',
-                'zone': 'example.com',
+                'zone_name': 'example.com',
                 'record': 'example.com',
                 'type': 'A',
                 '_ansible_remote_tmp': '/tmp/tmp',
@@ -438,7 +438,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         with patch('time.sleep', mock_sleep):
             result = self.run_module_success(mocker, hosttech_dns_record_info, {
                 'hosttech_token': 'foo',
-                'zone': 'example.com',
+                'zone_name': 'example.com',
                 'record': 'example.com',
                 'type': 'A',
                 '_ansible_remote_tmp': '/tmp/tmp',
@@ -485,7 +485,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
     def test_get_single_prefix(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record_info, {
             'hosttech_token': 'foo',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'prefix': '*',
             'type': 'A',
             '_ansible_remote_tmp': '/tmp/tmp',
@@ -519,7 +519,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         result = self.run_module_success(mocker, hosttech_dns_record_info, {
             'hosttech_token': 'foo',
             'what': 'all_types_for_record',
-            'zone': 'example.com',
+            'zone_name': 'example.com',
             'record': '*.example.com',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -563,7 +563,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
         result = self.run_module_success(mocker, hosttech_dns_record_info, {
             'hosttech_token': 'foo',
             'what': 'all_types_for_record',
-            'zone': 'example.com.',
+            'zone_name': 'example.com.',
             'prefix': '',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,

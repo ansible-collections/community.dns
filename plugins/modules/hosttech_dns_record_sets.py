@@ -34,7 +34,7 @@ author:
 EXAMPLES = '''
 - name: Make sure some records exist and have the expected values
   community.dns.hosttech_dns_record_sets:
-    zone: foo.com
+    zone_name: foo.com
     records:
       - prefix: new
         type: A
@@ -47,7 +47,7 @@ EXAMPLES = '''
         ttl: 7200
         value:
           - "::1"
-      - zone: foo.com
+      - record: foo.com
         type: TXT
         value:
           - test

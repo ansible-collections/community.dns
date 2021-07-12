@@ -35,7 +35,7 @@ def create_module_argument_spec(zone_id_type, provider_information):
     return ArgumentSpec(
         argument_spec=dict(
             what=dict(type='str', choices=['single_record', 'all_types_for_record', 'all_records'], default='single_record'),
-            zone=dict(type='str'),
+            zone_name=dict(type='str', aliases=['zone']),
             zone_id=dict(type=zone_id_type),
             record=dict(type='str'),
             prefix=dict(type='str'),
@@ -47,10 +47,10 @@ def create_module_argument_spec(zone_id_type, provider_information):
             ('what', 'all_types_for_record', ['record', 'prefix'], True),
         ],
         required_one_of=[
-            ('zone', 'zone_id'),
+            ('zone_name', 'zone_id'),
         ],
         mutually_exclusive=[
-            ('zone', 'zone_id'),
+            ('zone_name', 'zone_id'),
             ('record', 'prefix'),
         ],
     )
@@ -77,8 +77,8 @@ def run_module(module, create_api, provider_information):
         api = create_api()
 
         # Get zone information
-        if module.params.get('zone') is not None:
-            zone_in = normalize_dns_name(module.params.get('zone'))
+        if module.params.get('zone_name') is not None:
+            zone_in = normalize_dns_name(module.params.get('zone_name'))
             zone = api.get_zone_with_records_by_name(zone_in, prefix=filter_prefix, record_type=filter_record_type)
             if zone is None:
                 module.fail_json(msg='Zone not found')
