@@ -159,20 +159,18 @@ The :ref:`community.dns.hosttech_dns_record module <ansible_collections.communit
 
     - name: Make sure record is set to the given value
       community.dns.hosttech_dns_record:
+        state: present
         zone: example.com
         type: A  # IPv4 addresses
         # Either specify a record name:
         record: www.example.com
         # Or a record prefix ('' is the zone itself):
         prefix: www
-        # The following makes sure that existing values
-        # (that differ form the one given) are updated:
-        overwrite: true
         value:
           - 1.1.1.1
           - 8.8.8.8
 
-If you want to assert that a record has a certain value (and fail if it has a different value), leave away the ``overwrite: true``.
+If you want to assert that a record has a certain value (and fail if it already has a different value), set ``overwrite: false``.
 
 To delete values, you can either overwrite the values with value ``[]``, or use ``state: absent``:
 
@@ -180,11 +178,18 @@ To delete values, you can either overwrite the values with value ``[]``, or use 
 
     - name: Remove A values for www.example.com
       community.dns.hosttech_dns_record:
+        state: present
         zone: example.com
         type: A  # IPv4 addresses
         record: www.example.com
-        overwrite: true
         value: []
+
+    - name: Remove TXT values for www.example.com
+      community.dns.hosttech_dns_record:
+        zone: example.com
+        type: TXT
+        prefix: www
+        state: absent
 
     - name: Remove specific AAAA values for www.example.com
       community.dns.hosttech_dns_record:
@@ -193,10 +198,11 @@ To delete values, you can either overwrite the values with value ``[]``, or use 
         prefix: www
         state: absent
         ttl: 300
+        overwrite: false
         value:
           - '::1'
 
-In the second example, ``overwrite: true`` is not present, but an explicit value and TTL are given. This makes the module remove the current value only if there's a AAAA record for ``www.example.com`` whose current value is ``::1`` and whose TTL is 300. If another value is set, the module will not make any change. This can be useful to not accidentally remove values you do not want to change.
+In the third example, ``overwrite: false`` is present and an explicit value and TTL are given. This makes the module remove the current value only if there's a AAAA record for ``www.example.com`` whose current value is ``::1`` and whose TTL is 300. If another value is set, the module will not make any change, but fail. This can be useful to not accidentally remove values you do not want to change.
 
 Bulk synchronization of DNS records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
