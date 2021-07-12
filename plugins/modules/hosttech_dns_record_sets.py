@@ -12,12 +12,12 @@ DOCUMENTATION = '''
 ---
 module: hosttech_dns_record_sets
 
-short_description: Bulk synchronize DNS records in Hosttech DNS service
+short_description: Bulk synchronize DNS record sets in Hosttech DNS service
 
 version_added: 2.0.0
 
 description:
-    - Bulk synchronize DNS records in Hosttech DNS service.
+    - Bulk synchronize DNS record sets in Hosttech DNS service.
     - This module replaces C(hosttech_dns_records) from community.dns before 2.0.0.
 
 extends_documentation_fragment:
@@ -27,7 +27,7 @@ extends_documentation_fragment:
 options:
     zone_id:
         type: int
-    records:
+    record_sets:
         suboptions:
             type:
                 choices: ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']

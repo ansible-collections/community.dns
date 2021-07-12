@@ -12,12 +12,12 @@ DOCUMENTATION = '''
 ---
 module: hetzner_dns_record_sets
 
-short_description: Bulk synchronize DNS records in Hetzner DNS service
+short_description: Bulk synchronize DNS record sets in Hetzner DNS service
 
 version_added: 2.0.0
 
 description:
-    - Bulk synchronize DNS records in Hetzner DNS service.
+    - Bulk synchronize DNS record sets in Hetzner DNS service.
 
 extends_documentation_fragment:
     - community.dns.hetzner
@@ -26,7 +26,7 @@ extends_documentation_fragment:
 options:
     zone_id:
         type: str
-    records:
+    record_sets:
         suboptions:
             type:
                 choices: ['A', 'AAAA', 'NS', 'MX', 'CNAME', 'RP', 'TXT', 'SOA', 'HINFO', 'SRV', 'DANE', 'TLSA', 'DS', 'CAA']

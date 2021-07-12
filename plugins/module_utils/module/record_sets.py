@@ -39,10 +39,11 @@ def create_module_argument_spec(zone_id_type, provider_information):
             zone=dict(type='str'),
             zone_id=dict(type=zone_id_type),
             prune=dict(type='bool', default=False),
-            records=dict(
+            record_sets=dict(
                 type='list',
                 elements='dict',
                 required=True,
+                aliases=['records'],
                 options=dict(
                     record=dict(type='str'),
                     prefix=dict(type='str'),
@@ -88,64 +89,64 @@ def run_module(module, create_api, provider_information):
 
         # Process parameters
         prune = module.params['prune']
-        records = module.params['records']
-        records_dict = dict()
-        for index, record in enumerate(records):
-            record = record.copy()
-            record_name = record['record']
-            prefix = record['prefix']
+        record_sets = module.params['record_sets']
+        record_sets_dict = dict()
+        for index, record_set in enumerate(record_sets):
+            record_set = record_set.copy()
+            record_name = record_set['record']
+            prefix = record_set['prefix']
             record_name, prefix = get_prefix(
                 normalized_zone=zone_in, normalized_record=record_name, prefix=prefix, provider_information=provider_information)
-            record['record'] = record_name
-            record['prefix'] = prefix
-            key = (prefix, record['type'])
-            if key in records_dict:
-                module.fail_json(msg='Found multiple entries for record {record} and type {type}: index #{i1} and #{i2}'.format(
+            record_set['record'] = record_name
+            record_set['prefix'] = prefix
+            key = (prefix, record_set['type'])
+            if key in record_sets_dict:
+                module.fail_json(msg='Found multiple sets for record {record} and type {type}: index #{i1} and #{i2}'.format(
                     record=record_name,
-                    type=record['type'],
-                    i1=records_dict[key][0],
+                    type=record_set['type'],
+                    i1=record_sets_dict[key][0],
                     i2=index,
                 ))
-            records_dict[key] = (index, record)
+            record_sets_dict[key] = (index, record_set)
 
-        # Group existing records
-        existing_records = dict()
+        # Group existing record sets
+        existing_record_sets = dict()
         for record in zone_records:
             key = (record.prefix, record.type)
-            if key not in existing_records:
-                existing_records[key] = []
-            existing_records[key].append(record)
+            if key not in existing_record_sets:
+                existing_record_sets[key] = []
+            existing_record_sets[key].append(record)
 
         # Data required for diff
-        old_records = dict([(k, [r.clone() for r in v]) for k, v in existing_records.items()])
-        new_records = dict([(k, list(v)) for k, v in existing_records.items()])
+        old_record_sets = dict([(k, [r.clone() for r in v]) for k, v in existing_record_sets.items()])
+        new_record_sets = dict([(k, list(v)) for k, v in existing_record_sets.items()])
 
         # Create action lists
         to_create = []
         to_delete = []
         to_change = []
-        for (prefix, record_type), (dummy, record_data) in records_dict.items():
+        for (prefix, record_type), (dummy, record_set) in record_sets_dict.items():
             key = (prefix, record_type)
-            if key not in new_records:
-                new_records[key] = []
-            existing_recs = existing_records.get(key, [])
-            existing_records[key] = []
-            new_recs = new_records[key]
+            if key not in new_record_sets:
+                new_record_sets[key] = []
+            existing_recs = existing_record_sets.get(key, [])
+            existing_record_sets[key] = []
+            new_recs = new_record_sets[key]
 
-            if record_data['ignore']:
+            if record_set['ignore']:
                 continue
 
             mismatch_recs = []
-            keep_records = []
-            values = list(record_data['value'])
+            keep_record_sets = []
+            values = list(record_set['value'])
             for record in existing_recs:
-                if record.ttl != record_data['ttl']:
+                if record.ttl != record_set['ttl']:
                     mismatch_recs.append(record)
                     new_recs.remove(record)
                     continue
                 if record.target in values:
                     values.remove(record.target)
-                    keep_records.append(record)
+                    keep_record_sets.append(record)
                 else:
                     mismatch_recs.append(record)
                     new_recs.remove(record)
@@ -160,18 +161,18 @@ def run_module(module, create_api, provider_information):
                     to_create.append(record)
                 record.prefix = prefix
                 record.type = record_type
-                record.ttl = record_data['ttl']
+                record.ttl = record_set['ttl']
                 record.target = target
                 new_recs.append(record)
 
             to_delete.extend(mismatch_recs)
 
-        # If pruning, remove superfluous records
+        # If pruning, remove superfluous record sets
         if prune:
-            for key, record_list in existing_records.items():
-                to_delete.extend(record_list)
-                for record in record_list:
-                    new_records[key].remove(record)
+            for key, record_set in existing_record_sets.items():
+                to_delete.extend(record_set)
+                for record in record_set:
+                    new_record_sets[key].remove(record)
 
         # Apply changes
         result = dict(
@@ -192,22 +193,22 @@ def run_module(module, create_api, provider_information):
         if module._diff:
             def sort_items(dictionary):
                 items = [
-                    (zone_in if prefix is None else (prefix + '.' + zone_in), type, prefix, records)
-                    for (prefix, type), records in dictionary.items() if len(records) > 0
+                    (zone_in if prefix is None else (prefix + '.' + zone_in), type, prefix, record_set)
+                    for (prefix, type), record_set in dictionary.items() if len(record_set) > 0
                 ]
                 return sorted(items)
 
             result['diff'] = dict(
                 before=dict(
-                    records=[
-                        format_records_for_output(record_list, record_name, prefix)
-                        for record_name, type, prefix, record_list in sort_items(old_records)
+                    record_sets=[
+                        format_records_for_output(record_set, record_name, prefix)
+                        for record_name, type, prefix, record_set in sort_items(old_record_sets)
                     ],
                 ),
                 after=dict(
-                    records=[
-                        format_records_for_output(record_list, record_name, prefix)
-                        for record_name, type, prefix, record_list in sort_items(new_records)
+                    record_sets=[
+                        format_records_for_output(record_set, record_name, prefix)
+                        for record_name, type, prefix, record_set in sort_items(new_record_sets)
                     ],
                 ),
             )

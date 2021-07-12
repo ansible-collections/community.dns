@@ -10,3 +10,4 @@ deprecated_features:
 minor_changes:
 - "The hosttech_dns_records module has been renamed to hosttech_dns_record_sets (https://github.com/ansible-collections/community.dns/pull/31)."
 - "hosttech_dns_record_set - ``value`` is no longer required when ``state=absent`` and ``overwrite=true`` (https://github.com/ansible-collections/community.dns/pull/31)."
+- "hosttech_dns_record_sets - ``records`` has been renamed to ``record_sets``. The old name ``records`` can still be used as an alias (https://github.com/ansible-collections/community.dns/pull/31)."

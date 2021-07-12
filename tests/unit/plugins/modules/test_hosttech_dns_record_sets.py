@@ -75,7 +75,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'hosttech_username': 'foo',
                     'hosttech_password': 'bar',
                     'zone': 'example.org',
-                    'records': [],
+                    'record_sets': [],
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
@@ -103,7 +103,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'hosttech_username': 'foo',
                     'hosttech_password': 'bar',
                     'zone_id': 23,
-                    'records': [],
+                    'record_sets': [],
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
@@ -131,7 +131,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'hosttech_username': 'foo',
                     'hosttech_password': 'bar',
                     'zone': 'example.com',
-                    'records': [
+                    'record_sets': [
                         {
                             'prefix': '',
                             'type': 'A',
@@ -166,7 +166,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'hosttech_username': 'foo',
                     'hosttech_password': 'bar',
                     'zone': 'example.com',
-                    'records': [
+                    'record_sets': [
                         {
                             'record': 'example.com',
                             'type': 'CAA',
@@ -212,7 +212,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'hosttech_username': 'foo',
                     'hosttech_password': 'bar',
                     'zone': 'example.com',
-                    'records': [
+                    'record_sets': [
                         {
                             'record': 'foo.example.com',
                             'type': 'CAA',
@@ -264,7 +264,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'hosttech_username': 'foo',
                     'hosttech_password': 'bar',
                     'zone': 'example.com',
-                    'records': [
+                    'record_sets': [
                         {
                             'record': 'example.com',
                             'type': 'NS',
@@ -288,7 +288,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
         assert 'before' in e.value.args[0]['diff']
         assert 'after' in e.value.args[0]['diff']
         assert e.value.args[0]['diff']['before'] == {
-            'records': [
+            'record_sets': [
                 {
                     'record': '*.example.com',
                     'prefix': '*',
@@ -334,7 +334,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
             ],
         }
         assert e.value.args[0]['diff']['after'] == {
-            'records': [
+            'record_sets': [
                 {
                     'record': '*.example.com',
                     'prefix': '*',
@@ -389,7 +389,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone': 'example.org',
-            'records': [],
+            'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -408,7 +408,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone_id': 23,
-            'records': [],
+            'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -426,7 +426,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone': 'example.org',
-            'records': [],
+            'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -444,7 +444,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone_id': 23,
-            'records': [],
+            'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -461,7 +461,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone': 'example.org',
-            'records': [],
+            'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -480,7 +480,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone_id': 42,
-            'records': [
+            'record_sets': [
                 {
                     'record': 'test.example.com',
                     'type': 'A',
@@ -503,13 +503,13 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
         ])
 
-        assert result['msg'] == 'Found multiple entries for record test.example.com and type A: index #0 and #1'
+        assert result['msg'] == 'Found multiple sets for record test.example.com and type A: index #0 and #1'
 
     def test_idempotency_empty(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone_id': 42,
-            'records': [],
+            'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -528,7 +528,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone': 'example.com',
-            'records': [
+            'record_sets': [
                 {
                     'record': 'example.com',
                     'type': 'MX',
@@ -564,7 +564,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'hosttech_token': 'foo',
             'zone': 'example.com',
             'prune': 'true',
-            'records': [
+            'record_sets': [
                 {
                     'prefix': '*',
                     'ttl': 3600,
@@ -626,7 +626,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['changed'] is True
         assert result['zone_id'] == 42
         assert result['diff']['before'] == {
-            'records': [
+            'record_sets': [
                 {
                     'record': '*.example.com',
                     'prefix': '*',
@@ -672,7 +672,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             ],
         }
         assert result['diff']['after'] == {
-            'records': [
+            'record_sets': [
                 {
                     'record': '*.example.com',
                     'prefix': '*',
@@ -708,7 +708,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone_id': 42,
-            'records': [
+            'record_sets': [
                 {
                     'record': 'example.com',
                     'type': 'CAA',
@@ -737,7 +737,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone_id': 42,
-            'records': [
+            'record_sets': [
                 {
                     'prefix': '',
                     'type': 'CAA',
@@ -766,7 +766,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone': 'example.com',
-            'records': [
+            'record_sets': [
                 {
                     'record': 'example.com',
                     'type': 'CAA',
@@ -826,7 +826,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone': 'example.com',
-            'records': [
+            'record_sets': [
                 {
                     'prefix': '',
                     'type': 'CAA',
@@ -886,7 +886,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone': 'example.com',
-            'records': [
+            'record_sets': [
                 {
                     'prefix': '☺',
                     'type': 'CAA',
@@ -946,7 +946,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone': 'example.com',
-            'records': [
+            'record_sets': [
                 {
                     'record': 'example.com',
                     'type': 'NS',
@@ -1008,7 +1008,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert 'before' in result['diff']
         assert 'after' in result['diff']
         assert result['diff']['before'] == {
-            'records': [
+            'record_sets': [
                 {
                     'record': '*.example.com',
                     'prefix': '*',
@@ -1054,7 +1054,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             ],
         }
         assert result['diff']['after'] == {
-            'records': [
+            'record_sets': [
                 {
                     'record': '*.example.com',
                     'prefix': '*',
@@ -1104,7 +1104,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
             'zone': 'example.com',
-            'records': [
+            'record_sets': [
                 {
                     'record': 'example.com',
                     'type': 'NS',
@@ -1187,7 +1187,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert 'before' in result['diff']
         assert 'after' in result['diff']
         assert result['diff']['before'] == {
-            'records': [
+            'record_sets': [
                 {
                     'record': '*.example.com',
                     'prefix': '*',
@@ -1233,7 +1233,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             ],
         }
         assert result['diff']['after'] == {
-            'records': [
+            'record_sets': [
                 {
                     'record': '*.example.com',
                     'prefix': '*',

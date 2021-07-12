@@ -12,12 +12,12 @@ DOCUMENTATION = '''
 ---
 module: hetzner_dns_record_set
 
-short_description: Add or delete entries in Hetzner DNS service
+short_description: Add or delete record sets in Hetzner DNS service
 
 version_added: 2.0.0
 
 description:
-    - "Creates and deletes DNS records in Hetzner DNS service."
+    - "Creates and deletes DNS record sets in Hetzner DNS service."
 
 extends_documentation_fragment:
     - community.dns.hetzner

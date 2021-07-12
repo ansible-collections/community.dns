@@ -46,7 +46,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.org',
-            'records': [],
+            'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -65,7 +65,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone_id': 23,
-            'records': [],
+            'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -83,7 +83,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.org',
-            'records': [],
+            'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -101,7 +101,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone_id': 23,
-            'records': [],
+            'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -118,7 +118,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.org',
-            'records': [],
+            'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -137,7 +137,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone_id': '42',
-            'records': [
+            'record_sets': [
                 {
                     'record': 'test.example.com',
                     'type': 'A',
@@ -169,13 +169,13 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
         ])
 
-        assert result['msg'] == 'Found multiple entries for record test.example.com and type A: index #0 and #1'
+        assert result['msg'] == 'Found multiple sets for record test.example.com and type A: index #0 and #1'
 
     def test_idempotency_empty(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone_id': '42',
-            'records': [],
+            'record_sets': [],
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -203,7 +203,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.com',
-            'records': [
+            'record_sets': [
                 {
                     'record': 'example.com',
                     'type': 'MX',
@@ -242,7 +242,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'hetzner_token': 'foo',
             'zone': 'example.com',
             'prune': 'true',
-            'records': [
+            'record_sets': [
                 {
                     'prefix': '*',
                     'ttl': 3600,
@@ -312,7 +312,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['changed'] is True
         assert result['zone_id'] == '42'
         assert result['diff']['before'] == {
-            'records': [
+            'record_sets': [
                 {
                     'record': '*.example.com',
                     'prefix': '*',
@@ -365,7 +365,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             ],
         }
         assert result['diff']['after'] == {
-            'records': [
+            'record_sets': [
                 {
                     'record': '*.example.com',
                     'prefix': '*',
@@ -408,7 +408,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone_id': '42',
-            'records': [
+            'record_sets': [
                 {
                     'record': 'example.com',
                     'type': 'CAA',
@@ -446,7 +446,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone_id': '42',
-            'records': [
+            'record_sets': [
                 {
                     'prefix': '',
                     'type': 'CAA',
@@ -484,7 +484,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.com',
-            'records': [
+            'record_sets': [
                 {
                     'record': 'example.com',
                     'type': 'CAA',
@@ -543,7 +543,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.com',
-            'records': [
+            'record_sets': [
                 {
                     'prefix': '',
                     'type': 'CAA',
@@ -602,7 +602,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.com',
-            'records': [
+            'record_sets': [
                 {
                     'prefix': '☺',
                     'type': 'CAA',
@@ -661,7 +661,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.com',
-            'records': [
+            'record_sets': [
                 {
                     'record': 'example.com',
                     'type': 'NS',
@@ -747,7 +747,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert 'before' in result['diff']
         assert 'after' in result['diff']
         assert result['diff']['before'] == {
-            'records': [
+            'record_sets': [
                 {
                     'record': '*.example.com',
                     'prefix': '*',
@@ -800,7 +800,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             ],
         }
         assert result['diff']['after'] == {
-            'records': [
+            'record_sets': [
                 {
                     'record': '*.example.com',
                     'prefix': '*',
@@ -857,7 +857,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
             'zone': 'example.com',
-            'records': [
+            'record_sets': [
                 {
                     'record': 'example.com',
                     'type': 'NS',
@@ -943,7 +943,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert 'before' in result['diff']
         assert 'after' in result['diff']
         assert result['diff']['before'] == {
-            'records': [
+            'record_sets': [
                 {
                     'record': '*.example.com',
                     'prefix': '*',
@@ -996,7 +996,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             ],
         }
         assert result['diff']['after'] == {
-            'records': [
+            'record_sets': [
                 {
                     'record': '*.example.com',
                     'prefix': '*',

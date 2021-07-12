@@ -12,12 +12,12 @@ DOCUMENTATION = '''
 ---
 module: hosttech_dns_record_set
 
-short_description: Add or delete entries in Hosttech DNS service
+short_description: Add or delete record sets in Hosttech DNS service
 
 version_added: 2.0.0
 
 description:
-    - "Creates and deletes DNS records in Hosttech DNS service."
+    - "Creates and deletes DNS record sets in Hosttech DNS service."
     - This module replaces C(hosttech_dns_record) from community.dns before 2.0.0.
 
 extends_documentation_fragment:
