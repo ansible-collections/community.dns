@@ -25,6 +25,11 @@ extends_documentation_fragment:
     - community.dns.hetzner.zone_choices
     - community.dns.module_record_set
 
+options:
+    prefix:
+        aliases:
+          - name
+
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
     - Felix Fontein (@felixfontein)
@@ -197,6 +202,8 @@ def main():
     provider_information = create_hetzner_provider_information()
     argument_spec = create_hetzner_argument_spec()
     argument_spec.merge(create_module_argument_spec(zone_id_type='str', provider_information=provider_information))
+    argument_spec.argument_spec['prefix']['aliases'] = ['name']
+    argument_spec.argument_spec['prefix']['deprecated_aliases'] = [dict(name='name', version='3.0.0', collection_name='community.dns')]
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
     run_module(module, lambda: create_hetzner_api(module), provider_information=provider_information)
 
