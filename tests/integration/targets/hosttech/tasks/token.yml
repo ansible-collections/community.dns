@@ -35,14 +35,13 @@
     hosttech_zone_id: "{{ result.zone_id }}"
 
 - name: (token) Ensure that test record is not present
-  hosttech_dns_record:
+  hosttech_dns_record_set:
     state: present
     zone: '{{ test_zone }}'
     record: '{{ test_record }}'
     type: A
     ttl: 600
     value: []
-    overwrite: true
     hosttech_token: '{{ hosttech_token }}'
 
 - block:
@@ -60,7 +59,7 @@
         - not rec.set
 
   - name: (token) Create test record
-    hosttech_dns_record:
+    hosttech_dns_record_set:
       state: present
       zone: '{{ test_zone }}'
       record: '{{ test_record }}'
@@ -70,11 +69,10 @@
         - 1.2.3.4
         - 1.2.3.5
         - 1.2.3.6
-      overwrite: true
       hosttech_token: '{{ hosttech_token }}'
 
   - name: (token) Modify test record
-    hosttech_dns_record:
+    hosttech_dns_record_set:
       state: present
       zone: '{{ test_zone }}'
       prefix: '{{ test_record_prefix }}'
@@ -83,7 +81,6 @@
       value:
         - 1.2.3.4
         - 1.2.3.7
-      overwrite: true
       hosttech_token: '{{ hosttech_token }}'
 
   - name: (token) Get test record
@@ -103,23 +100,22 @@
         - rec.set.value | length == 2
 
   - name: (token) Delete test record
-    hosttech_dns_record:
+    hosttech_dns_record_set:
       state: absent
       zone_id: '{{ hosttech_zone_id }}'
       record: '{{ rec.set.record }}'
       ttl: '{{ rec.set.ttl }}'
       type: '{{ rec.set.type }}'
       value: '{{ rec.set.value }}'
+      on_existing: keep_and_fail
       hosttech_token: '{{ hosttech_token }}'
 
   always:
   - name: (token) Ensure that test record is not present
-    hosttech_dns_record:
-      state: present
+    hosttech_dns_record_set:
+      state: absent
       zone: '{{ test_zone }}'
       record: '{{ test_record }}'
       type: A
       ttl: 600
-      value: []
-      overwrite: true
       hosttech_token: '{{ hosttech_token }}'

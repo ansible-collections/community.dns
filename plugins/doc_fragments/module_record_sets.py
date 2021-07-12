@@ -12,12 +12,12 @@ class ModuleDocFragment(object):
     # Standard files documentation fragment
     DOCUMENTATION = r'''
 description:
-    - The module allows to set, modify and delete multiple DNS records at once.
-    - With the I(purge) option, it is also possible to delete existing records
+    - The module allows to set, modify and delete multiple DNS record sets at once.
+    - With the I(purge) option, it is also possible to delete existing record sets
       that are not mentioned in the module parameters. With this, it is possible
       to synchronize the expected state of a DNS zone with the expected state.
-    - "It is possible to ignore certain records by specifying I(ignore: true) for
-       that record."
+    - "It is possible to ignore certain record sets by specifying I(ignore: true) for
+       that record set."
 
 options:
     zone:
@@ -34,13 +34,16 @@ options:
           - If set to C(true), will remove all existing records in the zone that are not listed in I(records).
         type: bool
         default: false
-    records:
+    record_sets:
         description:
           - The records that should be present in the zone.
         required: true
         type: list
         elements: dict
+        aliases:
+          - records
         suboptions:
+            # (The following must be kept in sync with the equivalent lines in <provider_name>.py!)
             record:
                 description:
                   - The full DNS record to create or delete.

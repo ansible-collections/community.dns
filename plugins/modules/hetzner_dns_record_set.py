@@ -10,24 +10,20 @@ __metaclass__ = type
 
 DOCUMENTATION = '''
 ---
-module: hetzner_dns_record
+module: hetzner_dns_record_set
 
-short_description: Add or delete entries in Hetzner DNS service
+short_description: Add or delete record sets in Hetzner DNS service
 
 version_added: 2.0.0
 
 description:
-    - "Creates and deletes DNS records in Hetzner DNS service."
+    - "Creates and deletes DNS record sets in Hetzner DNS service."
 
 extends_documentation_fragment:
     - community.dns.hetzner
-    - community.dns.module_record
-
-options:
-    zone_id:
-        type: str
-    type:
-        choices: ['A', 'AAAA', 'NS', 'MX', 'CNAME', 'RP', 'TXT', 'SOA', 'HINFO', 'SRV', 'DANE', 'TLSA', 'DS', 'CAA']
+    - community.dns.hetzner.zone_id_type
+    - community.dns.hetzner.zone_choices
+    - community.dns.module_record_set
 
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
@@ -36,7 +32,7 @@ author:
 
 EXAMPLES = '''
 - name: Add new.foo.com as an A record with 3 IPs
-  community.dns.hetzner_dns_record:
+  community.dns.hetzner_dns_record_set:
     state: present
     zone: foo.com
     record: new.foo.com
@@ -46,7 +42,7 @@ EXAMPLES = '''
     hetzner_token: access_token
 
 - name: Update new.foo.com as an A record with a list of 3 IPs
-  community.dns.hetzner_dns_record:
+  community.dns.hetzner_dns_record_set:
     state: present
     zone: foo.com
     record: new.foo.com
@@ -67,7 +63,7 @@ EXAMPLES = '''
   register: rec
 
 - name: Delete new.foo.com A record using the results from the facts retrieval command
-  community.dns.hetzner_dns_record:
+  community.dns.hetzner_dns_record_set:
     state: absent
     zone: foo.com
     record: "{{ rec.set.record }}"
@@ -78,7 +74,7 @@ EXAMPLES = '''
 
 - name: Add an AAAA record
   # Note that because there are colons in the value that the IPv6 address must be quoted!
-  community.dns.hetzner_dns_record:
+  community.dns.hetzner_dns_record_set:
     state: present
     zone: foo.com
     record: localhost.foo.com
@@ -88,7 +84,7 @@ EXAMPLES = '''
     hetzner_token: access_token
 
 - name: Add a TXT record
-  community.dns.hetzner_dns_record:
+  community.dns.hetzner_dns_record_set:
     state: present
     zone: foo.com
     record: localhost.foo.com
@@ -98,7 +94,7 @@ EXAMPLES = '''
     hetzner_token: access_token
 
 - name: Remove the TXT record
-  community.dns.hetzner_dns_record:
+  community.dns.hetzner_dns_record_set:
     state: absent
     zone: foo.com
     record: localhost.foo.com
@@ -108,7 +104,7 @@ EXAMPLES = '''
     hetzner_token: access_token
 
 - name: Add a CAA record
-  community.dns.hetzner_dns_record:
+  community.dns.hetzner_dns_record_set:
     state: present
     zone: foo.com
     record: foo.com
@@ -120,7 +116,7 @@ EXAMPLES = '''
     hetzner_token: access_token
 
 - name: Add an MX record
-  community.dns.hetzner_dns_record:
+  community.dns.hetzner_dns_record_set:
     state: present
     zone: foo.com
     record: foo.com
@@ -131,7 +127,7 @@ EXAMPLES = '''
     hetzner_token: access_token
 
 - name: Add a CNAME record
-  community.dns.hetzner_dns_record:
+  community.dns.hetzner_dns_record_set:
     state: present
     zone: bla.foo.com
     record: foo.com
@@ -142,7 +138,7 @@ EXAMPLES = '''
     hetzner_token: access_token
 
 - name: Add a PTR record
-  community.dns.hetzner_dns_record:
+  community.dns.hetzner_dns_record_set:
     state: present
     zone: foo.foo.com
     record: foo.com
@@ -153,7 +149,7 @@ EXAMPLES = '''
     hetzner_token: access_token
 
 - name: Add an SPF record
-  community.dns.hetzner_dns_record:
+  community.dns.hetzner_dns_record_set:
     state: present
     zone: foo.com
     record: foo.com
@@ -164,7 +160,7 @@ EXAMPLES = '''
     hetzner_token: access_token
 
 - name: Add a PTR record
-  community.dns.hetzner_dns_record:
+  community.dns.hetzner_dns_record_set:
     state: present
     zone: foo.com
     record: foo.com
@@ -181,7 +177,6 @@ zone_id:
     type: str
     returned: success
     sample: 23
-    version_added: 0.2.0
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -192,7 +187,7 @@ from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
     create_hetzner_provider_information,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.module.record import (
+from ansible_collections.community.dns.plugins.module_utils.module.record_set import (
     create_module_argument_spec,
     run_module,
 )

@@ -10,24 +10,21 @@ __metaclass__ = type
 
 DOCUMENTATION = '''
 ---
-module: hosttech_dns_record
+module: hosttech_dns_record_set
 
-short_description: Add or delete entries in Hosttech DNS service
+short_description: Add or delete record sets in Hosttech DNS service
 
-version_added: 0.1.0
+version_added: 2.0.0
 
 description:
-    - "Creates and deletes DNS records in Hosttech DNS service."
+    - "Creates and deletes DNS record sets in Hosttech DNS service."
+    - This module replaces C(hosttech_dns_record) from community.dns before 2.0.0.
 
 extends_documentation_fragment:
     - community.dns.hosttech
-    - community.dns.module_record
-
-options:
-    zone_id:
-        type: int
-    type:
-        choices: ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
+    - community.dns.hosttech.zone_id_type
+    - community.dns.hosttech.zone_choices
+    - community.dns.module_record_set
 
 author:
     - Felix Fontein (@felixfontein)
@@ -35,7 +32,7 @@ author:
 
 EXAMPLES = '''
 - name: Add new.foo.com as an A record with 3 IPs
-  community.dns.hosttech_dns_record:
+  community.dns.hosttech_dns_record_set:
     state: present
     zone: foo.com
     record: new.foo.com
@@ -45,7 +42,7 @@ EXAMPLES = '''
     hosttech_token: access_token
 
 - name: Update new.foo.com as an A record with a list of 3 IPs
-  community.dns.hosttech_dns_record:
+  community.dns.hosttech_dns_record_set:
     state: present
     zone: foo.com
     record: new.foo.com
@@ -67,7 +64,7 @@ EXAMPLES = '''
   register: rec
 
 - name: Delete new.foo.com A record using the results from the facts retrieval command
-  community.dns.hosttech_dns_record:
+  community.dns.hosttech_dns_record_set:
     state: absent
     zone: foo.com
     record: "{{ rec.set.record }}"
@@ -79,7 +76,7 @@ EXAMPLES = '''
 
 - name: Add an AAAA record
   # Note that because there are colons in the value that the IPv6 address must be quoted!
-  community.dns.hosttech_dns_record:
+  community.dns.hosttech_dns_record_set:
     state: present
     zone: foo.com
     record: localhost.foo.com
@@ -89,7 +86,7 @@ EXAMPLES = '''
     hosttech_token: access_token
 
 - name: Add a TXT record
-  community.dns.hosttech_dns_record:
+  community.dns.hosttech_dns_record_set:
     state: present
     zone: foo.com
     record: localhost.foo.com
@@ -100,7 +97,7 @@ EXAMPLES = '''
     hosttech_password: bar
 
 - name: Remove the TXT record
-  community.dns.hosttech_dns_record:
+  community.dns.hosttech_dns_record_set:
     state: absent
     zone: foo.com
     record: localhost.foo.com
@@ -111,7 +108,7 @@ EXAMPLES = '''
     hosttech_password: bar
 
 - name: Add a CAA record
-  community.dns.hosttech_dns_record:
+  community.dns.hosttech_dns_record_set:
     state: present
     zone: foo.com
     record: foo.com
@@ -123,7 +120,7 @@ EXAMPLES = '''
     hosttech_token: access_token
 
 - name: Add an MX record
-  community.dns.hosttech_dns_record:
+  community.dns.hosttech_dns_record_set:
     state: present
     zone: foo.com
     record: foo.com
@@ -134,7 +131,7 @@ EXAMPLES = '''
     hosttech_token: access_token
 
 - name: Add a CNAME record
-  community.dns.hosttech_dns_record:
+  community.dns.hosttech_dns_record_set:
     state: present
     zone: bla.foo.com
     record: foo.com
@@ -146,7 +143,7 @@ EXAMPLES = '''
     hosttech_password: bar
 
 - name: Add a PTR record
-  community.dns.hosttech_dns_record:
+  community.dns.hosttech_dns_record_set:
     state: present
     zone: foo.foo.com
     record: foo.com
@@ -157,7 +154,7 @@ EXAMPLES = '''
     hosttech_token: access_token
 
 - name: Add an SPF record
-  community.dns.hosttech_dns_record:
+  community.dns.hosttech_dns_record_set:
     state: present
     zone: foo.com
     record: foo.com
@@ -169,7 +166,7 @@ EXAMPLES = '''
     hosttech_password: bar
 
 - name: Add a PTR record
-  community.dns.hosttech_dns_record:
+  community.dns.hosttech_dns_record_set:
     state: present
     zone: foo.com
     record: foo.com
@@ -197,7 +194,7 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech.api import 
     create_hosttech_provider_information,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.module.record import (
+from ansible_collections.community.dns.plugins.module_utils.module.record_set import (
     create_module_argument_spec,
     run_module,
 )

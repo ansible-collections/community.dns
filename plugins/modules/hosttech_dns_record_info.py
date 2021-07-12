@@ -21,13 +21,9 @@ description:
 
 extends_documentation_fragment:
     - community.dns.hosttech
+    - community.dns.hosttech.zone_id_type
+    - community.dns.hosttech.zone_choices
     - community.dns.module_record_info
-
-options:
-    zone_id:
-        type: int
-    type:
-        choices: ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
 
 author:
     - Felix Fontein (@felixfontein)

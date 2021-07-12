@@ -25,7 +25,7 @@ from ansible_collections.community.internal_test_tools.tests.unit.plugins.module
     AnsibleFailJson,
 )
 
-from ansible_collections.community.dns.plugins.modules import hosttech_dns_record
+from ansible_collections.community.dns.plugins.modules import hosttech_dns_record_set
 
 # These imports are needed so patching below works
 import ansible_collections.community.dns.plugins.module_utils.wsdl
@@ -88,7 +88,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
-                hosttech_dns_record.main()
+                hosttech_dns_record_set.main()
 
         print(e.value.args[0])
         assert e.value.args[0]['msg'] == 'Zone not found'
@@ -122,7 +122,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
-                hosttech_dns_record.main()
+                hosttech_dns_record_set.main()
 
         print(e.value.args[0])
         assert e.value.args[0]['msg'] == 'Zone not found'
@@ -156,7 +156,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
-                hosttech_dns_record.main()
+                hosttech_dns_record_set.main()
 
         print(e.value.args[0])
         assert e.value.args[0]['msg'] == 'Zone not found'
@@ -190,7 +190,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
-                hosttech_dns_record.main()
+                hosttech_dns_record_set.main()
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is False
@@ -222,10 +222,11 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'value': [
                         '1.2.3.6',
                     ],
+                    'on_existing': 'keep',
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
-                hosttech_dns_record.main()
+                hosttech_dns_record_set.main()
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is False
@@ -257,10 +258,11 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'value': [
                         '1.2.3.5',
                     ],
+                    'on_existing': 'keep',
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
-                hosttech_dns_record.main()
+                hosttech_dns_record_set.main()
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is False
@@ -292,10 +294,11 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'value': [
                         '0 issue "letsencrypt.org"',
                     ],
+                    'on_existing': 'keep',
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
-                hosttech_dns_record.main()
+                hosttech_dns_record_set.main()
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is False
@@ -327,10 +330,11 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'value': [
                         '1.2.3.6',
                     ],
+                    'on_existing': 'keep',
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
-                hosttech_dns_record.main()
+                hosttech_dns_record_set.main()
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is False
@@ -372,7 +376,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
-                hosttech_dns_record.main()
+                hosttech_dns_record_set.main()
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is True
@@ -408,7 +412,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
-                hosttech_dns_record.main()
+                hosttech_dns_record_set.main()
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is True
@@ -450,7 +454,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
-                hosttech_dns_record.main()
+                hosttech_dns_record_set.main()
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is True
@@ -483,14 +487,15 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                         'ns1.hostserv.eu',
                         'ns4.hostserv.eu',
                     ],
+                    'on_existing': 'keep_and_fail',
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
-                hosttech_dns_record.main()
+                hosttech_dns_record_set.main()
 
         print(e.value.args[0])
         assert e.value.args[0]['failed'] is True
-        assert e.value.args[0]['msg'] == "Record already exists with different value. Set 'overwrite' to replace it"
+        assert e.value.args[0]['msg'] == "Record already exists with different value. Set on_existing=replace to replace it"
 
     def test_change_modify_list(self):
         del_entry = (130, 42, 'NS', '', 'ns3.hostserv.eu', 10800, None, None)
@@ -533,12 +538,11 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                         'ns1.hostserv.eu',
                         'ns4.hostserv.eu',
                     ],
-                    'overwrite': True,
                     '_ansible_diff': True,
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
-                hosttech_dns_record.main()
+                hosttech_dns_record_set.main()
 
         print(e.value.args[0])
         assert e.value.args[0]['changed'] is True
@@ -563,11 +567,11 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
 
 
 class TestHosttechDNSRecordJSON(BaseTestModule):
-    MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hosttech_dns_record.AnsibleModule'
+    MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hosttech_dns_record_set.AnsibleModule'
     MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.json_api_helper.fetch_url'
 
     def test_unknown_zone(self, mocker):
-        result = self.run_module_failed(mocker, hosttech_dns_record, {
+        result = self.run_module_failed(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
             'zone': 'example.org',
@@ -592,7 +596,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['msg'] == 'Zone not found'
 
     def test_unknown_zone_id(self, mocker):
-        result = self.run_module_failed(mocker, hosttech_dns_record, {
+        result = self.run_module_failed(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
             'zone_id': 23,
@@ -616,7 +620,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['msg'] == 'Zone not found'
 
     def test_unknown_zone_id_prefix(self, mocker):
-        result = self.run_module_failed(mocker, hosttech_dns_record, {
+        result = self.run_module_failed(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
             'zone_id': 23,
@@ -641,7 +645,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['msg'] == 'Zone not found'
 
     def test_auth_error(self, mocker):
-        result = self.run_module_failed(mocker, hosttech_dns_record, {
+        result = self.run_module_failed(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
             'zone': 'example.org',
@@ -665,7 +669,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['msg'] == 'Cannot authenticate: Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
 
     def test_auth_error_forbidden(self, mocker):
-        result = self.run_module_failed(mocker, hosttech_dns_record, {
+        result = self.run_module_failed(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
             'zone_id': 23,
@@ -688,7 +692,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['msg'] == 'Cannot authenticate: Forbidden: you do not have access to this resource (HTTP status 403)'
 
     def test_other_error(self, mocker):
-        result = self.run_module_failed(mocker, hosttech_dns_record, {
+        result = self.run_module_failed(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
             'zone': 'example.org',
@@ -713,7 +717,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert 'did not yield JSON data, but HTTP status code 500 with Content-Type' in result['msg']
 
     def test_idempotency_present(self, mocker):
-        result = self.run_module_success(mocker, hosttech_dns_record, {
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
             'zone': 'example.com',
@@ -754,7 +758,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['diff']['before'] == result['diff']['after']
 
     def test_idempotency_absent_value(self, mocker):
-        result = self.run_module_success(mocker, hosttech_dns_record, {
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'absent',
             'zone': 'example.com',
@@ -764,6 +768,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'value': [
                 '1.2.3.6',
             ],
+            'on_existing': 'keep',
             '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -795,7 +800,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['diff']['before'] == result['diff']['after']
 
     def test_idempotency_absent_value_prefix(self, mocker):
-        result = self.run_module_success(mocker, hosttech_dns_record, {
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'absent',
             'zone': 'example.com',
@@ -805,6 +810,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'value': [
                 '1.2.3.6',
             ],
+            'on_existing': 'keep',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -827,7 +833,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == 42
 
     def test_idempotency_absent_ttl(self, mocker):
-        result = self.run_module_success(mocker, hosttech_dns_record, {
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'absent',
             'zone': 'example.com',
@@ -837,6 +843,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'value': [
                 '1.2.3.5',
             ],
+            'on_existing': 'keep',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -859,7 +866,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == 42
 
     def test_idempotency_absent_type(self, mocker):
-        result = self.run_module_success(mocker, hosttech_dns_record, {
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'absent',
             'zone': 'example.com',
@@ -869,6 +876,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'value': [
                 '0 issue "letsencrypt.org"',
             ],
+            'on_existing': 'keep',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -891,7 +899,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == 42
 
     def test_idempotency_absent_record(self, mocker):
-        result = self.run_module_success(mocker, hosttech_dns_record, {
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'absent',
             'zone': 'example.com.',
@@ -901,6 +909,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'value': [
                 '1.2.3.6',
             ],
+            'on_existing': 'keep',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -921,10 +930,77 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         assert result['changed'] is False
         assert result['zone_id'] == 42
+        assert 'warnings' not in result
+
+    def test_idempotency_absent_record_warn(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
+            'hosttech_token': 'foo',
+            'state': 'absent',
+            'zone': 'example.com.',
+            'record': 'somewhere.example.com.',
+            'type': 'A',
+            'ttl': 3600,
+            'value': [
+                '1.2.3.6',
+            ],
+            'on_existing': 'keep_and_warn',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
+        ])
+
+        assert result['changed'] is False
+        assert result['zone_id'] == 42
+        assert list(result['warnings']) == ["Record already exists with different value. Set on_existing=replace to remove it"]
+
+    def test_idempotency_absent_record_fail(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_record_set, {
+            'hosttech_token': 'foo',
+            'state': 'absent',
+            'zone': 'example.com.',
+            'record': 'somewhere.example.com.',
+            'type': 'A',
+            'ttl': 3600,
+            'value': [
+                '1.2.3.6',
+            ],
+            'on_existing': 'keep_and_fail',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
+        ])
+
+        assert result['msg'] == "Record already exists with different value. Set on_existing=replace to remove it"
 
     def test_absent(self, mocker):
         record = HOSTTECH_JSON_DEFAULT_ENTRIES[0]
-        result = self.run_module_success(mocker, hosttech_dns_record, {
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'absent',
             'zone': 'example.com',
@@ -961,7 +1037,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == 42
 
     def test_change_add_one_check_mode(self, mocker):
-        result = self.run_module_success(mocker, hosttech_dns_record, {
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
             'zone_id': 42,
@@ -987,7 +1063,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == 42
 
     def test_change_add_one_check_mode_prefix(self, mocker):
-        result = self.run_module_success(mocker, hosttech_dns_record, {
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
             'zone_id': 42,
@@ -1025,7 +1101,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         }
 
     def test_change_add_one(self, mocker):
-        result = self.run_module_success(mocker, hosttech_dns_record, {
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
             'zone': 'example.com',
@@ -1082,7 +1158,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == 42
 
     def test_change_add_one_prefix(self, mocker):
-        result = self.run_module_success(mocker, hosttech_dns_record, {
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
             'zone': 'example.com',
@@ -1139,7 +1215,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == 42
 
     def test_change_add_one_idn_prefix(self, mocker):
-        result = self.run_module_success(mocker, hosttech_dns_record, {
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
             'zone': 'example.com',
@@ -1196,7 +1272,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == 42
 
     def test_change_modify_list_fail(self, mocker):
-        result = self.run_module_failed(mocker, hosttech_dns_record, {
+        result = self.run_module_failed(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
             'zone': 'example.com',
@@ -1207,6 +1283,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
                 'ns1.hostserv.eu',
                 'ns4.hostserv.eu',
             ],
+            'on_existing': 'keep_and_fail',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -1225,10 +1302,10 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
         ])
 
-        assert result['msg'] == "Record already exists with different value. Set 'overwrite' to replace it"
+        assert result['msg'] == "Record already exists with different value. Set on_existing=replace to replace it"
 
-    def test_change_modify_list(self, mocker):
-        result = self.run_module_success(mocker, hosttech_dns_record, {
+    def test_change_modify_list_warn(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
             'zone': 'example.com',
@@ -1239,7 +1316,100 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
                 'ns1.hostserv.eu',
                 'ns4.hostserv.eu',
             ],
-            'overwrite': True,
+            'on_existing': 'keep_and_warn',
+            '_ansible_diff': True,
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
+        ])
+
+        assert result['changed'] is False
+        assert result['zone_id'] == 42
+        assert 'diff' in result
+        assert 'before' in result['diff']
+        assert 'after' in result['diff']
+        assert result['diff']['before'] == {
+            'record': 'example.com',
+            'prefix': '',
+            'type': 'NS',
+            'ttl': 10800,
+            'value': ['ns1.hostserv.eu', 'ns2.hostserv.eu', 'ns3.hostserv.eu'],
+        }
+        assert result['diff']['after'] == result['diff']['before']
+        assert list(result['warnings']) == ["Record already exists with different value. Set on_existing=replace to replace it"]
+
+    def test_change_modify_list_keep(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
+            'hosttech_token': 'foo',
+            'state': 'present',
+            'zone': 'example.com',
+            'record': 'example.com',
+            'type': 'NS',
+            'ttl': 10800,
+            'value': [
+                'ns1.hostserv.eu',
+                'ns4.hostserv.eu',
+            ],
+            'on_existing': 'keep',
+            '_ansible_diff': True,
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
+        ])
+
+        assert 'warnings' not in result
+        assert result['changed'] is False
+        assert result['zone_id'] == 42
+        assert 'diff' in result
+        assert 'before' in result['diff']
+        assert 'after' in result['diff']
+        assert result['diff']['before'] == {
+            'record': 'example.com',
+            'prefix': '',
+            'type': 'NS',
+            'ttl': 10800,
+            'value': ['ns1.hostserv.eu', 'ns2.hostserv.eu', 'ns3.hostserv.eu'],
+        }
+        assert result['diff']['after'] == result['diff']['before']
+
+    def test_change_modify_list(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
+            'hosttech_token': 'foo',
+            'state': 'present',
+            'zone': 'example.com',
+            'record': 'example.com',
+            'type': 'NS',
+            'ttl': 10800,
+            'value': [
+                'ns1.hostserv.eu',
+                'ns4.hostserv.eu',
+            ],
             '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,

@@ -45,6 +45,7 @@ options:
     ttl:
         description:
           - The TTL to give the new record, in seconds.
+          - Will be ignored if I(state=absent) and I(on_existing=replace).
         default: 3600
         type: int
     type:
@@ -58,16 +59,29 @@ options:
           - YAML lists or multiple comma-spaced values are allowed.
           - When deleting a record all values for the record must be specified or it will
             not be deleted.
-        required: true
+          - Must be specified if I(state=present) or when I(on_existing) is not C(replace).
+          - Will be ignored if I(state=absent) and I(on_existing=replace).
         type: list
         elements: str
-    overwrite:
+    on_existing:
         description:
-          - If I(state=present), whether an existing record should be overwritten on create if values do not
-            match.
-          - If I(state=absent), whether existing records should be deleted if values do not match.
-        default: false
-        type: bool
+          - This option defines the behavior if the record set already exists, but differs from the specified record set.
+            For this comparison, I(value) and I(ttl) are used for all records of type I(type) matching the I(prefix) resp. I(record).
+          - If set to C(replace), the record will be updated (I(state=present)) or removed (I(state=absent)).
+            This is the old I(overwrite=true) behavior.
+          - If set to C(keep_and_fail), the module will fail and not modify the records.
+            This is the old I(overwrite=false) behavior if I(state=present).
+          - If set to C(keep_and_warn), the module will warn and not modify the records.
+          - If set to C(keep), the module will not modify the records.
+            This is the old I(overwrite=false) behavior if I(state=absent).
+          - If I(state=absent) and the value is not C(replace), I(value) must be specified.
+        default: replace
+        type: str
+        choices:
+          - replace
+          - keep_and_fail
+          - keep_and_warn
+          - keep
 
 notes:
     - "Supports C(check_mode) and C(--diff)."
