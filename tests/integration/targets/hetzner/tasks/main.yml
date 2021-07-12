@@ -42,6 +42,7 @@
         type: CNAME
         ttl: 300
         hetzner_token: "{{ hetzner_token }}"
+        overwrite: false
       register: RECORD
 
     - name: assert add record 1
@@ -108,7 +109,6 @@
         value: "{{ hetzner_test_zone }}."
         type: CNAME
         ttl: 60
-        overwrite: true
         hetzner_token: "{{ hetzner_token }}"
       check_mode: yes
       register: RECORD
@@ -130,7 +130,6 @@
         value: "{{ hetzner_test_zone }}."
         type: CNAME
         ttl: 60
-        overwrite: true
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
       diff: true
@@ -149,8 +148,6 @@
         prefix: dns_ansible_collection
         type: CNAME
         state: absent
-        overwrite: true
-        value: []
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
 
@@ -165,7 +162,6 @@
         prefix: dns_ansible_collection
         type: CNAME
         state: absent
-        value: []
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
 
@@ -183,6 +179,7 @@
           - 1.1.1.1
         type: A
         ttl: 60
+        overwrite: false
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
 
@@ -196,7 +193,6 @@
           - 8.8.8.8
         type: A
         ttl: 60
-        overwrite: true
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
 
@@ -211,7 +207,6 @@
           - 8.8.4.4
         type: A
         ttl: 60
-        overwrite: true
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
 
@@ -237,7 +232,6 @@
           - 1.1.1.1
           - 8.8.4.4
         type: A
-        overwrite: true
         hetzner_token: "{{ hetzner_token }}"
 
     - name: fetch record info
@@ -259,8 +253,6 @@
         prefix: dns_ansible_collection
         type: A
         state: absent
-        value: []
-        overwrite: true
         hetzner_token: "{{ hetzner_token }}"
 
     - name: fetch record info
@@ -284,6 +276,7 @@
         type: A
         value:
           - 127.0.0.1
+        overwrite: false
         hetzner_token: "{{ hetzner_token }}"
 
     - name: replace record
@@ -294,7 +287,6 @@
         type: A
         value:
           - 127.0.0.2
-        overwrite: true
         hetzner_token: "{{ hetzner_token }}"
 
     - name: fetch record info
@@ -325,7 +317,6 @@
         value:
           - 127.0.0.2
           - 127.0.0.1
-        overwrite: true
         hetzner_token: "{{ hetzner_token }}"
 
     - name: fetch record info
@@ -349,7 +340,6 @@
         type: A
         value:
           - 8.8.8.8
-        overwrite: true
         hetzner_token: "{{ hetzner_token }}"
 
     - name: fetch record info
@@ -371,8 +361,6 @@
         prefix: website1
         type: A
         state: absent
-        value: []
-        overwrite: true
         hetzner_token: "{{ hetzner_token }}"
 
     - name: fetch record info
@@ -395,7 +383,6 @@
         prefix: dns_ansible_collection
         type: CNAME
         state: present
-        overwrite: true
         value: []
         hetzner_token: "{{ hetzner_token }}"
 
@@ -405,7 +392,6 @@
         prefix: dns_ansible_collection
         type: A
         state: present
-        overwrite: true
         value: []
         hetzner_token: "{{ hetzner_token }}"
 
@@ -415,6 +401,5 @@
         prefix: website1
         type: A
         state: present
-        overwrite: true
         value: []
         hetzner_token: "{{ hetzner_token }}"

@@ -42,7 +42,6 @@
     type: A
     ttl: 600
     value: []
-    overwrite: true
     hosttech_token: '{{ hosttech_token }}'
 
 - block:
@@ -70,7 +69,6 @@
         - 1.2.3.4
         - 1.2.3.5
         - 1.2.3.6
-      overwrite: true
       hosttech_token: '{{ hosttech_token }}'
 
   - name: (token) Modify test record
@@ -83,7 +81,6 @@
       value:
         - 1.2.3.4
         - 1.2.3.7
-      overwrite: true
       hosttech_token: '{{ hosttech_token }}'
 
   - name: (token) Get test record
@@ -110,16 +107,15 @@
       ttl: '{{ rec.set.ttl }}'
       type: '{{ rec.set.type }}'
       value: '{{ rec.set.value }}'
+      overwrite: false
       hosttech_token: '{{ hosttech_token }}'
 
   always:
   - name: (token) Ensure that test record is not present
     hosttech_dns_record_set:
-      state: present
+      state: absent
       zone: '{{ test_zone }}'
       record: '{{ test_record }}'
       type: A
       ttl: 600
-      value: []
-      overwrite: true
       hosttech_token: '{{ hosttech_token }}'

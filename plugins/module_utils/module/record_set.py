@@ -44,7 +44,7 @@ def create_module_argument_spec(zone_id_type, provider_information):
             ttl=dict(type='int', default=3600),
             type=dict(choices=provider_information.get_supported_record_types(), required=True),
             value=dict(type='list', elements='str'),
-            overwrite=dict(default=False, type='bool'),
+            overwrite=dict(default=True, type='bool'),
         ),
         required_one_of=[
             ('zone', 'zone_id'),

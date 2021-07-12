@@ -66,7 +66,7 @@ options:
           - If I(state=present), whether an existing record should be overwritten on create if values do not
             match.
           - If I(state=absent), whether existing records should be deleted if values do not match.
-        default: false
+        default: true
         type: bool
 
 notes:

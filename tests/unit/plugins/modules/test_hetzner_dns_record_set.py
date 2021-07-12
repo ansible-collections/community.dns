@@ -224,6 +224,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'value': [
                 '1.2.3.6',
             ],
+            'overwrite': False,
             '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -268,6 +269,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'value': [
                 '1.2.3.6',
             ],
+            'overwrite': False,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -303,6 +305,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'value': [
                 '1.2.3.5',
             ],
+            'overwrite': False,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -338,6 +341,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'value': [
                 '0 issue "letsencrypt.org"',
             ],
+            'overwrite': False,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -373,6 +377,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'value': [
                 '1.2.3.6',
             ],
+            'overwrite': False,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -693,6 +698,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                 'helium.ns.hetzner.de.',
                 'ytterbium.ns.hetzner.com.',
             ],
+            'overwrite': False,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -728,7 +734,6 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                 'helium.ns.hetzner.de.',
                 'ytterbium.ns.hetzner.com.',
             ],
-            'overwrite': True,
             '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,

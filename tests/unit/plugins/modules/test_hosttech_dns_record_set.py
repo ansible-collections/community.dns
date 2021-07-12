@@ -222,6 +222,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'value': [
                         '1.2.3.6',
                     ],
+                    'overwrite': False,
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
@@ -257,6 +258,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'value': [
                         '1.2.3.5',
                     ],
+                    'overwrite': False,
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
@@ -292,6 +294,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'value': [
                         '0 issue "letsencrypt.org"',
                     ],
+                    'overwrite': False,
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
@@ -327,6 +330,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                     'value': [
                         '1.2.3.6',
                     ],
+                    'overwrite': False,
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
@@ -483,6 +487,7 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                         'ns1.hostserv.eu',
                         'ns4.hostserv.eu',
                     ],
+                    'overwrite': False,
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
                 })
@@ -533,7 +538,6 @@ class TestHosttechDNSRecordWSDL(ModuleTestCase):
                         'ns1.hostserv.eu',
                         'ns4.hostserv.eu',
                     ],
-                    'overwrite': True,
                     '_ansible_diff': True,
                     '_ansible_remote_tmp': '/tmp/tmp',
                     '_ansible_keep_remote_files': True,
@@ -764,6 +768,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'value': [
                 '1.2.3.6',
             ],
+            'overwrite': False,
             '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -805,6 +810,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'value': [
                 '1.2.3.6',
             ],
+            'overwrite': False,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -837,6 +843,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'value': [
                 '1.2.3.5',
             ],
+            'overwrite': False,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -869,6 +876,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'value': [
                 '0 issue "letsencrypt.org"',
             ],
+            'overwrite': False,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -901,6 +909,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'value': [
                 '1.2.3.6',
             ],
+            'overwrite': False,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -1207,6 +1216,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
                 'ns1.hostserv.eu',
                 'ns4.hostserv.eu',
             ],
+            'overwrite': False,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -1239,7 +1249,6 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
                 'ns1.hostserv.eu',
                 'ns4.hostserv.eu',
             ],
-            'overwrite': True,
             '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
