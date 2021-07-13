@@ -14,11 +14,11 @@ from ansible.module_utils import six
 
 @six.add_metaclass(abc.ABCMeta)
 class ProviderInformation(object):
+    @abc.abstractmethod
     def get_supported_record_types(self):
         """
         Return a list of supported record types.
         """
-        return ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
 
     def normalize_prefix(self, prefix):
         """
@@ -31,8 +31,3 @@ class ProviderInformation(object):
         function needs to convert them to None as well.
         """
         return prefix or None
-
-
-class DefaultProviderInformation(ProviderInformation):
-    # This should mainly be used for tests, and not for anything else.
-    pass

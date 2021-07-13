@@ -8,9 +8,9 @@ The modules support both the old `WSDL-based API <https://ns1.hosttech.eu/public
 
 The collection provides four modules for working with HostTech DNS:
 
-- :ref:`community.dns.hosttech_dns_record <ansible_collections.community.dns.hosttech_dns_record_module>`: create/update/delete DNS records
 - :ref:`community.dns.hosttech_dns_record_info <ansible_collections.community.dns.hosttech_dns_record_info_module>`: retrieve information on DNS records
-- :ref:`community.dns.hosttech_dns_records <ansible_collections.community.dns.hosttech_dns_records_module>`: bulk synchronize DNS records
+- :ref:`community.dns.hosttech_dns_record_set <ansible_collections.community.dns.hosttech_dns_record_set_module>`: create/update/delete DNS record sets
+- :ref:`community.dns.hosttech_dns_record_sets <ansible_collections.community.dns.hosttech_dns_record_sets_module>`: bulk synchronize DNS record sets
 - :ref:`community.dns.hosttech_dns_zone_info <ansible_collections.community.dns.hosttech_dns_zone_info_module>`: retrieve zone information
 
 Authentication, Requirements and APIs
@@ -150,10 +150,10 @@ Finally you can query all records for a zone:
           TTL {{ item.ttl }} has values {{ item.value | join(', ') }}
       loop: result.sets
 
-Creating and updating DNS records
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Creating and updating DNS record sets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :ref:`community.dns.hosttech_dns_record module <ansible_collections.community.dns.hosttech_dns_record_module>` allows to set, update and remove DNS records. Setting and updating can be done as follows:
+The :ref:`community.dns.hosttech_dns_record_set module <ansible_collections.community.dns.hosttech_dns_record_set_module>` allows to set, update and remove DNS record sets. Setting and updating can be done as follows:
 
 .. code-block:: yaml+jinja
 
@@ -204,10 +204,10 @@ To delete values, you can either overwrite the values with value ``[]``, or use 
 
 In the third example, ``on_existing: keep_and_fail`` is present and an explicit value and TTL are given. This makes the module remove the current value only if there's a AAAA record for ``www.example.com`` whose current value is ``::1`` and whose TTL is 300. If another value is set, the module will not make any change, but fail. This can be useful to not accidentally remove values you do not want to change. To issue a warning instead of failing, use ```on_existing: keep_and_warn``, and to simply not do a change without any indication of this situation, use ``on_existing: keep``.
 
-Bulk synchronization of DNS records
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Bulk synchronization of DNS record sets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you want to set/update multiple records at once, or even make sure that the precise set of records you are providing are present and nothing else, you can use the :ref:`community.dns.hosttech_dns_records module <ansible_collections.community.dns.hosttech_dns_records_module>`.
+If you want to set/update multiple records at once, or even make sure that the precise set of records you are providing are present and nothing else, you can use the :ref:`community.dns.hosttech_dns_record_sets module <ansible_collections.community.dns.hosttech_dns_record_sets_module>`.
 
 The following example shows up to set/update multiple records at once:
 

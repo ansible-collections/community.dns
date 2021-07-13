@@ -1036,6 +1036,40 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['changed'] is True
         assert result['zone_id'] == 42
 
+    def test_absent_other_value(self, mocker):
+        record = HOSTTECH_JSON_DEFAULT_ENTRIES[0]
+        result = self.run_module_success(mocker, hosttech_dns_record_set, {
+            'hosttech_token': 'foo',
+            'state': 'absent',
+            'zone_name': 'example.com',
+            'record': record['name'] + 'example.com',
+            'type': record['type'],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
+            FetchUrlCall('DELETE', 204)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/{0}'.format(record['id']))
+            .result_str(''),
+        ])
+
+        assert result['changed'] is True
+        assert result['zone_id'] == 42
+
     def test_change_add_one_check_mode(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
