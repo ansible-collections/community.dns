@@ -13,7 +13,7 @@ import pytest
 from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import MagicMock, patch
 
 from ansible_collections.community.dns.plugins.module_utils.provider import (
-    DefaultProviderInformation,
+    ProviderInformation,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
@@ -26,6 +26,11 @@ from ansible_collections.community.dns.plugins.module_utils.module._utils import
 )
 
 
+class DefaultProviderInformation(ProviderInformation):
+    def get_supported_record_types(self):
+        return ['A']
+
+
 def test_normalize_dns_name():
     assert normalize_dns_name('ExAMPLE.CoM.') == 'example.com'
     assert normalize_dns_name('EXAMpLE.CoM') == 'example.com'
@@ -36,6 +41,7 @@ def test_normalize_dns_name():
 
 def test_get_prefix():
     provider_information = DefaultProviderInformation()
+    provider_information.get_supported_record_types()
     assert get_prefix(
         normalized_zone='example.com', normalized_record='example.com', provider_information=provider_information) == ('example.com', None)
     assert get_prefix(

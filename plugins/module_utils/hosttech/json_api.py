@@ -169,15 +169,6 @@ def _record_to_json(record, include_id=False, include_type=True):
     return result
 
 
-def _get_header_value(info, header_name):
-    header_name = header_name.lower()
-    header_value = info.get(header_name)
-    for k, v in info.items():
-        if k.lower() == header_name:
-            header_value = v
-    return header_value
-
-
 class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
     def __init__(self, module, token, api='https://api.ns1.hosttech.eu/api/', debug=False):
         """

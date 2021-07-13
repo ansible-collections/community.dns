@@ -63,18 +63,14 @@ def _create_record_from_json(source, type=None):
     return result
 
 
-def _record_to_json(record, include_id=False, include_type=True, zone_id=None):
+def _record_to_json(record, zone_id):
     result = {
         'ttl': record.ttl,
         'name': record.prefix or '@',
         'value': record.target,
+        'type': record.type,
+        'zone_id': zone_id,
     }
-    if include_type:
-        result['type'] = record.type
-    if include_id:
-        result['id'] = record.id
-    if zone_id is not None:
-        result['zone_id'] = zone_id
     return result
 
 
@@ -157,7 +153,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         @param record: The DNS record (DNSRecord)
         @return The created DNS record (DNSRecord)
         """
-        data = _record_to_json(record, include_type=True, zone_id=zone_id)
+        data = _record_to_json(record, zone_id=zone_id)
         result, dummy = self._post('v1/records', data=data, expected=[200])
         return _create_record_from_json(result['record'])
 
@@ -171,7 +167,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         """
         if record.id is None:
             raise DNSAPIError('Need record ID to update record!')
-        data = _record_to_json(record, include_type=True, zone_id=zone_id)
+        data = _record_to_json(record, zone_id=zone_id)
         result, dummy = self._put('v1/records/{id}'.format(id=record.id), data=data, expected=[200])
         return _create_record_from_json(result['record'])
 
