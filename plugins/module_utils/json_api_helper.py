@@ -42,12 +42,12 @@ def _get_header_value(info, header_name):
 
 
 class JSONAPIHelper(object):
-    def __init__(self, module, token, api, debug=False):
+    def __init__(self, http_helper, token, api, debug=False):
         """
         Create a new JSON API helper instance with given API key.
         """
         self._api = api
-        self._module = module
+        self._http_helper = http_helper
         self._token = token
         self._debug = debug
 
@@ -59,7 +59,7 @@ class JSONAPIHelper(object):
             return ''
         return ' with data: {0}'.format(result)
 
-    def _validate(self, response=None, result=None, info=None, expected=None, method='GET'):
+    def _validate(self, result=None, info=None, expected=None, method='GET'):
         if info is None:
             raise DNSAPIError('Internal error: info needs to be provided')
         status = info['status']
@@ -79,19 +79,14 @@ class JSONAPIHelper(object):
                     'Expected successful HTTP status for {0} {1}, but got HTTP status {2} ({3}){4}'.format(
                         method, url, status, error_code, more))
 
-    def _process_json_result(self, response, info, must_have_content=True, method='GET', expected=None):
+    def _process_json_result(self, content, info, must_have_content=True, method='GET', expected=None):
         if isinstance(must_have_content, (list, tuple)):
             must_have_content = info['status'] in must_have_content
-        # Read content
-        try:
-            content = response.read()
-        except AttributeError:
-            content = info.pop('body', None)
         # Check for unauthenticated
         if info['status'] == 401:
             message = 'Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
             try:
-                body = self._module.from_json(content.decode('utf8'))
+                body = json.loads(content.decode('utf8'))
                 if body['message']:
                     message = '{0}: {1}'.format(message, body['message'])
             except Exception:
@@ -100,7 +95,7 @@ class JSONAPIHelper(object):
         if info['status'] == 403:
             message = 'Forbidden: you do not have access to this resource (HTTP status 403)'
             try:
-                body = self._module.from_json(content.decode('utf8'))
+                body = json.loads(content.decode('utf8'))
                 if body['message']:
                     message = '{0}: {1}'.format(message, body['message'])
             except Exception:
@@ -117,7 +112,7 @@ class JSONAPIHelper(object):
             return None, info
         # Decode content as JSON
         try:
-            result = self._module.from_json(content.decode('utf8'))
+            result = json.loads(content.decode('utf8'))
         except Exception:
             if must_have_content:
                 raise DNSAPIError(
@@ -133,7 +128,7 @@ class JSONAPIHelper(object):
         number_retries = 10
         countdown = number_retries + 1
         while True:
-            response, info = fetch_url(self._module, url, **kwargs)
+            content, info = self._http_helper.fetch_url(url, **kwargs)
             countdown -= 1
             if info['status'] == 429:
                 if countdown <= 0:
@@ -144,7 +139,7 @@ class JSONAPIHelper(object):
                     retry_after = 10
                 time.sleep(retry_after)
                 continue
-            return response, info
+            return content, info
         raise DNSAPIError('Stopping after {0} failed retries with 429 Too Many Attempts'.format(number_retries))
 
     def _create_headers(self):
@@ -158,8 +153,8 @@ class JSONAPIHelper(object):
             pass
             # q.q('Request: GET {0}'.format(full_url))
         headers = self._create_headers()
-        response, info = self._request(full_url, headers=headers, method='GET')
-        return self._process_json_result(response, info, must_have_content=must_have_content, method='GET', expected=expected)
+        content, info = self._request(full_url, headers=headers, method='GET')
+        return self._process_json_result(content, info, must_have_content=must_have_content, method='GET', expected=expected)
 
     def _post(self, url, data=None, query=None, must_have_content=True, expected=None):
         full_url = self._build_url(url, query)
@@ -171,8 +166,8 @@ class JSONAPIHelper(object):
         if data is not None:
             headers['content-type'] = 'application/json'
             encoded_data = json.dumps(data).encode('utf-8')
-        response, info = self._request(full_url, headers=headers, method='POST', data=encoded_data)
-        return self._process_json_result(response, info, must_have_content=must_have_content, method='POST', expected=expected)
+        content, info = self._request(full_url, headers=headers, method='POST', data=encoded_data)
+        return self._process_json_result(content, info, must_have_content=must_have_content, method='POST', expected=expected)
 
     def _put(self, url, data=None, query=None, must_have_content=True, expected=None):
         full_url = self._build_url(url, query)
@@ -184,8 +179,8 @@ class JSONAPIHelper(object):
         if data is not None:
             headers['content-type'] = 'application/json'
             encoded_data = json.dumps(data).encode('utf-8')
-        response, info = self._request(full_url, headers=headers, method='PUT', data=encoded_data)
-        return self._process_json_result(response, info, must_have_content=must_have_content, method='PUT', expected=expected)
+        content, info = self._request(full_url, headers=headers, method='PUT', data=encoded_data)
+        return self._process_json_result(content, info, must_have_content=must_have_content, method='PUT', expected=expected)
 
     def _delete(self, url, query=None, must_have_content=True, expected=None):
         full_url = self._build_url(url, query)
@@ -193,5 +188,5 @@ class JSONAPIHelper(object):
             pass
             # q.q('Request: DELETE {0}'.format(full_url))
         headers = self._create_headers()
-        response, info = self._request(full_url, headers=headers, method='DELETE')
-        return self._process_json_result(response, info, must_have_content=must_have_content, method='DELETE', expected=expected)
+        content, info = self._request(full_url, headers=headers, method='DELETE')
+        return self._process_json_result(content, info, must_have_content=must_have_content, method='DELETE', expected=expected)

@@ -75,8 +75,8 @@ def _record_to_json(record, zone_id):
 
 
 class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
-    def __init__(self, module, token, api='https://dns.hetzner.com/api/', debug=False):
-        JSONAPIHelper.__init__(self, module, token, api=api, debug=debug)
+    def __init__(self, http_helper, token, api='https://dns.hetzner.com/api/', debug=False):
+        JSONAPIHelper.__init__(self, http_helper, token, api=api, debug=debug)
 
     def _create_headers(self):
         return {
@@ -223,5 +223,5 @@ def create_hetzner_argument_spec():
     )
 
 
-def create_hetzner_api(module):
-    return HetznerAPI(module, module.params['hetzner_token'])
+def create_hetzner_api(module, http_helper):
+    return HetznerAPI(http_helper, module.params['hetzner_token'])

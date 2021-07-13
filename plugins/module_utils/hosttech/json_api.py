@@ -170,11 +170,11 @@ def _record_to_json(record, include_id=False, include_type=True):
 
 
 class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
-    def __init__(self, module, token, api='https://api.ns1.hosttech.eu/api/', debug=False):
+    def __init__(self, http_helper, token, api='https://api.ns1.hosttech.eu/api/', debug=False):
         """
         Create a new HostTech API instance with given API token.
         """
-        JSONAPIHelper.__init__(self, module, token, api=api, debug=debug)
+        JSONAPIHelper.__init__(self, http_helper, token, api=api, debug=debug)
 
     def _extract_error_message(self, result):
         if result is None:

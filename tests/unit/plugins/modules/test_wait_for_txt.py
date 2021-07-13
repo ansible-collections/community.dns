@@ -10,7 +10,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import MagicMock, patch
+from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import patch
 
 from ansible_collections.community.internal_test_tools.tests.unit.plugins.modules.utils import (
     set_module_args,

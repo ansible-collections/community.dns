@@ -4,31 +4,15 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-import pytest
-
-from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import patch
-
 from ansible_collections.community.internal_test_tools.tests.unit.utils.fetch_url_module_framework import (
     BaseTestModule,
     FetchUrlCall,
 )
 
-from ansible_collections.community.internal_test_tools.tests.unit.utils.open_url_framework import (
-    OpenUrlCall,
-    OpenUrlProxy,
-)
-
-from ansible_collections.community.internal_test_tools.tests.unit.plugins.modules.utils import (
-    set_module_args,
-    ModuleTestCase,
-    AnsibleExitJson,
-    AnsibleFailJson,
-)
-
 from ansible_collections.community.dns.plugins.modules import hetzner_dns_record_set
 
 # These imports are needed so patching below works
-import ansible_collections.community.dns.plugins.module_utils.json_api_helper
+import ansible_collections.community.dns.plugins.module_utils.http  # noqa
 
 from .hetzner import (
     HETZNER_JSON_DEFAULT_ENTRIES,
@@ -40,7 +24,7 @@ from .hetzner import (
 
 class TestHetznerDNSRecordJSON(BaseTestModule):
     MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hetzner_dns_record_set.AnsibleModule'
-    MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.json_api_helper.fetch_url'
+    MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.http.fetch_url'
 
     def test_unknown_zone(self, mocker):
         result = self.run_module_failed(mocker, hetzner_dns_record_set, {

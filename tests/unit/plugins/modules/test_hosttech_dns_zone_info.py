@@ -6,30 +6,15 @@ __metaclass__ = type
 
 import pytest
 
-from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import patch
-
 from ansible_collections.community.internal_test_tools.tests.unit.utils.fetch_url_module_framework import (
     BaseTestModule,
     FetchUrlCall,
 )
 
-from ansible_collections.community.internal_test_tools.tests.unit.utils.open_url_framework import (
-    OpenUrlCall,
-    OpenUrlProxy,
-)
-
-from ansible_collections.community.internal_test_tools.tests.unit.plugins.modules.utils import (
-    set_module_args,
-    ModuleTestCase,
-    AnsibleExitJson,
-    AnsibleFailJson,
-)
-
 from ansible_collections.community.dns.plugins.modules import hosttech_dns_zone_info
 
 # These imports are needed so patching below works
-import ansible_collections.community.dns.plugins.module_utils.wsdl
-import ansible_collections.community.dns.plugins.module_utils.json_api_helper
+import ansible_collections.community.dns.plugins.module_utils.http  # noqa
 
 from .hosttech import (
     expect_wsdl_authentication,
@@ -49,10 +34,19 @@ except ImportError:
 
 
 @pytest.mark.skipif(not HAS_LXML_ETREE, reason="Need lxml.etree for WSDL tests")
-class TestHosttechDNSZoneInfoWSDL(ModuleTestCase):
-    def test_unknown_zone(self):
-        open_url = OpenUrlProxy([
-            OpenUrlCall('POST', 200)
+class TestHosttechDNSZoneInfoWSDL(BaseTestModule):
+    MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hosttech_dns_zone_info.AnsibleModule'
+    MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.http.fetch_url'
+
+    def test_unknown_zone(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_zone_info, {
+            'hosttech_username': 'foo',
+            'hosttech_password': 'bar',
+            'zone_name': 'example.org',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
                 expect_wsdl_authentication('foo', 'bar'),
                 expect_wsdl_value(
@@ -63,23 +57,18 @@ class TestHosttechDNSZoneInfoWSDL(ModuleTestCase):
             ]))
             .result_str(HOSTTECH_WSDL_ZONE_NOT_FOUND),
         ])
-        with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
-            with pytest.raises(AnsibleFailJson) as e:
-                set_module_args({
-                    'hosttech_username': 'foo',
-                    'hosttech_password': 'bar',
-                    'zone_name': 'example.org',
-                    '_ansible_remote_tmp': '/tmp/tmp',
-                    '_ansible_keep_remote_files': True,
-                })
-                hosttech_dns_zone_info.main()
 
-        print(e.value.args[0])
-        assert e.value.args[0]['msg'] == 'Zone not found'
+        assert result['msg'] == 'Zone not found'
 
-    def test_unknown_zone_id(self):
-        open_url = OpenUrlProxy([
-            OpenUrlCall('POST', 200)
+    def test_unknown_zone_id(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_zone_info, {
+            'hosttech_username': 'foo',
+            'hosttech_password': 'bar',
+            'zone_id': 23,
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
                 expect_wsdl_authentication('foo', 'bar'),
                 expect_wsdl_value(
@@ -90,23 +79,18 @@ class TestHosttechDNSZoneInfoWSDL(ModuleTestCase):
             ]))
             .result_str(HOSTTECH_WSDL_ZONE_NOT_FOUND),
         ])
-        with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
-            with pytest.raises(AnsibleFailJson) as e:
-                set_module_args({
-                    'hosttech_username': 'foo',
-                    'hosttech_password': 'bar',
-                    'zone_id': 23,
-                    '_ansible_remote_tmp': '/tmp/tmp',
-                    '_ansible_keep_remote_files': True,
-                })
-                hosttech_dns_zone_info.main()
 
-        print(e.value.args[0])
-        assert e.value.args[0]['msg'] == 'Zone not found'
+        assert result['msg'] == 'Zone not found'
 
-    def test_get(self):
-        open_url = OpenUrlProxy([
-            OpenUrlCall('POST', 200)
+    def test_get(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_zone_info, {
+            'hosttech_username': 'foo',
+            'hosttech_password': 'bar',
+            'zone_name': 'example.com',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
                 expect_wsdl_authentication('foo', 'bar'),
                 expect_wsdl_value(
@@ -117,25 +101,20 @@ class TestHosttechDNSZoneInfoWSDL(ModuleTestCase):
             ]))
             .result_str(HOSTTECH_WSDL_DEFAULT_ZONE_RESULT),
         ])
-        with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
-            with pytest.raises(AnsibleExitJson) as e:
-                set_module_args({
-                    'hosttech_username': 'foo',
-                    'hosttech_password': 'bar',
-                    'zone_name': 'example.com',
-                    '_ansible_remote_tmp': '/tmp/tmp',
-                    '_ansible_keep_remote_files': True,
-                })
-                hosttech_dns_zone_info.main()
 
-        print(e.value.args[0])
-        assert e.value.args[0]['changed'] is False
-        assert e.value.args[0]['zone_id'] == 42
-        assert e.value.args[0]['zone_name'] == 'example.com'
+        assert result['changed'] is False
+        assert result['zone_id'] == 42
+        assert result['zone_name'] == 'example.com'
 
-    def test_get_id(self):
-        open_url = OpenUrlProxy([
-            OpenUrlCall('POST', 200)
+    def test_get_id(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_zone_info, {
+            'hosttech_username': 'foo',
+            'hosttech_password': 'bar',
+            'zone_id': '42',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
                 expect_wsdl_authentication('foo', 'bar'),
                 expect_wsdl_value(
@@ -146,26 +125,15 @@ class TestHosttechDNSZoneInfoWSDL(ModuleTestCase):
             ]))
             .result_str(HOSTTECH_WSDL_DEFAULT_ZONE_RESULT),
         ])
-        with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
-            with pytest.raises(AnsibleExitJson) as e:
-                set_module_args({
-                    'hosttech_username': 'foo',
-                    'hosttech_password': 'bar',
-                    'zone_id': '42',
-                    '_ansible_remote_tmp': '/tmp/tmp',
-                    '_ansible_keep_remote_files': True,
-                })
-                hosttech_dns_zone_info.main()
 
-        print(e.value.args[0])
-        assert e.value.args[0]['changed'] is False
-        assert e.value.args[0]['zone_id'] == 42
-        assert e.value.args[0]['zone_name'] == 'example.com'
+        assert result['changed'] is False
+        assert result['zone_id'] == 42
+        assert result['zone_name'] == 'example.com'
 
 
 class TestHosttechDNSZoneInfoJSON(BaseTestModule):
     MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hosttech_dns_zone_info.AnsibleModule'
-    MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.json_api_helper.fetch_url'
+    MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.http.fetch_url'
 
     def test_unknown_zone(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_zone_info, {

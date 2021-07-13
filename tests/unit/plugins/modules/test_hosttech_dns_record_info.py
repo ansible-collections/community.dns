@@ -13,23 +13,10 @@ from ansible_collections.community.internal_test_tools.tests.unit.utils.fetch_ur
     FetchUrlCall,
 )
 
-from ansible_collections.community.internal_test_tools.tests.unit.utils.open_url_framework import (
-    OpenUrlCall,
-    OpenUrlProxy,
-)
-
-from ansible_collections.community.internal_test_tools.tests.unit.plugins.modules.utils import (
-    set_module_args,
-    ModuleTestCase,
-    AnsibleExitJson,
-    AnsibleFailJson,
-)
-
 from ansible_collections.community.dns.plugins.modules import hosttech_dns_record_info
 
 # These imports are needed so patching below works
-import ansible_collections.community.dns.plugins.module_utils.wsdl
-import ansible_collections.community.dns.plugins.module_utils.json_api_helper
+import ansible_collections.community.dns.plugins.module_utils.http  # noqa
 
 from .hosttech import (
     expect_wsdl_authentication,
@@ -53,10 +40,21 @@ def mock_sleep(delay):
 
 
 @pytest.mark.skipif(not HAS_LXML_ETREE, reason="Need lxml.etree for WSDL tests")
-class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
-    def test_unknown_zone(self):
-        open_url = OpenUrlProxy([
-            OpenUrlCall('POST', 200)
+class TestHosttechDNSRecordInfoWSDL(BaseTestModule):
+    MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hosttech_dns_record_info.AnsibleModule'
+    MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.http.fetch_url'
+
+    def test_unknown_zone(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_record_info, {
+            'hosttech_username': 'foo',
+            'hosttech_password': 'bar',
+            'zone_name': 'example.org',
+            'record': 'example.org',
+            'type': 'A',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
                 expect_wsdl_authentication('foo', 'bar'),
                 expect_wsdl_value(
@@ -67,25 +65,20 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
             ]))
             .result_str(HOSTTECH_WSDL_ZONE_NOT_FOUND),
         ])
-        with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
-            with pytest.raises(AnsibleFailJson) as e:
-                set_module_args({
-                    'hosttech_username': 'foo',
-                    'hosttech_password': 'bar',
-                    'zone_name': 'example.org',
-                    'record': 'example.org',
-                    'type': 'A',
-                    '_ansible_remote_tmp': '/tmp/tmp',
-                    '_ansible_keep_remote_files': True,
-                })
-                hosttech_dns_record_info.main()
 
-        print(e.value.args[0])
-        assert e.value.args[0]['msg'] == 'Zone not found'
+        assert result['msg'] == 'Zone not found'
 
-    def test_unknown_zone_id(self):
-        open_url = OpenUrlProxy([
-            OpenUrlCall('POST', 200)
+    def test_unknown_zone_id(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_record_info, {
+            'hosttech_username': 'foo',
+            'hosttech_password': 'bar',
+            'zone_id': 23,
+            'record': 'example.org',
+            'type': 'A',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
                 expect_wsdl_authentication('foo', 'bar'),
                 expect_wsdl_value(
@@ -96,25 +89,20 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
             ]))
             .result_str(HOSTTECH_WSDL_ZONE_NOT_FOUND),
         ])
-        with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
-            with pytest.raises(AnsibleFailJson) as e:
-                set_module_args({
-                    'hosttech_username': 'foo',
-                    'hosttech_password': 'bar',
-                    'zone_id': 23,
-                    'record': 'example.org',
-                    'type': 'A',
-                    '_ansible_remote_tmp': '/tmp/tmp',
-                    '_ansible_keep_remote_files': True,
-                })
-                hosttech_dns_record_info.main()
 
-        print(e.value.args[0])
-        assert e.value.args[0]['msg'] == 'Zone not found'
+        assert result['msg'] == 'Zone not found'
 
-    def test_get_single(self):
-        open_url = OpenUrlProxy([
-            OpenUrlCall('POST', 200)
+    def test_get_single(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record_info, {
+            'hosttech_username': 'foo',
+            'hosttech_password': 'bar',
+            'zone_name': 'example.com',
+            'record': 'example.com',
+            'type': 'A',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
                 expect_wsdl_authentication('foo', 'bar'),
                 expect_wsdl_value(
@@ -125,33 +113,28 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
             ]))
             .result_str(HOSTTECH_WSDL_DEFAULT_ZONE_RESULT),
         ])
-        with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
-            with pytest.raises(AnsibleExitJson) as e:
-                set_module_args({
-                    'hosttech_username': 'foo',
-                    'hosttech_password': 'bar',
-                    'zone_name': 'example.com',
-                    'record': 'example.com',
-                    'type': 'A',
-                    '_ansible_remote_tmp': '/tmp/tmp',
-                    '_ansible_keep_remote_files': True,
-                })
-                hosttech_dns_record_info.main()
 
-        print(e.value.args[0])
-        assert e.value.args[0]['changed'] is False
-        assert e.value.args[0]['zone_id'] == 42
-        assert 'set' in e.value.args[0]
-        assert e.value.args[0]['set']['record'] == 'example.com'
-        assert e.value.args[0]['set']['prefix'] == ''
-        assert e.value.args[0]['set']['ttl'] == 3600
-        assert e.value.args[0]['set']['type'] == 'A'
-        assert e.value.args[0]['set']['value'] == ['1.2.3.4']
-        assert 'sets' not in e.value.args[0]
+        assert result['changed'] is False
+        assert result['zone_id'] == 42
+        assert 'set' in result
+        assert result['set']['record'] == 'example.com'
+        assert result['set']['prefix'] == ''
+        assert result['set']['ttl'] == 3600
+        assert result['set']['type'] == 'A'
+        assert result['set']['value'] == ['1.2.3.4']
+        assert 'sets' not in result
 
-    def test_get_all_for_one_record(self):
-        open_url = OpenUrlProxy([
-            OpenUrlCall('POST', 200)
+    def test_get_all_for_one_record(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record_info, {
+            'hosttech_username': 'foo',
+            'hosttech_password': 'bar',
+            'what': 'all_types_for_record',
+            'zone_id': 42,
+            'record': '*.example.com',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
                 expect_wsdl_authentication('foo', 'bar'),
                 expect_wsdl_value(
@@ -162,25 +145,12 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
             ]))
             .result_str(HOSTTECH_WSDL_DEFAULT_ZONE_RESULT),
         ])
-        with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
-            with pytest.raises(AnsibleExitJson) as e:
-                set_module_args({
-                    'hosttech_username': 'foo',
-                    'hosttech_password': 'bar',
-                    'what': 'all_types_for_record',
-                    'zone_id': 42,
-                    'record': '*.example.com',
-                    '_ansible_remote_tmp': '/tmp/tmp',
-                    '_ansible_keep_remote_files': True,
-                })
-                hosttech_dns_record_info.main()
 
-        print(e.value.args[0])
-        assert e.value.args[0]['changed'] is False
-        assert e.value.args[0]['zone_id'] == 42
-        assert 'set' not in e.value.args[0]
-        assert 'sets' in e.value.args[0]
-        sets = e.value.args[0]['sets']
+        assert result['changed'] is False
+        assert result['zone_id'] == 42
+        assert 'set' not in result
+        assert 'sets' in result
+        sets = result['sets']
         assert len(sets) == 2
         assert sets[0] == {
             'record': '*.example.com',
@@ -197,9 +167,16 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
             'value': ['2001:1:2::4'],
         }
 
-    def test_get_all(self):
-        open_url = OpenUrlProxy([
-            OpenUrlCall('POST', 200)
+    def test_get_all(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record_info, {
+            'hosttech_username': 'foo',
+            'hosttech_password': 'bar',
+            'what': 'all_records',
+            'zone_name': 'example.com.',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('POST', 200)
             .expect_content_predicate(validate_wsdl_call([
                 expect_wsdl_authentication('foo', 'bar'),
                 expect_wsdl_value(
@@ -210,24 +187,12 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
             ]))
             .result_str(HOSTTECH_WSDL_DEFAULT_ZONE_RESULT),
         ])
-        with patch('ansible_collections.community.dns.plugins.module_utils.wsdl.open_url', open_url):
-            with pytest.raises(AnsibleExitJson) as e:
-                set_module_args({
-                    'hosttech_username': 'foo',
-                    'hosttech_password': 'bar',
-                    'what': 'all_records',
-                    'zone_name': 'example.com.',
-                    '_ansible_remote_tmp': '/tmp/tmp',
-                    '_ansible_keep_remote_files': True,
-                })
-                hosttech_dns_record_info.main()
 
-        print(e.value.args[0])
-        assert e.value.args[0]['changed'] is False
-        assert e.value.args[0]['zone_id'] == 42
-        assert 'set' not in e.value.args[0]
-        assert 'sets' in e.value.args[0]
-        sets = e.value.args[0]['sets']
+        assert result['changed'] is False
+        assert result['zone_id'] == 42
+        assert 'set' not in result
+        assert 'sets' in result
+        sets = result['sets']
         assert len(sets) == 6
         assert sets[0] == {
             'record': '*.example.com',
@@ -275,7 +240,7 @@ class TestHosttechDNSRecordInfoWSDL(ModuleTestCase):
 
 class TestHosttechDNSRecordInfoJSON(BaseTestModule):
     MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hosttech_dns_record_info.AnsibleModule'
-    MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.json_api_helper.fetch_url'
+    MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.http.fetch_url'
 
     def test_unknown_zone(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_record_info, {
@@ -380,7 +345,7 @@ class TestHosttechDNSRecordInfoJSON(BaseTestModule):
             expected = sleep_values.pop(0)
             assert delay == expected
 
-        with patch('time.sleep', sleep_check) as m:
+        with patch('time.sleep', sleep_check):
             result = self.run_module_failed(mocker, hosttech_dns_record_info, {
                 'hosttech_token': 'foo',
                 'zone_name': 'example.com',

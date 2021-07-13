@@ -62,6 +62,10 @@ zone_id:
 
 from ansible.module_utils.basic import AnsibleModule
 
+from ansible_collections.community.dns.plugins.module_utils.http import (
+    ModuleHTTPHelper,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
     create_hetzner_argument_spec,
     create_hetzner_api,
@@ -79,7 +83,7 @@ def main():
     argument_spec = create_hetzner_argument_spec()
     argument_spec.merge(create_module_argument_spec(zone_id_type='str', provider_information=provider_information))
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
-    run_module(module, lambda: create_hetzner_api(module), provider_information=provider_information)
+    run_module(module, lambda: create_hetzner_api(module, ModuleHTTPHelper(module)), provider_information=provider_information)
 
 
 if __name__ == '__main__':

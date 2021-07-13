@@ -102,10 +102,11 @@ def _encode_zone(zone):
 
 
 class HostTechWSDLAPI(ZoneRecordAPI):
-    def __init__(self, username, password, api='https://ns1.hosttech.eu/public/api', debug=False):
+    def __init__(self, http_helper, username, password, api='https://ns1.hosttech.eu/public/api', debug=False):
         """
         Create a new HostTech API instance with given username and password.
         """
+        self._http_helper = http_helper
         self._api = api
         self._namespaces = {
             'ns1': 'https://ns1.hosttech.eu/soap',
@@ -115,7 +116,7 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         self._debug = debug
 
     def _prepare(self):
-        command = Composer(self._api, self._namespaces)
+        command = Composer(self._http_helper, self._api, self._namespaces)
         command.add_auth(self._username, self._password)
         return command
 
