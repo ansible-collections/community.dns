@@ -16,6 +16,10 @@ try:
 except ImportError:
     HAS_LXML_ETREE = False
 
+from ansible_collections.community.dns.plugins.module_utils.http import (
+    NetworkError,
+)
+
 
 class WSDLException(Exception):
     pass
@@ -241,7 +245,8 @@ class Composer(object):
     def _create_envelope(self, tag, **kwarg):
         return self._create(tag, self._main_ns, **kwarg)
 
-    def __init__(self, api, namespaces=None):
+    def __init__(self, http_helper, api, namespaces=None):
+        self._http_helper = http_helper
         self._main_ns = _NAMESPACE_ENVELOPE
         self._api = api
         # Compose basic document
@@ -290,20 +295,10 @@ class Composer(object):
             }
             if self._command:
                 headers['SOAPAction'] = '"{0}#{1}"'.format(self._api, self._command)
-            req = open_url(self._api, data=payload, method='POST', timeout=300, headers=headers)
-            result = req.read()
-            code = req.code
-            req.close()
-        except urllib_error.HTTPError as e:
-            try:
-                result = e.read()
-            except AttributeError:
-                result = ''
-            code = e.code
-        except NoSSLError as e:
-            raise WSDLNetworkError('Cannot connect via SSL: {0}'.format(to_native(e)))
-        except (ConnectionError, ValueError) as e:
-            raise WSDLNetworkError('Connection error: {0}'.format(to_native(e)))
+            result, info = self._http_helper.fetch_url(self._api, data=payload, method='POST', timeout=300, headers=headers)
+            code = info['status']
+        except NetworkError as e:
+            raise WSDLNetworkError(to_native(e))
         # if debug:
         #     q.q('Result: {0}, content: {1}'.format(code, result.decode('utf-8')))
         if code < 200 or code >= 300:

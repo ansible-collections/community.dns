@@ -68,14 +68,14 @@ def create_hosttech_argument_spec():
     )
 
 
-def create_hosttech_api(module):
+def create_hosttech_api(module, http_helper):
     if module.params['hosttech_username'] is not None:
         if not HAS_LXML_ETREE:
             module.fail_json(msg='Needs lxml Python module (pip install lxml)')
 
-        return HostTechWSDLAPI(module.params['hosttech_username'], module.params['hosttech_password'], debug=False)
+        return HostTechWSDLAPI(http_helper, module.params['hosttech_username'], module.params['hosttech_password'], debug=False)
 
     if module.params['hosttech_token'] is not None:
-        return HostTechJSONAPI(module, module.params['hosttech_token'])
+        return HostTechJSONAPI(http_helper, module.params['hosttech_token'])
 
     raise DNSAPIError('Internal error!')

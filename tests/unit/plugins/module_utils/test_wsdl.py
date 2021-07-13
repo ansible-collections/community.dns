@@ -10,6 +10,8 @@ __metaclass__ = type
 import sys
 import pytest
 
+from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import MagicMock
+
 lxmletree = pytest.importorskip("lxml.etree")
 
 from ansible.module_utils.common.text.converters import to_native
@@ -21,7 +23,7 @@ from ansible_collections.community.dns.plugins.module_utils.wsdl import (
 
 
 def test_composer_generation():
-    composer = Composer(api='https://example.com/api')
+    composer = Composer(MagicMock(), api='https://example.com/api')
     composer.add_simple_command(
         'test',
         int_value=42,
