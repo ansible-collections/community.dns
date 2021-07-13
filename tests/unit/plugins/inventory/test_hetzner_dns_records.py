@@ -265,7 +265,7 @@ def test_inventory_file_no_filter(mocker):
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_token: foo
-    zone_id: 42
+    zone_id: '42'
     """)}
 
     open_url = OpenUrlProxy([
@@ -317,7 +317,7 @@ def test_inventory_file_error(mocker):
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_token: foo
-    zone_id: 42
+    zone_id: '42'
     """)}
 
     open_url = OpenUrlProxy([
