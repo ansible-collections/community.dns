@@ -20,33 +20,29 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech import api
 
 
 def test_internal_error():
-    module = MagicMock()
-    module.params = {'hosttech_username': None, 'hosttech_token': None}
+    def get_option(option_name):
+        return None
+
+    option_provider = MagicMock()
+    option_provider.get_option = get_option
     with pytest.raises(DNSAPIError) as exc:
-        api.create_hosttech_api(module, MagicMock())
-    assert exc.value.args[0] == 'Internal error!'
-
-
-class FailJsonException(Exception):
-    def __init__(self, data):
-        self.data = data
-
-
-def fake_fail(**kwargs):
-    raise FailJsonException(kwargs)
+        api.create_hosttech_api(option_provider, MagicMock())
+    assert exc.value.args[0] == 'One of hosttech_token or both hosttech_username and hosttech_password must be provided!'
 
 
 def test_wsdl_missing():
+    def get_option(option_name):
+        if option_name in ('hosttech_username', 'hosttech_password'):
+            return 'foo'
+        return None
+
+    option_provider = MagicMock()
+    option_provider.get_option = get_option
     old_value = api.HAS_LXML_ETREE
     try:
         api.HAS_LXML_ETREE = False
-        module = MagicMock()
-        module.params = {'hosttech_username': '', 'hosttech_password': '', 'hosttech_token': None}
-        module.fail_json = MagicMock(side_effect=fake_fail)
-        with pytest.raises(FailJsonException) as exc:
-            api.create_hosttech_api(module, MagicMock())
-        # For Python 2.6, for some reason exc.value.args is an empty tuple...
-        if len(exc.value.args) > 0:
-            assert exc.value.args[0]['msg'] == 'Needs lxml Python module (pip install lxml)'
+        with pytest.raises(DNSAPIError) as exc:
+            api.create_hosttech_api(option_provider, MagicMock())
+        assert exc.value.args[0] == 'Needs lxml Python module (pip install lxml)'
     finally:
         api.HAS_LXML_ETREE = old_value

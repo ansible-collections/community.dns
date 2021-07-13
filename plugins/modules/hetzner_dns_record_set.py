@@ -186,6 +186,10 @@ zone_id:
 
 from ansible.module_utils.basic import AnsibleModule
 
+from ansible_collections.community.dns.plugins.module_utils.argspec import (
+    ModuleOptionProvider,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.http import (
     ModuleHTTPHelper,
 )
@@ -209,7 +213,7 @@ def main():
     argument_spec.argument_spec['prefix']['aliases'] = ['name']
     argument_spec.argument_spec['prefix']['deprecated_aliases'] = [dict(name='name', version='3.0.0', collection_name='community.dns')]
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
-    run_module(module, lambda: create_hetzner_api(module, ModuleHTTPHelper(module)), provider_information=provider_information)
+    run_module(module, lambda: create_hetzner_api(ModuleOptionProvider(module), ModuleHTTPHelper(module)), provider_information=provider_information)
 
 
 if __name__ == '__main__':

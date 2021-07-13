@@ -68,14 +68,17 @@ def create_hosttech_argument_spec():
     )
 
 
-def create_hosttech_api(module, http_helper):
-    if module.params['hosttech_username'] is not None:
+def create_hosttech_api(option_provider, http_helper):
+    username = option_provider.get_option('hosttech_username')
+    password = option_provider.get_option('hosttech_password')
+    if username is not None and password is not None:
         if not HAS_LXML_ETREE:
-            module.fail_json(msg='Needs lxml Python module (pip install lxml)')
+            raise DNSAPIError('Needs lxml Python module (pip install lxml)')
 
-        return HostTechWSDLAPI(http_helper, module.params['hosttech_username'], module.params['hosttech_password'], debug=False)
+        return HostTechWSDLAPI(http_helper, username, password, debug=False)
 
-    if module.params['hosttech_token'] is not None:
-        return HostTechJSONAPI(http_helper, module.params['hosttech_token'])
+    token = option_provider.get_option('hosttech_token')
+    if token is not None:
+        return HostTechJSONAPI(http_helper, token)
 
-    raise DNSAPIError('Internal error!')
+    raise DNSAPIError('One of hosttech_token or both hosttech_username and hosttech_password must be provided!')

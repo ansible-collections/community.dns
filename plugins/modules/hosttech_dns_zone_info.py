@@ -21,11 +21,8 @@ description:
 
 extends_documentation_fragment:
     - community.dns.hosttech
+    - community.dns.hosttech.zone_id_type
     - community.dns.module_zone_info
-
-options:
-    zone_id:
-        type: int
 
 author:
     - Felix Fontein (@felixfontein)
@@ -62,6 +59,10 @@ zone_id:
 
 from ansible.module_utils.basic import AnsibleModule
 
+from ansible_collections.community.dns.plugins.module_utils.argspec import (
+    ModuleOptionProvider,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.http import (
     ModuleHTTPHelper,
 )
@@ -83,7 +84,7 @@ def main():
     argument_spec = create_hosttech_argument_spec()
     argument_spec.merge(create_module_argument_spec(zone_id_type='int', provider_information=provider_information))
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
-    run_module(module, lambda: create_hosttech_api(module, ModuleHTTPHelper(module)), provider_information=provider_information)
+    run_module(module, lambda: create_hosttech_api(ModuleOptionProvider(module), ModuleHTTPHelper(module)), provider_information=provider_information)
 
 
 if __name__ == '__main__':
