@@ -150,6 +150,39 @@ Finally you can query all records for a zone:
           TTL {{ item.ttl }} has values {{ item.value | join(', ') }}
       loop: result.sets
 
+Creating and updating DNS single records
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The :ref:`community.dns.hosttech_dns_record module <ansible_collections.community.dns.hosttech_dns_record_module>` allows to set, update and remove single DNS records. Setting and updating can be done as follows. Records will be matched by record name and type, and the TTL value will be updated if necessary:
+
+.. code-block:: yaml+jinja
+
+    - name: Add an A record with value 1.1.1.1 for www.example.com, resp. make sure the TTL is 300
+      community.dns.hosttech_dns_record:
+        state: present
+        zone_name: example.com
+        type: A  # IPv4 addresses
+        # Either specify a record name:
+        record: www.example.com
+        # Or a record prefix ('' is the zone itself):
+        prefix: www
+        value: 1.1.1.1
+        ttl: 300
+
+To delete records, simply use ``state: absent``. Records will be matched by record name and type, and the TTL will be ignored:
+
+.. code-block:: yaml+jinja
+
+    - name: Remove A values for www.example.com
+      community.dns.hosttech_dns_record:
+        state: absent
+        zone_name: example.com
+        type: A  # IPv4 addresses
+        record: www.example.com
+        value: 1.1.1.1
+
+Records of the same type for the same record name with other values are ignored.
+
 Creating and updating DNS record sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -158,7 +191,7 @@ The :ref:`community.dns.hosttech_dns_record_set module <ansible_collections.comm
 .. code-block:: yaml+jinja
 
     - name: Make sure record is set to the given value
-      community.dns.hosttech_dns_record:
+      community.dns.hosttech_dns_record_set:
         state: present
         zone_name: example.com
         type: A  # IPv4 addresses
@@ -177,7 +210,7 @@ To delete values, you can either overwrite the values with value ``[]``, or use 
 .. code-block:: yaml+jinja
 
     - name: Remove A values for www.example.com
-      community.dns.hosttech_dns_record:
+      community.dns.hosttech_dns_record_set:
         state: present
         zone_name: example.com
         type: A  # IPv4 addresses
@@ -185,7 +218,7 @@ To delete values, you can either overwrite the values with value ``[]``, or use 
         value: []
 
     - name: Remove TXT values for www.example.com
-      community.dns.hosttech_dns_record:
+      community.dns.hosttech_dns_record_set:
         zone_name: example.com
         type: TXT
         prefix: www
@@ -214,7 +247,7 @@ The following example shows up to set/update multiple records at once:
 .. code-block:: yaml+jinja
 
     - name: Make sure that multiple records are present
-      community.dns.hosttech_dns_records:
+      community.dns.hosttech_dns_record_sets:
         zone_name: example.com
         records:
           - prefix: www
@@ -232,7 +265,7 @@ The next example shows how to make sure that only the given records are availabl
 .. code-block:: yaml+jinja
 
     - name: Make sure that multiple records are present
-      community.dns.hosttech_dns_records:
+      community.dns.hosttech_dns_record_sets:
         zone_name: example.com
         prune: true
         records:

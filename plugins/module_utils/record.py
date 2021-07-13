@@ -74,3 +74,15 @@ def format_records_for_output(records, record_name, prefix=None):
     if len(ttls) > 1:
         entry['ttls'] = ttls
     return entry
+
+
+def format_record_for_output(record, record_name, prefix=None):
+    entry = {
+        'prefix': prefix or '',
+        'type': record.type,
+        'ttl': record.ttl,
+        'value': record.target,
+    }
+    if record_name is not None:
+        entry['record'] = record_name
+    return entry

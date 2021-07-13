@@ -83,6 +83,26 @@
         - 1.2.3.7
       hosttech_token: '{{ hosttech_token }}'
 
+  - name: (token) Add test record
+    hosttech_dns_record:
+      state: present
+      zone_name: '{{ test_zone }}'
+      prefix: '{{ test_record_prefix }}'
+      type: A
+      ttl: 600
+      value: 1.2.3.8
+      hosttech_token: '{{ hosttech_token }}'
+
+  - name: (token) Remove test record
+    hosttech_dns_record:
+      state: absent
+      zone_name: '{{ test_zone }}'
+      prefix: '{{ test_record_prefix }}'
+      type: A
+      ttl: 600
+      value: 1.2.3.4
+      hosttech_token: '{{ hosttech_token }}'
+
   - name: (token) Get test record
     hosttech_dns_record_info:
       zone_name: '{{ test_zone }}'
@@ -98,6 +118,7 @@
         - rec.set.type == 'A'
         - rec.set.ttl == 600
         - rec.set.value | length == 2
+        - rec.set.value | sort == ['1.2.3.7', '1.2.3.8']
 
   - name: (token) Delete test record
     hosttech_dns_record_set:
