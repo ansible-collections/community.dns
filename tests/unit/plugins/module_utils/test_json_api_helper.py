@@ -40,6 +40,14 @@ def test_extract_error_message():
     assert api._extract_error_message(dict(message='foo')) == " with data: {'message': 'foo'}"
 
 
+def test_validate():
+    module = MagicMock()
+    api = JSONAPIHelper(module, '123', 'https://example.com')
+    with pytest.raises(DNSAPIError) as exc:
+        api._validate()
+    assert exc.value.args[0] == 'Internal error: info needs to be provided'
+
+
 def test_process_json_result():
     module = MagicMock()
     module.from_json = json.loads
@@ -62,17 +70,29 @@ def test_process_json_result():
     with pytest.raises(DNSAPIError) as exc:
         api._process_json_result(response=None, info=dict(status=403, url='https://example.com', body='{"message": "foo"}'.encode('utf-8')))
     assert exc.value.args[0] == 'Forbidden: you do not have access to this resource (HTTP status 403): foo'
+
     info = dict(status=200, url='https://example.com', body='not JSON'.encode('utf-8'))
     info['content-TYPE'] = 'application/json'
     with pytest.raises(DNSAPIError) as exc:
         api._process_json_result(response=None, info=info)
-    print(exc.value.args[0])
     assert exc.value.args[0] == 'GET https://example.com did not yield JSON data, but HTTP status code 200 with data: not JSON'
+
     info = dict(status=200, url='https://example.com', body='not JSON'.encode('utf-8'))
     info['Content-type'] = 'application/json'
     r, i = api._process_json_result(response=None, info=info, must_have_content=False)
-    print(repr(r), i)
     assert r is None
     info = dict(status=200, url='https://example.com')
     info['Content-type'] = 'application/json'
     assert i == info
+
+    info = dict(status=404, url='https://example.com', body='{}'.encode('utf-8'))
+    info['content-type'] = 'application/json'
+    with pytest.raises(DNSAPIError) as exc:
+        api._process_json_result(response=None, info=info)
+    assert exc.value.args[0] == 'Expected successful HTTP status for GET https://example.com, but got HTTP status 404 (Not found) with data: {}'
+
+    info = dict(status=404, url='https://example.com', body='{}'.encode('utf-8'))
+    info['content-type'] = 'application/json'
+    with pytest.raises(DNSAPIError) as exc:
+        api._process_json_result(response=None, info=info, expected=[200, 201])
+    assert exc.value.args[0] == 'Expected HTTP status 200, 201 for GET https://example.com, but got HTTP status 404 (Not found) with data: {}'
