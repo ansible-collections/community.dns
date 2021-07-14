@@ -235,7 +235,7 @@ To delete values, you can either overwrite the values with value ``[]``, or use 
         value:
           - '::1'
 
-In the third example, ``on_existing: keep_and_fail`` is present and an explicit value and TTL are given. This makes the module remove the current value only if there's a AAAA record for ``www.example.com`` whose current value is ``::1`` and whose TTL is 300. If another value is set, the module will not make any change, but fail. This can be useful to not accidentally remove values you do not want to change. To issue a warning instead of failing, use ```on_existing: keep_and_warn``, and to simply not do a change without any indication of this situation, use ``on_existing: keep``.
+In the third example, ``on_existing: keep_and_fail`` is present and an explicit value and TTL are given. This makes the module remove the current value only if there's a AAAA record for ``www.example.com`` whose current value is ``::1`` and whose TTL is 300. If another value is set, the module will not make any change, but fail. This can be useful to not accidentally remove values you do not want to change. To issue a warning instead of failing, use ``on_existing: keep_and_warn``, and to simply not do a change without any indication of this situation, use ``on_existing: keep``.
 
 Bulk synchronization of DNS record sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
