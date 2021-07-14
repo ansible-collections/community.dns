@@ -29,7 +29,10 @@ class RecordsInventoryModule(BaseInventoryPlugin):
 
     @abc.abstractmethod
     def setup_api(self):
-        pass
+        """
+        This function needs to set up self.provider_information and self.api.
+        It can indicate errors by raising DNSAPIError.
+        """
 
     def verify_file(self, path):
         if super(RecordsInventoryModule, self).verify_file(path):
