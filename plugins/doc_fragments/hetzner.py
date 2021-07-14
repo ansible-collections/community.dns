@@ -22,6 +22,13 @@ options:
         required: true
 '''
 
+    PLUGIN = r'''
+options:
+    hetzner_token:
+        env:
+          - name: HETZNER_DNS_TOKEN
+'''
+
     ZONE_ID_TYPE = r'''
 options:
     zone_id:
@@ -80,4 +87,19 @@ options:
                     without having to know their current value.
                 type: bool
                 default: false
+'''
+
+    ZONE_CHOICES_RECORDS_INVENTORY = r'''
+options:
+    filters:
+        suboptions:
+            type:
+                choices: ['A', 'AAAA', 'NS', 'MX', 'CNAME', 'RP', 'TXT', 'SOA', 'HINFO', 'SRV', 'DANE', 'TLSA', 'DS', 'CAA']
+        # The following madness is needed because of the primitive merging of docs fragments:
+        # (It must be kept in sync with the equivalent lines in inventory_records.py!)
+                description:
+                  - Record types whose values to use.
+                type: list
+                elements: string
+                default: [A, AAAA, CNAME]
 '''

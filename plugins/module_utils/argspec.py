@@ -40,3 +40,11 @@ class ArgumentSpec(object):
             'required_one_of': self.required_one_of,
             'mutually_exclusive': self.mutually_exclusive,
         }
+
+
+class ModuleOptionProvider(object):
+    def __init__(self, module):
+        self.module = module
+
+    def get_option(self, option_name):
+        return self.module.params[option_name]

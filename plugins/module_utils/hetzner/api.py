@@ -223,5 +223,5 @@ def create_hetzner_argument_spec():
     )
 
 
-def create_hetzner_api(module, http_helper):
-    return HetznerAPI(http_helper, module.params['hetzner_token'])
+def create_hetzner_api(option_provider, http_helper):
+    return HetznerAPI(http_helper, option_provider.get_option('hetzner_token'))
