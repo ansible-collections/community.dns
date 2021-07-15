@@ -73,7 +73,7 @@ zone_info:
             description:
                 - The email address contacted when the DNSSEC key is changed.
                 - Is C(none) if DNSSEC is not enabled.
-            type: string
+            type: str
             returned: When I(hosttech_token) has been specified.
         ds_records:
             description:
@@ -89,47 +89,47 @@ zone_info:
                     description:
                         - This value is the algorithm number of the DNSKEY RR referred to by the DS record.
                         - A list of values can be found in L(Appendix A.1 of RFC 4034,https://datatracker.ietf.org/doc/html/rfc4034#appendix-A.1).
-                    type: integer
+                    type: int
                     sample: 8
                 digest:
                     description:
                         - A digest of the DNSKEY RR record this DS record refers to.
-                    type: string
+                    type: str
                     sample: 012356789ABCDEF0123456789ABCDEF012345678
                 digest_type:
                     description:
                         - This value identifies the algorithm used to construct the digest.
                         - A list of values can be found in L(Appendix A.2 of RFC 4034,https://datatracker.ietf.org/doc/html/rfc4034#appendix-A.2).
-                    type: integer
+                    type: int
                     sample: 1
                 flags:
                     description:
                         - The Zone Key flag. See L(Section 2.1.1 of RFC 4034,https://datatracker.ietf.org/doc/html/rfc4034#section-2.1.1) for details.
-                    type: integer
+                    type: int
                     sample: 257
                 key_tag:
                     description:
                         - The Key Tag field lists the key tag of the DNSKEY RR referred to by the DS record.
-                    type: integer
+                    type: int
                     sample: 12345
                 protocol:
                     description:
                         - Must be 3 according to RFC 4034.
-                    type: integer
+                    type: int
                     sample: 3
                 public_key:
                     description:
                         - The public key material.
-                    type: string
+                    type: str
                     sample: MuhdzsQdqEGShwjtJDKZZjdKqUSGluFzTTinpuEeIRzLLcgkwgAPKWFa eQntNlmcNDeCziGwpdvhJnvKXEMbFcZwsaDIJuWqERxAQNGABWfPlCLh HQPnbpRPNKipSdBaUhuOubvFvjBpFAwiwSAapRDVsAgKvjXucfXpFfYb pCundbAXBWhbpHVbqgmGoixXzFSwUsGVYLPpBCiDlLJwzjRKYYaoVYge kMtKFYUVnWIKbectWkDFdVqXwkKigCUDiuTTJxOBRJRNzGiDNMWBjYSm bBCAHMaMYaghLbYTwyKXltdHTHwBwtswGNfpnEdSpKFzZJonBZArQfHD lfceKgmKwEF=
         email:
             description:
                 - The zone's DNS contact mail in the SOA record.
-            type: string
+            type: str
         ttl:
             description:
                 - The zone's TTL.
-            type: integer
+            type: int
 '''
 
 from ansible.module_utils.basic import AnsibleModule
