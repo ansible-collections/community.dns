@@ -64,6 +64,7 @@ def run_module(module, create_api, provider_information):
             changed=False,
             zone_name=zone.name,
             zone_id=zone.id,
+            zone_info=zone.info,
         )
     except DNSAPIAuthenticationError as e:
         module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=str(e), exception=traceback.format_exc())

@@ -50,11 +50,10 @@ def _create_record_from_encoding(source, type=None):
 def _create_zone_from_encoding(source, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
     zone = DNSZone(source['name'])
     zone.id = source['id']
-    # zone.email = source.get('email')
-    # zone.ttl = int(source['ttl'])
-    # zone.nameserver = source['nameserver']
-    # zone.serial = source['serial']
-    # zone.template = source.get('template')
+    zone.info = dict(
+        email=source.get('email'),
+        ttl=source['ttl'],
+    )
     return DNSZoneWithRecords(
         zone,
         filter_records(
