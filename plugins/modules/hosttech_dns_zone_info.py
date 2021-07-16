@@ -55,6 +55,88 @@ zone_id:
     type: int
     returned: success
     sample: 23
+
+zone_info:
+    description:
+        - Extra information returned by the API.
+    type: dict
+    returned: success
+    version_added: 2.0.0
+    sample: {'dnssec': True, 'dnssec_email': 'test@example.com', 'ds_records': [], 'email': 'test@example.com', 'ttl': 3600}
+    contains:
+        dnssec:
+            description:
+                - Whether DNSSEC is enabled for the zone or not.
+            type: bool
+            returned: When I(hosttech_token) has been specified.
+        dnssec_email:
+            description:
+                - The email address contacted when the DNSSEC key is changed.
+                - Is C(none) if DNSSEC is not enabled.
+            type: str
+            returned: When I(hosttech_token) has been specified.
+        ds_records:
+            description:
+                - The DS records.
+                - See L(Section 5 of RFC 4034,https://datatracker.ietf.org/doc/html/rfc4034#section-5) and
+                  L(Section 2.1 of RFC 4034,https://datatracker.ietf.org/doc/html/rfc4034#section-2.1) for details.
+                - Is C(none) if DNSSEC is not enabled.
+            type: list
+            elements: dict
+            returned: When I(hosttech_token) has been specified.
+            contains:
+                algorithm:
+                    description:
+                        - This value is the algorithm number of the DNSKEY RR referred to by the DS record.
+                        - A list of values can be found in L(Appendix A.1 of RFC 4034,https://datatracker.ietf.org/doc/html/rfc4034#appendix-A.1).
+                    type: int
+                    sample: 8
+                digest:
+                    description:
+                        - A digest of the DNSKEY RR record this DS record refers to.
+                    type: str
+                    sample: 012356789ABCDEF0123456789ABCDEF012345678
+                digest_type:
+                    description:
+                        - This value identifies the algorithm used to construct the digest.
+                        - A list of values can be found in L(Appendix A.2 of RFC 4034,https://datatracker.ietf.org/doc/html/rfc4034#appendix-A.2).
+                    type: int
+                    sample: 1
+                flags:
+                    description:
+                        - The Zone Key flag. See L(Section 2.1.1 of RFC 4034,https://datatracker.ietf.org/doc/html/rfc4034#section-2.1.1) for details.
+                    type: int
+                    sample: 257
+                key_tag:
+                    description:
+                        - The Key Tag field lists the key tag of the DNSKEY RR referred to by the DS record.
+                    type: int
+                    sample: 12345
+                protocol:
+                    description:
+                        - Must be 3 according to RFC 4034.
+                    type: int
+                    sample: 3
+                public_key:
+                    description:
+                        - The public key material.
+                    type: str
+                    sample: >-
+                        MuhdzsQdqEGShwjtJDKZZjdKqUSGluFzTTinpuEeIRzLLcgkwgAPKWFa
+                        eQntNlmcNDeCziGwpdvhJnvKXEMbFcZwsaDIJuWqERxAQNGABWfPlCLh
+                        HQPnbpRPNKipSdBaUhuOubvFvjBpFAwiwSAapRDVsAgKvjXucfXpFfYb
+                        pCundbAXBWhbpHVbqgmGoixXzFSwUsGVYLPpBCiDlLJwzjRKYYaoVYge
+                        kMtKFYUVnWIKbectWkDFdVqXwkKigCUDiuTTJxOBRJRNzGiDNMWBjYSm
+                        bBCAHMaMYaghLbYTwyKXltdHTHwBwtswGNfpnEdSpKFzZJonBZArQfHD
+                        lfceKgmKwEF=
+        email:
+            description:
+                - The zone's DNS contact mail in the SOA record.
+            type: str
+        ttl:
+            description:
+                - The zone's TTL.
+            type: int
 '''
 
 from ansible.module_utils.basic import AnsibleModule

@@ -46,7 +46,10 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 def _create_zone_from_json(source):
     zone = DNSZone(source['name'])
     zone.id = source['id']
-    # See https://dns.hetzner.com/api-docs/#operation/GetZone for all other return values
+    info = source.copy()
+    info.pop('name')
+    info.pop('id')
+    zone.info = info
     return zone
 
 

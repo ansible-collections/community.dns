@@ -1,0 +1,2 @@
+minor_changes:
+- "hosttech_dns_zone_info - return extra information as ``zone_info`` (https://github.com/ansible-collections/community.dns/pull/38)."

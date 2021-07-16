@@ -55,6 +55,108 @@ zone_id:
     type: str
     returned: success
     sample: 23
+
+zone_info:
+    description:
+        - Extra information returned by the API.
+    type: dict
+    returned: success
+    sample: {'dnssec': True, 'dnssec_email': 'test@example.com', 'ds_records': [], 'email': 'test@example.com', 'ttl': 3600}
+    contains:
+        created:
+            description:
+                - The time when the zone was created.
+            type: str
+            sample: "2021-07-15T19:23:58Z"
+        modified:
+            description:
+                - The time the zone was last modified.
+            type: str
+            sample: "2021-07-15T19:23:58Z"
+        legacy_dns_host:
+            description:
+                # TODO
+                - Unknown.
+            type: str
+        legacy_ns:
+            description:
+                - List of nameservers during import.
+            type: list
+            elements: str
+        ns:
+            description:
+                - List of nameservers the zone should have for using Hetzner's DNS.
+            type: list
+            elements: str
+        owner:
+            description:
+                - Owner of the zone.
+            type: str
+        paused:
+            description:
+                # TODO
+                - Unknown.
+            type: bool
+            sample: true
+        permission:
+            description:
+                - Zone's permissions.
+            type: str
+        project:
+            description:
+                # TODO
+                - Unknown.
+            type: str
+        registrar:
+            description:
+                # TODO
+                - Unknown.
+            type: str
+        status:
+            description:
+                - Status of the zone.
+                - Can be one of C(verified), C(failed) and C(pending).
+            type: str
+            sample: verified
+            # choices:
+            #     - verified
+            #     - failed
+            #     - pending
+        ttl:
+            description:
+                - TTL of zone.
+            type: int
+            sample: 0
+        verified:
+            description:
+                - Time when zone was verified.
+            type: str
+            sample: "2021-07-15T19:23:58Z"
+        records_count:
+            description:
+                - Number of records associated to this zone.
+            type: int
+            sample: 0
+        is_secondary_dns:
+            description:
+                - Indicates whether the zone is a secondary DNS zone.
+            type: bool
+            sample: true
+        txt_verification:
+            description:
+                - Shape of the TXT record that has to be set to verify a zone.
+                - If name and token are empty, no TXT record needs to be set.
+            type: dict
+            sample: {'name': '', 'token': ''}
+            contains:
+                name:
+                    description:
+                        - The TXT record's name.
+                    type: str
+                token:
+                    description:
+                        - The TXT record's content.
+                    type: str
 '''
 
 from ansible.module_utils.basic import AnsibleModule

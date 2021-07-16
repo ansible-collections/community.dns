@@ -128,6 +128,27 @@ class TestHetznerDNSZoneInfoJSON(BaseTestModule):
         assert result['changed'] is False
         assert result['zone_id'] == '42'
         assert result['zone_name'] == 'example.com'
+        assert result['zone_info'] == {
+            'created': '2021-07-09T11:18:37Z',
+            'modified': '2021-07-09T11:18:37Z',
+            'legacy_dns_host': 'string',
+            'legacy_ns': ['string'],
+            'ns': ['string'],
+            'owner': 'Example',
+            'paused': True,
+            'permission': 'string',
+            'project': 'string',
+            'registrar': 'string',
+            'status': 'verified',
+            'ttl': 10800,
+            'verified': '2021-07-09T11:18:37Z',
+            'records_count': 0,
+            'is_secondary_dns': True,
+            'txt_verification': {
+                'name': 'string',
+                'token': 'string',
+            },
+        }
 
     def test_get_id(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_zone_info, {
@@ -146,3 +167,24 @@ class TestHetznerDNSZoneInfoJSON(BaseTestModule):
         assert result['changed'] is False
         assert result['zone_id'] == '42'
         assert result['zone_name'] == 'example.com'
+        assert result['zone_info'] == {
+            'created': '2021-07-09T11:18:37Z',
+            'modified': '2021-07-09T11:18:37Z',
+            'legacy_dns_host': 'string',
+            'legacy_ns': ['string'],
+            'ns': ['string'],
+            'owner': 'Example',
+            'paused': True,
+            'permission': 'string',
+            'project': 'string',
+            'registrar': 'string',
+            'status': 'verified',
+            'ttl': 10800,
+            'verified': '2021-07-09T11:18:37Z',
+            'records_count': 0,
+            'is_secondary_dns': True,
+            'txt_verification': {
+                'name': 'string',
+                'token': 'string',
+            },
+        }

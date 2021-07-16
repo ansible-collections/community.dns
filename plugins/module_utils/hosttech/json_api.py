@@ -74,9 +74,13 @@ def _create_record_from_json(source, type=None):
 def _create_zone_from_json(source):
     zone = DNSZone(source['name'])
     zone.id = source['id']
-    # zone.email = source.get('email')
-    # zone.ttl = int(source['ttl'])
-    # zone.nameserver = source['nameserver']
+    zone.info = dict(
+        dnssec=source['dnssec'],
+        dnssec_email=source.get('dnssec_email'),
+        ds_records=source.get('ds_records'),
+        email=source.get('email'),
+        ttl=source['ttl'],
+    )
     return zone
 
 

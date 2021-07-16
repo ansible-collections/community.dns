@@ -385,6 +385,49 @@ HOSTTECH_JSON_ZONE_LIST_RESULT = {
             "nameserver": "ns1.hosttech.ch",
             "dnssec": False,
         },
+        {
+            "id": 43,
+            "name": "foo.com",
+            "email": "test@foo.com",
+            "ttl": 10800,
+            "nameserver": "ns1.hosttech.ch",
+            'dnssec': True,
+            'dnssec_email': 'test@foo.com',
+            'ds_records': [
+                {
+                    'key_tag': 12345,
+                    'algorithm': 8,
+                    'digest_type': 1,
+                    'digest': '012356789ABCDEF0123456789ABCDEF012345678',
+                    'flags': 257,
+                    'protocol': 3,
+                    'public_key':
+                        'MuhdzsQdqEGShwjtJDKZZjdKqUSGluFzTTinpuEeIRzLLcgkwgAPKWFa '
+                        'eQntNlmcNDeCziGwpdvhJnvKXEMbFcZwsaDIJuWqERxAQNGABWfPlCLh '
+                        'HQPnbpRPNKipSdBaUhuOubvFvjBpFAwiwSAapRDVsAgKvjXucfXpFfYb '
+                        'pCundbAXBWhbpHVbqgmGoixXzFSwUsGVYLPpBCiDlLJwzjRKYYaoVYge '
+                        'kMtKFYUVnWIKbectWkDFdVqXwkKigCUDiuTTJxOBRJRNzGiDNMWBjYSm '
+                        'bBCAHMaMYaghLbYTwyKXltdHTHwBwtswGNfpnEdSpKFzZJonBZArQfHD '
+                        'lfceKgmKwEF=',
+                },
+                {
+                    'key_tag': 12345,
+                    'algorithm': 8,
+                    'digest_type': 2,
+                    'digest': '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF',
+                    'flags': 257,
+                    'protocol': 3,
+                    'public_key':
+                        'MuhdzsQdqEGShwjtJDKZZjdKqUSGluFzTTinpuEeIRzLLcgkwgAPKWFa '
+                        'eQntNlmcNDeCziGwpdvhJnvKXEMbFcZwsaDIJuWqERxAQNGABWfPlCLh '
+                        'HQPnbpRPNKipSdBaUhuOubvFvjBpFAwiwSAapRDVsAgKvjXucfXpFfYb '
+                        'pCundbAXBWhbpHVbqgmGoixXzFSwUsGVYLPpBCiDlLJwzjRKYYaoVYge '
+                        'kMtKFYUVnWIKbectWkDFdVqXwkKigCUDiuTTJxOBRJRNzGiDNMWBjYSm '
+                        'bBCAHMaMYaghLbYTwyKXltdHTHwBwtswGNfpnEdSpKFzZJonBZArQfHD '
+                        'lfceKgmKwEF=',
+                }
+            ],
+        },
     ],
 }
 

@@ -129,6 +129,10 @@ class TestHosttechDNSZoneInfoWSDL(BaseTestModule):
         assert result['changed'] is False
         assert result['zone_id'] == 42
         assert result['zone_name'] == 'example.com'
+        assert result['zone_info'] == {
+            'email': 'dns@hosttech.eu',
+            'ttl': 10800,
+        }
 
 
 class TestHosttechDNSZoneInfoJSON(BaseTestModule):
@@ -239,6 +243,13 @@ class TestHosttechDNSZoneInfoJSON(BaseTestModule):
         assert result['changed'] is False
         assert result['zone_id'] == 42
         assert result['zone_name'] == 'example.com'
+        assert result['zone_info'] == {
+            'email': 'test@example.com',
+            'ttl': 10800,
+            'dnssec': False,
+            'dnssec_email': None,
+            'ds_records': None,
+        }
 
     def test_get_id(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_zone_info, {
@@ -257,3 +268,69 @@ class TestHosttechDNSZoneInfoJSON(BaseTestModule):
         assert result['changed'] is False
         assert result['zone_id'] == 42
         assert result['zone_name'] == 'example.com'
+        assert result['zone_info'] == {
+            'email': 'test@example.com',
+            'ttl': 10800,
+            'dnssec': False,
+            'dnssec_email': None,
+            'ds_records': None,
+        }
+
+    def test_get_dnssec(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_zone_info, {
+            'hosttech_token': 'foo',
+            'zone_name': 'foo.com',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'foo.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
+        ])
+        assert result['changed'] is False
+        assert result['zone_id'] == 43
+        assert result['zone_name'] == 'foo.com'
+        assert result['zone_info'] == {
+            'email': 'test@foo.com',
+            'ttl': 10800,
+            'dnssec': True,
+            'dnssec_email': 'test@foo.com',
+            'ds_records': [
+                {
+                    'key_tag': 12345,
+                    'algorithm': 8,
+                    'digest_type': 1,
+                    'digest': '012356789ABCDEF0123456789ABCDEF012345678',
+                    'flags': 257,
+                    'protocol': 3,
+                    'public_key':
+                        'MuhdzsQdqEGShwjtJDKZZjdKqUSGluFzTTinpuEeIRzLLcgkwgAPKWFa '
+                        'eQntNlmcNDeCziGwpdvhJnvKXEMbFcZwsaDIJuWqERxAQNGABWfPlCLh '
+                        'HQPnbpRPNKipSdBaUhuOubvFvjBpFAwiwSAapRDVsAgKvjXucfXpFfYb '
+                        'pCundbAXBWhbpHVbqgmGoixXzFSwUsGVYLPpBCiDlLJwzjRKYYaoVYge '
+                        'kMtKFYUVnWIKbectWkDFdVqXwkKigCUDiuTTJxOBRJRNzGiDNMWBjYSm '
+                        'bBCAHMaMYaghLbYTwyKXltdHTHwBwtswGNfpnEdSpKFzZJonBZArQfHD '
+                        'lfceKgmKwEF=',
+                },
+                {
+                    'key_tag': 12345,
+                    'algorithm': 8,
+                    'digest_type': 2,
+                    'digest': '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF',
+                    'flags': 257,
+                    'protocol': 3,
+                    'public_key':
+                        'MuhdzsQdqEGShwjtJDKZZjdKqUSGluFzTTinpuEeIRzLLcgkwgAPKWFa '
+                        'eQntNlmcNDeCziGwpdvhJnvKXEMbFcZwsaDIJuWqERxAQNGABWfPlCLh '
+                        'HQPnbpRPNKipSdBaUhuOubvFvjBpFAwiwSAapRDVsAgKvjXucfXpFfYb '
+                        'pCundbAXBWhbpHVbqgmGoixXzFSwUsGVYLPpBCiDlLJwzjRKYYaoVYge '
+                        'kMtKFYUVnWIKbectWkDFdVqXwkKigCUDiuTTJxOBRJRNzGiDNMWBjYSm '
+                        'bBCAHMaMYaghLbYTwyKXltdHTHwBwtswGNfpnEdSpKFzZJonBZArQfHD '
+                        'lfceKgmKwEF=',
+                }
+            ],
+        }

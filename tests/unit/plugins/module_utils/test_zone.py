@@ -22,12 +22,13 @@ from ansible_collections.community.dns.plugins.module_utils.zone import (
 
 def test_zone_str_repr():
     Z1 = DNSZone('foo')
-    assert str(Z1) == 'DNSZone(name: foo)'
-    assert repr(Z1) == 'DNSZone(name: foo)'
+    assert str(Z1) == 'DNSZone(name: foo, info: {})'
+    assert repr(Z1) == 'DNSZone(name: foo, info: {})'
     Z2 = DNSZone('foo')
     Z2.id = 42
-    assert str(Z2) == 'DNSZone(id: 42, name: foo)'
-    assert repr(Z2) == 'DNSZone(id: 42, name: foo)'
+    Z2.info['foo'] = 'bar'
+    assert str(Z2) == "DNSZone(id: 42, name: foo, info: {'foo': 'bar'})"
+    assert repr(Z2) == "DNSZone(id: 42, name: foo, info: {'foo': 'bar'})"
 
 
 def test_zone_with_records_str_repr():
@@ -48,13 +49,13 @@ def test_zone_with_records_str_repr():
     A2.comment = 'test'
     ZZ1 = DNSZoneWithRecords(Z1, [A1])
     ZZ2 = DNSZoneWithRecords(Z2, [A1, A2])
-    assert str(ZZ1) == '(DNSZone(name: foo), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)])'
-    assert repr(ZZ1) == 'DNSZoneWithRecords(DNSZone(name: foo), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)])'
+    assert str(ZZ1) == '(DNSZone(name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)])'
+    assert repr(ZZ1) == 'DNSZoneWithRecords(DNSZone(name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)])'
     assert str(ZZ2) == (
-        '(DNSZone(id: 42, name: foo), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m),'
+        '(DNSZone(id: 42, name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m),'
         ' DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, comment: test)])'
     )
     assert repr(ZZ2) == (
-        'DNSZoneWithRecords(DNSZone(id: 42, name: foo), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m),'
+        'DNSZoneWithRecords(DNSZone(id: 42, name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m),'
         ' DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, comment: test)])'
     )
