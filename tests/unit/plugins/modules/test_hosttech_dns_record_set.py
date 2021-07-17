@@ -1324,6 +1324,54 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['changed'] is True
         assert result['zone_id'] == 42
 
+    def test_change_add_one_fail(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_record_set, {
+            'hosttech_token': 'foo',
+            'state': 'present',
+            'zone_name': 'example.com',
+            'prefix': '☺',
+            'type': 'CAA',
+            'ttl': 3600,
+            'value': [
+                '128 issue "letsencrypt.org"',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
+            FetchUrlCall('POST', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'CAA')
+            .expect_json_value(['ttl'], 3600)
+            .expect_json_value(['comment'], '')
+            .expect_json_value(['name'], 'xn--74h')
+            .expect_json_value(['flag'], '128')
+            .expect_json_value(['tag'], 'issue')
+            .expect_json_value(['value'], 'letsencrypt.org')
+            .return_header('Content-Type', 'application/json')
+            .result_json({'message': 'Internal Server Error'}),
+        ])
+
+        assert result['msg'] == (
+            'Error: Expected HTTP status 201 for POST https://api.ns1.hosttech.eu/api/user/v1/zones/42/records,'
+            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
+        )
+
     def test_change_modify_list_fail(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',

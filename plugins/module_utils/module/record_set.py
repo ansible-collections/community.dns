@@ -218,15 +218,13 @@ def run_module(module, create_api, provider_information):
             # Actually do something
             result['changed'] = True
             if not module.check_mode:
-                actually_changed, errors = bulk_apply_changes(
+                dummy, errors = bulk_apply_changes(
                     api,
                     zone_id,
                     records_to_delete=to_delete,
                     records_to_change=to_change,
                     records_to_create=to_create,
                 )
-                if not actually_changed:
-                    result['changed'] = False
                 if errors:
                     if len(errors) == 1:
                         raise errors[0]
