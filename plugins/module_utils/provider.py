@@ -31,3 +31,9 @@ class ProviderInformation(object):
         function needs to convert them to None as well.
         """
         return prefix or None
+
+    def supports_bulk_actions(self):
+        """
+        Return whether the API supports some kind of bulk actions.
+        """
+        return False

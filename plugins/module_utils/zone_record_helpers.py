@@ -12,16 +12,22 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 )
 
 
-def bulk_apply_changes(api, zone_id,
+def bulk_apply_changes(api,
+                       provider_information,
+                       options,
+                       zone_id,
                        records_to_delete=None,
                        records_to_change=None,
                        records_to_create=None,
-                       bulk_threshold=2,
-                       stop_early_on_errors=True):
+                       stop_early_on_errors=True,
+                       ):
     """
     Update multiple records. If an operation failed, raise a DNSAPIException.
 
     @param api: A ZoneRecordAPI instance
+    @param provider_information: A ProviderInformation object.
+    @param options: A object compatible with ModuleOptionProvider that gives access to the module/plugin
+                    options.
     @param zone_id: Zone ID to apply changes to
     @param records_to_delete: Optional list of DNS records to delete (DNSRecord)
     @param records_to_change: Optional list of DNS records to change (DNSRecord)
@@ -38,6 +44,10 @@ def bulk_apply_changes(api, zone_id,
 
     has_change = False
     errors = []
+
+    bulk_threshold = 2
+    if provider_information.supports_bulk_actions():
+        bulk_threshold = options.get_option('bulk_operation_threshold')
 
     # Delete records
     if len(records_to_delete) >= bulk_threshold:

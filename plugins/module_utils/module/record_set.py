@@ -13,6 +13,11 @@ import traceback
 
 from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
+    ModuleOptionProvider,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.options import (
+    create_bulk_operations_argspec,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.record import (
@@ -64,7 +69,7 @@ def create_module_argument_spec(zone_id_type, provider_information):
             ('on_existing', 'keep_and_warn', ['value']),
             ('on_existing', 'keep', ['value']),
         ],
-    )
+    ).merge(create_bulk_operations_argspec(provider_information))
 
 
 def run_module(module, create_api, provider_information):
@@ -220,10 +225,12 @@ def run_module(module, create_api, provider_information):
             if not module.check_mode:
                 dummy, errors = bulk_apply_changes(
                     api,
-                    zone_id,
+                    zone_id=zone_id,
                     records_to_delete=to_delete,
                     records_to_change=to_change,
                     records_to_create=to_create,
+                    provider_information=provider_information,
+                    options=ModuleOptionProvider(module),
                 )
                 if errors:
                     if len(errors) == 1:

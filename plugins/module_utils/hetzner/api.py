@@ -297,6 +297,12 @@ class HetznerProviderInformation(ProviderInformation):
         """
         return None if prefix in ('@', '') else prefix
 
+    def supports_bulk_actions(self):
+        """
+        Return whether the API supports some kind of bulk actions.
+        """
+        return True
+
 
 def create_hetzner_provider_information():
     return HetznerProviderInformation()
