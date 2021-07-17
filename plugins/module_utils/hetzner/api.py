@@ -53,9 +53,10 @@ def _create_zone_from_json(source):
     return zone
 
 
-def _create_record_from_json(source, type=None):
+def _create_record_from_json(source, type=None, has_id=True):
     result = DNSRecord()
-    result.id = source['id']
+    if has_id:
+        result.id = source['id']
     result.type = source.get('type', type)
     result.ttl = source['ttl'] if source.get('ttl') is not None else None
     name = source.get('name')
@@ -248,7 +249,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         results_per_zone_id = {}
         # This is the list of invalid records that was detected before accepting the whole set
         for json_record in result.get('invalid_records') or []:
-            record = _create_record_from_json(json_record)
+            record = _create_record_from_json(json_record, has_id=False)
             zone_id = json_record['zone_id']
             if zone_id not in results_per_zone_id:
                 results_per_zone_id[zone_id] = []
@@ -260,7 +261,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
                     zoneID=zone_id))))
         # This is the list of valid records that were not processed
         for json_record in result.get('valid_records') or []:
-            record = _create_record_from_json(json_record)
+            record = _create_record_from_json(json_record, has_id=False)
             zone_id = json_record['zone_id']
             if zone_id not in results_per_zone_id:
                 results_per_zone_id[zone_id] = []
