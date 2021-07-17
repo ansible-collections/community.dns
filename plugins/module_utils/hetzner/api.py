@@ -277,6 +277,53 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
             results_per_zone_id[zone_id].append((record, True, None))
         return results_per_zone_id
 
+    def update_records(self, records_per_zone_id, stop_early_on_errors=True):
+        """
+        Update multiple records.
+
+        @param records_per_zone_id: Maps a zone ID to a list of DNS records (DNSRecord)
+        @param stop_early_on_errors: If set to ``True``, try to stop changes after the first error happens.
+                                     This might only work on some APIs.
+        @return A dictionary mapping zone IDs to lists of tuples ``(record, updated, failed)``.
+                Here ``updated`` indicates whether the record was updated (``True``) or not (``False``).
+                If it was not updated, ``failed`` should be a ``DNSAPIError`` instance. If it was
+                updated, ``failed`` should be ``None``.  It is possible that the API only updates
+                records if all succeed, in that case ``failed`` can be ``None`` even though
+                ``updated`` is ``False``.
+        """
+        # Currently Hetzner's bulk update API seems to be broken, it always returns the error message
+        # "An invalid response was received from the upstream server". That's why for now, we always
+        # fall back to the default implementation.
+        if True:
+            return super(HetznerAPI, self).update_records(records_per_zone_id, stop_early_on_errors=stop_early_on_errors)
+
+        json_records = []
+        for zone_id, records in records_per_zone_id.items():
+            for record in records:
+                json_records.append(_record_to_json(record, zone_id=zone_id))
+        data = {'records': json_records}
+        result, dummy = self._put('v1/records/bulk', data=data, expected=[200])
+        results_per_zone_id = {}
+        for json_record in result.get('failed_records') or []:
+            record = _create_record_from_json(json_record)
+            zone_id = json_record['zone_id']
+            if zone_id not in results_per_zone_id:
+                results_per_zone_id[zone_id] = []
+            results_per_zone_id[zone_id].append((record, False, DNSAPIError(
+                'Updating {type} record #{id} "{target}" with TTL {ttl} for zone {zoneID} failed with unknown reason'.format(
+                    type=record.type,
+                    id=record.id,
+                    target=record.target,
+                    ttl=record.ttl,
+                    zoneID=zone_id))))
+        for json_record in result.get('records') or []:
+            record = _create_record_from_json(json_record)
+            zone_id = json_record['zone_id']
+            if zone_id not in results_per_zone_id:
+                results_per_zone_id[zone_id] = []
+            results_per_zone_id[zone_id].append((record, True, None))
+        return results_per_zone_id
+
 
 class HetznerProviderInformation(ProviderInformation):
     def get_supported_record_types(self):
