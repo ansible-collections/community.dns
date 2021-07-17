@@ -226,6 +226,54 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         dummy, info = self._delete('v1/records/{id}'.format(id=record.id), must_have_content=False, expected=[200, 404])
         return info['status'] == 200
 
+    def add_records(self, records_per_zone_id):
+        """
+        Add new records to an existing zone.
+
+        @param records_per_zone_id: Maps a zone ID to a list of DNS records (DNSRecord)
+        @return A dictionary mapping zone IDs to lists of tuples ``(record, created, failed)``.
+                Here ``created`` indicates whether the record was created (``True``) or not (``False``).
+                If it was created, ``record`` contains the record ID and ``failed`` is ``None``.
+                If it was not created, ``failed`` should be a ``DNSAPIError`` instance indicating why
+                it was not created. It is possible that the API only creates records if all succeed,
+                in that case ``failed`` can be ``None`` even though ``created`` is ``False``.
+        """
+        json_records = []
+        for zone_id, records in records_per_zone_id.items():
+            for record in records:
+                json_records.append(_record_to_json(record, zone_id=zone_id))
+        data = {'records': json_records}
+        # Error 422 means that at least one of the records was not valid
+        result, info = self._post('v1/records/bulk', data=data, expected=[200, 422])
+        results_per_zone_id = {}
+        # This is the list of invalid records that was detected before accepting the whole set
+        for json_record in result.get('invalid_records') or []:
+            record = _create_record_from_json(json_record)
+            zone_id = json_record['zone_id']
+            if zone_id not in results_per_zone_id:
+                results_per_zone_id[zone_id] = []
+            results_per_zone_id[zone_id].append((record, False, DNSAPIError(
+                'Creating {type} record "{target}" with TTL {ttl} for zone {zoneID} failed with unknown reason'.format(
+                    type=record.type,
+                    target=record.target,
+                    ttl=record.ttl,
+                    zoneID=zone_id))))
+        # This is the list of valid records that were not processed
+        for json_record in result.get('valid_records') or []:
+            record = _create_record_from_json(json_record)
+            zone_id = json_record['zone_id']
+            if zone_id not in results_per_zone_id:
+                results_per_zone_id[zone_id] = []
+            results_per_zone_id[zone_id].append((record, False, None))
+        # This is the list of correctly processed records
+        for json_record in result.get('records') or []:
+            record = _create_record_from_json(json_record)
+            zone_id = json_record['zone_id']
+            if zone_id not in results_per_zone_id:
+                results_per_zone_id[zone_id] = []
+            results_per_zone_id[zone_id].append((record, True, None))
+        return results_per_zone_id
+
 
 class HetznerProviderInformation(ProviderInformation):
     def get_supported_record_types(self):
