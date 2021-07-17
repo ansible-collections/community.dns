@@ -123,11 +123,13 @@ class ZoneRecordAPI(object):
         @return True in case of success (boolean)
         """
 
-    def add_records(self, records_per_zone_id):
+    def add_records(self, records_per_zone_id, stop_early_on_errors=True):
         """
         Add new records to an existing zone.
 
         @param records_per_zone_id: Maps a zone ID to a list of DNS records (DNSRecord)
+        @param stop_early_on_errors: If set to ``True``, try to stop changes after the first error happens.
+                                     This might only work on some APIs.
         @return A dictionary mapping zone IDs to lists of tuples ``(record, created, failed)``.
                 Here ``created`` indicates whether the record was created (``True``) or not (``False``).
                 If it was created, ``record`` contains the record ID and ``failed`` is ``None``.
@@ -138,19 +140,23 @@ class ZoneRecordAPI(object):
         results_per_zone_id = {}
         for zone_id, records in records_per_zone_id.items():
             result = []
+            results_per_zone_id[zone_id] = result
             for record in records:
                 try:
                     result.append((self.add_record(zone_id, record), True, None))
                 except DNSAPIError as e:
                     result.append((record, False, e))
-            results_per_zone_id[zone_id] = result
+                    if stop_early_on_errors:
+                        return results_per_zone_id
         return results_per_zone_id
 
-    def update_records(self, records_per_zone_id):
+    def update_records(self, records_per_zone_id, stop_early_on_errors=True):
         """
         Update multiple records.
 
         @param records_per_zone_id: Maps a zone ID to a list of DNS records (DNSRecord)
+        @param stop_early_on_errors: If set to ``True``, try to stop changes after the first error happens.
+                                     This might only work on some APIs.
         @return A dictionary mapping zone IDs to lists of tuples ``(record, updated, failed)``.
                 Here ``updated`` indicates whether the record was updated (``True``) or not (``False``).
                 If it was not updated, ``failed`` should be a ``DNSAPIError`` instance. If it was
@@ -161,19 +167,23 @@ class ZoneRecordAPI(object):
         results_per_zone_id = {}
         for zone_id, records in records_per_zone_id.items():
             result = []
+            results_per_zone_id[zone_id] = result
             for record in records:
                 try:
                     result.append((self.update_record(zone_id, record), True, None))
                 except DNSAPIError as e:
                     result.append((record, False, e))
-            results_per_zone_id[zone_id] = result
+                    if stop_early_on_errors:
+                        return results_per_zone_id
         return results_per_zone_id
 
-    def delete_records(self, records_per_zone_id):
+    def delete_records(self, records_per_zone_id, stop_early_on_errors=True):
         """
         Delete multiple records.
 
         @param records_per_zone_id: Maps a zone ID to a list of DNS records (DNSRecord)
+        @param stop_early_on_errors: If set to ``True``, try to stop changes after the first error happens.
+                                     This might only work on some APIs.
         @return A dictionary mapping zone IDs to lists of tuples ``(record, deleted, failed)``.
                 In case ``record`` was deleted or not deleted, ``deleted`` is ``True``
                 respectively ``False``, and ``failed`` is ``None``. In case an error happened
@@ -183,12 +193,14 @@ class ZoneRecordAPI(object):
         results_per_zone_id = {}
         for zone_id, records in records_per_zone_id.items():
             result = []
+            results_per_zone_id[zone_id] = result
             for record in records:
                 try:
                     result.append((record, self.delete_record(zone_id, record), None))
                 except DNSAPIError as e:
                     result.append((record, False, e))
-            results_per_zone_id[zone_id] = result
+                    if stop_early_on_errors:
+                        return results_per_zone_id
         return results_per_zone_id
 
 

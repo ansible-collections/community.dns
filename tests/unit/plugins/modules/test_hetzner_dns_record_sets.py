@@ -640,6 +640,141 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['changed'] is True
         assert result['zone_id'] == '42'
 
+    def test_change_add_one_failed(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
+            'hetzner_token': 'foo',
+            'zone_name': 'example.com',
+            'record_sets': [
+                {
+                    'record': 'example.com',
+                    'type': 'CAA',
+                    'ttl': 3600,
+                    'value': [
+                        '128 issue "letsencrypt.org xxx"',
+                    ],
+                },
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            FetchUrlCall('POST', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'CAA')
+            .expect_json_value(['ttl'], 3600)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '@')
+            .expect_json_value(['value'], '128 issue "letsencrypt.org xxx"')
+            .return_header('Content-Type', 'application/json')
+            .result_json({'message': 'Internal Server Error'}),
+        ])
+
+        assert result['msg'] == (
+            'Error: Expected HTTP status 200, 422 for POST https://dns.hetzner.com/api/v1/records,'
+            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
+        )
+
+    def test_change_add_two_failed(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
+            'hetzner_token': 'foo',
+            'zone_name': 'example.com',
+            'record_sets': [
+                {
+                    'record': 'example.com',
+                    'type': 'CAA',
+                    'ttl': 3600,
+                    'value': [
+                        '128 issue "letsencrypt.org xxx"',
+                        '128 issuewild "letsencrypt.org"',
+                    ],
+                },
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            FetchUrlCall('POST', 422)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/bulk')
+            .expect_json_value_absent(['records', 0, 'id'])
+            .expect_json_value(['records', 0, 'type'], 'CAA')
+            .expect_json_value(['records', 0, 'ttl'], 3600)
+            .expect_json_value(['records', 0, 'zone_id'], '42')
+            .expect_json_value(['records', 0, 'name'], '@')
+            .expect_json_value(['records', 0, 'value'], '128 issue "letsencrypt.org xxx"')
+            .expect_json_value_absent(['records', 1, 'id'])
+            .expect_json_value(['records', 1, 'type'], 'CAA')
+            .expect_json_value(['records', 1, 'ttl'], 3600)
+            .expect_json_value(['records', 1, 'zone_id'], '42')
+            .expect_json_value(['records', 1, 'name'], '@')
+            .expect_json_value(['records', 1, 'value'], '128 issuewild "letsencrypt.org"')
+            .expect_json_value_absent(['records', 2])
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'invalid_records': [
+                    {
+                        'type': 'CAA',
+                        'name': '@',
+                        'value': '128 issue "letsencrypt.org xxx"',
+                        'ttl': 3600,
+                        'zone_id': '42',
+                    },
+                    {
+                        'type': 'CAA',
+                        'name': '@',
+                        'value': '128 issuewild "letsencrypt.org"',
+                        'ttl': 3600,
+                        'zone_id': '42',
+                    },
+                ],
+                'valid_records': [],
+                'records': [],
+                'error': {
+                    'message': 'invalid CAA record, invalid CAA record, ',
+                    'code': 422,
+                },
+            }),
+        ])
+
+        assert result['msg'] == (
+            'Errors: Creating CAA record "128 issue "letsencrypt.org xxx"" with TTL 3600 for zone 42 failed with unknown reason;'
+            ' Creating CAA record "128 issuewild "letsencrypt.org"" with TTL 3600 for zone 42 failed with unknown reason'
+        )
+
     def test_change_modify_list(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',

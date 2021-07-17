@@ -227,11 +227,13 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         dummy, info = self._delete('v1/records/{id}'.format(id=record.id), must_have_content=False, expected=[200, 404])
         return info['status'] == 200
 
-    def add_records(self, records_per_zone_id):
+    def add_records(self, records_per_zone_id, stop_early_on_errors=True):
         """
         Add new records to an existing zone.
 
         @param records_per_zone_id: Maps a zone ID to a list of DNS records (DNSRecord)
+        @param stop_early_on_errors: If set to ``True``, try to stop changes after the first error happens.
+                                     This might only work on some APIs.
         @return A dictionary mapping zone IDs to lists of tuples ``(record, created, failed)``.
                 Here ``created`` indicates whether the record was created (``True``) or not (``False``).
                 If it was created, ``record`` contains the record ID and ``failed`` is ``None``.

@@ -1039,19 +1039,10 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/131')
             .return_header('Content-Type', 'application/json')
             .result_json({'message': 'Internal Server Error'}),
-            FetchUrlCall('DELETE', 500)
-            .expect_header('accept', 'application/json')
-            .expect_header('authorization', 'Bearer foo')
-            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/132')
-            .return_header('Content-Type', 'application/json')
-            .result_json({'message': 'Internal Server Error'}),
         ])
 
-        print(result['msg'])
         assert result['msg'] == (
-            'Errors: Expected HTTP status 204, 404 for DELETE https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/131,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error";'
-            ' Expected HTTP status 204, 404 for DELETE https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/132,'
+            'Error: Expected HTTP status 204, 404 for DELETE https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/131,'
             ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
         )
 
@@ -1740,7 +1731,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['zone_id'] == 42
         assert 'diff' not in result
 
-    def test_change_modify_bulk_errors(self, mocker):
+    def test_change_modify_bulk_errors_update(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_record_set, {
             'hosttech_token': 'foo',
             'state': 'present',
@@ -1784,7 +1775,67 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             .expect_json_value(['targetname'], 'a1')
             .return_header('Content-Type', 'application/json')
             .result_json({'message': 'Internal Server Error'}),
-            FetchUrlCall('PUT', 500)
+        ])
+
+        assert result['msg'] == (
+            'Error: Expected HTTP status 200 for PUT https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/132,'
+            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
+        )
+
+    def test_change_modify_bulk_errors_create(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_record_set, {
+            'hosttech_token': 'foo',
+            'state': 'present',
+            'zone_name': 'example.com',
+            'record': 'example.com',
+            'type': 'NS',
+            'ttl': 10800,
+            'value': [
+                'a1',
+                'a2',
+                'a3',
+                'a4',
+                'a5',
+                'a6',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
+            FetchUrlCall('PUT', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/132')
+            .expect_json_value_absent(['id'])
+            .expect_json_value_absent(['type'])
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['comment'], '')
+            .expect_json_value(['ownername'], '')
+            .expect_json_value(['targetname'], 'a1')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'data': {
+                    'id': 132,
+                    'type': 'NS',
+                    'ownername': '',
+                    'targetname': 'a1',
+                    'ttl': 10800,
+                    'comment': '',
+                },
+            }),
+            FetchUrlCall('PUT', 200)
             .expect_header('accept', 'application/json')
             .expect_header('authorization', 'Bearer foo')
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/131')
@@ -1795,8 +1846,17 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             .expect_json_value(['ownername'], '')
             .expect_json_value(['targetname'], 'a2')
             .return_header('Content-Type', 'application/json')
-            .result_json({'message': 'Internal Server Error'}),
-            FetchUrlCall('PUT', 500)
+            .result_json({
+                'data': {
+                    'id': 131,
+                    'type': 'NS',
+                    'ownername': '',
+                    'targetname': 'a2',
+                    'ttl': 10800,
+                    'comment': '',
+                },
+            }),
+            FetchUrlCall('PUT', 200)
             .expect_header('accept', 'application/json')
             .expect_header('authorization', 'Bearer foo')
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/130')
@@ -1807,7 +1867,16 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             .expect_json_value(['ownername'], '')
             .expect_json_value(['targetname'], 'a3')
             .return_header('Content-Type', 'application/json')
-            .result_json({'message': 'Internal Server Error'}),
+            .result_json({
+                'data': {
+                    'id': 130,
+                    'type': 'NS',
+                    'ownername': '',
+                    'targetname': 'a3',
+                    'ttl': 10800,
+                    'comment': '',
+                },
+            }),
             FetchUrlCall('POST', 500)
             .expect_header('accept', 'application/json')
             .expect_header('authorization', 'Bearer foo')
@@ -1820,43 +1889,9 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             .expect_json_value(['targetname'], 'a4')
             .return_header('Content-Type', 'application/json')
             .result_json({'message': 'Internal Server Error'}),
-            FetchUrlCall('POST', 500)
-            .expect_header('accept', 'application/json')
-            .expect_header('authorization', 'Bearer foo')
-            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records')
-            .expect_json_value_absent(['id'])
-            .expect_json_value(['type'], 'NS')
-            .expect_json_value(['ttl'], 10800)
-            .expect_json_value(['comment'], '')
-            .expect_json_value(['ownername'], '')
-            .expect_json_value(['targetname'], 'a5')
-            .return_header('Content-Type', 'application/json')
-            .result_json({'message': 'Internal Server Error'}),
-            FetchUrlCall('POST', 500)
-            .expect_header('accept', 'application/json')
-            .expect_header('authorization', 'Bearer foo')
-            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records')
-            .expect_json_value_absent(['id'])
-            .expect_json_value(['type'], 'NS')
-            .expect_json_value(['ttl'], 10800)
-            .expect_json_value(['comment'], '')
-            .expect_json_value(['ownername'], '')
-            .expect_json_value(['targetname'], 'a6')
-            .return_header('Content-Type', 'application/json')
-            .result_json({'message': 'Internal Server Error'}),
         ])
 
         assert result['msg'] == (
-            'Errors: Expected HTTP status 200 for PUT https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/132,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error";'
-            ' Expected HTTP status 200 for PUT https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/131,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error";'
-            ' Expected HTTP status 200 for PUT https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/130,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error";'
-            ' Expected HTTP status 201 for POST https://api.ns1.hosttech.eu/api/user/v1/zones/42/records,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error";'
-            ' Expected HTTP status 201 for POST https://api.ns1.hosttech.eu/api/user/v1/zones/42/records,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error";'
-            ' Expected HTTP status 201 for POST https://api.ns1.hosttech.eu/api/user/v1/zones/42/records,'
+            'Error: Expected HTTP status 201 for POST https://api.ns1.hosttech.eu/api/user/v1/zones/42/records,'
             ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
         )

@@ -632,18 +632,10 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .expect_url('https://dns.hetzner.com/api/v1/records/131')
             .return_header('Content-Type', 'application/json')
             .result_json({'error': {'message': 'Internal Server Error', 'code': 500}}),
-            FetchUrlCall('DELETE', 500)
-            .expect_header('accept', 'application/json')
-            .expect_header('auth-api-token', 'foo')
-            .expect_url('https://dns.hetzner.com/api/v1/records/132')
-            .return_header('Content-Type', 'application/json')
-            .result_json({'error': {'message': 'Internal Server Error', 'code': 500}}),
         ])
 
         assert result['msg'] == (
-            'Errors: Expected HTTP status 200, 404 for DELETE https://dns.hetzner.com/api/v1/records/131,'
-            ' but got HTTP status 500 (Unknown Error) with error message "Internal Server Error" (error code 500);'
-            ' Expected HTTP status 200, 404 for DELETE https://dns.hetzner.com/api/v1/records/132,'
+            'Error: Expected HTTP status 200, 404 for DELETE https://dns.hetzner.com/api/v1/records/131,'
             ' but got HTTP status 500 (Unknown Error) with error message "Internal Server Error" (error code 500)'
         )
 
@@ -1369,7 +1361,70 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .expect_json_value(['value'], 'a1')
             .return_header('Content-Type', 'application/json')
             .result_json({'message': 'Internal Server Error'}),
-            FetchUrlCall('PUT', 500)
+        ])
+
+        assert result['msg'] == (
+            'Error: Expected HTTP status 200, 422 for PUT https://dns.hetzner.com/api/v1/records/132,'
+            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
+        )
+
+    def test_change_modify_bulk_errors_2(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_record_set, {
+            'hetzner_token': 'foo',
+            'state': 'present',
+            'zone_name': 'example.com',
+            'record': 'example.com',
+            'type': 'NS',
+            'ttl': 10800,
+            'value': [
+                'a1',
+                'a2',
+                'a3',
+                'a4',
+                'a5',
+                'a6',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            FetchUrlCall('PUT', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/132')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'NS')
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '@')
+            .expect_json_value(['value'], 'a1')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'record': {
+                    'id': '132',
+                    'type': 'NS',
+                    'name': '@',
+                    'value': 'a1',
+                    'ttl': 10800,
+                    'zone_id': '42',
+                },
+            }),
+            FetchUrlCall('PUT', 200)
             .expect_header('accept', 'application/json')
             .expect_header('auth-api-token', 'foo')
             .expect_url('https://dns.hetzner.com/api/v1/records/131')
@@ -1380,8 +1435,17 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .expect_json_value(['name'], '@')
             .expect_json_value(['value'], 'a2')
             .return_header('Content-Type', 'application/json')
-            .result_json({'message': 'Internal Server Error'}),
-            FetchUrlCall('PUT', 500)
+            .result_json({
+                'record': {
+                    'id': '131',
+                    'type': 'NS',
+                    'name': '@',
+                    'value': 'a2',
+                    'ttl': 10800,
+                    'zone_id': '42',
+                },
+            }),
+            FetchUrlCall('PUT', 200)
             .expect_header('accept', 'application/json')
             .expect_header('auth-api-token', 'foo')
             .expect_url('https://dns.hetzner.com/api/v1/records/130')
@@ -1392,7 +1456,16 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .expect_json_value(['name'], '@')
             .expect_json_value(['value'], 'a3')
             .return_header('Content-Type', 'application/json')
-            .result_json({'message': 'Internal Server Error'}),
+            .result_json({
+                'record': {
+                    'id': '130',
+                    'type': 'NS',
+                    'name': '@',
+                    'value': 'a3',
+                    'ttl': 10800,
+                    'zone_id': '42',
+                },
+            }),
             FetchUrlCall('POST', 422)
             .expect_header('accept', 'application/json')
             .expect_header('auth-api-token', 'foo')
@@ -1420,7 +1493,6 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .result_json({
                 'invalid_records': [
                     {
-                        'id': '300',
                         'type': 'NS',
                         'name': '@',
                         'value': 'a4',
@@ -1428,7 +1500,6 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                         'zone_id': '42',
                     },
                     {
-                        'id': '301',
                         'type': 'NS',
                         'name': '@',
                         'value': 'a5',
@@ -1438,7 +1509,6 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                 ],
                 'valid_records': [
                     {
-                        'id': '302',
                         'type': 'NS',
                         'name': '@',
                         'value': 'a6',
@@ -1455,13 +1525,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         ])
 
         assert result['msg'] == (
-            'Errors: Expected HTTP status 200, 422 for PUT https://dns.hetzner.com/api/v1/records/132,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error";'
-            ' Expected HTTP status 200, 422 for PUT https://dns.hetzner.com/api/v1/records/131,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error";'
-            ' Expected HTTP status 200, 422 for PUT https://dns.hetzner.com/api/v1/records/130,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error";'
-            ' Creating NS record "a4" with TTL 10800 for zone 42 failed with unknown reason;'
+            'Errors: Creating NS record "a4" with TTL 10800 for zone 42 failed with unknown reason;'
             ' Creating NS record "a5" with TTL 10800 for zone 42 failed with unknown reason'
         )
 
