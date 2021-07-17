@@ -294,7 +294,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         # Currently Hetzner's bulk update API seems to be broken, it always returns the error message
         # "An invalid response was received from the upstream server". That's why for now, we always
         # fall back to the default implementation.
-        if True:
+        if True:  # pylint: disable=using-constant-test
             return super(HetznerAPI, self).update_records(records_per_zone_id, stop_early_on_errors=stop_early_on_errors)
 
         json_records = []
