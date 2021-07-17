@@ -22,6 +22,9 @@ options:
         required: true
 '''
 
+    # NOTE: This document fragment augments the above standard DOCUMENTATION document fragment
+    #       by providing alternative ways to provide configuration for plugins. (The above
+    #       documentation fragment is tailored for modules.)
     PLUGIN = r'''
 options:
     hetzner_token:
@@ -29,6 +32,8 @@ options:
           - name: HETZNER_DNS_TOKEN
 '''
 
+    # NOTE: This document fragment augments various DOCUMENTATION document fragments by
+    #       providing choices for the options.type entry.
     ZONE_ID_TYPE = r'''
 options:
     zone_id:
@@ -41,6 +46,10 @@ options:
         choices: ['A', 'AAAA', 'NS', 'MX', 'CNAME', 'RP', 'TXT', 'SOA', 'HINFO', 'SRV', 'DANE', 'TLSA', 'DS', 'CAA']
 '''
 
+    # NOTE: This document fragment augments the `module_record_sets` DOCUMENTATION document fragment by
+    #       providing choices for the options.record_sets.suboptions.type entry.
+    #       (Due to how doc fragments work in Ansible, that fragment basically has to contain everything
+    #        in options.record_sets.suboptions.)
     ZONE_CHOICES_RECORD_SETS_MODULE = r'''
 options:
     record_sets:
@@ -89,6 +98,10 @@ options:
                 default: false
 '''
 
+    # NOTE: This document fragment augments the `inventory_records` DOCUMENTATION document fragment by
+    #       providing choices for the options.filters.suboptions.type entry.
+    #       (Due to how doc fragments work in Ansible, that fragment basically has to contain everything
+    #        in options.filters.suboptions.)
     ZONE_CHOICES_RECORDS_INVENTORY = r'''
 options:
     filters:
