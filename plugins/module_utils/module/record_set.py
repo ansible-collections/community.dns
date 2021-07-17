@@ -27,6 +27,10 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
     filter_records,
 )
 
+from ansible_collections.community.dns.plugins.module_utils.zone_record_helpers import (
+    bulk_apply_changes,
+)
+
 from ._utils import (
     normalize_dns_name,
     get_prefix,
@@ -210,16 +214,26 @@ def run_module(module, create_api, provider_information):
             )
 
         # Determine whether there's something to do
-        if len(to_create) > 0 or len(to_delete) > 0 or len(to_change) > 0:
+        if to_create or to_delete or to_change:
             # Actually do something
             result['changed'] = True
             if not module.check_mode:
-                for record in to_delete:
-                    api.delete_record(zone_id, record)
-                for record in to_change:
-                    api.update_record(zone_id, record)
-                for record in to_create:
-                    api.add_record(zone_id, record)
+                actually_changed, errors = bulk_apply_changes(
+                    api,
+                    zone_id,
+                    records_to_delete=to_delete,
+                    records_to_change=to_change,
+                    records_to_create=to_create,
+                )
+                if not actually_changed:
+                    result['changed'] = False
+                if errors:
+                    if len(errors) == 1:
+                        raise errors[0]
+                    module.fail_json(
+                        msg='Errors: {0}'.format('; '.join([str(e) for e in errors])),
+                        errors=[str(e) for e in errors],
+                    )
 
         module.exit_json(**result)
     except DNSAPIAuthenticationError as e:

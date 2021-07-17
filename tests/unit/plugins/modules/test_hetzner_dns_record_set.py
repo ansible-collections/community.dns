@@ -500,6 +500,108 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['changed'] is True
         assert result['zone_id'] == '42'
 
+    def test_absent_bulk(self, mocker):
+        result = self.run_module_success(mocker, hetzner_dns_record_set, {
+            'hetzner_token': 'foo',
+            'state': 'present',
+            'zone_name': 'example.com',
+            'record': 'example.com',
+            'type': 'NS',
+            'value': [],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            FetchUrlCall('DELETE', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/130')
+            .result_str(''),
+            FetchUrlCall('DELETE', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/131')
+            .result_str(''),
+            # Record 132 has been deleted between querying and we trying to delete it
+            FetchUrlCall('DELETE', 404)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/132')
+            .return_header('Content-Type', 'application/json')
+            .result_json({'message': 'record does not exist'}),
+        ])
+
+        assert result['changed'] is True
+        assert result['zone_id'] == '42'
+
+    def test_absent_bulk_error(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_record_set, {
+            'hetzner_token': 'foo',
+            'state': 'present',
+            'zone_name': 'example.com',
+            'record': 'example.com',
+            'type': 'NS',
+            'value': [],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            FetchUrlCall('DELETE', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/130')
+            .result_str(''),
+            FetchUrlCall('DELETE', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/131')
+            .return_header('Content-Type', 'application/json')
+            .result_json({'error': {'message': 'Internal Server Error', 'code': 500}}),
+            FetchUrlCall('DELETE', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/132')
+            .return_header('Content-Type', 'application/json')
+            .result_json({'error': {'message': 'Internal Server Error', 'code': 500}}),
+        ])
+
+        assert result['msg'] == (
+            'Errors: Expected HTTP status 200, 404 for DELETE https://dns.hetzner.com/api/v1/records/131,'
+            ' but got HTTP status 500 (Unknown Error) with error message "Internal Server Error" (error code 500);'
+            ' Expected HTTP status 200, 404 for DELETE https://dns.hetzner.com/api/v1/records/132,'
+            ' but got HTTP status 500 (Unknown Error) with error message "Internal Server Error" (error code 500)'
+        )
+
     def test_absent_other_value(self, mocker):
         record = HETZNER_JSON_DEFAULT_ENTRIES[0]
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
@@ -1016,6 +1118,297 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'ttl': 10800,
             'value': ['helium.ns.hetzner.de.', 'ytterbium.ns.hetzner.com.'],
         }
+
+    def test_change_modify_bulk(self, mocker):
+        result = self.run_module_success(mocker, hetzner_dns_record_set, {
+            'hetzner_token': 'foo',
+            'state': 'present',
+            'zone_name': 'example.com',
+            'record': 'example.com',
+            'type': 'NS',
+            'ttl': 10800,
+            'value': [
+                'a1',
+                'a2',
+                'a3',
+                'a4',
+                'a5',
+                'a6',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            FetchUrlCall('PUT', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/132')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'NS')
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '@')
+            .expect_json_value(['value'], 'a1')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'record': {
+                    'id': '132',
+                    'type': 'NS',
+                    'name': '@',
+                    'value': 'a1',
+                    'ttl': 10800,
+                    'zone_id': '42',
+                },
+            }),
+            FetchUrlCall('PUT', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/131')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'NS')
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '@')
+            .expect_json_value(['value'], 'a2')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'record': {
+                    'id': '131',
+                    'type': 'NS',
+                    'name': '@',
+                    'value': 'a2',
+                    'ttl': 10800,
+                    'zone_id': '42',
+                },
+            }),
+            FetchUrlCall('PUT', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/130')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'NS')
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '@')
+            .expect_json_value(['value'], 'a3')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'record': {
+                    'id': '130',
+                    'type': 'NS',
+                    'name': '@',
+                    'value': 'a3',
+                    'ttl': 10800,
+                    'zone_id': '42',
+                },
+            }),
+            FetchUrlCall('POST', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'NS')
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '@')
+            .expect_json_value(['value'], 'a4')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'record': {
+                    'id': '300',
+                    'type': 'NS',
+                    'name': '@',
+                    'value': 'a4',
+                    'ttl': 10800,
+                    'zone_id': '42',
+                },
+            }),
+            FetchUrlCall('POST', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'NS')
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '@')
+            .expect_json_value(['value'], 'a5')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'record': {
+                    'id': '301',
+                    'type': 'NS',
+                    'name': '@',
+                    'value': 'a5',
+                    'ttl': 10800,
+                    'zone_id': '42',
+                },
+            }),
+            FetchUrlCall('POST', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'NS')
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '@')
+            .expect_json_value(['value'], 'a6')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'record': {
+                    'id': '302',
+                    'type': 'NS',
+                    'name': '@',
+                    'value': 'a6',
+                    'ttl': 10800,
+                    'zone_id': '42',
+                },
+            }),
+        ])
+
+        assert result['changed'] is True
+        assert result['zone_id'] == '42'
+        assert 'diff' not in result
+
+    def test_change_modify_bulk_errors(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_record_set, {
+            'hetzner_token': 'foo',
+            'state': 'present',
+            'zone_name': 'example.com',
+            'record': 'example.com',
+            'type': 'NS',
+            'ttl': 10800,
+            'value': [
+                'a1',
+                'a2',
+                'a3',
+                'a4',
+                'a5',
+                'a6',
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            FetchUrlCall('PUT', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/132')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'NS')
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '@')
+            .expect_json_value(['value'], 'a1')
+            .return_header('Content-Type', 'application/json')
+            .result_json({'message': 'Internal Server Error'}),
+            FetchUrlCall('PUT', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/131')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'NS')
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '@')
+            .expect_json_value(['value'], 'a2')
+            .return_header('Content-Type', 'application/json')
+            .result_json({'message': 'Internal Server Error'}),
+            FetchUrlCall('PUT', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/130')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'NS')
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '@')
+            .expect_json_value(['value'], 'a3')
+            .return_header('Content-Type', 'application/json')
+            .result_json({'message': 'Internal Server Error'}),
+            FetchUrlCall('POST', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'NS')
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '@')
+            .expect_json_value(['value'], 'a4')
+            .return_header('Content-Type', 'application/json')
+            .result_json({'message': 'Internal Server Error'}),
+            FetchUrlCall('POST', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'NS')
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '@')
+            .expect_json_value(['value'], 'a5')
+            .return_header('Content-Type', 'application/json')
+            .result_json({'message': 'Internal Server Error'}),
+            FetchUrlCall('POST', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'NS')
+            .expect_json_value(['ttl'], 10800)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '@')
+            .expect_json_value(['value'], 'a6')
+            .return_header('Content-Type', 'application/json')
+            .result_json({'message': 'Internal Server Error'}),
+        ])
+
+        assert result['msg'] == (
+            'Errors: Expected HTTP status 200, 422 for PUT https://dns.hetzner.com/api/v1/records/132,'
+            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error";'
+            ' Expected HTTP status 200, 422 for PUT https://dns.hetzner.com/api/v1/records/131,'
+            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error";'
+            ' Expected HTTP status 200, 422 for PUT https://dns.hetzner.com/api/v1/records/130,'
+            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error";'
+            ' Expected HTTP status 200, 422 for POST https://dns.hetzner.com/api/v1/records,'
+            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error";'
+            ' Expected HTTP status 200, 422 for POST https://dns.hetzner.com/api/v1/records,'
+            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error";'
+            ' Expected HTTP status 200, 422 for POST https://dns.hetzner.com/api/v1/records,'
+            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
+        )
 
     def test_change_change_bad(self, mocker):
         result = self.run_module_failed(mocker, hetzner_dns_record_set, {

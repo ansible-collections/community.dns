@@ -123,6 +123,74 @@ class ZoneRecordAPI(object):
         @return True in case of success (boolean)
         """
 
+    def add_records(self, records_per_zone_id):
+        """
+        Add new records to an existing zone.
+
+        @param records_per_zone_id: Maps a zone ID to a list of DNS records (DNSRecord)
+        @return A dictionary mapping zone IDs to lists of tuples ``(record, created, failed)``.
+                Here ``created`` indicates whether the record was created (``True``) or not (``False``).
+                If it was created, ``record`` contains the record ID and ``failed`` is ``None``.
+                If it was not created, ``failed`` should be a ``DNSAPIError`` instance indicating why
+                it was not created. It is possible that the API only creates records if all succeed,
+                in that case ``failed`` can be ``None`` even though ``created`` is ``False``.
+        """
+        results_per_zone_id = {}
+        for zone_id, records in records_per_zone_id.items():
+            result = []
+            for record in records:
+                try:
+                    result.append((self.add_record(zone_id, record), True, None))
+                except DNSAPIError as e:
+                    result.append((record, False, e))
+            results_per_zone_id[zone_id] = result
+        return results_per_zone_id
+
+    def update_records(self, records_per_zone_id):
+        """
+        Update multiple records.
+
+        @param records_per_zone_id: Maps a zone ID to a list of DNS records (DNSRecord)
+        @return A dictionary mapping zone IDs to lists of tuples ``(record, updated, failed)``.
+                Here ``updated`` indicates whether the record was updated (``True``) or not (``False``).
+                If it was not updated, ``failed`` should be a ``DNSAPIError`` instance. If it was
+                updated, ``failed`` should be ``None``.  It is possible that the API only updates
+                records if all succeed, in that case ``failed`` can be ``None`` even though
+                ``updated`` is ``False``.
+        """
+        results_per_zone_id = {}
+        for zone_id, records in records_per_zone_id.items():
+            result = []
+            for record in records:
+                try:
+                    result.append((self.update_record(zone_id, record), True, None))
+                except DNSAPIError as e:
+                    result.append((record, False, e))
+            results_per_zone_id[zone_id] = result
+        return results_per_zone_id
+
+    def delete_records(self, records_per_zone_id):
+        """
+        Delete multiple records.
+
+        @param records_per_zone_id: Maps a zone ID to a list of DNS records (DNSRecord)
+        @return A dictionary mapping zone IDs to lists of tuples ``(record, deleted, failed)``.
+                In case ``record`` was deleted or not deleted, ``deleted`` is ``True``
+                respectively ``False``, and ``failed`` is ``None``. In case an error happened
+                while deleting, ``deleted`` is ``False`` and ``failed`` is a ``DNSAPIError``
+                instance hopefully providing information on the error.
+        """
+        results_per_zone_id = {}
+        for zone_id, records in records_per_zone_id.items():
+            result = []
+            for record in records:
+                try:
+                    result.append((record, self.delete_record(zone_id, record), None))
+                except DNSAPIError as e:
+                    result.append((record, False, e))
+            results_per_zone_id[zone_id] = result
+        return results_per_zone_id
+
 
 def filter_records(records, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
     """
