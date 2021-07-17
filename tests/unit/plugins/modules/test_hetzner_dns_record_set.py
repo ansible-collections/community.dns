@@ -500,6 +500,51 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result['changed'] is True
         assert result['zone_id'] == '42'
 
+    def test_absent_error(self, mocker):
+        record = HETZNER_JSON_DEFAULT_ENTRIES[0]
+        result = self.run_module_failed(mocker, hetzner_dns_record_set, {
+            'hetzner_token': 'foo',
+            'state': 'absent',
+            'zone_name': 'example.com',
+            'record': ((record['name'] + '.') if record['name'] != '@' else '') + 'example.com',
+            'type': record['type'],
+            'ttl': record['ttl'],
+            'value': [
+                record['value'],
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            FetchUrlCall('DELETE', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/{0}'.format(record['id']))
+            .return_header('Content-Type', 'application/json')
+            .result_json({'error': {'message': 'Internal Server Error', 'code': 500}}),
+        ])
+
+        print(result['msg'])
+        assert result['msg'] == (
+            'Error: Expected HTTP status 200, 404 for DELETE https://dns.hetzner.com/api/v1/records/125,'
+            ' but got HTTP status 500 (Unknown Error) with error message "Internal Server Error" (error code 500)'
+        )
+
     def test_absent_bulk(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
