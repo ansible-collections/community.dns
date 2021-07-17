@@ -227,6 +227,12 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         dummy, info = self._delete('v1/records/{id}'.format(id=record.id), must_have_content=False, expected=[200, 404])
         return info['status'] == 200
 
+    @staticmethod
+    def _append(results_per_zone_id, zone_id, result):
+        if zone_id not in results_per_zone_id:
+            results_per_zone_id[zone_id] = []
+        results_per_zone_id[zone_id].append(result)
+
     def add_records(self, records_per_zone_id, stop_early_on_errors=True):
         """
         Add new records to an existing zone.
@@ -253,9 +259,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         for json_record in result.get('invalid_records') or []:
             record = _create_record_from_json(json_record, has_id=False)
             zone_id = json_record['zone_id']
-            if zone_id not in results_per_zone_id:
-                results_per_zone_id[zone_id] = []
-            results_per_zone_id[zone_id].append((record, False, DNSAPIError(
+            self._append(results_per_zone_id, zone_id, (record, False, DNSAPIError(
                 'Creating {type} record "{target}" with TTL {ttl} for zone {zoneID} failed with unknown reason'.format(
                     type=record.type,
                     target=record.target,
@@ -265,16 +269,12 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         for json_record in result.get('valid_records') or []:
             record = _create_record_from_json(json_record, has_id=False)
             zone_id = json_record['zone_id']
-            if zone_id not in results_per_zone_id:
-                results_per_zone_id[zone_id] = []
-            results_per_zone_id[zone_id].append((record, False, None))
+            self._append(results_per_zone_id, zone_id, (record, False, None))
         # This is the list of correctly processed records
         for json_record in result.get('records') or []:
             record = _create_record_from_json(json_record)
             zone_id = json_record['zone_id']
-            if zone_id not in results_per_zone_id:
-                results_per_zone_id[zone_id] = []
-            results_per_zone_id[zone_id].append((record, True, None))
+            self._append(results_per_zone_id, zone_id, (record, True, None))
         return results_per_zone_id
 
     def update_records(self, records_per_zone_id, stop_early_on_errors=True):
@@ -307,9 +307,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         for json_record in result.get('failed_records') or []:
             record = _create_record_from_json(json_record)
             zone_id = json_record['zone_id']
-            if zone_id not in results_per_zone_id:
-                results_per_zone_id[zone_id] = []
-            results_per_zone_id[zone_id].append((record, False, DNSAPIError(
+            self._append(results_per_zone_id, zone_id, (record, False, DNSAPIError(
                 'Updating {type} record #{id} "{target}" with TTL {ttl} for zone {zoneID} failed with unknown reason'.format(
                     type=record.type,
                     id=record.id,
@@ -319,9 +317,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         for json_record in result.get('records') or []:
             record = _create_record_from_json(json_record)
             zone_id = json_record['zone_id']
-            if zone_id not in results_per_zone_id:
-                results_per_zone_id[zone_id] = []
-            results_per_zone_id[zone_id].append((record, True, None))
+            self._append(results_per_zone_id, zone_id, (record, True, None))
         return results_per_zone_id
 
 
