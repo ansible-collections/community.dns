@@ -134,3 +134,18 @@ def test_update_id_delete():
     with pytest.raises(DNSAPIError) as exc:
         api.delete_record(1, DNSRecord())
     assert exc.value.args[0] == 'Need record ID to delete record!'
+
+
+def test_extract_error_message():
+    api = HetznerAPI(MagicMock(), '123')
+    assert api._extract_error_message(None) == ''
+    assert api._extract_error_message('foo') == ' with data: foo'
+    assert api._extract_error_message(dict()) == ' with data: {}'
+    assert api._extract_error_message(dict(message='')) == " with data: {'message': ''}"
+    assert api._extract_error_message(dict(message='foo')) == ' with message "foo"'
+    assert api._extract_error_message(dict(message='foo', error='')) == ' with message "foo"'
+    assert api._extract_error_message(dict(message='foo', error=dict())) == ' with message "foo"'
+    assert api._extract_error_message(dict(message='foo', error=dict(code=123))) == ' (error code 123) with message "foo"'
+    assert api._extract_error_message(dict(message='foo', error=dict(message='baz'))) == ' with error message "baz" with message "foo"'
+    assert api._extract_error_message(dict(message='foo', error=dict(message='baz', code=123))) == ' with error message "baz" (error code 123) with message "foo"'
+    assert api._extract_error_message(dict(error=dict(message='baz', code=123))) == ' with error message "baz" (error code 123)'

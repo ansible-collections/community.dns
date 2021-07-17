@@ -87,6 +87,27 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
             'Auth-API-Token': self._token,
         }
 
+    def _extract_only_error_message(self, result):
+        # These errors are not documented, but are what I experienced the API seems to return:
+        res = ''
+        if isinstance(result.get('error'), dict):
+            if 'message' in result['error']:
+                res = '{0} with error message "{1}"'.format(res, result['error']['message'])
+            if 'code' in result['error']:
+                res = '{0} (error code {1})'.format(res, result['error']['code'])
+        if result.get('message'):
+            res = '{0} with message "{1}"'.format(res, result['message'])
+        return res
+
+    def _extract_error_message(self, result):
+        if result is None:
+            return ''
+        if isinstance(result, dict):
+            res = self._extract_only_error_message(result)
+            if res:
+                return res
+        return ' with data: {0}'.format(result)
+
     def _list_pagination(self, url, data_key, query=None, block_size=100, accept_404=False):
         result = []
         page = 1
@@ -157,7 +178,16 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         @return The created DNS record (DNSRecord)
         """
         data = _record_to_json(record, zone_id=zone_id)
-        result, dummy = self._post('v1/records', data=data, expected=[200])
+        result, info = self._post('v1/records', data=data, expected=[200, 422])
+        if info['status'] == 422:
+            raise DNSAPIError(
+                'The new {type} record with value "{target}" and TTL {ttl} has not been accepted by the server{message}'.format(
+                    type=record.type,
+                    target=record.target,
+                    ttl=record.ttl,
+                    message=self._extract_only_error_message(result),
+                )
+            )
         return _create_record_from_json(result['record'])
 
     def update_record(self, zone_id, record):
@@ -171,7 +201,16 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         if record.id is None:
             raise DNSAPIError('Need record ID to update record!')
         data = _record_to_json(record, zone_id=zone_id)
-        result, dummy = self._put('v1/records/{id}'.format(id=record.id), data=data, expected=[200])
+        result, info = self._put('v1/records/{id}'.format(id=record.id), data=data, expected=[200, 422])
+        if info['status'] == 422:
+            raise DNSAPIError(
+                'The updated {type} record with value "{target}" and TTL {ttl} has not been accepted by the server{message}'.format(
+                    type=record.type,
+                    target=record.target,
+                    ttl=record.ttl,
+                    message=self._extract_only_error_message(result),
+                )
+            )
         return _create_record_from_json(result['record'])
 
     def delete_record(self, zone_id, record):
