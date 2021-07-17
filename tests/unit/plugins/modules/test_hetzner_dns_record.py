@@ -712,3 +712,64 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
 
         assert result['changed'] is True
         assert result['zone_id'] == '42'
+
+    def test_create_bad(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_record, {
+            'hetzner_token': 'foo',
+            'state': 'present',
+            'zone_name': 'example.com',
+            'record': '*.example.com',
+            'type': 'A',
+            'ttl': 300,
+            'value': '1.2.3.5.6',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            FetchUrlCall('POST', 422)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'A')
+            .expect_json_value(['ttl'], 300)
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], '*')
+            .expect_json_value(['value'], '1.2.3.5.6')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'record': {
+                    'id': '',
+                    'type': '',
+                    'name': '',
+                    'value': '',
+                    'zone_id': '',
+                    'created': '',
+                    'modified': '',
+                },
+                'error': {
+                    'message': 'invalid A record',
+                    'code': 422,
+                }
+            }),
+        ])
+
+        assert result['msg'] == (
+            'Error: The new A record with value "1.2.3.5.6" and TTL 300 has not been accepted'
+            ' by the server with error message "invalid A record" (error code 422)'
+        )

@@ -13,6 +13,11 @@ import traceback
 
 from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
+    ModuleOptionProvider,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.options import (
+    create_bulk_operations_argspec,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.record import (
@@ -25,6 +30,10 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
     DNSAPIAuthenticationError,
     NOT_PROVIDED,
     filter_records,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.zone_record_helpers import (
+    bulk_apply_changes,
 )
 
 from ._utils import (
@@ -60,7 +69,7 @@ def create_module_argument_spec(zone_id_type, provider_information):
             ('on_existing', 'keep_and_warn', ['value']),
             ('on_existing', 'keep', ['value']),
         ],
-    )
+    ).merge(create_bulk_operations_argspec(provider_information))
 
 
 def run_module(module, create_api, provider_information):
@@ -210,16 +219,26 @@ def run_module(module, create_api, provider_information):
             )
 
         # Determine whether there's something to do
-        if len(to_create) > 0 or len(to_delete) > 0 or len(to_change) > 0:
+        if to_create or to_delete or to_change:
             # Actually do something
             result['changed'] = True
             if not module.check_mode:
-                for record in to_delete:
-                    api.delete_record(zone_id, record)
-                for record in to_change:
-                    api.update_record(zone_id, record)
-                for record in to_create:
-                    api.add_record(zone_id, record)
+                dummy, errors = bulk_apply_changes(
+                    api,
+                    zone_id=zone_id,
+                    records_to_delete=to_delete,
+                    records_to_change=to_change,
+                    records_to_create=to_create,
+                    provider_information=provider_information,
+                    options=ModuleOptionProvider(module),
+                )
+                if errors:
+                    if len(errors) == 1:
+                        raise errors[0]
+                    module.fail_json(
+                        msg='Errors: {0}'.format('; '.join([str(e) for e in errors])),
+                        errors=[str(e) for e in errors],
+                    )
 
         module.exit_json(**result)
     except DNSAPIAuthenticationError as e:

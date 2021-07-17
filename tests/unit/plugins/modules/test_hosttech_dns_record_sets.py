@@ -720,6 +720,57 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['changed'] is True
         assert result['zone_id'] == 42
 
+    def test_change_add_one_failed(self, mocker):
+        result = self.run_module_failed(mocker, hosttech_dns_record_sets, {
+            'hosttech_token': 'foo',
+            'zone_name': 'example.com',
+            'record_sets': [
+                {
+                    'record': 'example.com',
+                    'type': 'CAA',
+                    'ttl': 3600,
+                    'value': [
+                        '128 issue "letsencrypt.org xxx"',
+                    ],
+                },
+            ],
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
+            FetchUrlCall('POST', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'CAA')
+            .expect_json_value(['ttl'], 3600)
+            .expect_json_value(['comment'], '')
+            .expect_json_value(['name'], '')
+            .expect_json_value(['flag'], '128')
+            .expect_json_value(['tag'], 'issue')
+            .expect_json_value(['value'], 'letsencrypt.org xxx')
+            .return_header('Content-Type', 'application/json')
+            .result_json({'message': 'Internal Server Error'}),
+        ])
+
+        assert result['msg'] == (
+            'Error: Expected HTTP status 201 for POST https://api.ns1.hosttech.eu/api/user/v1/zones/42/records,'
+            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
+        )
+
     def test_change_add_one(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record_sets, {
             'hosttech_token': 'foo',
@@ -1054,6 +1105,144 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
                     'type': 'NS',
                     'ttl': 10800,
                     'value': ['ns1.hostserv.eu', 'ns4.hostserv.eu'],
+                },
+            ],
+        }
+
+    def test_change_modify_list_nodelete(self, mocker):
+        result = self.run_module_success(mocker, hosttech_dns_record_sets, {
+            'hosttech_token': 'foo',
+            'zone_name': 'example.com',
+            'record_sets': [
+                {
+                    'record': 'example.com',
+                    'type': 'NS',
+                    'ttl': 10800,
+                    'value': [
+                        'ns1.hostserv.eu',
+                        'ns2.hostserv.eu',
+                    ],
+                },
+            ],
+            '_ansible_diff': True,
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+            .expect_query_values('query', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
+            FetchUrlCall('DELETE', 404)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/130')
+            .return_header('Content-Type', 'application/json')
+            .result_json({'message': 'record does not exist'}),
+        ])
+
+        assert result['changed'] is True
+        assert result['zone_id'] == 42
+        assert 'diff' in result
+        assert 'before' in result['diff']
+        assert 'after' in result['diff']
+        assert result['diff']['before'] == {
+            'record_sets': [
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.5'],
+                },
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::3'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'MX',
+                    'value': ['10 example.com'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 10800,
+                    'type': 'NS',
+                    'value': ['ns3.hostserv.eu', 'ns2.hostserv.eu', 'ns1.hostserv.eu'],
+                },
+            ],
+        }
+        assert result['diff']['after'] == {
+            'record_sets': [
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.5'],
+                },
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::3'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'MX',
+                    'value': ['10 example.com'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'type': 'NS',
+                    'ttl': 10800,
+                    'value': ['ns2.hostserv.eu', 'ns1.hostserv.eu'],
                 },
             ],
         }

@@ -31,6 +31,7 @@ class ArgumentSpec(object):
         self.required_if.extend(other.required_if)
         self.required_one_of.extend(other.required_one_of)
         self.mutually_exclusive.extend(other.mutually_exclusive)
+        return self
 
     def to_kwargs(self):
         return {
