@@ -1,2 +1,0 @@
-breaking_changes:
-  - "Hosttech API creation - now requires a ``ModuleOptionProvider`` object instead of an ``AnsibleModule`` object. Alternatively an Ansible plugin instance can be passed (https://github.com/ansible-collections/community.dns/pull/37)."

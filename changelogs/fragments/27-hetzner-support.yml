@@ -1,2 +1,0 @@
-minor_changes:
-- "Add support for Hetzner DNS (https://github.com/ansible-collections/community.dns/pull/27)."

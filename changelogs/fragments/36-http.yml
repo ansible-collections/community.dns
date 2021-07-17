@@ -1,2 +1,0 @@
-minor_changes:
-- "Use HTTP helper class to make API implementations work for both plugins and modules. Make WSDL API use ``fetch_url`` instead of ``open_url`` for modules (https://github.com/ansible-collections/community.dns/pull/36)."

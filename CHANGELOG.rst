@@ -5,6 +5,60 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v2.0.0-a1
+=========
+
+Release Summary
+---------------
+
+First alpha release of 2.0.0.
+
+Minor Changes
+-------------
+
+- Add support for Hetzner DNS (https://github.com/ansible-collections/community.dns/pull/27).
+- The hosttech_dns_records module has been renamed to hosttech_dns_record_sets (https://github.com/ansible-collections/community.dns/pull/31).
+- The internal API now supports bulk DNS record changes, if supported by the API (https://github.com/ansible-collections/community.dns/pull/39).
+- Use HTTP helper class to make API implementations work for both plugins and modules. Make WSDL API use ``fetch_url`` instead of ``open_url`` for modules (https://github.com/ansible-collections/community.dns/pull/36).
+- hosttech_dns_* modules - rename ``zone`` parameter to ``zone_name``. The old name ``zone`` can still be used as an alias (https://github.com/ansible-collections/community.dns/pull/32).
+- hosttech_dns_record_set - ``value`` is no longer required when ``state=absent`` and ``overwrite=true`` (https://github.com/ansible-collections/community.dns/pull/31).
+- hosttech_dns_record_sets - ``records`` has been renamed to ``record_sets``. The old name ``records`` can still be used as an alias (https://github.com/ansible-collections/community.dns/pull/31).
+- hosttech_dns_zone_info - return extra information as ``zone_info`` (https://github.com/ansible-collections/community.dns/pull/38).
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- Hosttech API creation - now requires a ``ModuleOptionProvider`` object instead of an ``AnsibleModule`` object. Alternatively an Ansible plugin instance can be passed (https://github.com/ansible-collections/community.dns/pull/37).
+- The hosttech_dns_record module has been renamed to hosttech_dns_record_set (https://github.com/ansible-collections/community.dns/pull/31).
+- When using the internal modules API, now a zone ID type and a provider information object must be passed (https://github.com/ansible-collections/community.dns/pull/27).
+- hosttech_dns_record_set - the option ``overwrite`` was replaced by a new option ``on_existing``. Specifying ``overwrite=true`` is equivalent to ``on_existing=replace`` (the new default). Specifying ``overwrite=false`` with ``state=present`` is equivalent to ``on_existing=keep_and_fail``, and specifying ``overwrite=false`` with ``state=absent`` is equivalent to ``on_existing=keep`` (https://github.com/ansible-collections/community.dns/pull/31).
+
+Deprecated Features
+-------------------
+
+- The hosttech_dns_records module has been renamed to hosttech_dns_record_sets. The old name will stop working in community.dns 3.0.0 (https://github.com/ansible-collections/community.dns/pull/31).
+
+New Plugins
+-----------
+
+Inventory
+~~~~~~~~~
+
+- community.dns.hetzner_dns_records - Create inventory from Hetzner DNS records
+- community.dns.hosttech_dns_records - Create inventory from Hosttech DNS records
+
+New Modules
+-----------
+
+- community.dns.hetzner_dns_record - Add or delete a single record in Hetzner DNS service
+- community.dns.hetzner_dns_record_info - Retrieve entries in Hetzner DNS service
+- community.dns.hetzner_dns_record_set - Add or delete record sets in Hetzner DNS service
+- community.dns.hetzner_dns_record_sets - Bulk synchronize DNS record sets in Hetzner DNS service
+- community.dns.hetzner_dns_zone_info - Retrieve zone information in Hetzner DNS service
+- community.dns.hosttech_dns_record - Add or delete a single record in Hosttech DNS service
+- community.dns.hosttech_dns_record_set - Add or delete record sets in Hosttech DNS service
+- community.dns.hosttech_dns_record_sets - Bulk synchronize DNS record sets in Hosttech DNS service
+
 v1.2.0
 ======
 
