@@ -1,0 +1,2 @@
+minor_changes:
+- "The internal API now supports bulk DNS record changes, if supported by the API (https://github.com/ansible-collections/community.dns/pull/39)."
