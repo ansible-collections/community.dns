@@ -13,7 +13,7 @@ import subprocess
 
 def main():
     """Main entry point."""
-    p = subprocess.run(['./update-docs-fragments.py', '--lint'], check=False)
+    p = subprocess.run([sys.executable, 'update-docs-fragments.py', '--lint'], check=False)
     if p.returncode not in (0, 5):
         print('{0}:0:0: unexpected return code {1}'.format(sys.argv[0], p.returncode))
 
