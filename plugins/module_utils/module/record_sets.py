@@ -42,11 +42,11 @@ from ._utils import (
 )
 
 
-def create_module_argument_spec(zone_id_type, provider_information):
+def create_module_argument_spec(provider_information):
     return ArgumentSpec(
         argument_spec=dict(
             zone_name=dict(type='str', aliases=['zone']),
-            zone_id=dict(type=zone_id_type),
+            zone_id=dict(type=provider_information.get_zone_id_type()),
             prune=dict(type='bool', default=False),
             record_sets=dict(
                 type='list',

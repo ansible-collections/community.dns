@@ -15,6 +15,18 @@ from ansible.module_utils import six
 @six.add_metaclass(abc.ABCMeta)
 class ProviderInformation(object):
     @abc.abstractmethod
+    def get_zone_id_type(self):
+        """
+        Return the (short) type for zone IDs, like ``'int'`` or ``'str'``.
+        """
+
+    @abc.abstractmethod
+    def get_record_id_type(self):
+        """
+        Return the (short) type for record IDs, like ``'int'`` or ``'str'``.
+        """
+
+    @abc.abstractmethod
     def get_supported_record_types(self):
         """
         Return a list of supported record types.

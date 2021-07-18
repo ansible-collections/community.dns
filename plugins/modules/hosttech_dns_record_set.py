@@ -211,7 +211,7 @@ from ansible_collections.community.dns.plugins.module_utils.module.record_set im
 def main():
     provider_information = create_hosttech_provider_information()
     argument_spec = create_hosttech_argument_spec()
-    argument_spec.merge(create_module_argument_spec(zone_id_type='int', provider_information=provider_information))
+    argument_spec.merge(create_module_argument_spec(provider_information=provider_information))
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
     run_module(module, lambda: create_hosttech_api(ModuleOptionProvider(module), ModuleHTTPHelper(module)), provider_information=provider_information)
 

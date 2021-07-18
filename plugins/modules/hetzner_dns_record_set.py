@@ -210,7 +210,7 @@ from ansible_collections.community.dns.plugins.module_utils.module.record_set im
 def main():
     provider_information = create_hetzner_provider_information()
     argument_spec = create_hetzner_argument_spec()
-    argument_spec.merge(create_module_argument_spec(zone_id_type='str', provider_information=provider_information))
+    argument_spec.merge(create_module_argument_spec(provider_information=provider_information))
     argument_spec.argument_spec['prefix']['aliases'] = ['name']
     argument_spec.argument_spec['prefix']['deprecated_aliases'] = [dict(name='name', version='3.0.0', collection_name='community.dns')]
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
