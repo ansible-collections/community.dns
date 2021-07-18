@@ -243,9 +243,11 @@ def main(program, arguments):
                 add_record_type_fragments(doc_fragment, record_types)
 
                 if not compare_doc_fragment(provider, doc_fragment):
+                    path = doc_fragment_fn(provider)
                     if lint:
-                        errors.append('{0}: Needs to be updated by update-docs-fragments.py'.format(doc_fragment_fn(provider)))
+                        errors.append('{0}: Needs to be updated by update-docs-fragments.py'.format(path))
                     else:
+                        print('Writing {0}...'.format(path))
                         write_doc_fragment(provider, doc_fragment)
 
             except DocFragmentParseError as e:
