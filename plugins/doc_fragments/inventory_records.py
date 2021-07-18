@@ -11,12 +11,6 @@ __metaclass__ = type
 class ModuleDocFragment(object):
 
     # Standard files documentation fragment
-
-    # NOTE: This document fragment needs to be augmented by ZONE_CHOICES_RECORDS_INVENTORY in a
-    #       provider doc fragment. The ZONE_CHOICES_RECORDS_INVENTORY fragment will provide `choices`
-    #       for the options.filters.suboptions.type entry.
-    #       (Due to how doc fragments work in Ansible, that fragment basically has to contain everything
-    #        in options.filters.suboptions.)
     DOCUMENTATION = r'''
 description:
     - Records are matched by prefix / record name and value.
