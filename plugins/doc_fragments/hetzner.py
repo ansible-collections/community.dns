@@ -54,7 +54,6 @@ options:
           - DANE
           - DS
           - HINFO
-          - MX
           - NS
           - RP
           - SOA
