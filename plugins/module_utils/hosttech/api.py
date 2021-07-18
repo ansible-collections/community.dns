@@ -39,6 +39,18 @@ class HosttechProviderInformation(ProviderInformation):
         """
         return ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
 
+    def get_zone_id_type(self):
+        """
+        Return the (short) type for zone IDs, like ``'int'`` or ``'str'``.
+        """
+        return 'int'
+
+    def get_record_id_type(self):
+        """
+        Return the (short) type for record IDs, like ``'int'`` or ``'str'``.
+        """
+        return 'int'
+
     def normalize_prefix(self, prefix):
         """
         Given a prefix (string or None), return its normalized form.
