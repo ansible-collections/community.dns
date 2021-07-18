@@ -1,0 +1,11 @@
+{
+    "include_symlinks": false,
+    "prefixes": [
+        "plugins/doc_fragments/",
+        "plugins/module_utils/",
+    ],
+    "output": "path-message",
+    "requirements": [
+        "PyYAML"
+    ]
+}
