@@ -10,12 +10,6 @@ __metaclass__ = type
 class ModuleDocFragment(object):
 
     # Standard files documentation fragment
-
-    # NOTE: This document fragment needs to be augmented by ZONE_CHOICES_RECORD_SETS_MODULE in a
-    #       provider doc fragment. The ZONE_CHOICES_RECORD_SETS_MODULE fragment will provide `choices`
-    #       for the options.record_sets.suboptions.type entry.
-    #       (Due to how doc fragments work in Ansible, that fragment basically has to contain everything
-    #        in options.record_sets.suboptions.)
     DOCUMENTATION = r'''
 description:
     - The module allows to set, modify and delete multiple DNS record sets at once.
