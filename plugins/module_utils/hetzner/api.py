@@ -58,7 +58,7 @@ def _create_record_from_json(source, type=None, has_id=True):
     if has_id:
         result.id = source['id']
     result.type = source.get('type', type)
-    result.ttl = source['ttl'] if source.get('ttl') is not None else None
+    result.ttl = source.get('ttl') or 300
     name = source.get('name')
     if name == '@':
         name = None

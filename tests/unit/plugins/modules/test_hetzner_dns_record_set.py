@@ -999,7 +999,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'record': 'example.com',
             'prefix': '',
             'type': 'NS',
-            'ttl': None,
+            'ttl': 300,
             'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
         }
         assert result['diff']['after'] == result['diff']['before']
@@ -1050,7 +1050,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'record': 'example.com',
             'prefix': '',
             'type': 'NS',
-            'ttl': None,
+            'ttl': 300,
             'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
         }
         assert result['diff']['after'] == result['diff']['before']
@@ -1145,7 +1145,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'record': 'example.com',
             'prefix': '',
             'type': 'NS',
-            'ttl': None,
+            'ttl': 300,
             'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
         }
         assert result['diff']['after'] == {

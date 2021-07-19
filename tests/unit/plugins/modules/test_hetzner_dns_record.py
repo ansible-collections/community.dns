@@ -704,7 +704,6 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'type': 'A',
                     'name': '*',
                     'value': '1.2.3.5',
-                    'ttl': 300,
                     'zone_id': '42',
                 },
             }),
