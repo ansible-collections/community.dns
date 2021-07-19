@@ -1,0 +1,2 @@
+bugfixes:
+- "Hetzner API - interpret missing TTL as 300, which is what the web console also does (https://github.com/ansible-collections/community.dns/pull/42)."
