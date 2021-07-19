@@ -51,7 +51,6 @@ options:
         description:
           - The TTL to give the new record, in seconds.
           - Will be ignored if I(state=absent) and I(on_existing=replace).
-        default: 3600
         type: int
     type:
         description:

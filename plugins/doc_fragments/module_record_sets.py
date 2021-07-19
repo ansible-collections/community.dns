@@ -62,7 +62,6 @@ options:
             ttl:
                 description:
                   - The TTL to give the new record, in seconds.
-                default: 3600
                 type: int
             type:
                 description:

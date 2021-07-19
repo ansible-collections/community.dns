@@ -14,28 +14,43 @@ import yaml
 
 PROVIDERS = ['hetzner', 'hosttech']
 
-RECORD_TYPE_CHOICES_DEPENDENT_FRAGMENTS = [
-    ('ZONE_CHOICES', 'options.type', [
-        'module_record',
-        'module_record_info',
-        'module_record_set',
+DEPENDENT_FRAGMENTS = [
+    ('RECORD_TYPE_CHOICES', [
+        ('record_type', 'options.type', [
+            'module_record',
+            'module_record_info',
+            'module_record_set',
+        ]),
     ]),
-    ('ZONE_CHOICES_RECORD_SETS_MODULE', 'options.record_sets.suboptions.type', [
-        'module_record_sets',
+    ('RECORD_DEFAULT_TTL', [
+        ('record_default_ttl', 'options.ttl', [
+            'module_record',
+            'module_record_info',
+            'module_record_set',
+        ]),
     ]),
-    ('ZONE_CHOICES_RECORDS_INVENTORY', 'options.filters.suboptions.type', [
-        'inventory_records',
+    ('RECORD_TYPE_CHOICES_RECORD_SETS_MODULE', [
+        ('record_type', 'options.record_sets.suboptions.type', [
+            'module_record_sets',
+        ]),
+        ('record_default_ttl', 'options.record_sets.suboptions.ttl', [
+            'module_record_sets',
+        ]),
     ]),
-]
-
-ZONE_ID_TYPE_DEPENDENT_FRAGMENTS = [
-    ('ZONE_ID_TYPE', 'options.zone_id', [
-        'module_record',
-        'module_record_info',
-        'module_record_set',
-        'module_record_sets',
-        'module_zone_info',
-        'inventory_records',
+    ('RECORD_TYPE_CHOICES_RECORDS_INVENTORY', [
+        ('record_type', 'options.filters.suboptions.type', [
+            'inventory_records',
+        ]),
+    ]),
+    ('ZONE_ID_TYPE', [
+        ('zone_id_type', 'options.zone_id', [
+            'module_record',
+            'module_record_info',
+            'module_record_set',
+            'module_record_sets',
+            'module_zone_info',
+            'inventory_records',
+        ]),
     ]),
 ]
 
@@ -213,10 +228,15 @@ def compare_doc_fragment(name, doc_fragment):
     return data == compare_data
 
 
-def add_fragments(provider_fragment, fragment_add_data, update):
-    for fragment_name, insertion_point, doc_fragment_names in fragment_add_data:
-        doc_fragments = [load_single_doc_fragment(doc_fragment) for doc_fragment in doc_fragment_names]
-        insertion_point = insertion_point.split('.')
+def augment_fragment(provider_fragment, provider_info):
+    data = {
+        'record_type': {'choices': sorted(provider_info.get_supported_record_types())},
+        'zone_id_type': {'type': provider_info.get_zone_id_type()},
+        'record_id_type': {'type': provider_info.get_record_id_type()},
+        'record_default_ttl': {'default': provider_info.get_record_default_ttl()}
+    }
+
+    for fragment_name, fragment_insertion_data in DEPENDENT_FRAGMENTS:
         insertion_fragment = provider_fragment.fragments_by_name.get(fragment_name)
         if insertion_fragment is None:
             insertion_fragment = DocFragment('', [], fragment_name, [])
@@ -224,16 +244,24 @@ def add_fragments(provider_fragment, fragment_add_data, update):
             provider_fragment.fragments_by_name[fragment_name] = insertion_fragment
 
         insertion_fragment.data = {}
-        insertion_pos = insertion_fragment.data
-        original_pos = doc_fragments[0].data  # FIXME
-        for depth, part in enumerate(insertion_point):
-            if part not in insertion_pos:
-                insertion_pos[part] = {}
-            insertion_pos = insertion_pos[part]
-            original_pos = original_pos[part]
-            if depth >= 2:
-                insertion_pos.update(original_pos)
-        insertion_pos.update(update)
+        all_doc_fragment_names = set()
+        for what, insertion_point, doc_fragment_names in fragment_insertion_data:
+            all_doc_fragment_names.update(doc_fragment_names)
+            doc_fragments = [load_single_doc_fragment(doc_fragment) for doc_fragment in doc_fragment_names]
+            insertion_point = insertion_point.split('.')
+
+            insertion_pos = insertion_fragment.data
+            original_pos = doc_fragments[0].data  # FIXME
+            for depth, part in enumerate(insertion_point):
+                if part not in insertion_pos:
+                    insertion_pos[part] = {}
+                insertion_pos = insertion_pos[part]
+                original_pos = original_pos[part]
+                if depth >= 2:
+                    for x in original_pos:
+                        if x not in insertion_pos:
+                            insertion_pos[x] = original_pos[x]
+            insertion_pos.update(data[what])
 
         insertion_fragment.prefix_lines = [
             '',
@@ -243,21 +271,12 @@ def add_fragments(provider_fragment, fragment_add_data, update):
             '    #          {0}'.format(line)
             for line in textwrap.wrap(
                 'It is used to augment the docs fragment{0} {1}.'.format(
-                    's' if len(doc_fragment_names) != 1 else '',
-                    ', '.join(sorted(doc_fragment_names))),
+                    's' if len(all_doc_fragment_names) != 1 else '',
+                    ', '.join(sorted(all_doc_fragment_names))),
                 width=80)
         ])
         insertion_fragment.prefix_lines.append('    #          DO NOT EDIT MANUALLY!')
         insertion_fragment.recreate_lines()
-
-
-def augment_fragment(provider_fragment, provider_info):
-    # Augment zone ID types
-    add_fragments(provider_fragment, ZONE_ID_TYPE_DEPENDENT_FRAGMENTS, {'type': provider_info.get_zone_id_type()})
-
-    # Augment record type choices
-    provider_record_types = sorted(provider_info.get_supported_record_types())
-    add_fragments(provider_fragment, RECORD_TYPE_CHOICES_DEPENDENT_FRAGMENTS, {'choices': provider_record_types})
 
 
 def main(program, arguments):

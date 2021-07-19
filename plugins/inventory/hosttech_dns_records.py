@@ -18,8 +18,8 @@ version_added: 2.0.0
 extends_documentation_fragment:
     - community.dns.hosttech
     - community.dns.hosttech.plugin
+    - community.dns.hosttech.record_type_choices_records_inventory
     - community.dns.hosttech.zone_id_type
-    - community.dns.hosttech.zone_choices_records_inventory
     - community.dns.inventory_records
 
 author:
