@@ -21,8 +21,9 @@ description:
 
 extends_documentation_fragment:
     - community.dns.hetzner
+    - community.dns.hetzner.record_default_ttl
+    - community.dns.hetzner.record_type_choices
     - community.dns.hetzner.zone_id_type
-    - community.dns.hetzner.zone_choices
     - community.dns.module_record
 
 options:

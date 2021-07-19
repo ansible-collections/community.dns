@@ -21,8 +21,8 @@ description:
 
 extends_documentation_fragment:
     - community.dns.hosttech
+    - community.dns.hosttech.record_type_choices
     - community.dns.hosttech.zone_id_type
-    - community.dns.hosttech.zone_choices
     - community.dns.module_record_info
 
 author:

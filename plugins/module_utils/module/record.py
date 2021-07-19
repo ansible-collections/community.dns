@@ -41,7 +41,7 @@ def create_module_argument_spec(provider_information):
             zone_id=dict(type=provider_information.get_zone_id_type()),
             record=dict(type='str'),
             prefix=dict(type='str'),
-            ttl=dict(type='int', default=3600),
+            ttl=dict(type='int', default=provider_information.get_record_default_ttl()),
             type=dict(choices=provider_information.get_supported_record_types(), required=True),
             value=dict(type='str', required=True),
         ),

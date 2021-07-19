@@ -340,6 +340,12 @@ class HetznerProviderInformation(ProviderInformation):
         """
         return 'str'
 
+    def get_record_default_ttl(self):
+        """
+        Return the default TTL for records, like 300 or 3600.
+        """
+        return 300
+
     def normalize_prefix(self, prefix):
         """
         Given a prefix (string or None), return its normalized form.

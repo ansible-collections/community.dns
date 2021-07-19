@@ -52,7 +52,6 @@ options:
         description:
           - The TTL to give the new record, in seconds.
           - This is not used for record deletion.
-        default: 3600
         type: int
     type:
         description:

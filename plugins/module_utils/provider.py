@@ -27,6 +27,12 @@ class ProviderInformation(object):
         """
 
     @abc.abstractmethod
+    def get_record_default_ttl(self):
+        """
+        Return the default TTL for records, like 300 or 3600.
+        """
+
+    @abc.abstractmethod
     def get_supported_record_types(self):
         """
         Return a list of supported record types.

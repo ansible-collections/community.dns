@@ -36,6 +36,9 @@ class DefaultProviderInformation(ProviderInformation):
     def get_record_id_type(self):
         return 'str'
 
+    def get_record_default_ttl(self):
+        return 300
+
 
 def test_normalize_dns_name():
     assert normalize_dns_name('ExAMPLE.CoM.') == 'example.com'
