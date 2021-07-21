@@ -61,7 +61,6 @@ zone_info:
         - Extra information returned by the API.
     type: dict
     returned: success
-    sample: {'dnssec': True, 'dnssec_email': 'test@example.com', 'ds_records': [], 'email': 'test@example.com', 'ttl': 3600}
     contains:
         created:
             description:
