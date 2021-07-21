@@ -18,6 +18,8 @@ The collection provides five modules for working with Hetzner DNS:
 - :ref:`community.dns.hetzner_dns_record_sets <ansible_collections.community.dns.hetzner_dns_record_sets_module>`: bulk synchronize DNS record sets
 - :ref:`community.dns.hetzner_dns_zone_info <ansible_collections.community.dns.hetzner_dns_zone_info_module>`: retrieve zone information
 
+If you are interested in migrating from the `markuman.hetzner_dns collection <https://galaxy.ansible.com/markuman/hetzner_dns>`_, please see :ref:`ansible_collections.community.dns.docsite.hetzner_guide.migration_markuman_hetzner_dns`.
+
 Authentication
 --------------
 
@@ -261,3 +263,162 @@ The next example shows how to make sure that only the given records are availabl
           - prefix: ''
             type: NS
             ignore: true
+
+.. _ansible_collections.community.dns.docsite.hetzner_guide.migration_markuman_hetzner_dns:
+
+Migrating from ``markuman.hetzner_dns``
+---------------------------------------
+
+This section describes how to migrate playbooks and roles from using the `markuman.hetzner_dns collection <https://galaxy.ansible.com/markuman/hetzner_dns>`_ to the Hetzner modules and plugins in the ``community.dns`` collection.
+
+There are three steps for migrating. Two of these steps must be done on migration, the third step can also be done later:
+
+1. Replace the modules and plugins used by the new ones.
+2. Adjust module and plugin options if necessary.
+3. Avoid deprecated aliases which ease the transition.
+
+The `markuman.hetzner_dns collection <https://galaxy.ansible.com/markuman/hetzner_dns>`_ collection provides three modules and one inventory plugin.
+
+The markuman.hetzner_dns.record module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``markuman.hetzner_dns.zone_info`` module can be replaced by the :ref:`community.dns.hetzner_dns_record module <ansible_collections.community.dns.hetzner_dns_record_module>` and the :ref:`community.dns.hetzner_dns_record_set module <ansible_collections.community.dns.hetzner_dns_record_set_module>`, depending on what it is used for.
+
+When creating, updating or removing single records, the :ref:`community.dns.hetzner_dns_record module <ansible_collections.community.dns.hetzner_dns_record_module>` should be used. This is the case when ``purge=false`` is specified (the default value). Note that ``replace``, ``overwrite`` and ``solo`` are aliases of ``purge``.
+
+.. code-block:: yaml+jinja
+
+    # Creating and updating DNS records
+
+    - name: Creating or updating a single DNS record with markuman.hetzner_dns
+      markuman.hetzner_dns.record:
+        zone_name: example.com
+        name: localhost
+        type: A
+        value: 127.0.0.1
+        ttl: 60
+        # This means the module operates on single DNS entries. If not specified,
+        # this is the default value:
+        purge: false
+
+    - name: Creating or updating a single DNS record with community.dns
+      community.dns.hetzner_dns_record:
+        zone_name: example.com
+        # 'state' must always be specified:
+        state: present
+        # 'name' is a deprecated alias of 'prefix', so it can be
+        # kept during a first migration step:
+        name: localhost
+        # 'type', 'value' and 'ttl' do not change:
+        type: A
+        value: 127.0.0.1
+        ttl: 60
+
+When the ``markuman.hetzner_dns.record`` module is in replace mode, it should be replaced by the :ref:`community.dns.hetzner_dns_record_set module <ansible_collections.community.dns.hetzner_dns_record_set_module>`, since then it operates on the *record set* and not just on a single record:
+
+.. code-block:: yaml+jinja
+
+    # Creating and updating DNS record sets
+
+    - name: Creating or updating a record set with markuman.hetzner_dns
+      markuman.hetzner_dns.record:
+        zone_name: example.com
+        name: localhost
+        type: A
+        value: 127.0.0.1
+        ttl: 60
+        # This means the module operates on the record set:
+        purge: true
+
+    - name: Creating or updating a record set with community.dns
+      community.dns.hetzner_dns_record_set:
+        zone_name: example.com
+        # 'state' must always be specified:
+        state: present
+        # 'name' is a deprecated alias of 'prefix', so it can be
+        # kept during a first migration step:
+        name: localhost
+        # 'type' and 'ttl' do not change:
+        type: A
+        ttl: 60
+        # 'value' is now a list:
+        value:
+          - 127.0.0.1
+        # Ansible allows to specify lists as a comma-separated string.
+        # So for records which do not contain a comma, you can also
+        # keep the old syntax, in this case:
+        #
+        #     value: 127.0.0.1
+
+When deleting a record, it depends on whether ``value`` is specified or not. If ``value`` is specified, the module is deleting a single DNS record, and the :ref:`community.dns.hetzner_dns_record module <ansible_collections.community.dns.hetzner_dns_record_module>` should be used:
+
+.. code-block:: yaml+jinja
+
+    # Deleting single DNS records
+
+    - name: Deleting a single DNS record with markuman.hetzner_dns
+      markuman.hetzner_dns.record:
+        zone_name: example.com
+        state: absent
+        name: localhost
+        type: A
+        value: 127.0.0.1
+        ttl: 60
+
+    - name: Deleting a single DNS record with community.dns
+      community.dns.hetzner_dns_record:
+        zone_name: example.com
+        state: absent
+        # 'name' is a deprecated alias of 'prefix', so it can be
+        # kept during a first migration step:
+        name: localhost
+        # 'type', 'value' and 'ttl' do not change:
+        type: A
+        value: 127.0.0.1
+        ttl: 60
+
+When ``value`` is not specified, the ``markuman.hetzner_dns.record`` module will delete all records for this prefix and type. In that case, it operates on a record set and the :ref:`community.dns.hetzner_dns_record_set module <ansible_collections.community.dns.hetzner_dns_record_set_module>` should be used:
+
+.. code-block:: yaml+jinja
+
+    # Deleting multiple DNS records
+
+    - name: Deleting multiple DNS records with markuman.hetzner_dns
+      markuman.hetzner_dns.record:
+        zone_name: example.com
+        state: absent
+        name: localhost
+        type: A
+
+    - name: Deleting a single DNS record with community.dns
+      community.dns.hetzner_dns_record:
+        zone_name: example.com
+        state: absent
+        # 'name' is a deprecated alias of 'prefix', so it can be
+        # kept during a first migration step:
+        name: localhost
+        # 'type' does not change:
+        type: A
+
+A last step is replacing the deprecated alias ``name`` of ``prefix`` by ``prefix``. This can be done later though, if you do not mind the deprecation warnings.
+
+The markuman.hetzner_dns.record_info module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``markuman.hetzner_dns.zone_info`` module can be replaced by the :ref:`community.dns.hetzner_dns_record_info module <ansible_collections.community.dns.hetzner_dns_record_info_module>`. There are two big differences:
+
+1. Instead of with the ``filters`` option, the output is controlled by the ``what`` option (choices ``single_record``, ``all_types_for_record``, and ``all_records``), the ``type`` option (needed when ``what=single_record``), and the ``record`` and ``prefix`` options (needed when ``what`` is not ``all_records``).
+2. The module returns **record sets** instead of individual records. This means that for example all A record for the prefix ``*`` are returned as one entry (with multiple values), instead of a list of records (which each a single value).
+
+The markuman.hetzner_dns.zone_info module
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``markuman.hetzner_dns.zone_info`` module can be replaced by the :ref:`community.dns.hetzner_dns_zone_info module <ansible_collections.community.dns.hetzner_dns_zone_info_module>`. The main differences are:
+
+1. The parameter ``name`` must be changed to ``zone_name`` or ``zone``.
+2. The return value ``zone_info`` no longer has the ``name`` and ``id`` entries. Use the return values ``zone_name`` and ``zone_id`` instead.
+
+The markuman.hetzner_dns.inventory inventory plugin
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``markuman.hetzner_dns.inventory`` inventory plugin can be replaced by the :ref:`community.dns.hetzner_dns_records inventory plugin <ansible_collections.community.dns.hetzner_dns_records_inventory>`. Besides the plugin name, no change should be necessary.
