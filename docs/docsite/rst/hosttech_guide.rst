@@ -3,6 +3,10 @@
 HostTech DNS Guide
 ==================
 
+.. contents:: Contents
+   :local:
+   :depth: 2
+
 The :ref:`community.dns collection <plugins_in_community.dns>` offers several modules for working with the `HostTech DNS service <https://www.hosttech.ch/>`_.
 The modules support both the old `WSDL-based API <https://ns1.hosttech.eu/public/api?wsdl>`_ and the new `JSON REST based API <https://api.ns1.hosttech.eu/api/documentation/>`_.
 

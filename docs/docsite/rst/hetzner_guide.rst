@@ -3,6 +3,10 @@
 Hetzner DNS Guide
 =================
 
+.. contents:: Contents
+   :local:
+   :depth: 2
+
 The :ref:`community.dns collection <plugins_in_community.dns>` offers several modules for working with the `Hetzner DNS service <https://docs.hetzner.com/dns-console/dns/>`_.
 The modules use the `JSON REST based API <https://dns.hetzner.com/api-docs/>`_.
 

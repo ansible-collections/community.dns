@@ -3,6 +3,10 @@
 Community.Dns Filter Guide
 ==========================
 
+.. contents:: Contents
+   :local:
+   :depth: 1
+
 The :ref:`community.dns collection <plugins_in_community.dns>` offers several filters for working with DNS names:
 
 - ``community.dns.get_public_suffix``: given a domain name, returns the public suffix;
