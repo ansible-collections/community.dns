@@ -3,4 +3,5 @@ sections:
   - title: Guides
     toctree:
       - filter_guide
+      - hetzner_guide
       - hosttech_guide
