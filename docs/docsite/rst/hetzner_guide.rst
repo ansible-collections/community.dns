@@ -23,7 +23,7 @@ If you are interested in migrating from the `markuman.hetzner_dns collection <ht
 Authentication
 --------------
 
-To use Hetzner's API, you need to create a API token. You can manage API tokens in the "API tokens" menu entry in your user menu in the `DNS Console <https://dns.hetzner.com/>`_. You must provide the token to the ``hetzner_token`` option of the modules, its alias ``api_token``, or pass it on in the ``HETZNER_DNS_TOKEN`` environment variable:
+To use Hetzner's API, you need to create an API token. You can manage API tokens in the "API tokens" menu entry in your user menu in the `DNS Console <https://dns.hetzner.com/>`_. You must provide the token to the ``hetzner_token`` option of the modules, its alias ``api_token``, or pass it on in the ``HETZNER_DNS_TOKEN`` environment variable:
 
 .. code-block:: yaml+jinja
 
