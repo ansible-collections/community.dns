@@ -6,9 +6,10 @@ HostTech DNS Guide
 The :ref:`community.dns collection <plugins_in_community.dns>` offers several modules for working with the `HostTech DNS service <https://www.hosttech.ch/>`_.
 The modules support both the old `WSDL-based API <https://ns1.hosttech.eu/public/api?wsdl>`_ and the new `JSON REST based API <https://api.ns1.hosttech.eu/api/documentation/>`_.
 
-The collection provides four modules for working with HostTech DNS:
+The collection provides five modules for working with HostTech DNS:
 
 - :ref:`community.dns.hosttech_dns_record_info <ansible_collections.community.dns.hosttech_dns_record_info_module>`: retrieve information on DNS records
+- :ref:`community.dns.hosttech_dns_record <ansible_collections.community.dns.hosttech_dns_record_module>`: create/update/delete single DNS records
 - :ref:`community.dns.hosttech_dns_record_set <ansible_collections.community.dns.hosttech_dns_record_set_module>`: create/update/delete DNS record sets
 - :ref:`community.dns.hosttech_dns_record_sets <ansible_collections.community.dns.hosttech_dns_record_sets_module>`: bulk synchronize DNS record sets
 - :ref:`community.dns.hosttech_dns_zone_info <ansible_collections.community.dns.hosttech_dns_zone_info_module>`: retrieve zone information
@@ -63,7 +64,7 @@ The :ref:`community.dns.hosttech_dns_zone_info module <ansible_collections.commu
         zone_name: example.com
       register: result
 
-    - name: Query zone information by name
+    - name: Query zone information by ID
       community.dns.hosttech_dns_zone_info:
         zone_id: 42
       register: result
