@@ -10857,6 +10857,11 @@ backplaneapp.io
 // Submitted by Petros Angelatos <petrosagg@balena.io>
 balena-devices.com
 
+// University of Banja Luka : https://unibl.org
+// Domains for Republic of Srpska administrative entity.
+// Submitted by Marko Ivanovic <kormang@hotmail.rs>
+rs.ba
+
 // Banzai Cloud
 // Submitted by Janos Matyas <info@banzaicloud.com>
 *.banzai.cloud
@@ -10871,6 +10876,10 @@ betainabox.com
 // BinaryLane : http://www.binarylane.com
 // Submitted by Nathan O'Sullivan <nathan@mammoth.com.au>
 bnr.la
+
+// Bitbucket : http://bitbucket.org
+// Submitted by Andy Ortlieb <aortlieb@atlassian.com>
+bitbucket.io
 
 // Blackbaud, Inc. : https://www.blackbaud.com
 // Submitted by Paul Crowder <paul.crowder@blackbaud.com>
@@ -11981,6 +11990,10 @@ gitpage.si
 // Glitch, Inc : https://glitch.com
 // Submitted by Mads Hartmann <mads@glitch.com>
 glitch.me
+
+// Global NOG Alliance : https://nogalliance.org/
+// Submitted by Sander Steffann <sander@nogalliance.org>
+nog.community
 
 // Globe Hosting SRL : https://www.globehosting.com/
 // Submitted by Gavin Brown <gavin.brown@centralnic.com>
@@ -13192,6 +13205,10 @@ wellbeingzone.co.uk
 // Submitted by Colin Brown <hello@adimo.co>
 adimo.co.uk
 
+// Riseup Networks : https://riseup.net
+// Submitted by Micah Anderson <micah@riseup.net>
+itcouldbewor.se
+
 // Rochester Institute of Technology : http://www.rit.edu/
 // Submitted by Jennifer Herting <jchits@rit.edu>
 git-pages.rit.edu
@@ -13247,6 +13264,10 @@ spdns.org
 // Seidat : https://www.seidat.com
 // Submitted by Artem Kondratev <accounts@seidat.com>
 seidat.net
+
+// Sellfy : https://sellfy.com
+// Submitted by Yuriy Romadin <contact@sellfy.com>
+sellfy.store
 
 // Senseering GmbH : https://www.senseering.de
 // Submitted by Felix Mönckemeyer <f.moenckemeyer@senseering.de>
