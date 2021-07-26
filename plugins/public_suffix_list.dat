@@ -10651,10 +10651,13 @@ graphox.us
 *.devcdnaccesso.com
 
 // Adobe : https://www.adobe.com/
-// Submitted by Ian Boston <boston@adobe.com>
+// Submitted by Ian Boston <boston@adobe.com> and Lars Trieloff <trieloff@adobe.com>
 adobeaemcloud.com
-adobeaemcloud.net
 *.dev.adobeaemcloud.com
+hlx.live
+adobeaemcloud.net
+hlx.page
+hlx3.page
 
 // Agnat sp. z o.o. : https://domena.pl
 // Submitted by Przemyslaw Plewa <it-admin@domena.pl>
@@ -11626,6 +11629,11 @@ dynv6.net
 // E4YOU spol. s.r.o. : https://e4you.cz/
 // Submitted by Vladimir Dudr <info@e4you.cz>
 e4.cz
+
+// eero : https://eero.com/
+// Submitted by Yue Kang <eero-dynamic-dns@amazon.com>
+eero.online
+eero-stage.online
 
 // En root‽ : https://en-root.org
 // Submitted by Emmanuel Raviart <emmanuel@raviart.com>
