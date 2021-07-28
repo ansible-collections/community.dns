@@ -10,7 +10,7 @@ HETZNER_DEFAULT_ZONE = {
     'created': '2021-07-09T11:18:37Z',
     'modified': '2021-07-09T11:18:37Z',
     'legacy_dns_host': 'string',
-    'legacy_ns': ['string'],
+    'legacy_ns': ['foo', 'bar'],
     'name': 'example.com',
     'ns': ['string'],
     'owner': 'Example',

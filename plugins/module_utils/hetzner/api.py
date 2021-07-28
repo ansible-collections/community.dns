@@ -44,6 +44,8 @@ def _create_zone_from_json(source):
     info = source.copy()
     info.pop('name')
     info.pop('id')
+    if 'legacy_ns' in info:
+        info['legacy_ns'] = sorted(info['legacy_ns'])
     zone.info = info
     return zone
 
