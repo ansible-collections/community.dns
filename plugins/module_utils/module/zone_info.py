@@ -15,10 +15,6 @@ from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.record import (
-    format_records_for_output,
-)
-
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
     DNSAPIAuthenticationError,

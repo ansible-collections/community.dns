@@ -28,8 +28,6 @@ from ansible_collections.community.dns.plugins.module_utils.record import (
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
     DNSAPIAuthenticationError,
-    NOT_PROVIDED,
-    filter_records,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.zone_record_helpers import (

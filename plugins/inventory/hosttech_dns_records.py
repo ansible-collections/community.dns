@@ -32,7 +32,6 @@ from ansible_collections.community.dns.plugins.module_utils.http import (
 )
 
 from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
-    create_hosttech_argument_spec,
     create_hosttech_api,
     create_hosttech_provider_information,
 )
