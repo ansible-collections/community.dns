@@ -70,9 +70,22 @@ set:
             type: str
             sample: A
         ttl:
-            description: The TTL.
+            description:
+              - The TTL.
+              - If there are records in this set with different TTLs, the minimum of the TTLs will be presented here.
             type: int
             sample: 3600
+        ttls:
+            description:
+              - If there are records with different TTL values in this set, this will be the list of TTLs appearing
+                in the records.
+              - Every distinct TTL will appear once, and the TTLs are in ascending order.
+            returned: When there is more than one distinct TTL
+            type: list
+            elements: int
+            sample:
+              - 300
+              - 3600
         value:
             description: The DNS record.
             type: list
@@ -108,9 +121,22 @@ sets:
             type: str
             sample: A
         ttl:
-            description: The TTL.
+            description:
+              - The TTL.
+              - If there are records in this set with different TTLs, the minimum of the TTLs will be presented here.
             type: int
             sample: 3600
+        ttls:
+            description:
+              - If there are records with different TTL values in this set, this will be the list of TTLs appearing
+                in the records.
+              - Every distinct TTL will appear once, and the TTLs are in ascending order.
+            returned: When there is more than one distinct TTL
+            type: list
+            elements: int
+            sample:
+              - 300
+              - 3600
         value:
             description: The DNS record.
             type: list
