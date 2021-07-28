@@ -43,7 +43,7 @@ class RecordsInventoryModule(BaseInventoryPlugin):
     def parse(self, inventory, loader, path, cache=False):
         super(RecordsInventoryModule, self).parse(inventory, loader, path, cache)
 
-        config = self._read_config_data(path)
+        self._read_config_data(path)
 
         try:
             self.setup_api()
