@@ -8,10 +8,7 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 
-from ansible.module_utils.six.moves.urllib.parse import urlencode
 from ansible.module_utils.basic import env_fallback
-from ansible.module_utils.common.text.converters import to_native
-from ansible.module_utils.urls import fetch_url
 
 from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
@@ -31,12 +28,10 @@ from ansible_collections.community.dns.plugins.module_utils.record import (
 
 from ansible_collections.community.dns.plugins.module_utils.zone import (
     DNSZone,
-    DNSZoneWithRecords,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
-    DNSAPIAuthenticationError,
     NOT_PROVIDED,
     ZoneRecordAPI,
     filter_records,

@@ -13,7 +13,6 @@ import time
 
 from ansible.module_utils.six.moves.urllib.parse import urlencode
 from ansible.module_utils.common.text.converters import to_native
-from ansible.module_utils.urls import fetch_url
 
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,

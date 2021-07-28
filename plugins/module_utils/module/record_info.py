@@ -59,18 +59,13 @@ def create_module_argument_spec(provider_information):
 def run_module(module, create_api, provider_information):
     filter_record_type = NOT_PROVIDED
     filter_prefix = NOT_PROVIDED
-    needs_zone_name = False
     if module.params.get('what') == 'single_record':
         filter_record_type = module.params.get('type')
         if module.params.get('prefix') is not None:
             filter_prefix = provider_information.normalize_prefix(module.params.get('prefix'))
-        else:
-            needs_zone_name = True
     elif module.params.get('what') == 'all_types_for_record':
         if module.params.get('prefix') is not None:
             filter_prefix = provider_information.normalize_prefix(module.params.get('prefix'))
-        else:
-            needs_zone_name = True
 
     try:
         # Create API
