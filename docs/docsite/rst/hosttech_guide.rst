@@ -18,6 +18,10 @@ The collection provides five modules for working with HostTech DNS:
 - :ref:`community.dns.hosttech_dns_record_sets <ansible_collections.community.dns.hosttech_dns_record_sets_module>`: bulk synchronize DNS record sets
 - :ref:`community.dns.hosttech_dns_zone_info <ansible_collections.community.dns.hosttech_dns_zone_info_module>`: retrieve zone information
 
+It also provides an inventory plugin:
+
+- :ref:`community.dns.hosttech_dns_records <ansible_collections.community.dns.hosttech_dns_records_inventory>`: create inventory from DNS records
+
 Authentication, Requirements and APIs
 -------------------------------------
 
