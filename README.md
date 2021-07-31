@@ -19,15 +19,20 @@ Depends on the plugin or module used.
 ## Included content
 
 - Modules:
+  - `hetzner_dns_record`: create/update/delete single DNS records with Hetzner DNS.
   - `hetzner_dns_record_info`: retrieve information on DNS records from Hetzner DNS.
   - `hetzner_dns_record_set`: create/update/delete DNS record sets with Hetzner DNS.
   - `hetzner_dns_record_sets`: bulk synchronize DNS record sets in Hetzner DNS service.
   - `hetzner_dns_zone_info`: retrieve zone information from Hetzner DNS.
+  - `hosttech_dns_record`: create/update/delete single DNS records with HostTech DNS.
   - `hosttech_dns_record_info`: retrieve information on DNS records from HostTech DNS.
   - `hosttech_dns_record_set`: create/update/delete DNS record sets with HostTech DNS.
   - `hosttech_dns_record_set`: bulk synchronize DNS record sets in Hosttech DNS service.
   - `hosttech_dns_zone_info`: retrieve zone information from HostTech DNS.
   - `wait_for_txt`: wait for TXT records to propagate to all name servers.
+- Inventory plugins:
+  - `hetzner_dns_records`: create inventory from Hetzner DNS records
+  - `hosttech_dns_records`: create inventory from HostTech DNS records
 - Filters:
   - `get_public_suffix`: given a domain name, returns the public suffix. For example, `"www.ansible.com" | community.dns.get_public_suffix == ".com"` and `"some.random.prefixes.ansible.co.uk" | community.dns.get_public_suffix == ".co.uk"`.
   - `get_registrable_domain`: given a domain name, returns the *registrable domain name* (also called *registered domain name*). For example, `"www.ansible.com" | community.dns.get_registrable_domain == "ansible.com"` and `"some.random.prefixes.ansible.co.uk" | community.dns.get_registrable_domain == "ansible.co.uk"`.

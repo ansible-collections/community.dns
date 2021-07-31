@@ -20,6 +20,10 @@ The collection provides five modules for working with Hetzner DNS:
 
 If you are interested in migrating from the `markuman.hetzner_dns collection <https://galaxy.ansible.com/markuman/hetzner_dns>`_, please see :ref:`ansible_collections.community.dns.docsite.hetzner_guide.migration_markuman_hetzner_dns`.
 
+It also provides an inventory plugin:
+
+- :ref:`community.dns.hetzner_dns_records <ansible_collections.community.dns.hetzner_dns_records_inventory>`: create inventory from DNS records
+
 Authentication
 --------------
 
