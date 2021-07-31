@@ -18,6 +18,7 @@ from ansible_collections.community.dns.plugins.module_utils.record import (
 
 
 def test_format_ttl():
+    assert format_ttl(None) == 'default'
     assert format_ttl(1) == '1s'
     assert format_ttl(59) == '59s'
     assert format_ttl(60) == '1m'
