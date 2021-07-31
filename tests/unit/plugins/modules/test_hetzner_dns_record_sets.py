@@ -334,14 +334,14 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                 {
                     'record': 'example.com',
                     'prefix': '',
-                    'ttl': 300,
+                    'ttl': None,
                     'type': 'NS',
                     'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
                 },
                 {
                     'record': 'example.com',
                     'prefix': '',
-                    'ttl': 300,
+                    'ttl': None,
                     'type': 'SOA',
                     'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
                 },
@@ -374,13 +374,13 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'record': 'example.com',
                     'prefix': '',
                     'type': 'NS',
-                    'ttl': 300,
+                    'ttl': None,
                     'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
                 },
                 {
                     'record': 'example.com',
                     'prefix': '',
-                    'ttl': 300,
+                    'ttl': None,
                     'type': 'SOA',
                     'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
                 },
@@ -783,7 +783,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                 {
                     'record': 'example.com',
                     'type': 'NS',
-                    'ttl': 10800,
+                    'ttl': None,
                     'value': [
                         'helium.ns.hetzner.de.',
                         'ytterbium.ns.hetzner.com.',
@@ -813,7 +813,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             FetchUrlCall('DELETE', 200)
             .expect_header('accept', 'application/json')
             .expect_header('auth-api-token', 'foo')
-            .expect_url('https://dns.hetzner.com/api/v1/records/130')
+            .expect_url('https://dns.hetzner.com/api/v1/records/131')
             .result_str(''),
             FetchUrlCall('PUT', 200)
             .expect_header('accept', 'application/json')
@@ -821,28 +821,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .expect_url('https://dns.hetzner.com/api/v1/records/132')
             .expect_json_value_absent(['id'])
             .expect_json_value(['type'], 'NS')
-            .expect_json_value(['ttl'], 10800)
-            .expect_json_value(['zone_id'], '42')
-            .expect_json_value(['name'], '@')
-            .expect_json_value(['value'], 'helium.ns.hetzner.de.')
-            .return_header('Content-Type', 'application/json')
-            .result_json({
-                'record': {
-                    'id': '132',
-                    'type': 'NS',
-                    'name': '@',
-                    'value': 'helium.ns.hetzner.de.',
-                    'ttl': 10800,
-                    'zone_id': '42',
-                },
-            }),
-            FetchUrlCall('PUT', 200)
-            .expect_header('accept', 'application/json')
-            .expect_header('auth-api-token', 'foo')
-            .expect_url('https://dns.hetzner.com/api/v1/records/131')
-            .expect_json_value_absent(['id'])
-            .expect_json_value(['type'], 'NS')
-            .expect_json_value(['ttl'], 10800)
+            .expect_json_value_absent(['ttl'])
             .expect_json_value(['zone_id'], '42')
             .expect_json_value(['name'], '@')
             .expect_json_value(['value'], 'ytterbium.ns.hetzner.com.')
@@ -853,7 +832,6 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'type': 'NS',
                     'name': '@',
                     'value': 'ytterbium.ns.hetzner.com.',
-                    'ttl': 10800,
                     'zone_id': '42',
                 },
             }),
@@ -904,14 +882,14 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                 {
                     'record': 'example.com',
                     'prefix': '',
-                    'ttl': 300,
+                    'ttl': None,
                     'type': 'NS',
                     'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
                 },
                 {
                     'record': 'example.com',
                     'prefix': '',
-                    'ttl': 300,
+                    'ttl': None,
                     'type': 'SOA',
                     'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
                 },
@@ -958,13 +936,13 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'record': 'example.com',
                     'prefix': '',
                     'type': 'NS',
-                    'ttl': 10800,
+                    'ttl': None,
                     'value': ['helium.ns.hetzner.de.', 'ytterbium.ns.hetzner.com.'],
                 },
                 {
                     'record': 'example.com',
                     'prefix': '',
-                    'ttl': 300,
+                    'ttl': None,
                     'type': 'SOA',
                     'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
                 },
@@ -1100,14 +1078,14 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                 {
                     'record': 'example.com',
                     'prefix': '',
-                    'ttl': 300,
+                    'ttl': None,
                     'type': 'NS',
                     'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
                 },
                 {
                     'record': 'example.com',
                     'prefix': '',
-                    'ttl': 300,
+                    'ttl': None,
                     'type': 'SOA',
                     'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
                 },
@@ -1160,7 +1138,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                 {
                     'record': 'example.com',
                     'prefix': '',
-                    'ttl': 300,
+                    'ttl': None,
                     'type': 'SOA',
                     'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
                 },

@@ -55,7 +55,7 @@ def _create_record_from_json(source, type=None, has_id=True):
     if has_id:
         result.id = source['id']
     result.type = source.get('type', type)
-    result.ttl = source.get('ttl') or 300
+    result.ttl = source.get('ttl')
     name = source.get('name')
     if name == '@':
         name = None
@@ -66,12 +66,13 @@ def _create_record_from_json(source, type=None, has_id=True):
 
 def _record_to_json(record, zone_id):
     result = {
-        'ttl': record.ttl,
         'name': record.prefix or '@',
         'value': record.target,
         'type': record.type,
         'zone_id': zone_id,
     }
+    if record.ttl is not None:
+        result['ttl'] = record.ttl
     return result
 
 
@@ -339,9 +340,10 @@ class HetznerProviderInformation(ProviderInformation):
 
     def get_record_default_ttl(self):
         """
-        Return the default TTL for records, like 300 or 3600.
+        Return the default TTL for records, like 300, 3600 or None.
+        None means that some other TTL (usually from the zone) will be used.
         """
-        return 300
+        return None
 
     def normalize_prefix(self, prefix):
         """
