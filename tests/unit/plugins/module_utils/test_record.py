@@ -18,6 +18,7 @@ from ansible_collections.community.dns.plugins.module_utils.record import (
 
 
 def test_format_ttl():
+    assert format_ttl(None) == 'default'
     assert format_ttl(1) == '1s'
     assert format_ttl(59) == '59s'
     assert format_ttl(60) == '1m'
@@ -48,6 +49,10 @@ def test_format_records_for_output():
     AAAA.type = 'AAAA'
     AAAA.ttl = 600
     AAAA.target = '::1'
+    AAAA2 = DNSRecord()
+    AAAA2.type = 'AAAA'
+    AAAA2.ttl = None
+    AAAA2.target = '::2'
     assert format_records_for_output([], 'foo', '') == {
         'record': 'foo',
         'prefix': '',
@@ -99,6 +104,22 @@ def test_format_records_for_output():
         'ttl': 600,
         'ttls': [600, 3600],
         'value': ['::1', '1.2.3.6'],
+    }
+    assert format_records_for_output([AAAA2], 'foo', None) == {
+        'record': 'foo',
+        'prefix': '',
+        'type': 'AAAA',
+        'ttl': None,
+        'value': ['::2'],
+    }
+    print(format_records_for_output([AAAA2, AAAA], 'foo', None))
+    assert format_records_for_output([AAAA2, AAAA], 'foo', None) == {
+        'record': 'foo',
+        'prefix': '',
+        'type': 'AAAA',
+        'ttl': None,
+        'ttls': [None, 600],
+        'value': ['::2', '::1'],
     }
 
 

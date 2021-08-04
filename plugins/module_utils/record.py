@@ -8,6 +8,8 @@ __metaclass__ = type
 
 
 def format_ttl(ttl):
+    if ttl is None:
+        return 'default'
     sec = ttl % 60
     ttl //= 60
     min = ttl % 60
@@ -61,8 +63,12 @@ class DNSRecord(object):
         return self.__str__()
 
 
+def sorted_ttls(ttls):
+    return sorted(ttls, key=lambda ttl: 0 if ttl is None else ttl)
+
+
 def format_records_for_output(records, record_name, prefix=None):
-    ttls = sorted(set([record.ttl for record in records]))
+    ttls = sorted_ttls(set([record.ttl for record in records]))
     entry = {
         'prefix': prefix or '',
         'type': min([record.type for record in records]) if records else None,

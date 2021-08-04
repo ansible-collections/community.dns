@@ -29,7 +29,8 @@ class ProviderInformation(object):
     @abc.abstractmethod
     def get_record_default_ttl(self):
         """
-        Return the default TTL for records, like 300 or 3600.
+        Return the default TTL for records, like 300, 3600 or None.
+        None means that some other TTL (usually from the zone) will be used.
         """
 
     @abc.abstractmethod

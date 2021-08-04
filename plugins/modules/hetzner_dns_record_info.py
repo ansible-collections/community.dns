@@ -73,6 +73,7 @@ set:
             description:
               - The TTL.
               - If there are records in this set with different TTLs, the minimum of the TTLs will be presented here.
+              - Will return C(none) if the zone's default TTL is used.
             type: int
             sample: 3600
         ttls:
@@ -124,6 +125,7 @@ sets:
             description:
               - The TTL.
               - If there are records in this set with different TTLs, the minimum of the TTLs will be presented here.
+              - Will return C(none) if the zone's default TTL is used.
             type: int
             sample: 3600
         ttls:

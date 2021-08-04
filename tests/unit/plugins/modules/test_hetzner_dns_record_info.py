@@ -378,14 +378,14 @@ class TestHetznerDNSRecordInfoJSON(BaseTestModule):
         assert sets[3] == {
             'record': 'example.com',
             'prefix': '',
-            'ttl': 300,
+            'ttl': None,
             'type': 'NS',
             'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
         }
         assert sets[4] == {
             'record': 'example.com',
             'prefix': '',
-            'ttl': 300,
+            'ttl': None,
             'type': 'SOA',
             'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
         }
@@ -458,14 +458,14 @@ class TestHetznerDNSRecordInfoJSON(BaseTestModule):
         assert sets[5] == {
             'record': 'example.com',
             'prefix': '',
-            'ttl': 300,
+            'ttl': None,
             'type': 'NS',
             'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
         }
         assert sets[6] == {
             'record': 'example.com',
             'prefix': '',
-            'ttl': 300,
+            'ttl': None,
             'type': 'SOA',
             'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
         }
