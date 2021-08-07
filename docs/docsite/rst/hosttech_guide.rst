@@ -162,7 +162,7 @@ Finally you can query all records for a zone:
 Creating and updating DNS single records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Please note that in most cases, you will be interested in modifying a **record set** and not a single record, especially when looking at record types such as ``CNAME`` and ``SOA``.
+If you do not want to add/remove values, but replace values, you will be interested in modifying a **record set** and not a single record. This is in particular important when working with ``CNAME`` and ``SOA`` records.
 
 The :ref:`community.dns.hosttech_dns_record module <ansible_collections.community.dns.hosttech_dns_record_module>` allows to set, update and remove single DNS records. Setting and updating can be done as follows. Records will be matched by record name and type, and the TTL value will be updated if necessary:
 
