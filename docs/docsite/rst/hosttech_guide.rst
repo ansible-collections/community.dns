@@ -12,9 +12,9 @@ The modules support both the old `WSDL-based API <https://ns1.hosttech.eu/public
 
 The collection provides five modules for working with HostTech DNS:
 
-- :ref:`community.dns.hosttech_dns_record_info <ansible_collections.community.dns.hosttech_dns_record_info_module>`: retrieve information on DNS records
 - :ref:`community.dns.hosttech_dns_record <ansible_collections.community.dns.hosttech_dns_record_module>`: create/update/delete single DNS records
 - :ref:`community.dns.hosttech_dns_record_set <ansible_collections.community.dns.hosttech_dns_record_set_module>`: create/update/delete DNS record sets
+- :ref:`community.dns.hosttech_dns_record_set_info <ansible_collections.community.dns.hosttech_dns_record_set_info_module>`: retrieve information on DNS record sets
 - :ref:`community.dns.hosttech_dns_record_sets <ansible_collections.community.dns.hosttech_dns_record_sets_module>`: bulk synchronize DNS record sets
 - :ref:`community.dns.hosttech_dns_zone_info <ansible_collections.community.dns.hosttech_dns_zone_info_module>`: retrieve zone information
 
@@ -92,12 +92,12 @@ Working with DNS records
 Querying DNS records
 ~~~~~~~~~~~~~~~~~~~~
 
-The :ref:`community.dns.hosttech_dns_record_info module <ansible_collections.community.dns.hosttech_dns_record_info_module>` allows to query DNS records from the API. It can be used to query a single record:
+The :ref:`community.dns.hosttech_dns_record_set_info module <ansible_collections.community.dns.hosttech_dns_record_set_info_module>` allows to query DNS record sets from the API. It can be used to query a single record:
 
 .. code-block:: yaml+jinja
 
     - name: Query single record
-      community.dns.hosttech_dns_record_info:
+      community.dns.hosttech_dns_record_set_info:
         zone_name: example.com
         type: A  # IPv4 addresses
         what: single_record  # default value
@@ -126,7 +126,7 @@ You can also query a list of all records for a record name or prefix:
 .. code-block:: yaml+jinja
 
     - name: Query all records for www.example.com
-      community.dns.hosttech_dns_record_info:
+      community.dns.hosttech_dns_record_set_info:
         zone_name: example.com
         what: all_types_for_record
         # Either specify a record name:
@@ -147,7 +147,7 @@ Finally you can query all records for a zone:
 .. code-block:: yaml+jinja
 
     - name: Query all records for a zone
-      community.dns.hosttech_dns_record_info:
+      community.dns.hosttech_dns_record_set_info:
         zone_name: example.com
         what: all_records
       register: result

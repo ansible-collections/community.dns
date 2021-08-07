@@ -18,15 +18,15 @@ DEPENDENT_FRAGMENTS = [
     ('RECORD_TYPE_CHOICES', [
         ('record_type', 'options.type', [
             'module_record',
-            'module_record_info',
             'module_record_set',
+            'module_record_set_info',
         ]),
     ]),
     ('RECORD_DEFAULT_TTL', [
         ('record_default_ttl', 'options.ttl', [
             'module_record',
-            'module_record_info',
             'module_record_set',
+            'module_record_set_info',
         ]),
     ]),
     ('RECORD_TYPE_CHOICES_RECORD_SETS_MODULE', [
@@ -45,8 +45,8 @@ DEPENDENT_FRAGMENTS = [
     ('ZONE_ID_TYPE', [
         ('zone_id_type', 'options.zone_id', [
             'module_record',
-            'module_record_info',
             'module_record_set',
+            'module_record_set_info',
             'module_record_sets',
             'module_zone_info',
             'inventory_records',
