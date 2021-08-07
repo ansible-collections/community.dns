@@ -19,6 +19,9 @@ version_added: 2.0.0
 description:
     - "Creates and deletes single DNS records in Hosttech DNS service."
     - This module replaces C(hosttech_dns_record) from community.dns before 2.0.0.
+    - Please note that in most cases, you will be interested in modifying a B(record set) and not a single record,
+      especially when looking at record types such as C(CNAME) and C(SOA).
+      Use the M(community.dns.hosttech_dns_record_set) module for working with record sets.
 
 extends_documentation_fragment:
     - community.dns.hosttech
