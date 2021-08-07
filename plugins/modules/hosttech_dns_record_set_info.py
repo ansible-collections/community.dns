@@ -18,6 +18,8 @@ version_added: 0.1.0
 
 description:
     - "Retrieves DNS record sets in Hosttech DNS service."
+    - This module was renamed from C(community.dns.hosttech_dns_record_info) to C(community.dns.hosttech_dns_record_set_info)
+      in community.dns 2.0.0.
 
 extends_documentation_fragment:
     - community.dns.hosttech
