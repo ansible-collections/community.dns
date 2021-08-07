@@ -20,6 +20,33 @@
           - RECORD is failed
           - 'RECORD.msg == "Zone not found"'
 
+    - name: make sure that CNAME record isn't there
+      hetzner_dns_record_set:
+        zone_name: "{{ hetzner_test_zone }}"
+        prefix: dns_ansible_collection
+        type: CNAME
+        state: present
+        value: []
+        hetzner_token: "{{ hetzner_token }}"
+
+    - name: make sure that A record isn't there
+      hetzner_dns_record_set:
+        zone_name: "{{ hetzner_test_zone }}"
+        prefix: dns_ansible_collection
+        type: A
+        state: present
+        value: []
+        hetzner_token: "{{ hetzner_token }}"
+
+    - name: make sure that A record isn't there
+      hetzner_dns_record_set:
+        zone_name: "{{ hetzner_test_zone }}"
+        prefix: website1
+        type: A
+        state: present
+        value: []
+        hetzner_token: "{{ hetzner_token }}"
+
     - name: fetch zone info
       hetzner_dns_zone_info:
         zone_name: "{{ hetzner_test_zone }}"
@@ -303,7 +330,7 @@
     - name: assert 1 A record
       assert:
         that:
-          - RECORD.set.ttl == 3600
+          - RECORD.set.ttl is none
           - RECORD.set.type == 'A'
           - RECORD.set.value | count == 1
           - RECORD.set.value[0] == '127.0.0.2'

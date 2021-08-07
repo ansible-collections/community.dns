@@ -23,6 +23,7 @@ from .hosttech import (
     HOSTTECH_WSDL_DEFAULT_ZONE_RESULT,
     HOSTTECH_WSDL_ZONE_NOT_FOUND,
     HOSTTECH_JSON_ZONE_GET_RESULT,
+    HOSTTECH_JSON_ZONE_2_GET_RESULT,
     HOSTTECH_JSON_ZONE_LIST_RESULT,
 )
 
@@ -239,6 +240,12 @@ class TestHosttechDNSZoneInfoJSON(BaseTestModule):
             .expect_query_values('query', 'example.com')
             .return_header('Content-Type', 'application/json')
             .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
         ])
         assert result['changed'] is False
         assert result['zone_id'] == 42
@@ -290,6 +297,12 @@ class TestHosttechDNSZoneInfoJSON(BaseTestModule):
             .expect_query_values('query', 'foo.com')
             .return_header('Content-Type', 'application/json')
             .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('authorization', 'Bearer foo')
+            .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/43')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HOSTTECH_JSON_ZONE_2_GET_RESULT),
         ])
         assert result['changed'] is False
         assert result['zone_id'] == 43
