@@ -1,0 +1,2 @@
+bugfixes:
+- "hosttech_dns_zone_info - make sure that full information is returned both when requesting a zone by ID or by name (https://github.com/ansible-collections/community.dns/pull/56)."

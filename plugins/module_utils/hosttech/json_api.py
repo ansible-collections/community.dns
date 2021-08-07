@@ -280,7 +280,8 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         result = self._list_pagination('user/v1/zones', query=dict(query=name))
         for zone in result:
             if zone['name'] == name:
-                return _create_zone_from_json(zone)
+                # We cannot simply return `_create_zone_from_json(zone)`, since this contains less information!
+                return self.get_zone_by_id(zone['id'])
         return None
 
     def get_zone_by_id(self, id):
