@@ -12,9 +12,9 @@ The modules use the `JSON REST based API <https://dns.hetzner.com/api-docs/>`_.
 
 The collection provides five modules for working with Hetzner DNS:
 
-- :ref:`community.dns.hetzner_dns_record_info <ansible_collections.community.dns.hetzner_dns_record_info_module>`: retrieve information on DNS records
 - :ref:`community.dns.hetzner_dns_record <ansible_collections.community.dns.hetzner_dns_record_module>`: create/update/delete single DNS records
 - :ref:`community.dns.hetzner_dns_record_set <ansible_collections.community.dns.hetzner_dns_record_set_module>`: create/update/delete DNS record sets
+- :ref:`community.dns.hetzner_dns_record_set_info <ansible_collections.community.dns.hetzner_dns_record_set_info_module>`: retrieve information on DNS record sets
 - :ref:`community.dns.hetzner_dns_record_sets <ansible_collections.community.dns.hetzner_dns_record_sets_module>`: bulk synchronize DNS record sets
 - :ref:`community.dns.hetzner_dns_zone_info <ansible_collections.community.dns.hetzner_dns_zone_info_module>`: retrieve zone information
 
@@ -69,12 +69,12 @@ Working with DNS records
 Querying DNS records
 ~~~~~~~~~~~~~~~~~~~~
 
-The :ref:`community.dns.hetzner_dns_record_info module <ansible_collections.community.dns.hetzner_dns_record_info_module>` allows to query DNS records from the API. It can be used to query a single record:
+The :ref:`community.dns.hetzner_dns_record_set_info module <ansible_collections.community.dns.hetzner_dns_record_set_info_module>` allows to query DNS record sets from the API. It can be used to query a single record:
 
 .. code-block:: yaml+jinja
 
     - name: Query single record
-      community.dns.hetzner_dns_record_info:
+      community.dns.hetzner_dns_record_set_info:
         zone_name: example.com
         type: A  # IPv4 addresses
         what: single_record  # default value
@@ -103,7 +103,7 @@ You can also query a list of all records for a record name or prefix:
 .. code-block:: yaml+jinja
 
     - name: Query all records for www.example.com
-      community.dns.hetzner_dns_record_info:
+      community.dns.hetzner_dns_record_set_info:
         zone_name: example.com
         what: all_types_for_record
         # Either specify a record name:
@@ -124,7 +124,7 @@ Finally you can query all records for a zone:
 .. code-block:: yaml+jinja
 
     - name: Query all records for a zone
-      community.dns.hetzner_dns_record_info:
+      community.dns.hetzner_dns_record_set_info:
         zone_name: example.com
         what: all_records
       register: result
@@ -409,7 +409,7 @@ A last step is replacing the deprecated alias ``name`` of ``prefix`` by ``prefix
 The markuman.hetzner_dns.record_info module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``markuman.hetzner_dns.zone_info`` module can be replaced by the :ref:`community.dns.hetzner_dns_record_info module <ansible_collections.community.dns.hetzner_dns_record_info_module>`. There are two big differences:
+The ``markuman.hetzner_dns.record_info`` module can be replaced by the :ref:`community.dns.hetzner_dns_record_set_info module <ansible_collections.community.dns.hetzner_dns_record_set_info_module>`. There are two big differences:
 
 1. Instead of with the ``filters`` option, the output is controlled by the ``what`` option (choices ``single_record``, ``all_types_for_record``, and ``all_records``), the ``type`` option (needed when ``what=single_record``), and the ``record`` and ``prefix`` options (needed when ``what`` is not ``all_records``).
 2. The module returns **record sets** instead of individual records. This means that for example all A record for the prefix ``*`` are returned as one entry (with multiple values), instead of a list of records (which each a single value).

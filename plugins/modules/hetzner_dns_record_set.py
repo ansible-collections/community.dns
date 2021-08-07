@@ -62,7 +62,7 @@ EXAMPLES = '''
     hetzner_token: access_token
 
 - name: Retrieve the details for new.foo.com
-  community.dns.hetzner_dns_record_info:
+  community.dns.hetzner_dns_record_set_info:
     zone: foo.com
     record: new.foo.com
     type: A

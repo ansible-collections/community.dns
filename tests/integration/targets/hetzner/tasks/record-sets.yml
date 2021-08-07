@@ -49,11 +49,11 @@
       assert:
         that:
           - RECORD is changed
-          # - RECORD.record_info.record.ttl == 300
-          # - RECORD.record_info | count == 1
+          # - RECORD.record_set_info.record.ttl == 300
+          # - RECORD.record_set_info | count == 1
 
     - name: fetch record info
-      hetzner_dns_record_info:
+      hetzner_dns_record_set_info:
         prefix: dns_ansible_collection
         type: CNAME
         zone_name: "{{ hetzner_test_zone }}"
@@ -71,7 +71,7 @@
           - RECORD.set.value == [hetzner_test_zone ~ "."]
 
     - name: fetch record info must also work in check_mode
-      hetzner_dns_record_info:
+      hetzner_dns_record_set_info:
         prefix: dns_ansible_collection
         type: CNAME
         zone_name: "{{ hetzner_test_zone }}"
@@ -211,7 +211,7 @@
       register: RECORD
 
     - name: fetch record info
-      hetzner_dns_record_info:
+      hetzner_dns_record_set_info:
         prefix: dns_ansible_collection
         type: A
         zone_name: "{{ hetzner_test_zone }}"
@@ -235,7 +235,7 @@
         hetzner_token: "{{ hetzner_token }}"
 
     - name: fetch record info
-      hetzner_dns_record_info:
+      hetzner_dns_record_set_info:
         prefix: dns_ansible_collection
         type: A
         zone_name: "{{ hetzner_test_zone }}"
@@ -256,7 +256,7 @@
         hetzner_token: "{{ hetzner_token }}"
 
     - name: fetch record info
-      hetzner_dns_record_info:
+      hetzner_dns_record_set_info:
         prefix: dns_ansible_collection
         type: A
         zone_name: "{{ hetzner_test_zone }}"
@@ -290,7 +290,7 @@
         hetzner_token: "{{ hetzner_token }}"
 
     - name: fetch record info
-      hetzner_dns_record_info:
+      hetzner_dns_record_set_info:
         prefix: website1
         type: A
         zone_name: "{{ hetzner_test_zone }}"
@@ -320,7 +320,7 @@
         hetzner_token: "{{ hetzner_token }}"
 
     - name: fetch record info
-      hetzner_dns_record_info:
+      hetzner_dns_record_set_info:
         prefix: website1
         type: A
         zone_name: "{{ hetzner_test_zone }}"
@@ -343,7 +343,7 @@
         hetzner_token: "{{ hetzner_token }}"
 
     - name: fetch record info
-      hetzner_dns_record_info:
+      hetzner_dns_record_set_info:
         prefix: website1
         type: A
         zone_name: "{{ hetzner_test_zone }}"
@@ -364,7 +364,7 @@
         hetzner_token: "{{ hetzner_token }}"
 
     - name: fetch record info
-      hetzner_dns_record_info:
+      hetzner_dns_record_set_info:
         prefix: website1
         type: A
         zone_name: "{{ hetzner_test_zone }}"

@@ -4,7 +4,7 @@
   ignore_errors: true
   register: result
 
-- name: Validate hetzner_dns_record run 
+- name: Validate hetzner_dns_record run
   assert:
     that:
       - result is failed
@@ -13,12 +13,12 @@
       - "'type' in result.msg"
       - "'value' in result.msg"
 
-- name: Run hetzner_dns_record_info without options
-  hetzner_dns_record_info:
+- name: Run hetzner_dns_record_set_info without options
+  hetzner_dns_record_set_info:
   ignore_errors: true
   register: result
 
-- name: Validate hetzner_dns_record_info run 
+- name: Validate hetzner_dns_record_set_info run
   assert:
     that:
       - result is failed
@@ -29,7 +29,7 @@
   ignore_errors: true
   register: result
 
-- name: Validate hetzner_dns_record_set run 
+- name: Validate hetzner_dns_record_set run
   assert:
     that:
       - result is failed
@@ -42,7 +42,7 @@
   ignore_errors: true
   register: result
 
-- name: Validate hetzner_dns_record_sets run 
+- name: Validate hetzner_dns_record_sets run
   assert:
     that:
       - result is failed
@@ -54,7 +54,7 @@
   ignore_errors: true
   register: result
 
-- name: Validate hetzner_dns_zone_info run 
+- name: Validate hetzner_dns_zone_info run
   assert:
     that:
       - result is failed
@@ -65,7 +65,7 @@
   ignore_errors: true
   register: result
 
-- name: Validate hosttech_dns_record run 
+- name: Validate hosttech_dns_record run
   assert:
     that:
       - result is failed
@@ -73,12 +73,12 @@
       - "'type' in result.msg"
       - "'value' in result.msg"
 
-- name: Run hosttech_dns_record_info without options
-  hosttech_dns_record_info:
+- name: Run hosttech_dns_record_set_info without options
+  hosttech_dns_record_set_info:
   ignore_errors: true
   register: result
 
-- name: Validate hosttech_dns_record_info run 
+- name: Validate hosttech_dns_record_set_info run
   assert:
     that:
       - result is failed
@@ -91,7 +91,7 @@
   ignore_errors: true
   register: result
 
-- name: Validate hosttech_dns_record_set run 
+- name: Validate hosttech_dns_record_set run
   assert:
     that:
       - result is failed
@@ -103,7 +103,7 @@
   ignore_errors: true
   register: result
 
-- name: Validate hosttech_dns_record_sets run 
+- name: Validate hosttech_dns_record_sets run
   assert:
     that:
       - result is failed
@@ -114,7 +114,7 @@
   ignore_errors: true
   register: result
 
-- name: Validate hosttech_dns_zone_info run 
+- name: Validate hosttech_dns_zone_info run
   assert:
     that:
       - result is failed
@@ -127,7 +127,7 @@
   ignore_errors: true
   register: result
 
-- name: Validate wait_for_txt run 
+- name: Validate wait_for_txt run
   assert:
     that:
       - result is failed

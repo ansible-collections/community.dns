@@ -56,7 +56,7 @@ EXAMPLES = '''
     hosttech_token: access_token
 
 - name: Retrieve the details for new.foo.com
-  community.dns.hosttech_dns_record_info:
+  community.dns.hosttech_dns_record_set_info:
     zone_name: foo.com
     record: new.foo.com
     type: A

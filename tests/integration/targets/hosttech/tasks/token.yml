@@ -12,7 +12,7 @@
   register: result_zone_id
 
 - name: (token) Get all NS records
-  hosttech_dns_record_info:
+  hosttech_dns_record_set_info:
     zone_name: '{{ test_zone }}'
     record: '{{ test_zone }}'
     type: NS
@@ -47,7 +47,7 @@
 - block:
 
   - name: (token) Get test record
-    hosttech_dns_record_info:
+    hosttech_dns_record_set_info:
       zone_id: '{{ hosttech_zone_id }}'
       record: '{{ test_record }}'
       type: A
@@ -104,7 +104,7 @@
       hosttech_token: '{{ hosttech_token }}'
 
   - name: (token) Get test record
-    hosttech_dns_record_info:
+    hosttech_dns_record_set_info:
       zone_name: '{{ test_zone }}'
       record: '{{ test_record }}'
       type: A
