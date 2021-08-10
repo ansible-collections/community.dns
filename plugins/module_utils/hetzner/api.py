@@ -115,6 +115,8 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
             error = result.get('error')
             if isinstance(error, dict):
                 status = error.get('code')
+                if status is None:
+                    return
                 url = info['url']
                 if expected is not None and status in expected:
                     return
