@@ -9,7 +9,7 @@ __metaclass__ = type
 
 import sys
 
-from ansible.module_utils.common.text.converters import to_bytes, to_native
+from ansible.module_utils.common.text.converters import to_bytes, to_text
 
 from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
     DNSConversionError,
@@ -32,7 +32,7 @@ else:
 
 def _parse_quoted(value, index):
     if index == len(value):
-        raise DNSConversionError('Unexpected backslash at end of string')
+        raise DNSConversionError(u'Unexpected backslash at end of string')
     letter = value[index:index + 1]
     index += 1
     if letter in (b'\\', b'"'):
@@ -42,23 +42,23 @@ def _parse_quoted(value, index):
     if v2 < 0:
         # It is apparently not - error out
         raise DNSConversionError(
-            'A backslash must not be followed by "{letter}" (index {index})'.format(letter=to_native(letter), index=index))
+            u'A backslash must not be followed by "{letter}" (index {index})'.format(letter=to_text(letter), index=index))
     if index + 1 >= len(value):
         # We need more letters for a three-digit octal sequence
         raise DNSConversionError(
-            'The octal sequence at the end requires {missing} more digit(s)'.format(missing=index + 2 - len(value)))
+            u'The octal sequence at the end requires {missing} more digit(s)'.format(missing=index + 2 - len(value)))
     letter = value[index:index + 1]
     index += 1
     v1 = _OCTAL_DIGITS.find(letter)
     if v1 < 0:
         raise DNSConversionError(
-            'The second letter of the octal sequence at index {index} is not an octal digit, but "{letter}"'.format(letter=to_native(letter), index=index))
+            u'The second letter of the octal sequence at index {index} is not an octal digit, but "{letter}"'.format(letter=to_text(letter), index=index))
     letter = value[index:index + 1]
     index += 1
     v0 = _OCTAL_DIGITS.find(letter)
     if v0 < 0:
         raise DNSConversionError(
-            'The third letter of the octal sequence at index {index} is not an octal digit, but "{letter}"'.format(letter=to_native(letter), index=index))
+            u'The third letter of the octal sequence at index {index} is not an octal digit, but "{letter}"'.format(letter=to_text(letter), index=index))
     return _int_to_byte((v2 << 6) | (v1 << 3) | v0), index
 
 
@@ -93,16 +93,16 @@ def decode_txt_value(value):
                 state = _STATE_QUOTED_STRING
             else:
                 raise DNSConversionError(
-                    'Unexpected double quotation mark inside an unquoted block at position {index}'.format(index=index))
+                    u'Unexpected double quotation mark inside an unquoted block at position {index}'.format(index=index))
         else:
             if state != _STATE_QUOTED_STRING:
                 state = _STATE_UNQUOTED_STRING
             result.append(letter)
 
     if state == _STATE_QUOTED_STRING:
-        raise DNSConversionError('Missing double quotation mark at the end of value')
+        raise DNSConversionError(u'Missing double quotation mark at the end of value')
 
-    return to_native(b''.join(result))
+    return to_text(b''.join(result))
 
 
 def encode_txt_value(value, always_quote=False):
@@ -151,4 +151,4 @@ def encode_txt_value(value, always_quote=False):
     if buffer or not output:
         append(buffer)
 
-    return to_native(b' '.join(output))
+    return to_text(b' '.join(output))

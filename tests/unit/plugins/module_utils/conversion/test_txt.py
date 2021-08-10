@@ -22,92 +22,92 @@ from ansible_collections.community.dns.plugins.module_utils.conversion.txt impor
 
 
 TEST_DECODE = [
-    (r'', ''),
-    (r'"" "" ""', ''),
-    (r'   ""     ""  ', ''),
-    (r'\040\041', ' !'),
-    (r'"\040" \041 ""', ' !'),
+    (r'', u''),
+    (r'"" "" ""', u''),
+    (r'   ""     ""  ', u''),
+    (r'\040\041', u' !'),
+    (r'"\040" \041 ""', u' !'),
 ]
 
 
 @pytest.mark.parametrize("encoded, decoded", TEST_DECODE)
 def test_decode(encoded, decoded):
     decoded_ = decode_txt_value(encoded)
-    print(decoded_)
+    print(repr(decoded_), repr(decoded))
     assert decoded_ == decoded
 
 
 TEST_ENCODE_DECODE = [
-    ('', '""', False),
-    ('', '""', True),
-    ('Hi', 'Hi', False),
-    ('Hi', '"Hi"', True),
-    ('"\\', '\\\"\\\\', False),
-    ('"\\', '"\\"\\\\"', True),
-    ('ä', '\\303\\244', False),
-    ('ä', '"\\303\\244"', True),
-    ('a b', '"a b"', False),
-    ('a b', '"a b"', True),
+    (u'', u'""', False),
+    (u'', u'""', True),
+    (u'Hi', u'Hi', False),
+    (u'Hi', u'"Hi"', True),
+    (u'"\\', u'\\\"\\\\', False),
+    (u'"\\', u'"\\"\\\\"', True),
+    (u'ä', u'\\303\\244', False),
+    (u'ä', u'"\\303\\244"', True),
+    (u'a b', u'"a b"', False),
+    (u'a b', u'"a b"', True),
     (
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
-        'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
-        '456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuv'
-        'wxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
-        'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
-        '456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg hijklmnopqrstu'
-        'vwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+        u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
+        u'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
+        u'456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuv'
+        u'wxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+        u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
+        u'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
+        u'456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg hijklmnopqrstu'
+        u'vwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
         False
     ),
     (
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
-        'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
-        '456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuv'
-        'wxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-        '"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzA'
-        'BCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012'
-        '3456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg" "hijklmnopqr'
-        'stuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"',
+        u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
+        u'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
+        u'456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuv'
+        u'wxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+        u'"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzA'
+        u'BCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012'
+        u'3456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg" "hijklmnopqr'
+        u'stuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"',
         True
     ),
     (
-        'abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzA'
-        'BCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012'
-        '3456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstu'
-        'vwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-        '"abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz'
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01'
-        '23456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdef" ghijklmnopqr'
-        'stuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+        u'abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzA'
+        u'BCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012'
+        u'3456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstu'
+        u'vwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+        u'"abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz'
+        u'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01'
+        u'23456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdef" ghijklmnopqr'
+        u'stuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
         False
     ),
     (
-        'abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzA'
-        'BCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012'
-        '3456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstu'
-        'vwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-        '"abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz'
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01'
-        '23456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdef" "ghijklmnopq'
-        'rstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"',
+        u'abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzA'
+        u'BCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012'
+        u'3456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstu'
+        u'vwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
+        u'"abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz'
+        u'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01'
+        u'23456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdef" "ghijklmnopq'
+        u'rstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"',
         True
     ),
     (
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
-        'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
-        '456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg',
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
-        'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
-        '456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg',
+        u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
+        u'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
+        u'456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg',
+        u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
+        u'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
+        u'456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg',
         False
     ),
     (
-        'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
-        'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
-        '456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg',
-        '"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzA'
-        'BCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012'
-        '3456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg"',
+        u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
+        u'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
+        u'456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg',
+        u'"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzA'
+        u'BCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012'
+        u'3456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg"',
         True
     ),
 ]
@@ -116,23 +116,23 @@ TEST_ENCODE_DECODE = [
 @pytest.mark.parametrize("decoded, encoded, always_quote", TEST_ENCODE_DECODE)
 def test_encode_decode(decoded, encoded, always_quote):
     decoded_ = decode_txt_value(encoded)
-    print(decoded_)
+    print(repr(decoded_), repr(decoded))
     assert decoded_ == decoded
     encoded_ = encode_txt_value(decoded, always_quote=always_quote)
-    print(encoded_)
+    print(repr(encoded_), repr(encoded))
     assert encoded_ == encoded
 
 
 TEST_DECODE_ERROR = [
-    ('\\', 'Unexpected backslash at end of string'),
-    ('\\a', 'A backslash must not be followed by "a" (index 2)'),
-    ('\\0', 'The octal sequence at the end requires 2 more digit(s)'),
-    ('\\00', 'The octal sequence at the end requires 1 more digit(s)'),
-    ('\\0a', 'The octal sequence at the end requires 1 more digit(s)'),
-    ('\\0a0', 'The second letter of the octal sequence at index 3 is not an octal digit, but "a"'),
-    ('\\00a', 'The third letter of the octal sequence at index 4 is not an octal digit, but "a"'),
-    ('a"b', 'Unexpected double quotation mark inside an unquoted block at position 2'),
-    ('"', 'Missing double quotation mark at the end of value'),
+    (u'\\', 'Unexpected backslash at end of string'),
+    (u'\\a', 'A backslash must not be followed by "a" (index 2)'),
+    (u'\\0', 'The octal sequence at the end requires 2 more digit(s)'),
+    (u'\\00', 'The octal sequence at the end requires 1 more digit(s)'),
+    (u'\\0a', 'The octal sequence at the end requires 1 more digit(s)'),
+    (u'\\0a0', 'The second letter of the octal sequence at index 3 is not an octal digit, but "a"'),
+    (u'\\00a', 'The third letter of the octal sequence at index 4 is not an octal digit, but "a"'),
+    (u'a"b', 'Unexpected double quotation mark inside an unquoted block at position 2'),
+    (u'"', 'Missing double quotation mark at the end of value'),
 ]
 
 
