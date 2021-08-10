@@ -11,6 +11,8 @@ __metaclass__ = type
 
 import traceback
 
+from ansible.module_utils.common.text.converters import to_text
+
 from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
 )
@@ -139,6 +141,6 @@ def run_module(module, create_api, provider_information):
                 zone_id=zone.zone.id,
             )
     except DNSAPIAuthenticationError as e:
-        module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=str(e), exception=traceback.format_exc())
+        module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=to_text(e), exception=traceback.format_exc())
     except DNSAPIError as e:
-        module.fail_json(msg='Error: {0}'.format(e), error=str(e), exception=traceback.format_exc())
+        module.fail_json(msg='Error: {0}'.format(e), error=to_text(e), exception=traceback.format_exc())
