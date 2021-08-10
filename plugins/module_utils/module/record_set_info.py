@@ -15,6 +15,15 @@ from ansible.module_utils.common.text.converters import to_text
 
 from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
+    ModuleOptionProvider,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.conversion.converter import (
+    RecordConverter,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.options import (
+    create_txt_transformation_argspec,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.record import (
@@ -55,10 +64,13 @@ def create_module_argument_spec(provider_information):
             ('zone_name', 'zone_id'),
             ('record', 'prefix'),
         ],
-    )
+    ).merge(create_txt_transformation_argspec())
 
 
 def run_module(module, create_api, provider_information):
+    option_provider = ModuleOptionProvider(module)
+    record_converter = RecordConverter(provider_information, option_provider)
+
     filter_record_type = NOT_PROVIDED
     filter_prefix = NOT_PROVIDED
     if module.params.get('what') == 'single_record':
@@ -99,6 +111,10 @@ def run_module(module, create_api, provider_information):
                 if record.prefix == prefix:
                     records.append(record)
 
+            # Convert records
+            record_converter.process_multiple_from_api(records)
+            record_converter.process_multiple_to_user(records)
+
             # Format output
             data = format_records_for_output(records, record_in, prefix) if records else {}
             module.exit_json(
@@ -129,6 +145,11 @@ def run_module(module, create_api, provider_information):
                 if record_list is None:
                     record_list = records[key] = []
                 record_list.append(record)
+
+            # Convert records
+            for record_list in records.values():
+                record_converter.process_multiple_from_api(record_list)
+                record_converter.process_multiple_to_user(record_list)
 
             # Format output
             data = [

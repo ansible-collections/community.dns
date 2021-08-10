@@ -70,6 +70,17 @@ class HosttechProviderInformation(ProviderInformation):
         """
         return prefix or None
 
+    def txt_record_handling(self):
+        """
+        Return how the API handles TXT records.
+
+        Returns one of the following strings:
+        * 'decoded' - the API works with unencoded values
+        * 'encoded' - the API works with encoded values
+        * 'encoded-no-octal' - the API works with encoded values, but without octal encoding
+        """
+        return 'decoded'
+
 
 def create_hosttech_provider_information():
     return HosttechProviderInformation()

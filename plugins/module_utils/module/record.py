@@ -15,6 +15,15 @@ from ansible.module_utils.common.text.converters import to_text
 
 from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
+    ModuleOptionProvider,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.conversion.converter import (
+    RecordConverter,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.options import (
+    create_txt_transformation_argspec,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.record import (
@@ -55,10 +64,13 @@ def create_module_argument_spec(provider_information):
             ('zone_name', 'zone_id'),
             ('record', 'prefix'),
         ],
-    )
+    ).merge(create_txt_transformation_argspec())
 
 
 def run_module(module, create_api, provider_information):
+    option_provider = ModuleOptionProvider(module)
+    record_converter = RecordConverter(provider_information, option_provider)
+
     record_in = normalize_dns_name(module.params.get('record'))
     prefix_in = module.params.get('prefix')
     type_in = module.params.get('type')
@@ -104,9 +116,11 @@ def run_module(module, create_api, provider_information):
 
         # Find matching records
         records = filter_records(records, prefix=prefix)
+        record_converter.process_multiple_from_api(records)
 
         # Parse records
         value_in = module.params.get('value')
+        value_in = record_converter.process_value_from_user(type_in, value_in)
 
         # Compare records
         existing_record = None
@@ -130,23 +144,26 @@ def run_module(module, create_api, provider_information):
                 record.type = type_in
                 record.ttl = ttl_in
                 record.target = value_in
+                api_record = record_converter.clone_to_api(record)
                 if not module.check_mode:
-                    api.add_record(zone_id, record)
+                    api.add_record(zone_id, api_record)
                 after = record
                 changed = True
             elif not exact_match:
                 # Update record
                 record = existing_record
                 record.ttl = ttl_in
+                api_record = record_converter.clone_to_api(record)
                 if not module.check_mode:
-                    api.update_record(zone_id, record)
+                    api.update_record(zone_id, api_record)
                 after = record
                 changed = True
         else:
             if existing_record is not None:
                 # Delete record
+                api_record = record_converter.clone_to_api(record)
                 if not module.check_mode:
-                    api.delete_record(zone_id, existing_record)
+                    api.delete_record(zone_id, api_record)
                 after = None
                 changed = True
 
@@ -157,8 +174,8 @@ def run_module(module, create_api, provider_information):
         )
         if module._diff:
             result['diff'] = dict(
-                before=format_record_for_output(before, record_in, prefix) if before else {},
-                after=format_record_for_output(after, record_in, prefix) if after else {},
+                before=format_record_for_output(before, record_in, prefix, record_converter=record_converter) if before else {},
+                after=format_record_for_output(after, record_in, prefix, record_converter=record_converter) if after else {},
             )
 
         module.exit_json(**result)

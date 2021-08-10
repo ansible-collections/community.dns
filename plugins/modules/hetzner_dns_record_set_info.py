@@ -24,6 +24,7 @@ extends_documentation_fragment:
     - community.dns.hetzner.record_type_choices
     - community.dns.hetzner.zone_id_type
     - community.dns.module_record_set_info
+    - community.dns.options.txt_transformation
 
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>

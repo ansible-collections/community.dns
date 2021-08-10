@@ -67,7 +67,7 @@ def sorted_ttls(ttls):
     return sorted(ttls, key=lambda ttl: 0 if ttl is None else ttl)
 
 
-def format_records_for_output(records, record_name, prefix=None):
+def format_records_for_output(records, record_name, prefix=None, record_converter=None):
     ttls = sorted_ttls(set([record.ttl for record in records]))
     entry = {
         'prefix': prefix or '',
@@ -75,6 +75,8 @@ def format_records_for_output(records, record_name, prefix=None):
         'ttl': ttls[0] if len(ttls) > 0 else None,
         'value': [record.target for record in records],
     }
+    if record_converter:
+        entry['value'] = record_converter.process_values_to_user(entry['type'], entry['value'])
     if record_name is not None:
         entry['record'] = record_name
     if len(ttls) > 1:
@@ -82,13 +84,15 @@ def format_records_for_output(records, record_name, prefix=None):
     return entry
 
 
-def format_record_for_output(record, record_name, prefix=None):
+def format_record_for_output(record, record_name, prefix=None, record_converter=None):
     entry = {
         'prefix': prefix or '',
         'type': record.type,
         'ttl': record.ttl,
         'value': record.target,
     }
+    if record_converter:
+        entry['value'] = record_converter.process_value_to_user(entry['type'], entry['value'])
     if record_name is not None:
         entry['record'] = record_name
     return entry

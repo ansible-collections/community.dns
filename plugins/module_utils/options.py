@@ -25,3 +25,11 @@ def create_bulk_operations_argspec(provider_information):
             bulk_operation_threshold=dict(type='int', default=2),
         ),
     )
+
+
+def create_txt_transformation_argspec():
+    return ArgumentSpec(
+        argument_spec=dict(
+            txt_transformation=dict(type='str', default='normalized', choices=['api', 'dns', 'normalized']),
+        ),
+    )

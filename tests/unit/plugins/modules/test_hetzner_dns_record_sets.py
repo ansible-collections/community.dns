@@ -259,6 +259,12 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'type': 'SOA',
                     'ignore': True,
                 },
+                {
+                    'record': 'foo.example.com',
+                    'type': 'TXT',
+                    'ttl': None,
+                    'value': [r'bär "with quotes" (use \ to escape)'],
+                },
             ],
             '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
@@ -345,6 +351,13 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'type': 'SOA',
                     'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
                 },
+                {
+                    'record': 'foo.example.com',
+                    'prefix': 'foo',
+                    'ttl': None,
+                    'type': 'TXT',
+                    'value': [r'bär "with quotes" (use \ to escape)'],
+                },
             ],
         }
         assert result['diff']['after'] == {
@@ -383,6 +396,13 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'ttl': None,
                     'type': 'SOA',
                     'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
+                },
+                {
+                    'record': 'foo.example.com',
+                    'prefix': 'foo',
+                    'ttl': None,
+                    'type': 'TXT',
+                    'value': [r'bär "with quotes" (use \ to escape)'],
                 },
             ],
         }
@@ -893,6 +913,13 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'type': 'SOA',
                     'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
                 },
+                {
+                    'record': 'foo.example.com',
+                    'prefix': 'foo',
+                    'ttl': None,
+                    'type': 'TXT',
+                    'value': [r'bär "with quotes" (use \ to escape)'],
+                },
             ],
         }
         assert result['diff']['after'] == {
@@ -945,6 +972,13 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'ttl': None,
                     'type': 'SOA',
                     'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
+                },
+                {
+                    'record': 'foo.example.com',
+                    'prefix': 'foo',
+                    'ttl': None,
+                    'type': 'TXT',
+                    'value': [r'bär "with quotes" (use \ to escape)'],
                 },
             ],
         }
@@ -1089,6 +1123,13 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'type': 'SOA',
                     'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
                 },
+                {
+                    'record': 'foo.example.com',
+                    'prefix': 'foo',
+                    'ttl': None,
+                    'type': 'TXT',
+                    'value': [r'bär "with quotes" (use \ to escape)'],
+                },
             ],
         }
         assert result['diff']['after'] == {
@@ -1141,6 +1182,13 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'ttl': None,
                     'type': 'SOA',
                     'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
+                },
+                {
+                    'record': 'foo.example.com',
+                    'prefix': 'foo',
+                    'ttl': None,
+                    'type': 'TXT',
+                    'value': [r'bär "with quotes" (use \ to escape)'],
                 },
             ],
         }

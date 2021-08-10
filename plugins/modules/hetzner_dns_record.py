@@ -29,6 +29,7 @@ extends_documentation_fragment:
     - community.dns.hetzner.record_type_choices
     - community.dns.hetzner.zone_id_type
     - community.dns.module_record
+    - community.dns.options.txt_transformation
 
 options:
     prefix:

@@ -56,3 +56,14 @@ class ProviderInformation(object):
         Return whether the API supports some kind of bulk actions.
         """
         return False
+
+    @abc.abstractmethod
+    def txt_record_handling(self):
+        """
+        Return how the API handles TXT records.
+
+        Returns one of the following strings:
+        * 'decoded' - the API works with unencoded values
+        * 'encoded' - the API works with encoded values
+        * 'encoded-no-octal' - the API works with encoded values, but without octal encoding
+        """

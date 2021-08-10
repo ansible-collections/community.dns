@@ -116,6 +116,15 @@ HETZNER_JSON_DEFAULT_ENTRIES = [
         'created': '2021-07-09T11:18:37Z',
         'modified': '2021-07-09T11:18:37Z',
     },
+    {
+        'id': '201',
+        'type': 'TXT',
+        'name': 'foo',
+        'value': r'bär " \"with quotes\"" " " "(use \\ to escape)"',
+        'zone_id': '42',
+        'created': '2021-07-09T11:18:37Z',
+        'modified': '2021-07-09T11:18:37Z',
+    },
 ]
 
 HETZNER_JSON_ZONE_LIST_RESULT = {

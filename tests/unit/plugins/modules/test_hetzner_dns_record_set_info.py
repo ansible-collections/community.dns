@@ -419,7 +419,7 @@ class TestHetznerDNSRecordSetInfoJSON(BaseTestModule):
         assert 'set' not in result
         assert 'sets' in result
         sets = result['sets']
-        assert len(sets) == 7
+        assert len(sets) == 8
         assert sets[0] == {
             'record': '*.example.com',
             'prefix': '*',
@@ -469,3 +469,114 @@ class TestHetznerDNSRecordSetInfoJSON(BaseTestModule):
             'type': 'SOA',
             'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
         }
+        assert sets[7] == {
+            'record': 'foo.example.com',
+            'prefix': 'foo',
+            'ttl': None,
+            'type': 'TXT',
+            'value': [r'bär "with quotes" (use \ to escape)'],
+        }
+
+    def test_get_single_txt_api(self, mocker):
+        with patch('time.sleep', mock_sleep):
+            result = self.run_module_success(mocker, hetzner_dns_record_set_info, {
+                'hetzner_token': 'foo',
+                'zone_name': 'example.com',
+                'prefix': 'foo',
+                'type': 'TXT',
+                'txt_transformation': 'api',
+                '_ansible_remote_tmp': '/tmp/tmp',
+                '_ansible_keep_remote_files': True,
+            }, [
+                FetchUrlCall('GET', 429)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+                .expect_query_values('name', 'example.com')
+                .return_header('Retry-After', '5')
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+                .expect_query_values('name', 'example.com')
+                .return_header('Retry-After', '10')
+                .result_str(''),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+                .expect_query_values('name', 'example.com')
+                .return_header('Content-Type', 'application/json')
+                .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+                .expect_query_values('zone_id', '42')
+                .expect_query_values('page', '1')
+                .expect_query_values('per_page', '100')
+                .return_header('Content-Type', 'application/json')
+                .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            ])
+        assert result['changed'] is False
+        assert result['zone_id'] == '42'
+        assert 'set' in result
+        assert result['set']['record'] == 'foo.example.com'
+        assert result['set']['prefix'] == 'foo'
+        assert result['set']['ttl'] is None
+        assert result['set']['type'] == 'TXT'
+        assert result['set']['value'] == [r'bär " \"with quotes\"" " " "(use \\ to escape)"']
+        assert 'sets' not in result
+
+    def test_get_single_txt_dns(self, mocker):
+        with patch('time.sleep', mock_sleep):
+            result = self.run_module_success(mocker, hetzner_dns_record_set_info, {
+                'hetzner_token': 'foo',
+                'zone_name': 'example.com',
+                'prefix': 'foo',
+                'type': 'TXT',
+                'txt_transformation': 'dns',
+                '_ansible_remote_tmp': '/tmp/tmp',
+                '_ansible_keep_remote_files': True,
+            }, [
+                FetchUrlCall('GET', 429)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+                .expect_query_values('name', 'example.com')
+                .return_header('Retry-After', '5')
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+                .expect_query_values('name', 'example.com')
+                .return_header('Retry-After', '10')
+                .result_str(''),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+                .expect_query_values('name', 'example.com')
+                .return_header('Content-Type', 'application/json')
+                .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+                .expect_query_values('zone_id', '42')
+                .expect_query_values('page', '1')
+                .expect_query_values('per_page', '100')
+                .return_header('Content-Type', 'application/json')
+                .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            ])
+        assert result['changed'] is False
+        assert result['zone_id'] == '42'
+        assert 'set' in result
+        assert result['set']['record'] == 'foo.example.com'
+        assert result['set']['prefix'] == 'foo'
+        assert result['set']['ttl'] is None
+        assert result['set']['type'] == 'TXT'
+        assert result['set']['value'] == [r'"b\303\244r \"with quotes\" (use \\ to escape)"']
+        assert 'sets' not in result
