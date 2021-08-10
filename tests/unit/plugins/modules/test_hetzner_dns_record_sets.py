@@ -673,7 +673,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .expect_query_values('per_page', '100')
             .return_header('Content-Type', 'application/json')
             .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
-            FetchUrlCall('POST', 500)
+            FetchUrlCall('POST', 200)
             .expect_header('accept', 'application/json')
             .expect_header('auth-api-token', 'foo')
             .expect_url('https://dns.hetzner.com/api/v1/records')
@@ -684,12 +684,12 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .expect_json_value(['name'], '@')
             .expect_json_value(['value'], '128 issue "letsencrypt.org xxx"')
             .return_header('Content-Type', 'application/json')
-            .result_json({'message': 'Internal Server Error'}),
+            .result_json({'record': {}, 'error': {'code': 500, 'message': 'Internal Server Error'}}),
         ])
 
         assert result['msg'] == (
-            'Error: Expected HTTP status 200, 422 for POST https://dns.hetzner.com/api/v1/records,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
+            'Error: POST https://dns.hetzner.com/api/v1/records resulted in API error 500 (Internal Server Error)'
+            ' with error message "Internal Server Error" (error code 500)'
         )
 
     def test_change_add_two_failed(self, mocker):
