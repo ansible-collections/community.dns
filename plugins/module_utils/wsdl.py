@@ -8,6 +8,7 @@ __metaclass__ = type
 
 
 from ansible.module_utils.common.text.converters import to_native
+from ansible.module_utils.six import string_types
 
 try:
     import lxml.etree
@@ -65,7 +66,7 @@ def _set_type(node, type_value, namespace=None):
 def encode_wsdl(node, value):
     if value is None:
         node.set(lxml.etree.QName(_NAMESPACE_XSI, 'nil').text, 'true')
-    elif isinstance(value, str):
+    elif isinstance(value, string_types):
         _set_type(node, 'xsd:string')
         node.text = value
     elif isinstance(value, int):
