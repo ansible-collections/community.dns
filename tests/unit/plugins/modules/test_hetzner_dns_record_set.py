@@ -542,7 +542,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         print(result['msg'])
         assert result['msg'] == (
             'Error: Expected HTTP status 200, 404 for DELETE https://dns.hetzner.com/api/v1/records/125,'
-            ' but got HTTP status 500 (Unknown Error) with error message "Internal Server Error" (error code 500)'
+            ' but got HTTP status 500 (Internal Server Error) with error message "Internal Server Error" (error code 500)'
         )
 
     def test_absent_bulk(self, mocker):
@@ -636,7 +636,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
 
         assert result['msg'] == (
             'Error: Expected HTTP status 200, 404 for DELETE https://dns.hetzner.com/api/v1/records/131,'
-            ' but got HTTP status 500 (Unknown Error) with error message "Internal Server Error" (error code 500)'
+            ' but got HTTP status 500 (Internal Server Error) with error message "Internal Server Error" (error code 500)'
         )
 
     def test_absent_other_value(self, mocker):
@@ -1343,7 +1343,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
 
         assert result['msg'] == (
             'Error: Expected HTTP status 200, 422 for PUT https://dns.hetzner.com/api/v1/records/132,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
+            ' but got HTTP status 500 (Internal Server Error) with message "Internal Server Error"'
         )
 
     def test_change_modify_bulk_errors_2(self, mocker):

@@ -1043,7 +1043,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         assert result['msg'] == (
             'Error: Expected HTTP status 204, 404 for DELETE https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/131,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
+            ' but got HTTP status 500 (Internal Server Error) with message "Internal Server Error"'
         )
 
     def test_absent_other_value(self, mocker):
@@ -1360,7 +1360,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         assert result['msg'] == (
             'Error: Expected HTTP status 201 for POST https://api.ns1.hosttech.eu/api/user/v1/zones/42/records,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
+            ' but got HTTP status 500 (Internal Server Error) with message "Internal Server Error"'
         )
 
     def test_change_modify_list_fail(self, mocker):
@@ -1779,7 +1779,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         assert result['msg'] == (
             'Error: Expected HTTP status 200 for PUT https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/132,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
+            ' but got HTTP status 500 (Internal Server Error) with message "Internal Server Error"'
         )
 
     def test_change_modify_bulk_errors_create(self, mocker):
@@ -1893,5 +1893,5 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         assert result['msg'] == (
             'Error: Expected HTTP status 201 for POST https://api.ns1.hosttech.eu/api/user/v1/zones/42/records,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
+            ' but got HTTP status 500 (Internal Server Error) with message "Internal Server Error"'
         )

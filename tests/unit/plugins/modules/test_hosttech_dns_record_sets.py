@@ -768,7 +768,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         assert result['msg'] == (
             'Error: Expected HTTP status 201 for POST https://api.ns1.hosttech.eu/api/user/v1/zones/42/records,'
-            ' but got HTTP status 500 (Unknown Error) with message "Internal Server Error"'
+            ' but got HTTP status 500 (Internal Server Error) with message "Internal Server Error"'
         )
 
     def test_change_add_one(self, mocker):

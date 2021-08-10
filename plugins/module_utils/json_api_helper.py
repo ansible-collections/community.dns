@@ -26,7 +26,8 @@ ERROR_CODES = {
     404: "Not found",
     406: "Not acceptable",
     409: "Conflict",
-    422: "Unprocessable entity"
+    422: "Unprocessable entity",
+    500: "Internal Server Error",
 }
 UNKNOWN_ERROR = "Unknown Error"
 
