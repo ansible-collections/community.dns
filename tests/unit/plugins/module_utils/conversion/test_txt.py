@@ -16,6 +16,7 @@ from ansible_collections.community.dns.plugins.module_utils.conversion.base impo
 
 from ansible_collections.community.dns.plugins.module_utils.conversion.txt import (
     _parse_quoted,
+    _get_utf8_length,
     decode_txt_value,
     encode_txt_value,
 )
@@ -37,17 +38,39 @@ def test_decode(encoded, decoded):
     assert decoded_ == decoded
 
 
+TEST_GET_UTF8_LENGTH = [
+    # See https://en.wikipedia.org/wiki/UTF-8#Examples
+    (0xC2, 2),  # first byte of UTF-8 encoding of U+0024
+    (0o303, 2),  # first byte of UTF-8 encoding of ä
+    (0xE0, 3),  # first byte of UTF-8 encoding of U+0939
+    (0xE2, 3),  # first byte of UTF-8 encoding of U+20AC
+    (0xED, 3),  # first byte of UTF-8 encoding of U+D55C
+    (0xF0, 4),  # first byte of UTF-8 encoding of U+10348
+    (0x00, 1),
+    (0xFF, 1),
+]
+
+
+@pytest.mark.parametrize("letter_code, length", TEST_GET_UTF8_LENGTH)
+def test_get_utf8_length(letter_code, length):
+    length_ = _get_utf8_length(letter_code)
+    print(length_, length)
+    assert length_ == length
+
+
 TEST_ENCODE_DECODE = [
-    (u'', u'""', False),
-    (u'', u'""', True),
-    (u'Hi', u'Hi', False),
-    (u'Hi', u'"Hi"', True),
-    (u'"\\', u'\\\"\\\\', False),
-    (u'"\\', u'"\\"\\\\"', True),
-    (u'ä', u'\\303\\244', False),
-    (u'ä', u'"\\303\\244"', True),
-    (u'a b', u'"a b"', False),
-    (u'a b', u'"a b"', True),
+    (u'', u'""', False, True),
+    (u'', u'""', True, True),
+    (u'Hi', u'Hi', False, True),
+    (u'Hi', u'"Hi"', True, True),
+    (u'"\\', u'\\\"\\\\', False, True),
+    (u'"\\', u'"\\"\\\\"', True, True),
+    (u'ä', u'ä', False, False),
+    (u'ä', u'"ä"', True, False),
+    (u'ä', u'\\303\\244', False, True),
+    (u'ä', u'"\\303\\244"', True, True),
+    (u'a b', u'"a b"', False, True),
+    (u'a b', u'"a b"', True, True),
     (
         u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
         u'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
@@ -57,7 +80,7 @@ TEST_ENCODE_DECODE = [
         u'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
         u'456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg hijklmnopqrstu'
         u'vwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-        False
+        False, True
     ),
     (
         u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
@@ -68,7 +91,7 @@ TEST_ENCODE_DECODE = [
         u'BCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012'
         u'3456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg" "hijklmnopqr'
         u'stuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"',
-        True
+        True, True
     ),
     (
         u'abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzA'
@@ -79,7 +102,7 @@ TEST_ENCODE_DECODE = [
         u'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01'
         u'23456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdef" ghijklmnopqr'
         u'stuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
-        False
+        False, True
     ),
     (
         u'abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzA'
@@ -90,7 +113,7 @@ TEST_ENCODE_DECODE = [
         u'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01'
         u'23456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdef" "ghijklmnopq'
         u'rstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"',
-        True
+        True, True
     ),
     (
         u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
@@ -99,7 +122,7 @@ TEST_ENCODE_DECODE = [
         u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
         u'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
         u'456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg',
-        False
+        False, True
     ),
     (
         u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
@@ -108,17 +131,37 @@ TEST_ENCODE_DECODE = [
         u'"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzA'
         u'BCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012'
         u'3456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefg"',
-        True
+        True, True
+    ),
+    (
+        # Avoid splitting up an octal sequence into multiple TXT strings
+        u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
+        u'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
+        u'456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789aä',
+        u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
+        u'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
+        u'456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789a\\303 \\244',
+        False, True
+    ),
+    (
+        # Avoid splitting up a UTF-8 character into multiple TXT strings
+        u'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzAB'
+        u'CDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123'
+        u'456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefä',
+        u'"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzA'
+        u'BCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ012'
+        u'3456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdef" "ä"',
+        True, False
     ),
 ]
 
 
-@pytest.mark.parametrize("decoded, encoded, always_quote", TEST_ENCODE_DECODE)
-def test_encode_decode(decoded, encoded, always_quote):
+@pytest.mark.parametrize("decoded, encoded, always_quote, use_octal", TEST_ENCODE_DECODE)
+def test_encode_decode(decoded, encoded, always_quote, use_octal):
     decoded_ = decode_txt_value(encoded)
     print(repr(decoded_), repr(decoded))
     assert decoded_ == decoded
-    encoded_ = encode_txt_value(decoded, always_quote=always_quote)
+    encoded_ = encode_txt_value(decoded, always_quote=always_quote, use_octal=use_octal)
     print(repr(encoded_), repr(encoded))
     assert encoded_ == encoded
 

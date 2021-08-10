@@ -105,11 +105,26 @@ def decode_txt_value(value):
     return to_text(b''.join(result))
 
 
-def encode_txt_value(value, always_quote=False):
+def _get_utf8_length(first_byte_value):
+    """
+    Given the byte value of a UTF-8 letter, returns the length of the UTF-8 character.
+    """
+    if first_byte_value & 0xE0 == 0xC0:
+        return 2
+    if first_byte_value & 0xF0 == 0xE0:
+        return 3
+    if first_byte_value & 0xF8 == 0xF0:
+        return 4
+    # Shouldn't happen
+    return 1
+
+
+def encode_txt_value(value, always_quote=False, use_octal=True):
     """
     Given a decoded TXT value, encodes it.
 
     If always_quote is set to True, always use double quotes for all strings.
+    If use_octal is set to False, do not use octal encoding.
     """
     value = to_bytes(value)
     buffer = []
@@ -131,7 +146,11 @@ def encode_txt_value(value, always_quote=False):
         if letter in (b'"', b'\\'):
             buffer.append(b'\\')
             buffer.append(letter)
-        elif not (0o40 <= ord(letter) < 0o177):
+        elif use_octal and not (0o40 <= ord(letter) < 0o177):
+            # Make sure that we don't split up an octal sequence over multiple TXT strings
+            if len(buffer) + 4 > 255:
+                append(buffer[:255])
+                buffer = buffer[255:]
             letter_value = ord(letter)
             buffer.append(b'\\')
             v2 = (letter_value >> 6) & 7
@@ -140,6 +159,17 @@ def encode_txt_value(value, always_quote=False):
             buffer.append(_OCTAL_DIGITS[v2:v2 + 1])
             buffer.append(_OCTAL_DIGITS[v1:v1 + 1])
             buffer.append(_OCTAL_DIGITS[v0:v0 + 1])
+        elif not use_octal and (ord(letter) & 0x80) != 0:
+            utf8_length = min(_get_utf8_length(ord(letter)), length - index + 1)
+            # Make sure that we don't split up a UTF-8 letter over multiple TXT strings
+            if len(buffer) + utf8_length > 255:
+                append(buffer[:255])
+                buffer = buffer[255:]
+            buffer.append(letter)
+            while utf8_length > 1:
+                buffer.append(value[index:index + 1])
+                index += 1
+                utf8_length -= 1
         else:
             buffer.append(letter)
 
