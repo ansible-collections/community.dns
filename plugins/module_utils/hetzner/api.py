@@ -16,6 +16,8 @@ from ansible_collections.community.dns.plugins.module_utils.argspec import (
 
 from ansible_collections.community.dns.plugins.module_utils.json_api_helper import (
     JSONAPIHelper,
+    ERROR_CODES,
+    UNKNOWN_ERROR,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.provider import (
@@ -106,6 +108,20 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
             if res:
                 return res
         return ' with data: {0}'.format(result)
+
+    def _validate(self, result=None, info=None, expected=None, method='GET'):
+        super(HetznerAPI, self)._validate(result=result, info=info, expected=expected, method=method)
+        if isinstance(result, dict):
+            error = result.get('error')
+            if isinstance(error, dict):
+                status = error.get('code')
+                url = info['url']
+                if expected is not None and status in expected:
+                    return
+                error_code = ERROR_CODES.get(status, UNKNOWN_ERROR)
+                more = self._extract_error_message(result)
+                raise DNSAPIError(
+                    '{0} {1} resulted in API error {2} ({3}){4}'.format(method, url, status, error_code, more))
 
     def _list_pagination(self, url, data_key, query=None, block_size=100, accept_404=False):
         result = []
