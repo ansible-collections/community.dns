@@ -30,7 +30,8 @@ options:
             - The value C(api) means that values are returned from this module as they are returned
               from the API, and pushed to the API as they have been passed to this module. For
               idempotency checks, the input string will be compared to the strings returned by the
-              API.
+              API. The API might automatically transform some values, like splitting long values or
+              adding quotes, which can cause problems with idempotency.
             - The value C(normalized) automatically transforms values so that you can pass in unquoted
               values, and the module will return unquoted values. If you pass in quoted values, they
               will be double-quoted.
@@ -39,7 +40,8 @@ options:
               longer than 255 bytes. It also makes sure to return values from the API in a normalized
               encoding.
             - The default value, C(normalized), ensures that you can work with values without having
-              to care about how to correctly quote for DNS.
+              to care about how to correctly quote for DNS. Most users should use one of C(normalized)
+              or C(dns), but not C(api).
             - B(Note:) the conversion code assumes UTF-8 encoding for values. If you need another
               encoding use I(txt_transformation=api) and handle the encoding yourself.
         type: str
