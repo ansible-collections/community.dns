@@ -18,42 +18,14 @@ from ansible_collections.community.dns.plugins.module_utils.conversion.converter
     RecordConverter,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.provider import (
-    ProviderInformation,
-)
-
 from ansible_collections.community.dns.plugins.module_utils.record import (
     DNSRecord,
 )
 
-
-class CustomProviderInformation(ProviderInformation):
-    def __init__(self, txt_record_handling='decoded'):
-        super(CustomProviderInformation, self).__init__()
-        self._txt_record_handling = txt_record_handling
-
-    def get_supported_record_types(self):
-        return ['A']
-
-    def get_zone_id_type(self):
-        return 'str'
-
-    def get_record_id_type(self):
-        return 'str'
-
-    def get_record_default_ttl(self):
-        return 300
-
-    def txt_record_handling(self):
-        return self._txt_record_handling
-
-
-class CustomProvideOptions(object):
-    def __init__(self, option_dict):
-        self._option_dict = option_dict
-
-    def get_option(self, name):
-        return self._option_dict.get(name)
+from ..helper import (
+    CustomProviderInformation,
+    CustomProvideOptions,
+)
 
 
 def test_user_api():
