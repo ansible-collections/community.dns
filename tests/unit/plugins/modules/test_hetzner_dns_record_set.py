@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # (c) 2021 Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -1142,7 +1143,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'record': 'foo.example.com',
             'type': 'TXT',
             'ttl': None,
-            'value': [r'bär "with quotes" (use \ to escape)!'],
+            'value': [u'bär "with quotes" (use \\ to escape)!'],
             'txt_transformation': 'normalized',
             '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
@@ -1173,14 +1174,14 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .expect_json_value_absent(['ttl'])
             .expect_json_value(['zone_id'], '42')
             .expect_json_value(['name'], 'foo')
-            .expect_json_value(['value'], r'"bär \"with quotes\" (use \\ to escape)!"')
+            .expect_json_value(['value'], u'"bär \\"with quotes\\" (use \\\\ to escape)!"')
             .return_header('Content-Type', 'application/json')
             .result_json({
                 'record': {
                     'id': '201',
                     'type': 'TXT',
                     'name': 'foo',
-                    'value': r'"bär \"with quotes\" (use \\ to escape)!"',
+                    'value': u'"bär \\"with quotes\\" (use \\\\ to escape)!"',
                     'zone_id': '42',
                 },
             }),
@@ -1196,14 +1197,14 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'prefix': 'foo',
             'type': 'TXT',
             'ttl': None,
-            'value': [r'bär "with quotes" (use \ to escape)'],
+            'value': [u'bär "with quotes" (use \\ to escape)'],
         }
         assert result['diff']['after'] == {
             'record': 'foo.example.com',
             'prefix': 'foo',
             'type': 'TXT',
             'ttl': None,
-            'value': [r'bär "with quotes" (use \ to escape)!'],
+            'value': [u'bär "with quotes" (use \\ to escape)!'],
         }
 
     def test_change_modify_txt_dns(self, mocker):
@@ -1245,14 +1246,14 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .expect_json_value_absent(['ttl'])
             .expect_json_value(['zone_id'], '42')
             .expect_json_value(['name'], 'foo')
-            .expect_json_value(['value'], r'"bär \"with quotes\" (use \\ to escape)!"')
+            .expect_json_value(['value'], u'"bär \\"with quotes\\" (use \\\\ to escape)!"')
             .return_header('Content-Type', 'application/json')
             .result_json({
                 'record': {
                     'id': '201',
                     'type': 'TXT',
                     'name': 'foo',
-                    'value': r'"bär \"with quotes\" (use \\ to escape)!"',
+                    'value': u'"bär \\"with quotes\\" (use \\\\ to escape)!"',
                     'zone_id': '42',
                 },
             }),
@@ -1286,7 +1287,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'record': 'foo.example.com',
             'type': 'TXT',
             'ttl': None,
-            'value': [r'bär " " \"with " " quotes\" " (use \\ to escape)!"'],
+            'value': [u'bär " " \\"with " " quotes\\" " (use \\\\ to escape)!"'],
             'txt_transformation': 'api',
             '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
@@ -1317,14 +1318,14 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .expect_json_value_absent(['ttl'])
             .expect_json_value(['zone_id'], '42')
             .expect_json_value(['name'], 'foo')
-            .expect_json_value(['value'], r'bär " " \"with " " quotes\" " (use \\ to escape)!"')
+            .expect_json_value(['value'], u'bär " " \\"with " " quotes\\" " (use \\\\ to escape)!"')
             .return_header('Content-Type', 'application/json')
             .result_json({
                 'record': {
                     'id': '201',
                     'type': 'TXT',
                     'name': 'foo',
-                    'value': r'bär " " \"with " " quotes\" " (use \\ to escape)!"',
+                    'value': u'bär " " \\"with " " quotes\\" " (use \\\\ to escape)!"',
                     'zone_id': '42',
                 },
             }),
@@ -1340,14 +1341,14 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'prefix': 'foo',
             'type': 'TXT',
             'ttl': None,
-            'value': [r'bär " \"with quotes\"" " " "(use \\ to escape)"'],
+            'value': [u'bär " \\"with quotes\\"" " " "(use \\\\ to escape)"'],
         }
         assert result['diff']['after'] == {
             'record': 'foo.example.com',
             'prefix': 'foo',
             'type': 'TXT',
             'ttl': None,
-            'value': [r'bär " " \"with " " quotes\" " (use \\ to escape)!"'],
+            'value': [u'bär " " \\"with " " quotes\\" " (use \\\\ to escape)!"'],
         }
 
     def test_change_modify_bulk(self, mocker):

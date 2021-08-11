@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # (c) 2021 Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -263,7 +264,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'record': 'foo.example.com',
                     'type': 'TXT',
                     'ttl': None,
-                    'value': [r'bär "with quotes" (use \ to escape)'],
+                    'value': [u'bär "with quotes" (use \\ to escape)'],
                 },
             ],
             '_ansible_diff': True,
@@ -356,7 +357,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'prefix': 'foo',
                     'ttl': None,
                     'type': 'TXT',
-                    'value': [r'bär "with quotes" (use \ to escape)'],
+                    'value': [u'bär "with quotes" (use \\ to escape)'],
                 },
             ],
         }
@@ -402,7 +403,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'prefix': 'foo',
                     'ttl': None,
                     'type': 'TXT',
-                    'value': [r'bär "with quotes" (use \ to escape)'],
+                    'value': [u'bär "with quotes" (use \\ to escape)'],
                 },
             ],
         }
@@ -918,7 +919,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'prefix': 'foo',
                     'ttl': None,
                     'type': 'TXT',
-                    'value': [r'bär "with quotes" (use \ to escape)'],
+                    'value': [u'bär "with quotes" (use \\ to escape)'],
                 },
             ],
         }
@@ -978,7 +979,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'prefix': 'foo',
                     'ttl': None,
                     'type': 'TXT',
-                    'value': [r'bär "with quotes" (use \ to escape)'],
+                    'value': [u'bär "with quotes" (use \\ to escape)'],
                 },
             ],
         }
@@ -1128,7 +1129,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'prefix': 'foo',
                     'ttl': None,
                     'type': 'TXT',
-                    'value': [r'bär "with quotes" (use \ to escape)'],
+                    'value': [u'bär "with quotes" (use \\ to escape)'],
                 },
             ],
         }
@@ -1188,7 +1189,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'prefix': 'foo',
                     'ttl': None,
                     'type': 'TXT',
-                    'value': [r'bär "with quotes" (use \ to escape)'],
+                    'value': [u'bär "with quotes" (use \\ to escape)'],
                 },
             ],
         }

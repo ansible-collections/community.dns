@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # (c) 2021 Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -120,7 +121,7 @@ HETZNER_JSON_DEFAULT_ENTRIES = [
         'id': '201',
         'type': 'TXT',
         'name': 'foo',
-        'value': r'bär " \"with quotes\"" " " "(use \\ to escape)"',
+        'value': u'bär " \\"with quotes\\"" " " "(use \\\\ to escape)"',
         'zone_id': '42',
         'created': '2021-07-09T11:18:37Z',
         'modified': '2021-07-09T11:18:37Z',

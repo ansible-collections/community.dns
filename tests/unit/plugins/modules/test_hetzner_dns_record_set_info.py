@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # (c) 2021 Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -474,7 +475,7 @@ class TestHetznerDNSRecordSetInfoJSON(BaseTestModule):
             'prefix': 'foo',
             'ttl': None,
             'type': 'TXT',
-            'value': [r'bär "with quotes" (use \ to escape)'],
+            'value': [u'bär "with quotes" (use \\ to escape)'],
         }
 
     def test_get_single_txt_api(self, mocker):
@@ -526,7 +527,7 @@ class TestHetznerDNSRecordSetInfoJSON(BaseTestModule):
         assert result['set']['prefix'] == 'foo'
         assert result['set']['ttl'] is None
         assert result['set']['type'] == 'TXT'
-        assert result['set']['value'] == [r'bär " \"with quotes\"" " " "(use \\ to escape)"']
+        assert result['set']['value'] == [u'bär " \\"with quotes\\"" " " "(use \\\\ to escape)"']
         assert 'sets' not in result
 
     def test_get_single_txt_dns(self, mocker):
@@ -578,5 +579,5 @@ class TestHetznerDNSRecordSetInfoJSON(BaseTestModule):
         assert result['set']['prefix'] == 'foo'
         assert result['set']['ttl'] is None
         assert result['set']['type'] == 'TXT'
-        assert result['set']['value'] == [r'"b\303\244r \"with quotes\" (use \\ to escape)"']
+        assert result['set']['value'] == [u'"b\\303\\244r \\"with quotes\\" (use \\\\ to escape)"']
         assert 'sets' not in result
