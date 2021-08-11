@@ -1279,7 +1279,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'value': [r'"b\303\244r \"with quotes\" (use \\ to escape)!"'],
         }
 
-    def test_change_modify_txt_dns(self, mocker):
+    def test_change_modify_txt_api(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'present',
