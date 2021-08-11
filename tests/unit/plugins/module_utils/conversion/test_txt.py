@@ -183,5 +183,5 @@ TEST_DECODE_ERROR = [
 def test_decode_error(encoded, error):
     with pytest.raises(DNSConversionError) as exc:
         decode_txt_value(encoded)
-    print(exc.value.args[0])
-    assert exc.value.args[0] == error
+    print(exc.value.error_message)
+    assert exc.value.error_message == error

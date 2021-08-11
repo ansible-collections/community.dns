@@ -18,6 +18,10 @@ from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ModuleOptionProvider,
 )
 
+from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
+    DNSConversionError,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.conversion.converter import (
     RecordConverter,
 )
@@ -248,6 +252,8 @@ def run_module(module, create_api, provider_information):
             )
 
         module.exit_json(**result)
+    except DNSConversionError as e:
+        module.fail_json(msg='Error while converting DNS values: {0}'.format(e.error_message), error=e.error_message, exception=traceback.format_exc())
     except DNSAPIAuthenticationError as e:
         module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=to_text(e), exception=traceback.format_exc())
     except DNSAPIError as e:

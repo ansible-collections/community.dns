@@ -8,4 +8,6 @@ __metaclass__ = type
 
 
 class DNSConversionError(Exception):
-    pass
+    def __init__(self, message):
+        super(DNSConversionError, self).__init__(message)
+        self.error_message = message

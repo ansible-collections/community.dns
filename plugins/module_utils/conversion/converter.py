@@ -76,7 +76,7 @@ class RecordConverter(object):
                 self._handle_txt_api(False, record)
             return record
         except DNSConversionError as e:
-            raise_from(DNSConversionError('While processing record from API: {0}'.format(str(e))), e)
+            raise_from(DNSConversionError(u'While processing record from API: {0}'.format(e.error_message)), e)
 
     def process_to_api(self, record):
         """
@@ -88,7 +88,7 @@ class RecordConverter(object):
                 self._handle_txt_api(True, record)
             return record
         except DNSConversionError as e:
-            raise_from(DNSConversionError('While processing record for the API: {0}'.format(str(e))), e)
+            raise_from(DNSConversionError(u'While processing record for the API: {0}'.format(e.error_message)), e)
 
     def process_from_user(self, record):
         """
@@ -101,7 +101,7 @@ class RecordConverter(object):
                 self._handle_txt_user(False, record)
             return record
         except DNSConversionError as e:
-            raise_from(DNSConversionError('While processing record from the user: {0}'.format(str(e))), e)
+            raise_from(DNSConversionError(u'While processing record from the user: {0}'.format(e.error_message)), e)
 
     def process_to_user(self, record):
         """
@@ -113,7 +113,7 @@ class RecordConverter(object):
                 self._handle_txt_user(True, record)
             return record
         except DNSConversionError as e:
-            raise_from(DNSConversionError('While processing record for the user: {0}'.format(str(e))), e)
+            raise_from(DNSConversionError(u'While processing record for the user: {0}'.format(e.error_message)), e)
 
     def clone_from_api(self, record):
         """

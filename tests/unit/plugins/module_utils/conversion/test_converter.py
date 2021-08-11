@@ -85,6 +85,14 @@ def test_user_dns():
     converter.process_multiple_to_user([record])
     assert record.target == u'"hello w\\303\\266rld"'
 
+    record.target = u'"a\\o'
+    with pytest.raises(DNSConversionError) as exc:
+        converter.process_from_user(record)
+    print(exc.value.error_message)
+    assert exc.value.error_message == (
+        u'While processing record from the user: A backslash must not be followed by "o" (index 4)'
+    )
+
 
 def test_user_normalized():
     converter = RecordConverter(
@@ -198,6 +206,14 @@ def test_api_encoded():
     assert records[0].target == u'"xyz \\\\\\303\\266"'
     converter.process_multiple_to_api([record])
     assert record.target == u'"xyz \\\\\\303\\266"'
+
+    record.target = u'"a'
+    with pytest.raises(DNSConversionError) as exc:
+        converter.process_from_api(record)
+    print(exc.value.error_message)
+    assert exc.value.error_message == (
+        u'While processing record from API: Missing double quotation mark at the end of value'
+    )
 
 
 def test_api_encoded_no_octal():

@@ -155,6 +155,46 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
 
         assert result['msg'] == 'Found multiple sets for record test.example.com and type A: index #0 and #1'
 
+    def test_conversion_error(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
+            'hetzner_token': 'foo',
+            'zone_name': 'example.com',
+            'record_sets': [
+                {
+                    'record': 'example.com',
+                    'type': 'TXT',
+                    'ttl': 3600,
+                    'value': [
+                        '"hellö',
+                    ],
+                },
+            ],
+            'txt_transformation': 'dns',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+        ])
+
+        assert result['msg'] == (
+            'Error while converting DNS values: While processing record from the user: Missing double quotation mark at the end of value'
+        )
+
     def test_idempotency_empty(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_sets, {
             'hetzner_token': 'foo',
