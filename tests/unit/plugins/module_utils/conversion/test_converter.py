@@ -57,10 +57,10 @@ def test_user_api():
     assert record.target == u'"xyz \\'
 
 
-def test_user_dns():
+def test_user_quoted():
     converter = RecordConverter(
         CustomProviderInformation(txt_record_handling='decoded'),
-        CustomProvideOptions({'txt_transformation': 'dns'}))
+        CustomProvideOptions({'txt_transformation': 'quoted'}))
     assert converter.process_value_from_user('TXT', u'hëllo " w\\303\\266rld"') == u'hëllo wörld'
     assert converter.process_values_from_user('TXT', [u'hëllo " w\\303\\266rld"']) == [u'hëllo wörld']
     assert converter.process_value_to_user('TXT', u'hello wörld') == u'"hello w\\303\\266rld"'
@@ -94,10 +94,10 @@ def test_user_dns():
     )
 
 
-def test_user_normalized():
+def test_user_unquoted():
     converter = RecordConverter(
         CustomProviderInformation(txt_record_handling='decoded'),
-        CustomProvideOptions({'txt_transformation': 'normalized'}))
+        CustomProvideOptions({'txt_transformation': 'unquoted'}))
     assert converter.process_value_from_user('TXT', u'hello "wörl\\d"') == u'hello "wörl\\d"'
     assert converter.process_values_from_user('TXT', [u'hello "wörl\\d"']) == [u'hello "wörl\\d"']
     assert converter.process_value_to_user('TXT', u'hello "wörl\\d"') == u'hello "wörl\\d"'
@@ -126,7 +126,7 @@ def test_user_normalized():
 def test_api_decoded():
     converter = RecordConverter(
         CustomProviderInformation(txt_record_handling='decoded'),
-        CustomProvideOptions({'txt_transformation': 'normalized'}))
+        CustomProvideOptions({'txt_transformation': 'unquoted'}))
     record = DNSRecord()
     record.type = 'TXT'
 
@@ -168,7 +168,7 @@ def test_api_decoded():
 def test_api_encoded():
     converter = RecordConverter(
         CustomProviderInformation(txt_record_handling='encoded'),
-        CustomProvideOptions({'txt_transformation': 'normalized'}))
+        CustomProvideOptions({'txt_transformation': 'unquoted'}))
     record = DNSRecord()
     record.type = 'TXT'
 
@@ -219,7 +219,7 @@ def test_api_encoded():
 def test_api_encoded_no_octal():
     converter = RecordConverter(
         CustomProviderInformation(txt_record_handling='encoded-no-octal'),
-        CustomProvideOptions({'txt_transformation': 'normalized'}))
+        CustomProvideOptions({'txt_transformation': 'unquoted'}))
     record = DNSRecord()
     record.type = 'TXT'
 

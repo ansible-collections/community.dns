@@ -169,7 +169,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     ],
                 },
             ],
-            'txt_transformation': 'dns',
+            'txt_transformation': 'quoted',
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [

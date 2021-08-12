@@ -33,7 +33,7 @@ class RecordConverter(object):
         self._option_provider = option_provider
 
         self._txt_api_handling = self._provider_information.txt_record_handling()  # 'decoded', 'encoded', 'encoded-no-octal'
-        self._txt_transformation = self._option_provider.get_option('txt_transformation')  # 'api', 'dns', 'normalized'
+        self._txt_transformation = self._option_provider.get_option('txt_transformation')  # 'api', 'quoted', 'unquoted'
 
     def _handle_txt_api(self, to_api, record):
         """
@@ -59,7 +59,7 @@ class RecordConverter(object):
             return
 
         # We assume that records internally use decoded values
-        if self._txt_transformation == 'dns':
+        if self._txt_transformation == 'quoted':
             if to_user:
                 record.target = encode_txt_value(record.target)
             else:

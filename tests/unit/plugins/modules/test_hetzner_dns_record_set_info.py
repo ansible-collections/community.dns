@@ -196,7 +196,7 @@ class TestHetznerDNSRecordSetInfoJSON(BaseTestModule):
                 'zone_name': 'example.com',
                 'record': 'example.com',
                 'type': 'TXT',
-                'txt_transformation': 'dns',
+                'txt_transformation': 'quoted',
                 '_ansible_remote_tmp': '/tmp/tmp',
                 '_ansible_keep_remote_files': True,
             }, [
@@ -573,14 +573,14 @@ class TestHetznerDNSRecordSetInfoJSON(BaseTestModule):
         assert result['set']['value'] == [u'bär " \\"with quotes\\"" " " "(use \\\\ to escape)"']
         assert 'sets' not in result
 
-    def test_get_single_txt_dns(self, mocker):
+    def test_get_single_txt_quoted(self, mocker):
         with patch('time.sleep', mock_sleep):
             result = self.run_module_success(mocker, hetzner_dns_record_set_info, {
                 'hetzner_token': 'foo',
                 'zone_name': 'example.com',
                 'prefix': 'foo',
                 'type': 'TXT',
-                'txt_transformation': 'dns',
+                'txt_transformation': 'quoted',
                 '_ansible_remote_tmp': '/tmp/tmp',
                 '_ansible_keep_remote_files': True,
             }, [

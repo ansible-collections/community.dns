@@ -30,6 +30,6 @@ def create_bulk_operations_argspec(provider_information):
 def create_txt_transformation_argspec():
     return ArgumentSpec(
         argument_spec=dict(
-            txt_transformation=dict(type='str', default='normalized', choices=['api', 'dns', 'normalized']),
+            txt_transformation=dict(type='str', default='unquoted', choices=['api', 'quoted', 'unquoted']),
         ),
     )

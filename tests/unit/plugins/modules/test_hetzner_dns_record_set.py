@@ -165,7 +165,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'value': [
                 u'"hellö',
             ],
-            'txt_transformation': 'dns',
+            'txt_transformation': 'quoted',
             '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -1173,7 +1173,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'value': ['helium.ns.hetzner.de.', 'ytterbium.ns.hetzner.com.'],
         }
 
-    def test_change_modify_txt_normalized(self, mocker):
+    def test_change_modify_txt_unquoted(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'present',
@@ -1182,7 +1182,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'type': 'TXT',
             'ttl': None,
             'value': [u'bär "with quotes" (use \\ to escape)!'],
-            'txt_transformation': 'normalized',
+            'txt_transformation': 'unquoted',
             '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
@@ -1245,7 +1245,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'value': [u'bär "with quotes" (use \\ to escape)!'],
         }
 
-    def test_change_modify_txt_dns(self, mocker):
+    def test_change_modify_txt_quoted(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
             'hetzner_token': 'foo',
             'state': 'present',
@@ -1254,7 +1254,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'type': 'TXT',
             'ttl': None,
             'value': [r'"b\303\244r \"with quotes\" (use \\ to escape)!"'],
-            'txt_transformation': 'dns',
+            'txt_transformation': 'quoted',
             '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,

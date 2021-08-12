@@ -153,7 +153,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'type': 'TXT',
             'ttl': 3600,
             'value': u'"hellö',
-            'txt_transformation': 'dns',
+            'txt_transformation': 'quoted',
             '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
