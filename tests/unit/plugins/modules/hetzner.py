@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # (c) 2021 Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -112,6 +113,15 @@ HETZNER_JSON_DEFAULT_ENTRIES = [
         'type': 'SOA',
         'name': '@',
         'value': 'hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600',
+        'zone_id': '42',
+        'created': '2021-07-09T11:18:37Z',
+        'modified': '2021-07-09T11:18:37Z',
+    },
+    {
+        'id': '201',
+        'type': 'TXT',
+        'name': 'foo',
+        'value': u'bär " \\"with quotes\\"" " " "(use \\\\ to escape)"',
         'zone_id': '42',
         'created': '2021-07-09T11:18:37Z',
         'modified': '2021-07-09T11:18:37Z',

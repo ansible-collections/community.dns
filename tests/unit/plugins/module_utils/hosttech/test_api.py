@@ -18,26 +18,23 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 
 from ansible_collections.community.dns.plugins.module_utils.hosttech import api
 
+from ..helper import (
+    CustomProvideOptions,
+)
+
 
 def test_internal_error():
-    def get_option(option_name):
-        return None
-
-    option_provider = MagicMock()
-    option_provider.get_option = get_option
+    option_provider = CustomProvideOptions({})
     with pytest.raises(DNSAPIError) as exc:
         api.create_hosttech_api(option_provider, MagicMock())
     assert exc.value.args[0] == 'One of hosttech_token or both hosttech_username and hosttech_password must be provided!'
 
 
 def test_wsdl_missing():
-    def get_option(option_name):
-        if option_name in ('hosttech_username', 'hosttech_password'):
-            return 'foo'
-        return None
-
-    option_provider = MagicMock()
-    option_provider.get_option = get_option
+    option_provider = CustomProvideOptions({
+        'hosttech_username': 'foo',
+        'hosttech_password': 'foo',
+    })
     old_value = api.HAS_LXML_ETREE
     try:
         api.HAS_LXML_ETREE = False

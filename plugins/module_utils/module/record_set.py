@@ -11,13 +11,24 @@ __metaclass__ = type
 
 import traceback
 
+from ansible.module_utils.common.text.converters import to_text
+
 from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
     ModuleOptionProvider,
 )
 
+from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
+    DNSConversionError,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.conversion.converter import (
+    RecordConverter,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.options import (
     create_bulk_operations_argspec,
+    create_txt_transformation_argspec,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.record import (
@@ -69,10 +80,13 @@ def create_module_argument_spec(provider_information):
             ('on_existing', 'keep_and_warn', ['value']),
             ('on_existing', 'keep', ['value']),
         ],
-    ).merge(create_bulk_operations_argspec(provider_information))
+    ).merge(create_bulk_operations_argspec(provider_information)).merge(create_txt_transformation_argspec())
 
 
 def run_module(module, create_api, provider_information):
+    option_provider = ModuleOptionProvider(module)
+    record_converter = RecordConverter(provider_information, option_provider)
+
     record_in = normalize_dns_name(module.params.get('record'))
     prefix_in = module.params.get('prefix')
     type_in = module.params.get('type')
@@ -118,10 +132,12 @@ def run_module(module, create_api, provider_information):
 
         # Find matching records
         records = filter_records(records, prefix=prefix)
+        record_converter.process_multiple_from_api(records)
 
         # Parse records
         values = []
         value_in = module.params.get('value') or []
+        value_in = record_converter.process_values_from_user(type_in, value_in)
         values = value_in[:]
 
         # Compare records
@@ -209,11 +225,11 @@ def run_module(module, create_api, provider_information):
         if module._diff:
             result['diff'] = dict(
                 before=(
-                    format_records_for_output(sorted(before, key=lambda record: record.target), record_in, prefix)
+                    format_records_for_output(sorted(before, key=lambda record: record.target), record_in, prefix, record_converter=record_converter)
                     if before else dict()
                 ),
                 after=(
-                    format_records_for_output(sorted(after, key=lambda record: record.target), record_in, prefix)
+                    format_records_for_output(sorted(after, key=lambda record: record.target), record_in, prefix, record_converter=record_converter)
                     if after else dict()
                 ),
             )
@@ -221,16 +237,19 @@ def run_module(module, create_api, provider_information):
         # Determine whether there's something to do
         if to_create or to_delete or to_change:
             # Actually do something
+            records_to_delete = record_converter.clone_multiple_to_api(to_delete)
+            records_to_change = record_converter.clone_multiple_to_api(to_change)
+            records_to_create = record_converter.clone_multiple_to_api(to_create)
             result['changed'] = True
             if not module.check_mode:
                 dummy, errors = bulk_apply_changes(
                     api,
                     zone_id=zone_id,
-                    records_to_delete=to_delete,
-                    records_to_change=to_change,
-                    records_to_create=to_create,
+                    records_to_delete=records_to_delete,
+                    records_to_change=records_to_change,
+                    records_to_create=records_to_create,
                     provider_information=provider_information,
-                    options=ModuleOptionProvider(module),
+                    options=option_provider,
                 )
                 if errors:
                     if len(errors) == 1:
@@ -241,7 +260,9 @@ def run_module(module, create_api, provider_information):
                     )
 
         module.exit_json(**result)
+    except DNSConversionError as e:
+        module.fail_json(msg='Error while converting DNS values: {0}'.format(e.error_message), error=e.error_message, exception=traceback.format_exc())
     except DNSAPIAuthenticationError as e:
-        module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=str(e), exception=traceback.format_exc())
+        module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=to_text(e), exception=traceback.format_exc())
     except DNSAPIError as e:
-        module.fail_json(msg='Error: {0}'.format(e), error=str(e), exception=traceback.format_exc())
+        module.fail_json(msg='Error: {0}'.format(e), error=to_text(e), exception=traceback.format_exc())

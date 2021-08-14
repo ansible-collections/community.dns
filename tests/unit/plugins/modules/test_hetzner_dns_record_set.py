@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # (c) 2021 Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -152,6 +153,44 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
 
         assert result['msg'].startswith('Error: GET https://dns.hetzner.com/api/v1/zones?')
         assert 'did not yield JSON data, but HTTP status code 500 with Content-Type' in result['msg']
+
+    def test_conversion_error(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_record_set, {
+            'hetzner_token': 'foo',
+            'state': 'present',
+            'zone_name': 'example.com',
+            'record': 'example.com',
+            'type': 'TXT',
+            'ttl': 3600,
+            'value': [
+                u'"hellö',
+            ],
+            'txt_transformation': 'quoted',
+            '_ansible_diff': True,
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+        ])
+
+        assert result['msg'] == (
+            'Error while converting DNS values: While processing record from the user: Missing double quotation mark at the end of value'
+        )
 
     def test_idempotency_present(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
@@ -1132,6 +1171,222 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'type': 'NS',
             'ttl': None,
             'value': ['helium.ns.hetzner.de.', 'ytterbium.ns.hetzner.com.'],
+        }
+
+    def test_change_modify_txt_unquoted(self, mocker):
+        result = self.run_module_success(mocker, hetzner_dns_record_set, {
+            'hetzner_token': 'foo',
+            'state': 'present',
+            'zone_name': 'example.com',
+            'record': 'foo.example.com',
+            'type': 'TXT',
+            'ttl': None,
+            'value': [u'bär "with quotes" (use \\ to escape)!'],
+            'txt_transformation': 'unquoted',
+            '_ansible_diff': True,
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            FetchUrlCall('PUT', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/201')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'TXT')
+            .expect_json_value_absent(['ttl'])
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], 'foo')
+            .expect_json_value(['value'], u'"bär \\"with quotes\\" (use \\\\ to escape)!"')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'record': {
+                    'id': '201',
+                    'type': 'TXT',
+                    'name': 'foo',
+                    'value': u'"bär \\"with quotes\\" (use \\\\ to escape)!"',
+                    'zone_id': '42',
+                },
+            }),
+        ])
+
+        assert result['changed'] is True
+        assert result['zone_id'] == '42'
+        assert 'diff' in result
+        assert 'before' in result['diff']
+        assert 'after' in result['diff']
+        assert result['diff']['before'] == {
+            'record': 'foo.example.com',
+            'prefix': 'foo',
+            'type': 'TXT',
+            'ttl': None,
+            'value': [u'bär "with quotes" (use \\ to escape)'],
+        }
+        assert result['diff']['after'] == {
+            'record': 'foo.example.com',
+            'prefix': 'foo',
+            'type': 'TXT',
+            'ttl': None,
+            'value': [u'bär "with quotes" (use \\ to escape)!'],
+        }
+
+    def test_change_modify_txt_quoted(self, mocker):
+        result = self.run_module_success(mocker, hetzner_dns_record_set, {
+            'hetzner_token': 'foo',
+            'state': 'present',
+            'zone_name': 'example.com',
+            'record': 'foo.example.com',
+            'type': 'TXT',
+            'ttl': None,
+            'value': [r'"b\303\244r \"with quotes\" (use \\ to escape)!"'],
+            'txt_transformation': 'quoted',
+            '_ansible_diff': True,
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            FetchUrlCall('PUT', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/201')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'TXT')
+            .expect_json_value_absent(['ttl'])
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], 'foo')
+            .expect_json_value(['value'], u'"bär \\"with quotes\\" (use \\\\ to escape)!"')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'record': {
+                    'id': '201',
+                    'type': 'TXT',
+                    'name': 'foo',
+                    'value': u'"bär \\"with quotes\\" (use \\\\ to escape)!"',
+                    'zone_id': '42',
+                },
+            }),
+        ])
+
+        assert result['changed'] is True
+        assert result['zone_id'] == '42'
+        assert 'diff' in result
+        assert 'before' in result['diff']
+        assert 'after' in result['diff']
+        assert result['diff']['before'] == {
+            'record': 'foo.example.com',
+            'prefix': 'foo',
+            'type': 'TXT',
+            'ttl': None,
+            'value': [r'"b\303\244r \"with quotes\" (use \\ to escape)"'],
+        }
+        assert result['diff']['after'] == {
+            'record': 'foo.example.com',
+            'prefix': 'foo',
+            'type': 'TXT',
+            'ttl': None,
+            'value': [r'"b\303\244r \"with quotes\" (use \\ to escape)!"'],
+        }
+
+    def test_change_modify_txt_api(self, mocker):
+        result = self.run_module_success(mocker, hetzner_dns_record_set, {
+            'hetzner_token': 'foo',
+            'state': 'present',
+            'zone_name': 'example.com',
+            'record': 'foo.example.com',
+            'type': 'TXT',
+            'ttl': None,
+            'value': [u'bär " " \\"with " " quotes\\" " (use \\\\ to escape)!"'],
+            'txt_transformation': 'api',
+            '_ansible_diff': True,
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            FetchUrlCall('PUT', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records/201')
+            .expect_json_value_absent(['id'])
+            .expect_json_value(['type'], 'TXT')
+            .expect_json_value_absent(['ttl'])
+            .expect_json_value(['zone_id'], '42')
+            .expect_json_value(['name'], 'foo')
+            .expect_json_value(['value'], u'bär " " \\"with " " quotes\\" " (use \\\\ to escape)!"')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                'record': {
+                    'id': '201',
+                    'type': 'TXT',
+                    'name': 'foo',
+                    'value': u'bär " " \\"with " " quotes\\" " (use \\\\ to escape)!"',
+                    'zone_id': '42',
+                },
+            }),
+        ])
+
+        assert result['changed'] is True
+        assert result['zone_id'] == '42'
+        assert 'diff' in result
+        assert 'before' in result['diff']
+        assert 'after' in result['diff']
+        assert result['diff']['before'] == {
+            'record': 'foo.example.com',
+            'prefix': 'foo',
+            'type': 'TXT',
+            'ttl': None,
+            'value': [u'bär " \\"with quotes\\"" " " "(use \\\\ to escape)"'],
+        }
+        assert result['diff']['after'] == {
+            'record': 'foo.example.com',
+            'prefix': 'foo',
+            'type': 'TXT',
+            'ttl': None,
+            'value': [u'bär " " \\"with " " quotes\\" " (use \\\\ to escape)!"'],
         }
 
     def test_change_modify_bulk(self, mocker):

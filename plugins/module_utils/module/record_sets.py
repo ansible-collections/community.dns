@@ -11,13 +11,24 @@ __metaclass__ = type
 
 import traceback
 
+from ansible.module_utils.common.text.converters import to_text
+
 from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
     ModuleOptionProvider,
 )
 
+from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
+    DNSConversionError,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.conversion.converter import (
+    RecordConverter,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.options import (
     create_bulk_operations_argspec,
+    create_txt_transformation_argspec,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.record import (
@@ -70,10 +81,13 @@ def create_module_argument_spec(provider_information):
         mutually_exclusive=[
             ('zone_name', 'zone_id'),
         ],
-    ).merge(create_bulk_operations_argspec(provider_information))
+    ).merge(create_bulk_operations_argspec(provider_information)).merge(create_txt_transformation_argspec())
 
 
 def run_module(module, create_api, provider_information):
+    option_provider = ModuleOptionProvider(module)
+    record_converter = RecordConverter(provider_information, option_provider)
+
     try:
         # Create API
         api = create_api()
@@ -94,6 +108,8 @@ def run_module(module, create_api, provider_information):
             zone_id = zone.zone.id
             zone_records = zone.records
 
+        record_converter.process_multiple_from_api(zone_records)
+
         # Process parameters
         prune = module.params['prune']
         record_sets = module.params['record_sets']
@@ -106,6 +122,8 @@ def run_module(module, create_api, provider_information):
                 normalized_zone=zone_in, normalized_record=record_name, prefix=prefix, provider_information=provider_information)
             record_set['record'] = record_name
             record_set['prefix'] = prefix
+            if record_set['value']:
+                record_set['value'] = record_converter.process_values_from_user(record_set['type'], record_set['value'])
             key = (prefix, record_set['type'])
             if key in record_sets_dict:
                 module.fail_json(msg='Found multiple sets for record {record} and type {type}: index #{i1} and #{i2}'.format(
@@ -187,16 +205,19 @@ def run_module(module, create_api, provider_information):
             zone_id=zone_id,
         )
         if to_create or to_delete or to_change:
+            records_to_delete = record_converter.clone_multiple_to_api(to_delete)
+            records_to_change = record_converter.clone_multiple_to_api(to_change)
+            records_to_create = record_converter.clone_multiple_to_api(to_create)
             result['changed'] = True
             if not module.check_mode:
                 dummy, errors = bulk_apply_changes(
                     api,
                     zone_id=zone_id,
-                    records_to_delete=to_delete,
-                    records_to_change=to_change,
-                    records_to_create=to_create,
+                    records_to_delete=records_to_delete,
+                    records_to_change=records_to_change,
+                    records_to_create=records_to_create,
                     provider_information=provider_information,
-                    options=ModuleOptionProvider(module),
+                    options=option_provider,
                 )
                 if errors:
                     if len(errors) == 1:
@@ -218,20 +239,22 @@ def run_module(module, create_api, provider_information):
             result['diff'] = dict(
                 before=dict(
                     record_sets=[
-                        format_records_for_output(record_set, record_name, prefix)
+                        format_records_for_output(record_set, record_name, prefix, record_converter=record_converter)
                         for record_name, type, prefix, record_set in sort_items(old_record_sets)
                     ],
                 ),
                 after=dict(
                     record_sets=[
-                        format_records_for_output(record_set, record_name, prefix)
+                        format_records_for_output(record_set, record_name, prefix, record_converter=record_converter)
                         for record_name, type, prefix, record_set in sort_items(new_record_sets)
                     ],
                 ),
             )
 
         module.exit_json(**result)
+    except DNSConversionError as e:
+        module.fail_json(msg='Error while converting DNS values: {0}'.format(e.error_message), error=e.error_message, exception=traceback.format_exc())
     except DNSAPIAuthenticationError as e:
-        module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=str(e), exception=traceback.format_exc())
+        module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=to_text(e), exception=traceback.format_exc())
     except DNSAPIError as e:
-        module.fail_json(msg='Error: {0}'.format(e), error=str(e), exception=traceback.format_exc())
+        module.fail_json(msg='Error: {0}'.format(e), error=to_text(e), exception=traceback.format_exc())

@@ -25,19 +25,9 @@ from ansible_collections.community.dns.plugins.module_utils.module._utils import
     get_prefix,
 )
 
-
-class DefaultProviderInformation(ProviderInformation):
-    def get_supported_record_types(self):
-        return ['A']
-
-    def get_zone_id_type(self):
-        return 'str'
-
-    def get_record_id_type(self):
-        return 'str'
-
-    def get_record_default_ttl(self):
-        return 300
+from ..helper import (
+    CustomProviderInformation,
+)
 
 
 def test_normalize_dns_name():
@@ -49,7 +39,7 @@ def test_normalize_dns_name():
 
 
 def test_get_prefix():
-    provider_information = DefaultProviderInformation()
+    provider_information = CustomProviderInformation()
     provider_information.get_supported_record_types()
     assert get_prefix(
         normalized_zone='example.com', normalized_record='example.com', provider_information=provider_information) == ('example.com', None)
