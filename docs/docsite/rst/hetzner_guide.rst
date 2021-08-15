@@ -397,7 +397,7 @@ When ``value`` is not specified, the ``markuman.hetzner_dns.record`` module will
         type: A
 
     - name: Deleting a single DNS record with community.dns
-      community.dns.hetzner_dns_record:
+      community.dns.hetzner_dns_record_set:
         zone_name: example.com
         state: absent
         # 'name' is a deprecated alias of 'prefix', so it can be
