@@ -21,7 +21,7 @@ extends_documentation_fragment:
     - community.dns.hosttech.record_type_choices_records_inventory
     - community.dns.hosttech.zone_id_type
     - community.dns.inventory_records
-    - community.dns.options.txt_transformation
+    - community.dns.options.record_transformation
 
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>

@@ -25,7 +25,7 @@ extends_documentation_fragment:
     - community.dns.hosttech.record_type_choices_record_sets_module
     - community.dns.hosttech.zone_id_type
     - community.dns.module_record_sets
-    - community.dns.options.txt_transformation
+    - community.dns.options.record_transformation
 
 author:
     - Felix Fontein (@felixfontein)

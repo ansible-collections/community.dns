@@ -28,7 +28,7 @@ from ansible_collections.community.dns.plugins.module_utils.conversion.converter
 
 from ansible_collections.community.dns.plugins.module_utils.options import (
     create_bulk_operations_argspec,
-    create_txt_transformation_argspec,
+    create_record_transformation_argspec,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.record import (
@@ -81,7 +81,7 @@ def create_module_argument_spec(provider_information):
         mutually_exclusive=[
             ('zone_name', 'zone_id'),
         ],
-    ).merge(create_bulk_operations_argspec(provider_information)).merge(create_txt_transformation_argspec())
+    ).merge(create_bulk_operations_argspec(provider_information)).merge(create_record_transformation_argspec())
 
 
 def run_module(module, create_api, provider_information):
