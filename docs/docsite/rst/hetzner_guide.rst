@@ -285,6 +285,10 @@ There are three steps for migrating. Two of these steps must be done on migratio
 
 The `markuman.hetzner_dns collection <https://galaxy.ansible.com/markuman/hetzner_dns>`_ collection provides three modules and one inventory plugin.
 
+.. note::
+
+  When working with TXT records, please look at the ``txt_transformation`` option. By default, the modules and plugins in this collection use **unquoted** values (you do not have to add double quotes and escape double quotes and backslashes), while the modules and plugins in ``markuman.hetzner_dns`` use partially quoted values. You can switch behavior of the ``community.dns`` modules by passing ``txt_transformation=api`` or ``txt_transformation=quoted``.
+
 The markuman.hetzner_dns.record module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -319,6 +323,9 @@ When creating, updating or removing single records, the :ref:`community.dns.hetz
         type: A
         value: 127.0.0.1
         ttl: 60
+        # If type is TXT, you either have to adjust the value you pass,
+        # or keep the following option:
+        txt_transformation: api
 
 When the ``markuman.hetzner_dns.record`` module is in replace mode, it should be replaced by the :ref:`community.dns.hetzner_dns_record_set module <ansible_collections.community.dns.hetzner_dns_record_set_module>`, since then it operates on the *record set* and not just on a single record:
 
@@ -355,6 +362,10 @@ When the ``markuman.hetzner_dns.record`` module is in replace mode, it should be
         # keep the old syntax, in this case:
         #
         #     value: 127.0.0.1
+        #
+        # If type is TXT, you either have to adjust the value you pass,
+        # or keep the following option:
+        txt_transformation: api
 
 When deleting a record, it depends on whether ``value`` is specified or not. If ``value`` is specified, the module is deleting a single DNS record, and the :ref:`community.dns.hetzner_dns_record module <ansible_collections.community.dns.hetzner_dns_record_module>` should be used:
 
@@ -382,6 +393,9 @@ When deleting a record, it depends on whether ``value`` is specified or not. If 
         type: A
         value: 127.0.0.1
         ttl: 60
+        # If type is TXT, you either have to adjust the value you pass,
+        # or keep the following option:
+        txt_transformation: api
 
 When ``value`` is not specified, the ``markuman.hetzner_dns.record`` module will delete all records for this prefix and type. In that case, it operates on a record set and the :ref:`community.dns.hetzner_dns_record_set module <ansible_collections.community.dns.hetzner_dns_record_set_module>` should be used:
 
