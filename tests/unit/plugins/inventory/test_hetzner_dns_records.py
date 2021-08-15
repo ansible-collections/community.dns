@@ -115,6 +115,19 @@ HETZNER_JSON_DEFAULT_ENTRIES = [
     },
 ]
 
+HETZNER_JSON_BAD_ENTRIES = [
+    {
+        'id': '125',
+        'type': 'TXT',
+        'name': '@',
+        'value': '"this is wrongly quoted',
+        'ttl': 3600,
+        'zone_id': '42',
+        'created': '2021-07-09T11:18:37Z',
+        'modified': '2021-07-09T11:18:37Z',
+    },
+]
+
 HETZNER_JSON_ZONE_LIST_RESULT = {
     'zones': [
         HETZNER_DEFAULT_ZONE,
@@ -127,6 +140,10 @@ HETZNER_JSON_ZONE_GET_RESULT = {
 
 HETZNER_JSON_ZONE_RECORDS_GET_RESULT = {
     'records': HETZNER_JSON_DEFAULT_ENTRIES,
+}
+
+HETZNER_JSON_ZONE_RECORDS_GET_RESULT_2 = {
+    'records': HETZNER_JSON_BAD_ENTRIES,
 }
 
 
@@ -310,6 +327,48 @@ def test_inventory_file_no_filter(mocker):
     assert len(im._inventory.groups['all'].hosts) == 0
 
 
+def test_inventory_file_record_conversion_error(mocker):
+    inventory_filename = "test.hetzner_dns.yaml"
+    C.INVENTORY_ENABLED = ['community.dns.hetzner_dns_records']
+    inventory_file = {inventory_filename: textwrap.dedent("""\
+    ---
+    plugin: community.dns.hetzner_dns_records
+    hetzner_token: foo
+    zone_id: '42'
+    """)}
+
+    open_url = OpenUrlProxy([
+        OpenUrlCall('GET', 200)
+        .expect_header('accept', 'application/json')
+        .expect_header('auth-api-token', 'foo')
+        .expect_url('https://dns.hetzner.com/api/v1/zones/42')
+        .return_header('Content-Type', 'application/json')
+        .result_json(HETZNER_JSON_ZONE_GET_RESULT),
+        OpenUrlCall('GET', 200)
+        .expect_header('accept', 'application/json')
+        .expect_header('auth-api-token', 'foo')
+        .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+        .expect_query_values('zone_id', '42')
+        .expect_query_values('page', '1')
+        .expect_query_values('per_page', '100')
+        .return_header('Content-Type', 'application/json')
+        .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT_2),
+    ])
+    mocker.patch('ansible_collections.community.dns.plugins.module_utils.http.open_url', open_url)
+    mocker.patch('ansible.inventory.manager.unfrackpath', mock_unfrackpath_noop)
+    mocker.patch('os.path.exists', exists_mock(inventory_filename))
+    mocker.patch('os.access', access_mock(inventory_filename))
+    im = InventoryManager(loader=DictDataLoader(inventory_file), sources=inventory_filename)
+
+    open_url.assert_is_done()
+
+    # TODO: make sure that the correct error was reported
+
+    assert not im._inventory.hosts
+    assert len(im._inventory.groups['ungrouped'].hosts) == 0
+    assert len(im._inventory.groups['all'].hosts) == 0
+
+
 def test_inventory_file_missing_zone(mocker):
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ['community.dns.hetzner_dns_records']
@@ -328,6 +387,8 @@ def test_inventory_file_missing_zone(mocker):
     im = InventoryManager(loader=DictDataLoader(inventory_file), sources=inventory_filename)
 
     open_url.assert_is_done()
+
+    # TODO: make sure that the correct error was reported
 
     assert not im._inventory.hosts
     assert len(im._inventory.groups['ungrouped'].hosts) == 0
@@ -360,6 +421,8 @@ def test_inventory_file_zone_not_found(mocker):
 
     open_url.assert_is_done()
 
+    # TODO: make sure that the correct error was reported
+
     assert not im._inventory.hosts
     assert len(im._inventory.groups['ungrouped'].hosts) == 0
     assert len(im._inventory.groups['all'].hosts) == 0
@@ -389,6 +452,8 @@ def test_inventory_file_unauthorized(mocker):
     im = InventoryManager(loader=DictDataLoader(inventory_file), sources=inventory_filename)
 
     open_url.assert_is_done()
+
+    # TODO: make sure that the correct error was reported
 
     assert not im._inventory.hosts
     assert len(im._inventory.groups['ungrouped'].hosts) == 0
@@ -420,6 +485,8 @@ def test_inventory_file_error(mocker):
 
     open_url.assert_is_done()
 
+    # TODO: make sure that the correct error was reported
+
     assert not im._inventory.hosts
     assert len(im._inventory.groups['ungrouped'].hosts) == 0
     assert len(im._inventory.groups['all'].hosts) == 0
@@ -443,6 +510,8 @@ def test_inventory_wrong_file(mocker):
 
     open_url.assert_is_done()
 
+    # TODO: make sure that the correct error was reported
+
     assert not im._inventory.hosts
     assert len(im._inventory.groups['ungrouped'].hosts) == 0
     assert len(im._inventory.groups['all'].hosts) == 0
@@ -460,6 +529,8 @@ def test_inventory_no_file(mocker):
     im = InventoryManager(loader=DictDataLoader({}), sources=inventory_filename)
 
     open_url.assert_is_done()
+
+    # TODO: make sure that the correct error was reported
 
     assert not im._inventory.hosts
     assert len(im._inventory.groups['ungrouped'].hosts) == 0
