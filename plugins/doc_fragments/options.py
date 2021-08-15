@@ -21,7 +21,7 @@ options:
         default: 2
 '''
 
-    TXT_TRANSFORMATION = r'''
+    RECORD_TRANSFORMATION = r'''
 options:
     txt_transformation:
         description:

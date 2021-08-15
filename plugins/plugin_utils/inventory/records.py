@@ -19,6 +19,14 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
     DNSAPIAuthenticationError,
 )
 
+from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
+    DNSConversionError,
+)
+
+from ansible_collections.community.dns.plugins.module_utils.conversion.converter import (
+    RecordConverter,
+)
+
 
 @six.add_metaclass(abc.ABCMeta)
 class RecordsInventoryModule(BaseInventoryPlugin):
@@ -47,6 +55,7 @@ class RecordsInventoryModule(BaseInventoryPlugin):
 
         try:
             self.setup_api()
+            self.record_converter = RecordConverter(self.provider_information, self)
 
             zone_name = self.get_option('zone_name')
             zone_id = self.get_option('zone_id')
@@ -61,6 +70,11 @@ class RecordsInventoryModule(BaseInventoryPlugin):
             if zone_with_records is None:
                 raise AnsibleError('Zone does not exist')
 
+            self.record_converter.process_multiple_from_api(zone_with_records.records)
+            self.record_converter.process_multiple_to_user(zone_with_records.records)
+
+        except DNSConversionError as e:
+            raise AnsibleError(u'Error while converting DNS values: {0}'.format(e.error_message))
         except DNSAPIAuthenticationError as e:
             raise AnsibleError('Cannot authenticate: %s' % e)
         except DNSAPIError as e:
