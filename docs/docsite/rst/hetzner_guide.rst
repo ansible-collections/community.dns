@@ -66,6 +66,10 @@ The module returns both the zone name and zone ID, so this module can be used to
 Working with DNS records
 ------------------------
 
+.. note::
+
+  By default, TXT record values returned and accepted by the modules and plugins in this collection are unquoted. This means that  you do not have to add double quotes (``"``), and escape double quotes (as ``\"``) and backslashes (as ``\\``). All modules and plugins which work with DNS records support the ``txt_transformation`` option which allows to configure this behavior.
+
 Querying DNS records
 ~~~~~~~~~~~~~~~~~~~~
 
