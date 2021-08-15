@@ -1,4 +1,0 @@
-minor_changes:
-- "Added a ``txt_transformation`` option to all modules and plugins working with DNS records (https://github.com/ansible-collections/community.dns/issues/48, https://github.com/ansible-collections/community.dns/pull/57, https://github.com/ansible-collections/community.dns/pull/60)."
-breaking_changes:
-- "All Hetzner modules and plugins which handle DNS records now work with unquoted TXT values by default. The old behavior can be obtained by setting ``txt_transformation=api`` (https://github.com/ansible-collections/community.dns/issues/48, https://github.com/ansible-collections/community.dns/pull/57, https://github.com/ansible-collections/community.dns/pull/60)."

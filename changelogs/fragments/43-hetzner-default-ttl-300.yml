@@ -1,2 +1,0 @@
-breaking_changes:
-- "hetzner_dns_record, hetzner_dns_record_set, hetzner_dns_record_sets - the default TTL is now 300 and no longer 3600, which equals the default in the web console (https://github.com/ansible-collections/community.dns/pull/43)."

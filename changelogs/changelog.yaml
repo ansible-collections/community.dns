@@ -194,9 +194,6 @@ releases:
     - description: Add or delete a single record in Hetzner DNS service
       name: hetzner_dns_record
       namespace: ''
-    - description: Retrieve entries in Hetzner DNS service
-      name: hetzner_dns_record_info
-      namespace: ''
     - description: Add or delete record sets in Hetzner DNS service
       name: hetzner_dns_record_set
       namespace: ''
@@ -224,3 +221,52 @@ releases:
         name: hosttech_dns_records
         namespace: null
     release_date: '2021-07-17'
+  2.0.0-a2:
+    changes:
+      breaking_changes:
+      - All Hetzner modules and plugins which handle DNS records now work with unquoted
+        TXT values by default. The old behavior can be obtained by setting ``txt_transformation=api``
+        (https://github.com/ansible-collections/community.dns/issues/48, https://github.com/ansible-collections/community.dns/pull/57,
+        https://github.com/ansible-collections/community.dns/pull/60).
+      - The hetzner_dns_record_info and hosttech_dns_record_info modules have been
+        renamed to hetzner_dns_record_set_info and hosttech_dns_record_set_info, respectively
+        (https://github.com/ansible-collections/community.dns/pull/54).
+      - hetzner_dns_record* modules - implement correct handling of default TTL. The
+        value ``none`` is now accepted and returned in this case (https://github.com/ansible-collections/community.dns/pull/52,
+        https://github.com/ansible-collections/community.dns/issues/50).
+      - hetzner_dns_record, hetzner_dns_record_set, hetzner_dns_record_sets - the
+        default TTL is now 300 and no longer 3600, which equals the default in the
+        web console (https://github.com/ansible-collections/community.dns/pull/43).
+      bugfixes:
+      - Hetzner API - interpret missing TTL as 300, which is what the web console
+        also does (https://github.com/ansible-collections/community.dns/pull/42).
+      - Update Public Suffix List.
+      - hetzner API code - make sure to also handle errors returned by the API if
+        the HTTP status code indicates success. This sometimes happens for 500 Internal
+        Server Error (https://github.com/ansible-collections/community.dns/pull/58).
+      - hosttech_dns_zone_info - make sure that full information is returned both
+        when requesting a zone by ID or by name (https://github.com/ansible-collections/community.dns/pull/56).
+      minor_changes:
+      - Added a ``txt_transformation`` option to all modules and plugins working with
+        DNS records (https://github.com/ansible-collections/community.dns/issues/48,
+        https://github.com/ansible-collections/community.dns/pull/57, https://github.com/ansible-collections/community.dns/pull/60).
+      - hetzner_dns_zone_info - the ``legacy_ns`` return value is now sorted, since
+        its order is unstable (https://github.com/ansible-collections/community.dns/pull/46).
+      release_summary: Second alpha release of 2.0.0.
+    fragments:
+    - 2.0.0-a2.yml
+    - 42-hetzner-ttl-300.yml
+    - 43-hetzner-default-ttl-300.yml
+    - 45-cleanup.yml
+    - 46-hetzner-legacy_ns-sorting.yml
+    - 52-hetzner-default-ttl.yml
+    - 54-info-rename.yml
+    - 56-tests-fixes.yml
+    - 57-60-txt_transformation.yml
+    - 58-hetzner-api-errors.yml
+    - update-psl.yml
+    modules:
+    - description: Retrieve record sets in Hetzner DNS service
+      name: hetzner_dns_record_set_info
+      namespace: ''
+    release_date: '2021-08-15'

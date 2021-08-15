@@ -1,4 +1,0 @@
-breaking_changes:
-- The hetzner_dns_record_info and hosttech_dns_record_info modules have been renamed
-  to hetzner_dns_record_set_info and hosttech_dns_record_set_info, respectively
-  (https://github.com/ansible-collections/community.dns/pull/54).

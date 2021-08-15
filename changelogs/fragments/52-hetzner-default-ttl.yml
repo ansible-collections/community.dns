@@ -1,2 +1,0 @@
-breaking_changes:
-- "hetzner_dns_record* modules - implement correct handling of default TTL. The value ``none`` is now accepted and returned in this case (https://github.com/ansible-collections/community.dns/pull/52, https://github.com/ansible-collections/community.dns/issues/50)."

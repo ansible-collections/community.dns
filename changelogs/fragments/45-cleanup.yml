@@ -1,2 +1,0 @@
-trivial:
-- "Code cleanup: removing some unnecessary imports and variables (https://github.com/ansible-collections/community.dns/pull/45)."
