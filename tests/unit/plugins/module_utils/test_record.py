@@ -137,6 +137,5 @@ def test_record_str_repr():
     A2.type = 'A'
     A2.ttl = 1
     A2.target = ''
-    A2.comment = 'test'
-    assert str(A2) == 'DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, comment: test)'
-    assert repr(A2) == 'DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, comment: test)'
+    assert str(A2) == 'DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s)'
+    assert repr(A2) == 'DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s)'

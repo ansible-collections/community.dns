@@ -46,7 +46,6 @@ def test_AAAA():
     assert record.prefix == 'www'
     assert record.target == '2001:db8:1234::1'
     assert record.ttl == 3600
-    assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
 
 
@@ -65,7 +64,6 @@ def test_A():
     assert record.prefix == 'www'
     assert record.target == '1.2.3.4'
     assert record.ttl == 3600
-    assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
 
 
@@ -86,7 +84,6 @@ def test_CAA():
     assert record.prefix is None
     assert record.target == '0 issue "letsencrypt.org"'
     assert record.ttl == 3600
-    assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
 
     # We also accept versions without quotes:
@@ -114,7 +111,6 @@ def test_CNAME():
     assert record.prefix == 'www'
     assert record.target == 'site.example.com'
     assert record.ttl == 3600
-    assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
 
 
@@ -134,7 +130,6 @@ def test_MX():
     assert record.prefix is None
     assert record.target == '10 mail.example.com'
     assert record.ttl == 3600
-    assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
 
     record.target = 'mail.example.com'
@@ -165,7 +160,6 @@ def test_NS():
     assert record.prefix == 'sub'
     assert record.target == 'ns1.example.com'
     assert record.ttl == 3600
-    assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
 
 
@@ -184,7 +178,6 @@ def test_PTR():
     assert record.prefix is None
     assert record.target == '4.3.2.1 smtp.example.com'
     assert record.ttl == 3600
-    assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
 
     record.target = 'smtp.example.com'
@@ -211,7 +204,6 @@ def test_SRV():
     assert record.prefix == '_autodiscover._tcp'
     assert record.target == '0 1 443 exchange.example.com'
     assert record.ttl == 3600
-    assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
 
     record.target = '1 443 exchange.example.com'
@@ -254,7 +246,6 @@ def test_TXT():
     assert record.prefix is None
     assert record.target == 'v=spf1 ip4:1.2.3.4/32 -all'
     assert record.ttl == 3600
-    assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
 
 
@@ -273,7 +264,6 @@ def test_TLSA():
     assert record.prefix is None
     assert record.target == '0 0 1 d2abde240d7cd3ee6b4b28c54df034b97983a1d16e8a410e4561cb106618e971'
     assert record.ttl == 3600
-    assert record.comment == 'my first record'
     assert _record_to_json(record, include_id=True) == data
 
 
