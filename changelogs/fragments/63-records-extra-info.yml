@@ -1,5 +1,6 @@
 breaking_changes:
   - The internal record API no longer allows to manage comments explicitly (https://github.com/ansible-collections/community.dns/pull/63).
+  - The internal bulk record updating helper (``bulk_apply_changes``) now also returns the records that were deleted, created or updated (https://github.com/ansible-collections/community.dns/pull/63).
 minor_changes:
   - The internal record API allows to manage extra data (https://github.com/ansible-collections/community.dns/pull/63).
   - "*_dns_record - when not using check mode, use actual return data for diff, instead of input data, so that extra data can be shown (https://github.com/ansible-collections/community.dns/pull/63)."
