@@ -35,7 +35,6 @@ def _create_record_from_json(source, type=None):
     result.id = source['id']
     result.type = source.get('type', type)
     result.ttl = int(source['ttl']) if source['ttl'] is not None else None
-    result.comment = source['comment']
 
     name = source.get('name')
     target = None
@@ -98,7 +97,7 @@ def _create_zone_with_records_from_json(source, prefix=NOT_PROVIDED, record_type
 def _record_to_json(record, include_id=False, include_type=True):
     result = {
         'ttl': record.ttl,
-        'comment': record.comment or '',
+        'comment': '',
     }
     if include_type:
         result['type'] = record.type
