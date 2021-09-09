@@ -32,6 +32,7 @@ class DNSRecord(object):
         self.prefix = None
         self.target = None
         self.ttl = 86400  # 24 * 60 * 60
+        self.extra = {}
 
     def clone(self):
         result = DNSRecord()
@@ -40,6 +41,7 @@ class DNSRecord(object):
         result.prefix = self.prefix
         result.target = self.target
         result.ttl = self.ttl
+        result.extra = dict(self.extra)
         return result
 
     def __str__(self):
@@ -53,6 +55,8 @@ class DNSRecord(object):
             data.append('prefix: (none)')
         data.append('target: "{0}"'.format(self.target))
         data.append('ttl: {0}'.format(format_ttl(self.ttl)))
+        if self.extra:
+            data.append('extra: {0}'.format(self.extra))
         return 'DNSRecord(' + ', '.join(data) + ')'
 
     def __repr__(self):
@@ -86,6 +90,7 @@ def format_record_for_output(record, record_name, prefix=None, record_converter=
         'type': record.type,
         'ttl': record.ttl,
         'value': record.target,
+        'extra': record.extra,
     }
     if record_converter:
         entry['value'] = record_converter.process_value_to_user(entry['type'], entry['value'])

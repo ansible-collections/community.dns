@@ -53,16 +53,19 @@ def _create_zone_from_json(source):
 
 
 def _create_record_from_json(source, type=None, has_id=True):
+    source = dict(source)
     result = DNSRecord()
     if has_id:
-        result.id = source['id']
-    result.type = source.get('type', type)
-    result.ttl = source.get('ttl')
-    name = source.get('name')
+        result.id = source.pop('id')
+    result.type = source.pop('type', type)
+    result.ttl = source.pop('ttl', None)
+    name = source.pop('name', None)
     if name == '@':
         name = None
     result.prefix = name
-    result.target = source['value']
+    result.target = source.pop('value')
+    source.pop('zone_id', None)
+    result.extra.update(source)
     return result
 
 

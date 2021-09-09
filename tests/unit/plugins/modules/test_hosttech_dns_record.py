@@ -512,6 +512,9 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'type': 'MX',
             'ttl': 3600,
             'value': '10 example.com',
+            'extra': {
+                'comment': '',
+            },
         }
         assert result['diff']['before'] == result['diff']['after']
 
@@ -763,6 +766,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'type': 'CAA',
             'ttl': 3600,
             'value': '0 issue "letsencrypt.org"',
+            'extra': {},
         }
 
     def test_change_add_one(self, mocker):

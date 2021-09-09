@@ -35,15 +35,18 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 
 
 def _create_record_from_encoding(source, type=None):
+    source = dict(source)
     result = DNSRecord()
-    result.id = source['id']
-    result.type = source.get('type', type)
-    result.prefix = source.get('prefix')
-    result.ttl = int(source['ttl']) if source['ttl'] is not None else None
+    result.id = source.pop('id')
+    result.type = source.pop('type', type)
+    result.prefix = source.pop('prefix', None)
+    ttl = source.pop('ttl')
+    result.ttl = int(ttl) if ttl is not None else None
     if result.type in ('PTR', 'MX'):
-        result.target = '{0} {1}'.format(source.get('priority'), source.get('target'))
+        result.target = '{0} {1}'.format(source.pop('priority'), source.pop('target'))
     else:
-        result.target = source.get('target')
+        result.target = source.pop('target')
+    result.extra.update(source)
     return result
 
 

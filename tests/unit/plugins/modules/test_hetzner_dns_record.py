@@ -219,6 +219,10 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'type': 'MX',
             'ttl': 3600,
             'value': '10 example.com',
+            'extra': {
+                'created': '2021-07-09T11:18:37Z',
+                'modified': '2021-07-09T11:18:37Z',
+            },
         }
         assert result['diff']['before'] == result['diff']['after']
 
@@ -498,6 +502,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'type': 'CAA',
             'ttl': 3600,
             'value': '0 issue "letsencrypt.org"',
+            'extra': {},
         }
 
     def test_change_add_one(self, mocker):
