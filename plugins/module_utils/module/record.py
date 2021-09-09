@@ -150,7 +150,8 @@ def run_module(module, create_api, provider_information):
                 record.target = value_in
                 api_record = record_converter.clone_to_api(record)
                 if not module.check_mode:
-                    api.add_record(zone_id, api_record)
+                    new_api_record = api.add_record(zone_id, api_record)
+                    record = record_converter.clone_from_api(new_api_record)
                 after = record
                 changed = True
             elif not exact_match:
@@ -159,7 +160,8 @@ def run_module(module, create_api, provider_information):
                 record.ttl = ttl_in
                 api_record = record_converter.clone_to_api(record)
                 if not module.check_mode:
-                    api.update_record(zone_id, api_record)
+                    new_api_record = api.update_record(zone_id, api_record)
+                    record = record_converter.clone_from_api(new_api_record)
                 after = record
                 changed = True
         else:
