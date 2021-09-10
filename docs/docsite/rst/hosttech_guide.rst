@@ -10,9 +10,10 @@ HostTech DNS Guide
 The :ref:`community.dns collection <plugins_in_community.dns>` offers several modules for working with the `HostTech DNS service <https://www.hosttech.ch/>`_.
 The modules support both the old `WSDL-based API <https://ns1.hosttech.eu/public/api?wsdl>`_ and the new `JSON REST based API <https://api.ns1.hosttech.eu/api/documentation/>`_.
 
-The collection provides five modules for working with HostTech DNS:
+The collection provides six modules for working with HostTech DNS:
 
 - :ref:`community.dns.hosttech_dns_record <ansible_collections.community.dns.hosttech_dns_record_module>`: create/update/delete single DNS records
+- :ref:`community.dns.hosttech_dns_record_info <ansible_collections.community.dns.hosttech_dns_record_info_module>`: retrieve information on DNS records
 - :ref:`community.dns.hosttech_dns_record_set <ansible_collections.community.dns.hosttech_dns_record_set_module>`: create/update/delete DNS record sets
 - :ref:`community.dns.hosttech_dns_record_set_info <ansible_collections.community.dns.hosttech_dns_record_set_info_module>`: retrieve information on DNS record sets
 - :ref:`community.dns.hosttech_dns_record_sets <ansible_collections.community.dns.hosttech_dns_record_sets_module>`: bulk synchronize DNS record sets

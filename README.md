@@ -19,11 +19,13 @@ Depends on the plugin or module used.
 ## Included content
 
 - Modules:
+  - `hetzner_dns_record_info`: retrieve information on DNS records from Hetzner DNS.
   - `hetzner_dns_record`: create/update/delete single DNS records with Hetzner DNS.
   - `hetzner_dns_record_set_info`: retrieve information on DNS record sets from Hetzner DNS.
   - `hetzner_dns_record_set`: create/update/delete DNS record sets with Hetzner DNS.
   - `hetzner_dns_record_sets`: bulk synchronize DNS record sets in Hetzner DNS service.
   - `hetzner_dns_zone_info`: retrieve zone information from Hetzner DNS.
+  - `hosttech_dns_record_info`: retrieve information on DNS records from HostTech DNS.
   - `hosttech_dns_record`: create/update/delete single DNS records with HostTech DNS.
   - `hosttech_dns_record_set_info`: retrieve information on DNS record sets from HostTech DNS.
   - `hosttech_dns_record_set`: create/update/delete DNS record sets with HostTech DNS.

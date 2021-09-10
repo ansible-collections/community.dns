@@ -10,9 +10,10 @@ Hetzner DNS Guide
 The :ref:`community.dns collection <plugins_in_community.dns>` offers several modules for working with the `Hetzner DNS service <https://docs.hetzner.com/dns-console/dns/>`_.
 The modules use the `JSON REST based API <https://dns.hetzner.com/api-docs/>`_.
 
-The collection provides five modules for working with Hetzner DNS:
+The collection provides six modules for working with Hetzner DNS:
 
 - :ref:`community.dns.hetzner_dns_record <ansible_collections.community.dns.hetzner_dns_record_module>`: create/update/delete single DNS records
+- :ref:`community.dns.hetzner_dns_record_info <ansible_collections.community.dns.hetzner_dns_record_info_module>`: retrieve information on DNS records
 - :ref:`community.dns.hetzner_dns_record_set <ansible_collections.community.dns.hetzner_dns_record_set_module>`: create/update/delete DNS record sets
 - :ref:`community.dns.hetzner_dns_record_set_info <ansible_collections.community.dns.hetzner_dns_record_set_info_module>`: retrieve information on DNS record sets
 - :ref:`community.dns.hetzner_dns_record_sets <ansible_collections.community.dns.hetzner_dns_record_sets_module>`: bulk synchronize DNS record sets
