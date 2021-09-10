@@ -429,10 +429,7 @@ A last step is replacing the deprecated alias ``name`` of ``prefix`` by ``prefix
 The markuman.hetzner_dns.record_info module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``markuman.hetzner_dns.record_info`` module can be replaced by the :ref:`community.dns.hetzner_dns_record_set_info module <ansible_collections.community.dns.hetzner_dns_record_set_info_module>`. There are two big differences:
-
-1. Instead of with the ``filters`` option, the output is controlled by the ``what`` option (choices ``single_record``, ``all_types_for_record``, and ``all_records``), the ``type`` option (needed when ``what=single_record``), and the ``record`` and ``prefix`` options (needed when ``what`` is not ``all_records``).
-2. The module returns **record sets** instead of individual records. This means that for example all A record for the prefix ``*`` are returned as one entry (with multiple values), instead of a list of records (which each a single value).
+The ``markuman.hetzner_dns.record_info`` module can be replaced by the :ref:`community.dns.hetzner_dns_record_info module <ansible_collections.community.dns.hetzner_dns_record_info_module>`. The main difference is that instead of by the ``filters`` option, the output is controlled by the ``what`` option (choices ``single_record``, ``all_types_for_record``, and ``all_records``), the ``type`` option (needed when ``what=single_record``), and the ``record`` and ``prefix`` options (needed when ``what`` is not ``all_records``).
 
 The markuman.hetzner_dns.zone_info module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
