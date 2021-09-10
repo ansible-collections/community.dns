@@ -13,6 +13,17 @@
       - "'type' in result.msg"
       - "'value' in result.msg"
 
+- name: Run hetzner_dns_record_info without options
+  hetzner_dns_record_info:
+  ignore_errors: true
+  register: result
+
+- name: Validate hetzner_dns_record_info run
+  assert:
+    that:
+      - result is failed
+      - "'hetzner_token' in result.msg"
+
 - name: Run hetzner_dns_record_set_info without options
   hetzner_dns_record_set_info:
   ignore_errors: true
@@ -79,6 +90,19 @@
   register: result
 
 - name: Validate hosttech_dns_record_set_info run
+  assert:
+    that:
+      - result is failed
+      - "'one of the following is required' in result.msg"
+      - "'zone_name' in result.msg"
+      - "'zone_id' in result.msg"
+
+- name: Run hosttech_dns_record_info without options
+  hosttech_dns_record_info:
+  ignore_errors: true
+  register: result
+
+- name: Validate hosttech_dns_record_info run
   assert:
     that:
       - result is failed
