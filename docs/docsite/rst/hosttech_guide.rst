@@ -93,10 +93,10 @@ Working with DNS records
 
   By default, TXT record values returned and accepted by the modules and plugins in this collection are unquoted. This means that  you do not have to add double quotes (``"``), and escape double quotes (as ``\"``) and backslashes (as ``\\``). All modules and plugins which work with DNS records support the ``txt_transformation`` option which allows to configure this behavior.
 
-Querying DNS records
-~~~~~~~~~~~~~~~~~~~~
+Querying DNS records and record sets
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :ref:`community.dns.hosttech_dns_record_set_info module <ansible_collections.community.dns.hosttech_dns_record_set_info_module>` allows to query DNS record sets from the API. It can be used to query a single record:
+The :ref:`community.dns.hosttech_dns_record_set_info module <ansible_collections.community.dns.hosttech_dns_record_set_info_module>` allows to query DNS record sets from the API. It can be used to query a single record set:
 
 .. code-block:: yaml+jinja
 
@@ -125,7 +125,7 @@ The :ref:`community.dns.hosttech_dns_record_set_info module <ansible_collections
 
 In all examples in this section, you can replace ``zone_name: example.com`` by ``zone_id: 42`` with the zone's integer ID.
 
-You can also query a list of all records for a record name or prefix:
+You can also query a list of all record sets for a record name or prefix:
 
 .. code-block:: yaml+jinja
 
@@ -146,7 +146,7 @@ You can also query a list of all records for a record name or prefix:
           values {{ item.value | join(', ') }}
       loop: result.sets
 
-Finally you can query all records for a zone:
+Finally you can query all record sets for a zone:
 
 .. code-block:: yaml+jinja
 
@@ -162,6 +162,8 @@ Finally you can query all records for a zone:
           {{ item.type }} record for {{ item.record }} with
           TTL {{ item.ttl }} has values {{ item.value | join(', ') }}
       loop: result.sets
+
+If you are interested in individual DNS records, and not record sets, you should use the :ref:`community.dns.hosttech_dns_record_info module <ansible_collections.community.dns.hosttech_dns_record_info_module>`. It supports the same limiting options as the ``community.dns.hosttech_dns_record_set_info`` module.
 
 Creating and updating DNS single records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

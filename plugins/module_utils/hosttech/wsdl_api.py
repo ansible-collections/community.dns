@@ -42,10 +42,14 @@ def _create_record_from_encoding(source, type=None):
     result.prefix = source.pop('prefix', None)
     ttl = source.pop('ttl')
     result.ttl = int(ttl) if ttl is not None else None
+    priority = source.pop('priority')
+    target = source.pop('target')
     if result.type in ('PTR', 'MX'):
-        result.target = '{0} {1}'.format(source.pop('priority'), source.pop('target'))
+        result.target = '{0} {1}'.format(priority, target)
     else:
-        result.target = source.pop('target')
+        result.target = target
+    source.pop('zone', None)
+    result.extra['comment'] = source.pop('comment') or ''
     result.extra.update(source)
     return result
 
