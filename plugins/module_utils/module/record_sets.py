@@ -199,18 +199,20 @@ def run_module(module, create_api, provider_information):
                 for record in record_set:
                     new_record_sets[key].remove(record)
 
-        # Apply changes
+        # Compose result
         result = dict(
             changed=False,
             zone_id=zone_id,
         )
+
+        # Apply changes
         if to_create or to_delete or to_change:
             records_to_delete = record_converter.clone_multiple_to_api(to_delete)
             records_to_change = record_converter.clone_multiple_to_api(to_change)
             records_to_create = record_converter.clone_multiple_to_api(to_create)
             result['changed'] = True
             if not module.check_mode:
-                dummy, errors = bulk_apply_changes(
+                dummy, errors, success = bulk_apply_changes(
                     api,
                     zone_id=zone_id,
                     records_to_delete=records_to_delete,

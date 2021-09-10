@@ -512,6 +512,9 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'type': 'MX',
             'ttl': 3600,
             'value': '10 example.com',
+            'extra': {
+                'comment': '',
+            },
         }
         assert result['diff']['before'] == result['diff']['after']
 
@@ -763,6 +766,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'type': 'CAA',
             'ttl': 3600,
             'value': '0 issue "letsencrypt.org"',
+            'extra': {},
         }
 
     def test_change_add_one(self, mocker):
@@ -774,6 +778,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'type': 'CAA',
             'ttl': 3600,
             'value': '128 issue "letsencrypt.org xxx"',
+            '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -819,6 +824,20 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         assert result['changed'] is True
         assert result['zone_id'] == 42
+        assert 'diff' in result
+        assert 'before' in result['diff']
+        assert 'after' in result['diff']
+        assert result['diff']['before'] == {}
+        assert result['diff']['after'] == {
+            'prefix': '',
+            'record': 'example.com',
+            'type': 'CAA',
+            'ttl': 3600,
+            'value': '128 issue "letsencrypt.org xxx"',
+            'extra': {
+                'comment': '',
+            },
+        }
 
     def test_change_add_one_prefix(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record, {

@@ -46,16 +46,16 @@ def test_zone_with_records_str_repr():
     A2.type = 'A'
     A2.ttl = 1
     A2.target = ''
-    A2.comment = 'test'
+    A2.extra['foo'] = 23
     ZZ1 = DNSZoneWithRecords(Z1, [A1])
     ZZ2 = DNSZoneWithRecords(Z2, [A1, A2])
     assert str(ZZ1) == '(DNSZone(name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)])'
     assert repr(ZZ1) == 'DNSZoneWithRecords(DNSZone(name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)])'
     assert str(ZZ2) == (
         '(DNSZone(id: 42, name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m),'
-        ' DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, comment: test)])'
+        ' DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, extra: {\'foo\': 23})])'
     )
     assert repr(ZZ2) == (
         'DNSZoneWithRecords(DNSZone(id: 42, name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m),'
-        ' DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, comment: test)])'
+        ' DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, extra: {\'foo\': 23})])'
     )

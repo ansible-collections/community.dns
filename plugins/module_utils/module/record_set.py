@@ -222,17 +222,6 @@ def run_module(module, create_api, provider_information):
             changed=False,
             zone_id=zone_id,
         )
-        if module._diff:
-            result['diff'] = dict(
-                before=(
-                    format_records_for_output(sorted(before, key=lambda record: record.target), record_in, prefix, record_converter=record_converter)
-                    if before else dict()
-                ),
-                after=(
-                    format_records_for_output(sorted(after, key=lambda record: record.target), record_in, prefix, record_converter=record_converter)
-                    if after else dict()
-                ),
-            )
 
         # Determine whether there's something to do
         if to_create or to_delete or to_change:
@@ -242,7 +231,7 @@ def run_module(module, create_api, provider_information):
             records_to_create = record_converter.clone_multiple_to_api(to_create)
             result['changed'] = True
             if not module.check_mode:
-                dummy, errors = bulk_apply_changes(
+                dummy, errors, success = bulk_apply_changes(
                     api,
                     zone_id=zone_id,
                     records_to_delete=records_to_delete,
@@ -258,6 +247,19 @@ def run_module(module, create_api, provider_information):
                         msg='Errors: {0}'.format('; '.join([str(e) for e in errors])),
                         errors=[str(e) for e in errors],
                     )
+
+        # Include diff information
+        if module._diff:
+            result['diff'] = dict(
+                before=(
+                    format_records_for_output(sorted(before, key=lambda record: record.target), record_in, prefix, record_converter=record_converter)
+                    if before else dict()
+                ),
+                after=(
+                    format_records_for_output(sorted(after, key=lambda record: record.target), record_in, prefix, record_converter=record_converter)
+                    if after else dict()
+                ),
+            )
 
         module.exit_json(**result)
     except DNSConversionError as e:

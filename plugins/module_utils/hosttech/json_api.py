@@ -31,43 +31,46 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 
 
 def _create_record_from_json(source, type=None):
+    source = dict(source)
     result = DNSRecord()
-    result.id = source['id']
-    result.type = source.get('type', type)
-    result.ttl = int(source['ttl']) if source['ttl'] is not None else None
-    result.comment = source['comment']
+    result.id = source.pop('id')
+    result.type = source.pop('type', type)
+    ttl = source.pop('ttl')
+    result.ttl = int(ttl) if ttl is not None else None
+    result.extra['comment'] = source.pop('comment')
 
-    name = source.get('name')
+    name = source.pop('name', None)
     target = None
     if result.type == 'A':
-        target = source['ipv4']
+        target = source.pop('ipv4')
     elif result.type == 'AAAA':
-        target = source['ipv6']
+        target = source.pop('ipv6')
     elif result.type == 'CAA':
-        target = '{0} {1} "{2}"'.format(source['flag'], source['tag'], source['value'])
+        target = '{0} {1} "{2}"'.format(source.pop('flag'), source.pop('tag'), source.pop('value'))
     elif result.type == 'CNAME':
-        target = source['cname']
+        target = source.pop('cname')
     elif result.type == 'MX':
-        name = source['ownername']
-        target = '{0} {1}'.format(source['pref'], source['name'])
+        mx_name, name = name, source.pop('ownername')
+        target = '{0} {1}'.format(source.pop('pref'), mx_name)
     elif result.type == 'NS':
-        name = source['ownername']
-        target = source['targetname']
+        name = source.pop('ownername')
+        target = source.pop('targetname')
     elif result.type == 'PTR':
-        name = ''
-        target = '{0} {1}'.format(source['origin'], source['name'])
+        ptr_name, name = name, ''
+        target = '{0} {1}'.format(source.pop('origin'), ptr_name)
     elif result.type == 'SRV':
-        name = source['service']
-        target = '{0} {1} {2} {3}'.format(source['priority'], source['weight'], source['port'], source['target'])
+        name = source.pop('service')
+        target = '{0} {1} {2} {3}'.format(source.pop('priority'), source.pop('weight'), source.pop('port'), source.pop('target'))
     elif result.type == 'TXT':
-        target = source['text']
+        target = source.pop('text')
     elif result.type == 'TLSA':
-        target = source['text']
+        target = source.pop('text')
     else:
         raise DNSAPIError('Cannot parse unknown record type: {0}'.format(result.type))
 
     result.prefix = name or None  # API returns '', we want None
     result.target = target
+    result.extra.update(source)
     return result
 
 
@@ -98,7 +101,7 @@ def _create_zone_with_records_from_json(source, prefix=NOT_PROVIDED, record_type
 def _record_to_json(record, include_id=False, include_type=True):
     result = {
         'ttl': record.ttl,
-        'comment': record.comment or '',
+        'comment': record.extra.get('comment') or '',
     }
     if include_type:
         result['type'] = record.type

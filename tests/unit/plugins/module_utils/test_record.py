@@ -37,6 +37,7 @@ def test_format_records_for_output():
     A1.type = 'A'
     A1.ttl = 300
     A1.target = '1.2.3.4'
+    A1.extra['foo'] = 'bar'
     A2 = DNSRecord()
     A2.type = 'A'
     A2.ttl = 300
@@ -137,6 +138,6 @@ def test_record_str_repr():
     A2.type = 'A'
     A2.ttl = 1
     A2.target = ''
-    A2.comment = 'test'
-    assert str(A2) == 'DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, comment: test)'
-    assert repr(A2) == 'DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, comment: test)'
+    A2.extra['foo'] = 'bar'
+    assert str(A2) == 'DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, extra: {\'foo\': \'bar\'})'
+    assert repr(A2) == 'DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, extra: {\'foo\': \'bar\'})'

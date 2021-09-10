@@ -219,6 +219,10 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'type': 'MX',
             'ttl': 3600,
             'value': '10 example.com',
+            'extra': {
+                'created': '2021-07-09T11:18:37Z',
+                'modified': '2021-07-09T11:18:37Z',
+            },
         }
         assert result['diff']['before'] == result['diff']['after']
 
@@ -498,6 +502,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'type': 'CAA',
             'ttl': 3600,
             'value': '0 issue "letsencrypt.org"',
+            'extra': {},
         }
 
     def test_change_add_one(self, mocker):
@@ -509,6 +514,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'type': 'CAA',
             'ttl': 3600,
             'value': '128 issue "letsencrypt.org xxx"',
+            '_ansible_diff': True,
             '_ansible_remote_tmp': '/tmp/tmp',
             '_ansible_keep_remote_files': True,
         }, [
@@ -547,12 +553,29 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'value': '128 issue "letsencrypt.org xxx"',
                     'ttl': 3600,
                     'zone_id': '42',
+                    'created': '2021-07-09T11:18:37Z',
+                    'modified': '2021-07-09T11:18:37Z',
                 },
             }),
         ])
 
         assert result['changed'] is True
         assert result['zone_id'] == '42'
+        assert 'diff' in result
+        assert 'before' in result['diff']
+        assert 'after' in result['diff']
+        assert result['diff']['before'] == {}
+        assert result['diff']['after'] == {
+            'prefix': '',
+            'record': 'example.com',
+            'type': 'CAA',
+            'ttl': 3600,
+            'value': '128 issue "letsencrypt.org xxx"',
+            'extra': {
+                'created': '2021-07-09T11:18:37Z',
+                'modified': '2021-07-09T11:18:37Z',
+            },
+        }
 
     def test_change_add_one_prefix(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record, {
