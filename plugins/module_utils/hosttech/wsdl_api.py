@@ -49,6 +49,7 @@ def _create_record_from_encoding(source, type=None):
     else:
         result.target = target
     source.pop('zone', None)
+    result.extra['comment'] = source.pop('comment') or ''
     result.extra.update(source)
     return result
 
