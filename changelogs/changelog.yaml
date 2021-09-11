@@ -270,3 +270,29 @@ releases:
       name: hetzner_dns_record_set_info
       namespace: ''
     release_date: '2021-08-15'
+  2.0.0-a3:
+    changes:
+      breaking_changes:
+      - The internal bulk record updating helper (``bulk_apply_changes``) now also
+        returns the records that were deleted, created or updated (https://github.com/ansible-collections/community.dns/pull/63).
+      - The internal record API no longer allows to manage comments explicitly (https://github.com/ansible-collections/community.dns/pull/63).
+      bugfixes:
+      - Update Public Suffix List.
+      minor_changes:
+      - The internal record API allows to manage extra data (https://github.com/ansible-collections/community.dns/pull/63).
+      - hetzner_dns_record and hosttech_dns_record - when not using check mode, use
+        actual return data for diff, instead of input data, so that extra data can
+        be shown (https://github.com/ansible-collections/community.dns/pull/63).
+      release_summary: Third alpha release of 2.0.0.
+    fragments:
+    - 2.0.0-a3.yml
+    - 63-records-extra-info.yml
+    - update-psl.yml
+    modules:
+    - description: Retrieve records in Hetzner DNS service
+      name: hetzner_dns_record_info
+      namespace: ''
+    - description: Retrieve records in Hosttech DNS service
+      name: hosttech_dns_record_info
+      namespace: ''
+    release_date: '2021-09-11'

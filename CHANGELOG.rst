@@ -5,6 +5,37 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v2.0.0-a3
+=========
+
+Release Summary
+---------------
+
+Third alpha release of 2.0.0.
+
+Minor Changes
+-------------
+
+- The internal record API allows to manage extra data (https://github.com/ansible-collections/community.dns/pull/63).
+- hetzner_dns_record and hosttech_dns_record - when not using check mode, use actual return data for diff, instead of input data, so that extra data can be shown (https://github.com/ansible-collections/community.dns/pull/63).
+
+Breaking Changes / Porting Guide
+--------------------------------
+
+- The internal bulk record updating helper (``bulk_apply_changes``) now also returns the records that were deleted, created or updated (https://github.com/ansible-collections/community.dns/pull/63).
+- The internal record API no longer allows to manage comments explicitly (https://github.com/ansible-collections/community.dns/pull/63).
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+
+New Modules
+-----------
+
+- community.dns.hetzner_dns_record_info - Retrieve records in Hetzner DNS service
+- community.dns.hosttech_dns_record_info - Retrieve records in Hosttech DNS service
+
 v2.0.0-a2
 =========
 
