@@ -86,7 +86,7 @@ class ResolveDirectlyFromNameServers(object):
                 return None, cname
             if rrset.rdtype == dns.rdatatype.NS:
                 new_nameservers.extend(str(ns_record.target) for ns_record in rrset)
-        return sorted(set(new_nameservers)), cname
+        return sorted(set(new_nameservers)) if new_nameservers else None, cname
 
     def _lookup_address(self, target):
         result = self.cache.get((target, 'addr'))
