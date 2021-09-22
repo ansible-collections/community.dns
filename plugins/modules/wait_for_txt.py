@@ -196,8 +196,10 @@ def lookup(resolver, name):
         res = []
         if txt is not None:
             for data in txt:
+                line = []
                 for str in data.strings:
-                    res.append(to_text(str))
+                    line.append(to_text(str))
+                res.append(u''.join(line))
         result[key] = res
         txts[key] = []
     return result
