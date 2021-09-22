@@ -9,7 +9,6 @@ __metaclass__ = type
 
 DOCUMENTATION = '''
 name: hetzner_dns_records
-plugin_type: inventory
 
 short_description: Create inventory from Hetzner DNS records
 

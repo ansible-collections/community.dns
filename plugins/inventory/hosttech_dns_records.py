@@ -9,7 +9,6 @@ __metaclass__ = type
 
 DOCUMENTATION = '''
 name: hosttech_dns_records
-plugin_type: inventory
 
 short_description: Create inventory from Hosttech DNS records
 
