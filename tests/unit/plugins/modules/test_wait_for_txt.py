@@ -371,7 +371,8 @@ class TestWaitForTXT(ModuleTestCase):
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'example.com',
                         300,
-                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'asdf "another one"'),
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'as df'),
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, '"another one"'),
                     )),
                 },
                 {
@@ -393,7 +394,8 @@ class TestWaitForTXT(ModuleTestCase):
                         'example.com',
                         300,
                         dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, '"foo bar"'),
-                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, '"another one" asdf'),
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, '"another one"'),
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'as df'),
                     )),
                 },
             ],
@@ -505,7 +507,8 @@ class TestWaitForTXT(ModuleTestCase):
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'www.example.com',
                         300,
-                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'asdf bee'),
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'asdf ""'),
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'bee'),
                     )),
                 },
             ],
@@ -645,7 +648,8 @@ class TestWaitForTXT(ModuleTestCase):
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'example.com',
                         300,
-                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'bumble bee'),
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'bumble'),
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'bee'),
                         dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'wizard'),
                     )),
                 },
@@ -656,7 +660,8 @@ class TestWaitForTXT(ModuleTestCase):
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'example.com',
                         300,
-                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'bumble bee'),
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'bumble'),
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'bee'),
                     )),
                 },
             ],

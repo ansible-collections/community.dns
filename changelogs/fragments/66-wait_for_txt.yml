@@ -1,0 +1,2 @@
+bugfixes:
+  - "wait_for_txt - fix handling of too long TXT values (https://github.com/ansible-collections/community.dns/pull/65)."
