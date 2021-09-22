@@ -5,87 +5,25 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
-v2.0.0-a3
-=========
+v2.0.0
+======
 
 Release Summary
 ---------------
 
-Third alpha release of 2.0.0.
-
-Minor Changes
--------------
-
-- The internal record API allows to manage extra data (https://github.com/ansible-collections/community.dns/pull/63).
-- hetzner_dns_record and hosttech_dns_record - when not using check mode, use actual return data for diff, instead of input data, so that extra data can be shown (https://github.com/ansible-collections/community.dns/pull/63).
-
-Breaking Changes / Porting Guide
---------------------------------
-
-- The internal bulk record updating helper (``bulk_apply_changes``) now also returns the records that were deleted, created or updated (https://github.com/ansible-collections/community.dns/pull/63).
-- The internal record API no longer allows to manage comments explicitly (https://github.com/ansible-collections/community.dns/pull/63).
-
-Bugfixes
---------
-
-- Update Public Suffix List.
-
-New Modules
------------
-
-- community.dns.hetzner_dns_record_info - Retrieve records in Hetzner DNS service
-- community.dns.hosttech_dns_record_info - Retrieve records in Hosttech DNS service
-
-v2.0.0-a2
-=========
-
-Release Summary
----------------
-
-Second alpha release of 2.0.0.
-
-Minor Changes
--------------
-
-- Added a ``txt_transformation`` option to all modules and plugins working with DNS records (https://github.com/ansible-collections/community.dns/issues/48, https://github.com/ansible-collections/community.dns/pull/57, https://github.com/ansible-collections/community.dns/pull/60).
-- hetzner_dns_zone_info - the ``legacy_ns`` return value is now sorted, since its order is unstable (https://github.com/ansible-collections/community.dns/pull/46).
-
-Breaking Changes / Porting Guide
---------------------------------
-
-- All Hetzner modules and plugins which handle DNS records now work with unquoted TXT values by default. The old behavior can be obtained by setting ``txt_transformation=api`` (https://github.com/ansible-collections/community.dns/issues/48, https://github.com/ansible-collections/community.dns/pull/57, https://github.com/ansible-collections/community.dns/pull/60).
-- The hetzner_dns_record_info and hosttech_dns_record_info modules have been renamed to hetzner_dns_record_set_info and hosttech_dns_record_set_info, respectively (https://github.com/ansible-collections/community.dns/pull/54).
-- hetzner_dns_record* modules - implement correct handling of default TTL. The value ``none`` is now accepted and returned in this case (https://github.com/ansible-collections/community.dns/pull/52, https://github.com/ansible-collections/community.dns/issues/50).
-- hetzner_dns_record, hetzner_dns_record_set, hetzner_dns_record_sets - the default TTL is now 300 and no longer 3600, which equals the default in the web console (https://github.com/ansible-collections/community.dns/pull/43).
-
-Bugfixes
---------
-
-- Hetzner API - interpret missing TTL as 300, which is what the web console also does (https://github.com/ansible-collections/community.dns/pull/42).
-- Update Public Suffix List.
-- hetzner API code - make sure to also handle errors returned by the API if the HTTP status code indicates success. This sometimes happens for 500 Internal Server Error (https://github.com/ansible-collections/community.dns/pull/58).
-- hosttech_dns_zone_info - make sure that full information is returned both when requesting a zone by ID or by name (https://github.com/ansible-collections/community.dns/pull/56).
-
-New Modules
------------
-
-- community.dns.hetzner_dns_record_set_info - Retrieve record sets in Hetzner DNS service
-
-v2.0.0-a1
-=========
-
-Release Summary
----------------
-
-First alpha release of 2.0.0.
+This release contains many new features, modules and plugins, but also has several breaking changes to the 1.x.y versions. Please read the changelog carefully to determine what to change if you used an earlier version of this collection.
 
 Minor Changes
 -------------
 
 - Add support for Hetzner DNS (https://github.com/ansible-collections/community.dns/pull/27).
+- Added a ``txt_transformation`` option to all modules and plugins working with DNS records (https://github.com/ansible-collections/community.dns/issues/48, https://github.com/ansible-collections/community.dns/pull/57, https://github.com/ansible-collections/community.dns/pull/60).
 - The hosttech_dns_records module has been renamed to hosttech_dns_record_sets (https://github.com/ansible-collections/community.dns/pull/31).
 - The internal API now supports bulk DNS record changes, if supported by the API (https://github.com/ansible-collections/community.dns/pull/39).
+- The internal record API allows to manage extra data (https://github.com/ansible-collections/community.dns/pull/63).
 - Use HTTP helper class to make API implementations work for both plugins and modules. Make WSDL API use ``fetch_url`` instead of ``open_url`` for modules (https://github.com/ansible-collections/community.dns/pull/36).
+- hetzner_dns_record and hosttech_dns_record - when not using check mode, use actual return data for diff, instead of input data, so that extra data can be shown (https://github.com/ansible-collections/community.dns/pull/63).
+- hetzner_dns_zone_info - the ``legacy_ns`` return value is now sorted, since its order is unstable (https://github.com/ansible-collections/community.dns/pull/46).
 - hosttech_dns_* modules - rename ``zone`` parameter to ``zone_name``. The old name ``zone`` can still be used as an alias (https://github.com/ansible-collections/community.dns/pull/32).
 - hosttech_dns_record_set - ``value`` is no longer required when ``state=absent`` and ``overwrite=true`` (https://github.com/ansible-collections/community.dns/pull/31).
 - hosttech_dns_record_sets - ``records`` has been renamed to ``record_sets``. The old name ``records`` can still be used as an alias (https://github.com/ansible-collections/community.dns/pull/31).
@@ -94,15 +32,33 @@ Minor Changes
 Breaking Changes / Porting Guide
 --------------------------------
 
+- All Hetzner modules and plugins which handle DNS records now work with unquoted TXT values by default. The old behavior can be obtained by setting ``txt_transformation=api`` (https://github.com/ansible-collections/community.dns/issues/48, https://github.com/ansible-collections/community.dns/pull/57, https://github.com/ansible-collections/community.dns/pull/60).
 - Hosttech API creation - now requires a ``ModuleOptionProvider`` object instead of an ``AnsibleModule`` object. Alternatively an Ansible plugin instance can be passed (https://github.com/ansible-collections/community.dns/pull/37).
+- The hetzner_dns_record_info and hosttech_dns_record_info modules have been renamed to hetzner_dns_record_set_info and hosttech_dns_record_set_info, respectively (https://github.com/ansible-collections/community.dns/pull/54).
 - The hosttech_dns_record module has been renamed to hosttech_dns_record_set (https://github.com/ansible-collections/community.dns/pull/31).
+- The internal bulk record updating helper (``bulk_apply_changes``) now also returns the records that were deleted, created or updated (https://github.com/ansible-collections/community.dns/pull/63).
+- The internal record API no longer allows to manage comments explicitly (https://github.com/ansible-collections/community.dns/pull/63).
 - When using the internal modules API, now a zone ID type and a provider information object must be passed (https://github.com/ansible-collections/community.dns/pull/27).
+- hetzner_dns_record* modules - implement correct handling of default TTL. The value ``none`` is now accepted and returned in this case (https://github.com/ansible-collections/community.dns/pull/52, https://github.com/ansible-collections/community.dns/issues/50).
+- hetzner_dns_record, hetzner_dns_record_set, hetzner_dns_record_sets - the default TTL is now 300 and no longer 3600, which equals the default in the web console (https://github.com/ansible-collections/community.dns/pull/43).
 - hosttech_dns_record_set - the option ``overwrite`` was replaced by a new option ``on_existing``. Specifying ``overwrite=true`` is equivalent to ``on_existing=replace`` (the new default). Specifying ``overwrite=false`` with ``state=present`` is equivalent to ``on_existing=keep_and_fail``, and specifying ``overwrite=false`` with ``state=absent`` is equivalent to ``on_existing=keep`` (https://github.com/ansible-collections/community.dns/pull/31).
 
 Deprecated Features
 -------------------
 
 - The hosttech_dns_records module has been renamed to hosttech_dns_record_sets. The old name will stop working in community.dns 3.0.0 (https://github.com/ansible-collections/community.dns/pull/31).
+
+Bugfixes
+--------
+
+- Hetzner API - interpret missing TTL as 300, which is what the web console also does (https://github.com/ansible-collections/community.dns/pull/42).
+- Update Public Suffix List.
+- Update Public Suffix List.
+- Update Public Suffix List.
+- hetzner API code - make sure to also handle errors returned by the API if the HTTP status code indicates success. This sometimes happens for 500 Internal Server Error (https://github.com/ansible-collections/community.dns/pull/58).
+- hosttech_dns_zone_info - make sure that full information is returned both when requesting a zone by ID or by name (https://github.com/ansible-collections/community.dns/pull/56).
+- wait_for_txt - fix handling of too long TXT values (https://github.com/ansible-collections/community.dns/pull/65).
+- wait_for_txt - resolving nameservers sometimes resulted in an empty list, yielding wrong results (https://github.com/ansible-collections/community.dns/pull/64).
 
 New Plugins
 -----------
@@ -117,10 +73,13 @@ New Modules
 -----------
 
 - community.dns.hetzner_dns_record - Add or delete a single record in Hetzner DNS service
+- community.dns.hetzner_dns_record_info - Retrieve records in Hetzner DNS service
 - community.dns.hetzner_dns_record_set - Add or delete record sets in Hetzner DNS service
+- community.dns.hetzner_dns_record_set_info - Retrieve record sets in Hetzner DNS service
 - community.dns.hetzner_dns_record_sets - Bulk synchronize DNS record sets in Hetzner DNS service
 - community.dns.hetzner_dns_zone_info - Retrieve zone information in Hetzner DNS service
 - community.dns.hosttech_dns_record - Add or delete a single record in Hosttech DNS service
+- community.dns.hosttech_dns_record_info - Retrieve records in Hosttech DNS service
 - community.dns.hosttech_dns_record_set - Add or delete record sets in Hosttech DNS service
 - community.dns.hosttech_dns_record_sets - Bulk synchronize DNS record sets in Hosttech DNS service
 

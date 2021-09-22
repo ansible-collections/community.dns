@@ -145,6 +145,23 @@ releases:
     - 30-caa-records-quoting.yml
     - update-psl.yml
     release_date: '2021-07-12'
+  2.0.0:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      - wait_for_txt - fix handling of too long TXT values (https://github.com/ansible-collections/community.dns/pull/65).
+      - wait_for_txt - resolving nameservers sometimes resulted in an empty list,
+        yielding wrong results (https://github.com/ansible-collections/community.dns/pull/64).
+      release_summary: This release contains many new features, modules and plugins,
+        but also has several breaking changes to the 1.x.y versions. Please read the
+        changelog carefully to determine what to change if you used an earlier version
+        of this collection.
+    fragments:
+    - 2.0.0.yml
+    - 65-wait_for_txt-ns.yml
+    - 66-wait_for_txt.yml
+    - update-psl.yml
+    release_date: '2021-09-22'
   2.0.0-a1:
     changes:
       breaking_changes:
