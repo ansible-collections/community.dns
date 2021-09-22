@@ -3,7 +3,8 @@
   wait_for_txt:
     records:
       - name: github.com
-        values: "{{ query('community.general.dig', 'github.com', 'qtype=TXT') }}"
+        values: |
+          {{ query('community.general.dig', 'github.com', 'qtype=TXT') | map('regex_replace', '" "', '') | list }}
       - name: github.io
         values: []
     timeout: 0
