@@ -5,6 +5,21 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v1.2.1
+======
+
+Release Summary
+---------------
+
+Bugfix maintenance release.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- wait_for_txt - fix handling of too long TXT values (https://github.com/ansible-collections/community.dns/pull/65).
+- wait_for_txt - resolving nameservers sometimes resulted in an empty list, yielding wrong results (https://github.com/ansible-collections/community.dns/pull/64).
+
 v1.2.0
 ======
 
