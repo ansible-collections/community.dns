@@ -24,11 +24,10 @@ jobs:
       matrix:
         ansible:
           # It's important that Sanity is tested against all stable-X.Y branches
-          # Testing against `devel` may fail as new tests are added.
           - stable-2.9
           - stable-2.10
           - stable-2.11
-          - devel
+          - stable-2.12
     runs-on: ubuntu-latest
     steps:
 
@@ -74,7 +73,7 @@ jobs:
           - stable-2.9
           - stable-2.10
           - stable-2.11
-          - devel
+          - stable-2.12
 
     steps:
       - name: Check out code
@@ -134,7 +133,7 @@ jobs:
           - stable-2.9
           - stable-2.10
           - stable-2.11
-          - devel
+          - stable-2.12
         python:
           - 2.6
           - 2.7
