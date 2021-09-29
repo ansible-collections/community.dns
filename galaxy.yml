@@ -18,7 +18,7 @@ tags:
   - hosttech
   - hetzner
 repository: https://github.com/ansible-collections/community.dns
-documentation: https://ansible.fontein.de/collections/community/dns/
+documentation: https://docs.ansible.com/ansible/devel/collections/community/dns/
 homepage: https://github.com/ansible-collections/community.dns
 issues: https://github.com/ansible-collections/community.dns/issues
 build_ignore:
