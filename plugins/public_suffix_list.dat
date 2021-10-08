@@ -12513,6 +12513,7 @@ linkyard-cloud.ch
 members.linode.com
 *.nodebalancer.linode.com
 *.linodeobjects.com
+ip.linodeusercontent.com
 
 // LiquidNet Ltd : http://www.liquidnetlimited.com/
 // Submitted by Victor Velchev <admin@liquidnetlimited.com>
@@ -13503,6 +13504,10 @@ reservd.dev.thingdust.io
 reservd.disrec.thingdust.io
 reservd.testing.thingdust.io
 
+// ticket i/O GmbH : https://ticket.io
+// Submitted by Christian Franke <it@ticket.io>
+tickets.io
+
 // Tlon.io : https://tlon.io
 // Submitted by Mark Staarink <mark@tlon.io>
 arvo.network
@@ -13587,6 +13592,10 @@ inc.hk
 // Submitted by Stefan Schwarz <sysadm@united-gameserver.de>
 virtualuser.de
 virtual-user.de
+
+// Upli : https://upli.io
+// Submitted by Lenny Bakkalian <lenny.bakkalian@gmail.com>
+upli.io
 
 // urown.net : https://urown.net
 // Submitted by Hostmaster <hostmaster@urown.net>
