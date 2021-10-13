@@ -313,3 +313,12 @@ releases:
       name: hosttech_dns_record_info
       namespace: ''
     release_date: '2021-09-11'
+  2.0.1:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      release_summary: Maintenance release with Public Suffix List updates.
+    fragments:
+    - 2.0.1.yml
+    - update-psl.yml
+    release_date: '2021-10-13'
