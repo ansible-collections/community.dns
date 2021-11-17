@@ -11,6 +11,7 @@ import abc
 
 from ansible.module_utils import six
 from ansible.module_utils.common.text.converters import to_native
+from ansible.module_utils.six import PY3
 from ansible.module_utils.urls import fetch_url, open_url, urllib_error, NoSSLError, ConnectionError
 
 
@@ -36,8 +37,12 @@ class ModuleHTTPHelper(HTTPHelper):
     def fetch_url(self, url, method='GET', headers=None, data=None, timeout=None):
         response, info = fetch_url(self.module, url, method=method, headers=headers, data=data, timeout=timeout)
         try:
+            # In Python 2, reading from a closed response yields a TypeError.
+            # In Python 3, read() simply returns ''
+            if PY3 and response.closed:
+                raise TypeError
             content = response.read()
-        except AttributeError:
+        except (AttributeError, TypeError):
             content = info.pop('body', None)
         return content, info
 
