@@ -5,6 +5,19 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v2.0.3
+======
+
+Release Summary
+---------------
+
+Bugfix release.
+
+Minor Changes
+-------------
+
+- HTTP API module utils - fix usage of ``fetch_url`` with changes in latest ansible-core ``devel`` branch (https://github.com/ansible-collections/community.dns/pull/73).
+
 v2.0.2
 ======
 

@@ -331,3 +331,13 @@ releases:
     - 2.0.2.yml
     - update-psl.yml
     release_date: '2021-11-14'
+  2.0.3:
+    changes:
+      minor_changes:
+      - HTTP API module utils - fix usage of ``fetch_url`` with changes in latest
+        ansible-core ``devel`` branch (https://github.com/ansible-collections/community.dns/pull/73).
+      release_summary: Bugfix release.
+    fragments:
+    - 2.0.3.yml
+    - fetch_url-devel.yml
+    release_date: '2021-11-21'
