@@ -1,0 +1,18 @@
+---
+edit_on_github:
+  repository: ansible-collections/community.dns
+  branch: main
+  path_prefix: ''
+
+extra_links:
+  - title: Submit a bug report
+    url: https://github.com/ansible-collections/community.dns/issues/new?assignees=&labels=&template=bug_report.md
+  - title: Request a feature
+    url: https://github.com/ansible-collections/community.dns/issues/new?assignees=&labels=&template=feature_request.md
+
+communication:
+  matrix:
+    - '#community:ansible.com'
+  irc:
+    - network: Libera
+      channel: '#ansible-community'
