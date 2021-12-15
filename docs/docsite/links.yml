@@ -12,7 +12,17 @@ extra_links:
 
 communication:
   matrix:
-    - '#community:ansible.com'
+    - topic: General usage and support questions
+      room: '#users:ansible.im'
+    - topic: Ansible Community Working Group
+      room: '#community:ansible.com'
   irc:
-    - network: Libera
+    - topic: General usage and support questions
+      network: Libera
+      channel: '#ansible'
+    - topic: Ansible Community Working Group
+      network: Libera
       channel: '#ansible-community'
+  mailing_list:
+    - topic: Ansible Project List
+      url: https://groups.google.com/g/ansible-project
