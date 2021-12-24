@@ -243,7 +243,7 @@ To delete values, you can either overwrite the values with value ``[]``, or use 
         state: absent
 
     - name: Remove specific AAAA values for www.example.com
-      community.dns.hosttech_dns_record:
+      community.dns.hosttech_dns_record_set:
         zone_name: example.com
         type: AAAA  # IPv6 addresses
         prefix: www
