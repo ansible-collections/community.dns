@@ -24,7 +24,7 @@ options:
     hosttech_password:
         description:
           - The password for the Hosttech API user.
-          - If provided, I(hosttech_password) must also be provided.
+          - If provided, I(hosttech_username) must also be provided.
           - Mutually exclusive with I(hosttech_token).
         type: str
     hosttech_token:
