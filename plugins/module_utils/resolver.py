@@ -154,11 +154,16 @@ class ResolveDirectlyFromNameServers(object):
             nameservers = list(nameserver_ips)
         return sorted(nameservers)
 
-    def resolve(self, target, **kwargs):
+    def resolve(self, target, nxdomain_is_empty=True, **kwargs):
         dnsname = dns.name.from_unicode(to_text(target))
         loop_catcher = set()
         while True:
-            nameservers = self._lookup_ns(dnsname)
+            try:
+                nameservers = self._lookup_ns(dnsname)
+            except dns.resolver.NXDOMAIN:
+                if nxdomain_is_empty:
+                    return {}
+                raise
             cname = self.cache.get((str(dnsname), 'cname'))
             if cname is None:
                 break
