@@ -5,6 +5,20 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v1.2.2
+======
+
+Release Summary
+---------------
+
+Bugfix release.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- wait_for_txt - do not fail if ``NXDOMAIN`` result is returned. Also do not succeed if no nameserver can be found (https://github.com/ansible-collections/community.dns/issues/81, https://github.com/ansible-collections/community.dns/pull/82).
+
 v1.2.1
 ======
 
