@@ -359,3 +359,16 @@ releases:
     - 2.0.5.yml
     - update-psl.yml
     release_date: '2022-01-31'
+  2.0.6:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      - wait_for_txt - do not fail if ``NXDOMAIN`` result is returned. Also do not
+        succeed if no nameserver can be found (https://github.com/ansible-collections/community.dns/issues/81,
+        https://github.com/ansible-collections/community.dns/pull/82).
+      release_summary: Bugfix release.
+    fragments:
+    - 2.0.6.yml
+    - 82-wait_for_txt.yml
+    - update-psl.yml
+    release_date: '2022-02-01'
