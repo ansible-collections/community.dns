@@ -167,6 +167,7 @@ completed:
 '''
 
 import time
+import traceback
 
 try:
     from time import monotonic
@@ -183,8 +184,8 @@ from ansible_collections.community.dns.plugins.module_utils.resolver import (
 )
 
 try:
-    import dns.rdatatype
     import dns.exception
+    import dns.rdatatype
 except ImportError:
     pass  # handled in assert_requirements_present()
 
@@ -275,7 +276,7 @@ def main():
                 txts = lookup(resolver, record['name'])
                 results[index]['values'] = txts
                 results[index]['check_count'] += 1
-                if all(validate_check(txt, record['values'], record['mode']) for txt in txts.values()):
+                if txts and all(validate_check(txt, record['values'], record['mode']) for txt in txts.values()):
                     results[index]['done'] = True
                     finished_checks += 1
                 else:
@@ -306,12 +307,14 @@ def main():
         module.fail_json(
             msg='Unexpected resolving error: {0}'.format(to_native(e)),
             records=results,
-            completed=finished_checks)
+            completed=finished_checks,
+            exception=traceback.format_exc())
     except dns.exception.DNSException as e:
         module.fail_json(
             msg='Unexpected DNS error: {0}'.format(to_native(e)),
             records=results,
-            completed=finished_checks)
+            completed=finished_checks,
+            exception=traceback.format_exc())
 
 
 if __name__ == "__main__":

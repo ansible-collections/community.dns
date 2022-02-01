@@ -1122,32 +1122,44 @@ class TestWaitForTXT(ModuleTestCase):
                 },
                 'result': create_mock_response(dns.rcode.NXDOMAIN),
             },
+            {
+                'query_target': dns.name.from_unicode(u'com'),
+                'query_type': dns.rdatatype.NS,
+                'nameserver': '1.1.1.1',
+                'kwargs': {
+                    'timeout': 10,
+                },
+                'result': create_mock_response(dns.rcode.NXDOMAIN),
+            },
         ]
         with patch('dns.resolver.get_default_resolver', resolver):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                     with patch('time.sleep', mock_sleep):
-                        with pytest.raises(AnsibleFailJson) as exc:
-                            set_module_args({
-                                'records': [
-                                    {
-                                        'name': 'www.example.com',
-                                        'values': [
-                                            'asdf',
-                                        ],
-                                    },
-                                ],
-                            })
-                            wait_for_txt.main()
+                        with patch('ansible_collections.community.dns.plugins.modules.wait_for_txt.monotonic',
+                                   mock_monotonic([0, 0.01, 1.2, 6.013])):
+                            with pytest.raises(AnsibleFailJson) as exc:
+                                set_module_args({
+                                    'records': [
+                                        {
+                                            'name': 'www.example.com',
+                                            'values': [
+                                                'asdf',
+                                            ],
+                                        },
+                                    ],
+                                    'timeout': 2,
+                                })
+                                wait_for_txt.main()
 
         print(exc.value.args[0])
-        assert exc.value.args[0]['msg'] == 'Unexpected DNS error: The DNS query name does not exist: com.'
+        assert exc.value.args[0]['msg'] == 'Timeout (0 out of 1 check(s) passed).'
         assert exc.value.args[0]['completed'] == 0
         assert len(exc.value.args[0]['records']) == 1
         assert exc.value.args[0]['records'][0]['name'] == 'www.example.com'
         assert exc.value.args[0]['records'][0]['done'] is False
-        assert 'values' not in exc.value.args[0]['records'][0]
-        assert exc.value.args[0]['records'][0]['check_count'] == 0
+        assert exc.value.args[0]['records'][0]['values'] == {}
+        assert exc.value.args[0]['records'][0]['check_count'] == 2
 
     def test_servfail(self):
         resolver = mock_resolver(['1.1.1.1'], {})
