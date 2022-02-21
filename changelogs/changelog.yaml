@@ -372,3 +372,12 @@ releases:
     - 82-wait_for_txt.yml
     - update-psl.yml
     release_date: '2022-02-01'
+  2.0.7:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      release_summary: Maintenance release with updated Public Suffix List.
+    fragments:
+    - 2.0.7.yml
+    - update-psl.yml
+    release_date: '2022-02-21'
