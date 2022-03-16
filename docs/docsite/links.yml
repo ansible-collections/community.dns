@@ -14,15 +14,10 @@ communication:
   matrix_rooms:
     - topic: General usage and support questions
       room: '#users:ansible.im'
-    - topic: Ansible Community Working Group
-      room: '#community:ansible.com'
   irc_channels:
     - topic: General usage and support questions
       network: Libera
       channel: '#ansible'
-    - topic: Ansible Community Working Group
-      network: Libera
-      channel: '#ansible-community'
   mailing_lists:
     - topic: Ansible Project List
       url: https://groups.google.com/g/ansible-project
