@@ -390,3 +390,13 @@ releases:
     - 2.0.8.yml
     - update-psl.yml
     release_date: '2022-03-14'
+  2.0.9:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      release_summary: Maintenance release with updated Public Suffix List and added
+        collection links file.
+    fragments:
+    - 2.0.9.yml
+    - update-psl.yml
+    release_date: '2022-03-22'
