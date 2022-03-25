@@ -7131,7 +7131,7 @@ org.zw
 
 // newGTLDs
 
-// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2022-03-22T15:14:59Z
+// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2022-03-24T15:15:00Z
 // This list is auto-generated, don't edit it manually.
 // aaa : 2015-02-26 American Automobile Association, Inc.
 aaa
@@ -8468,7 +8468,7 @@ hermes
 // hgtv : 2015-07-02 Lifestyle Domain Holdings, Inc.
 hgtv
 
-// hiphop : 2014-03-06 Dot Hip Hop LLC
+// hiphop : 2014-03-06 Dot Hip Hop, LLC
 hiphop
 
 // hisamitsu : 2015-07-16 Hisamitsu Pharmaceutical Co.,Inc.
@@ -10633,6 +10633,12 @@ hlx3.page
 // Submitted by Przemyslaw Plewa <it-admin@domena.pl>
 beep.pl
 
+// Airkit : https://www.airkit.com/
+// Submitted by Grant Cooksey <security@airkit.com>
+airkitapps.com
+airkitapps-au.com
+airkitapps.eu
+
 // Aiven: https://aiven.io/
 // Submitted by Etienne Stalmans <security@aiven.io>
 aivencloud.com
@@ -11662,6 +11668,11 @@ en-root.fr
 // Submitted by Thomas Cottier <thomas.cottier@enalean.com>
 mytuleap.com
 tuleap-partners.com
+
+// Encoretivity AB: https://encore.dev
+// Submitted by André Eriksson <andre@encore.dev>
+encr.app
+encoreapi.com
 
 // ECG Robotics, Inc: https://ecgrobotics.org
 // Submitted by <frc1533@ecgrobotics.org>
