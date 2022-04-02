@@ -53,8 +53,8 @@ EXAMPLES = '''
     hetzner_token: access_token
 
 - name: Remove a new.foo.com A record
-  community.dns.hosttech_dns_record_set:
-    state: present
+  community.dns.hetzner_dns_record:
+    state: absent
     zone_name: foo.com
     record: new.foo.com
     type: A
