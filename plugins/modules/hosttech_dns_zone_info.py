@@ -37,8 +37,7 @@ EXAMPLES = '''
   register: rec
 
 - name: Retrieve details for zone 23
-  community.dns.hosttech_dns_record:
-    state: absent
+  community.dns.hosttech_dns_zone_info:
     zone_id: 23
     hosttech_token: access_token
 '''

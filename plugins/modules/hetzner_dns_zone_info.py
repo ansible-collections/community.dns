@@ -37,8 +37,7 @@ EXAMPLES = '''
   register: rec
 
 - name: Retrieve details for zone 23
-  community.dns.hetzner_dns_record:
-    state: absent
+  community.dns.hetzner_dns_zone_info:
     zone_id: 23
     hetzner_token: access_token
 '''
