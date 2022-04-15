@@ -7,10 +7,10 @@ on:
       - main
       - stable-*
   pull_request:
-  # Run CI once per day (at 03:00 UTC)
+  # Run CI once per day (at 04:30 UTC)
   # This ensures that even if there haven't been commits that we are still testing against latest version of ansible-builder
   schedule:
-    - cron: '0 3 * * *'
+    - cron: '30 4 * * *'
 
 env:
   NAMESPACE: community
