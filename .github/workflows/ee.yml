@@ -104,5 +104,6 @@ jobs:
           --pull-policy never
           --set-environment-variable ANSIBLE_PRIVATE_ROLE_VARS=true
           --execution-environment-image test-ee:latest
+          -vvv
           all.yml
         working-directory: ansible_collections/${{ env.NAMESPACE }}/${{ env.COLLECTION_NAME }}/tests/ee
