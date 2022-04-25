@@ -400,3 +400,16 @@ releases:
     - 2.0.9.yml
     - update-psl.yml
     release_date: '2022-03-22'
+  2.1.0:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      minor_changes:
+      - Prepare collection for inclusion in an Execution Environment by declaring
+        its dependencies (https://github.com/ansible-collections/community.dns/pull/93).
+      release_summary: Feature and maintenance release with updated PSL.
+    fragments:
+    - 2.1.0.yml
+    - 93-ee.yml
+    - update-psl.yml
+    release_date: '2022-04-25'

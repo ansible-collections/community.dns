@@ -5,6 +5,24 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v2.1.0
+======
+
+Release Summary
+---------------
+
+Feature and maintenance release with updated PSL.
+
+Minor Changes
+-------------
+
+- Prepare collection for inclusion in an Execution Environment by declaring its dependencies (https://github.com/ansible-collections/community.dns/pull/93).
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+
 v2.0.9
 ======
 
