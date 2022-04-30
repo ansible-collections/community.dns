@@ -40,7 +40,9 @@ def main():
             continue
 
         if os.path.islink(path):
-            print('%s: is a symbolic link' % (path, ))
+            # Enable this once we no longer support Ansible 2.9:
+            # print('%s: is a symbolic link' % (path, ))
+            pass
         elif not os.path.isfile(path):
             print('%s: is not a regular file' % (path, ))
 
