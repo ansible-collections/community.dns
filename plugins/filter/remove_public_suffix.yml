@@ -12,26 +12,13 @@ DOCUMENTATION:
       required: true
     keep_trailing_period:
       description:
-        - This controls whether the trailing period of the prefix (that is, the part before
-          the public suffix) is preserved or not.
+        - This controls whether the trailing period of the prefix (that is, the part before the
+          public suffix) is preserved or not.
       type: boolean
       default: false
-    keep_unknown_suffix:
-      description:
-        - This treats unknown TLDs as valid public suffixes. So for example the public suffix
-          of C(example.tlddoesnotexist) is C(.tlddoesnotexist) if this is C(true). If set to
-          C(false), it will return an empty string in this case.
-        - This option corresponds to whether the global wildcard rule C(*) in the Public
-          Suffix List is used or not.
-      type: boolean
-      default: true
-    icann_only:
-      description:
-        - This controls whether only entries from the ICANN section of the Public Suffix List are
-          used, or also entries from the Private section. For example, C(.co.uk) is in the ICANN
-          section, but C(github.io) is in the Private section.
-      type: boolean
-      default: false
+  extends_documentation_fragment:
+    - community.dns.filters
+    - community.dns.filters.public_suffix
   author:
     - Felix Fontein (@felixfontein)
 

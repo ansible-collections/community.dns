@@ -16,33 +16,9 @@ DOCUMENTATION:
           registrable domain) is preserved or not.
       type: boolean
       default: false
-    keep_unknown_suffix:
-      description:
-        - This treats unknown TLDs as valid public suffixes. So for example the public suffix of
-          C(example.tlddoesnotexist) is C(.tlddoesnotexist) if this is C(true), and hence the
-          registrable domain of C(www.example.tlddoesnotexist) is C(example.tlddoesnotexist).
-          If set to C(false), the registrable domain of C(www.example.tlddoesnotexist) is
-          C(tlddoesnotexist).
-        - This option corresponds to whether the global wildcard rule C(*) in the Public Suffix List
-          is used or not.
-      type: boolean
-      default: true
-    only_if_registerable:
-      description:
-        - This controls the behavior in case there is no label in front of the public suffix.
-          This is the case if the DNS name itself is a public suffix.
-        - If set to C(false), in this case the public suffix is treated as a registrable domain.
-        - If set to C(true) (default), the registrable domain of a public suffix is interpreted as an
-          empty string.
-      type: boolean
-      default: true
-    icann_only:
-      description:
-        - This controls whether only entries from the ICANN section of the Public Suffix List are used,
-          or also entries from the Private section. For example, C(.co.uk) is in the ICANN section,
-          but C(github.io) is in the Private section.
-      type: boolean
-      default: false
+  extends_documentation_fragment:
+    - community.dns.filters
+    - community.dns.filters.registerable_domain
   author:
     - Felix Fontein (@felixfontein)
 
