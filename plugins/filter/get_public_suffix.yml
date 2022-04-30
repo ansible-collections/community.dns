@@ -1,0 +1,54 @@
+DOCUMENTATION:
+  name: get_public_suffix
+  short_description: Returns the public suffix of a DNS name
+  version_added: 0.1.0
+  description:
+    - Returns the public suffix of a DNS name.
+  options:
+    _input:
+      description:
+        - A DNS name.
+      type: string
+      required: true
+    keep_leading_period:
+      description:
+        - This controls whether the leading period of a public suffix is preserved or not.
+      type: boolean
+      default: true
+    keep_unknown_suffix:
+      description:
+        - This treats unknown TLDs as valid public suffixes. So for example the public suffix
+          of C(example.tlddoesnotexist) is C(.tlddoesnotexist) if this is C(true). If set to
+          C(false), it will return an empty string in this case.
+        - This option corresponds to whether the global wildcard rule C(*) in the Public
+          Suffix List is used or not.
+      type: boolean
+      default: true
+    normalize_result:
+      description:
+        - This controls whether the result is reconstructed from the normalized name used during
+          lookup. During normalization, ulabels are converted to alabels, and every label is
+          converted to lowercase. For example, the ulabel C(ëçãmplê) is converted to
+          C(xn--mpl-llatwb) (puny-code), and C(Example.COM) is converted to C(example.com).
+      type: boolean
+      default: false
+    icann_only:
+      description:
+        - This controls whether only entries from the ICANN section of the Public Suffix List are
+          used, or also entries from the Private section. For example, C(.co.uk) is in the ICANN
+          section, but C(github.io) is in the Private section.
+      type: boolean
+      default: false
+  author:
+    - Felix Fontein (@felixfontein)
+
+EXAMPLES: |
+  - name: Extract the public suffix from a DNS name
+    ansible.builtin.set_fact:
+      public_suffix: "{{ 'www.ansible.co.uk' | community.dns.get_public_suffix }}"
+      # Should result in '.co.uk'
+
+RETURN:
+  _value:
+    description: The public suffix.
+    type: string
