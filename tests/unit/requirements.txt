@@ -4,4 +4,4 @@ importlib ; python_version < '2.7'
 dnspython
 
 lxml < 4.3.0 ; python_version < '2.7' # lxml 4.3.0 and later require python 2.7 or later
-lxml ; python_version >= '2.7'
+lxml ; python_version >= '2.7' and python_version < '3.11' # TODO: remove limitation once lxml 4.9.0 is released
