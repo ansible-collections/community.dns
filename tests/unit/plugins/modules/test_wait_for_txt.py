@@ -1192,7 +1192,7 @@ class TestWaitForTXT(ModuleTestCase):
                             wait_for_txt.main()
 
         print(exc.value.args[0])
-        assert exc.value.args[0]['msg'] == 'Unexpected resolving error: Error SERVFAIL'
+        assert exc.value.args[0]['msg'] == 'Unexpected resolving error: Error SERVFAIL while querying 1.1.1.1 with query get NS for "com."'
         assert exc.value.args[0]['completed'] == 0
         assert len(exc.value.args[0]['records']) == 1
         assert exc.value.args[0]['records'][0]['name'] == 'www.example.com'

@@ -39,13 +39,18 @@ class ResolveDirectlyFromNameServers(object):
         self.default_nameservers = self.default_resolver.nameservers
         self.always_ask_default_resolver = always_ask_default_resolver
 
-    def _handle_reponse_errors(self, target, response):
+    def _handle_reponse_errors(self, target, response, nameserver=None, query=None):
         rcode = response.rcode()
         if rcode == dns.rcode.NOERROR:
             return True
         if rcode == dns.rcode.NXDOMAIN:
             raise dns.resolver.NXDOMAIN(qnames=[target], responses={target: response})
-        raise ResolverError('Error %s' % dns.rcode.to_text(rcode))
+        msg = 'Error %s' % dns.rcode.to_text(rcode)
+        if nameserver:
+            msg = '%s while querying %s' % (msg, nameserver)
+        if query:
+            msg = '%s with query %s' % (msg, query)
+        raise ResolverError(msg)
 
     def _handle_timeout(self, function, *args, **kwargs):
         retry = 0
@@ -70,7 +75,7 @@ class ResolveDirectlyFromNameServers(object):
 
         query = dns.message.make_query(target, dns.rdatatype.NS)
         response = self._handle_timeout(dns.query.udp, query, nameserver_ips[0], timeout=self.timeout)
-        self._handle_reponse_errors(target, response)
+        self._handle_reponse_errors(target, response, nameserver=nameserver_ips[0], query='get NS for "%s"' % target)
 
         cname = None
         for rrset in response.answer:
