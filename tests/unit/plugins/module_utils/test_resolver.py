@@ -436,7 +436,7 @@ def test_error_servfail():
                 with pytest.raises(ResolverError) as exc:
                     resolver = ResolveDirectlyFromNameServers()
                     resolver.resolve_nameservers('example.com')
-                assert exc.value.args[0] == 'Error SERVFAIL'
+                assert exc.value.args[0] == 'Error SERVFAIL while querying 1.1.1.1 with query get NS for "com."'
 
 
 def test_no_response():
