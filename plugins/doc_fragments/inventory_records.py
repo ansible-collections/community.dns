@@ -15,6 +15,9 @@ class ModuleDocFragment(object):
 description:
     - Records are matched by prefix / record name and value.
 
+notes:
+    - The I(zone_name) and I(zone_id) options can be templated.
+
 options:
     zone_name:
         description:

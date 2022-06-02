@@ -22,6 +22,9 @@ extends_documentation_fragment:
     - community.dns.inventory_records
     - community.dns.options.record_transformation
 
+notes:
+    - The provider-specific I(hosttech_username), I(hosttech_password), and I(hosttech_token) options can be templated.
+
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
     - Felix Fontein (@felixfontein)
@@ -36,6 +39,10 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech.api import 
     create_hosttech_provider_information,
 )
 
+from ansible_collections.community.dns.plugins.plugin_utils.templated_options import (
+    TemplatedOptionProvider,
+)
+
 from ansible_collections.community.dns.plugins.plugin_utils.inventory.records import (
     RecordsInventoryModule,
 )
@@ -47,4 +54,4 @@ class InventoryModule(RecordsInventoryModule):
 
     def setup_api(self):
         self.provider_information = create_hosttech_provider_information()
-        self.api = create_hosttech_api(self, OpenURLHelper())
+        self.api = create_hosttech_api(TemplatedOptionProvider(self, self.templar), OpenURLHelper())

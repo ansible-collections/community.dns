@@ -13,6 +13,7 @@ from ansible.errors import AnsibleError
 from ansible.module_utils import six
 from ansible.module_utils.common._collections_compat import Sequence
 from ansible.plugins.inventory import BaseInventoryPlugin
+from ansible.template import Templar
 
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
@@ -53,12 +54,18 @@ class RecordsInventoryModule(BaseInventoryPlugin):
 
         self._read_config_data(path)
 
+        self.templar = Templar(loader=loader)
+
         try:
             self.setup_api()
             self.record_converter = RecordConverter(self.provider_information, self)
 
             zone_name = self.get_option('zone_name')
+            if self.templar.is_template(zone_name):
+                zone_name = self.templar.template(variable=zone_name, disable_lookups=False)
             zone_id = self.get_option('zone_id')
+            if self.templar.is_template(zone_id):
+                zone_id = self.templar.template(variable=zone_id, disable_lookups=False)
 
             if zone_name is not None:
                 zone_with_records = self.api.get_zone_with_records_by_name(zone_name)
