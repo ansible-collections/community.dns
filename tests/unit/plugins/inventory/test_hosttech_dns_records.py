@@ -292,6 +292,31 @@ def test_inventory_file_no_filter(mocker):
     assert len(im._inventory.groups['all'].hosts) == 0
 
 
+def test_inventory_file_invalid_zone_id(mocker):
+    inventory_filename = "test.hosttech_dns.yaml"
+    C.INVENTORY_ENABLED = ['community.dns.hosttech_dns_records']
+    inventory_file = {inventory_filename: textwrap.dedent("""\
+    ---
+    plugin: community.dns.hosttech_dns_records
+    hosttech_token: foo
+    zone_id: invalid
+    """)}
+
+    open_url = OpenUrlProxy([
+    ])
+    mocker.patch('ansible_collections.community.dns.plugins.module_utils.http.open_url', open_url)
+    mocker.patch('ansible.inventory.manager.unfrackpath', mock_unfrackpath_noop)
+    mocker.patch('os.path.exists', exists_mock(inventory_filename))
+    mocker.patch('os.access', access_mock(inventory_filename))
+    im = InventoryManager(loader=DictDataLoader(inventory_file), sources=inventory_filename)
+
+    open_url.assert_is_done()
+
+    assert not im._inventory.hosts
+    assert len(im._inventory.groups['ungrouped'].hosts) == 0
+    assert len(im._inventory.groups['all'].hosts) == 0
+
+
 def test_inventory_file_missing_zone(mocker):
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ['community.dns.hosttech_dns_records']
