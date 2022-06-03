@@ -11,6 +11,31 @@ import abc
 
 from ansible.module_utils import six
 
+from ansible.module_utils.common.validation import (
+    check_type_str,
+    check_type_list,
+    check_type_dict,
+    check_type_bool,
+    check_type_int,
+    check_type_float,
+)
+
+
+def ensure_type(value, type_name):
+    if type_name == 'str':
+        return check_type_str(value)
+    if type_name == 'list':
+        return check_type_list(value)
+    if type_name == 'dict':
+        return check_type_dict(value)
+    if type_name == 'bool':
+        return check_type_bool(value)
+    if type_name == 'int':
+        return check_type_int(value)
+    if type_name == 'float':
+        return check_type_float(value)
+    return value
+
 
 @six.add_metaclass(abc.ABCMeta)
 class ProviderInformation(object):
