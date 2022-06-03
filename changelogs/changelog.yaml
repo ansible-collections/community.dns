@@ -422,3 +422,20 @@ releases:
     - 2.1.1.yml
     - update-psl.yml
     release_date: '2022-05-16'
+  2.2.0:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      minor_changes:
+      - hetzner_dns_records and hosttech_dns_records inventory plugins - allow to
+        template provider-specific credentials and the ``zone_name``, ``zone_id``
+        options (https://github.com/ansible-collections/community.dns/pull/106).
+      - wait_for_txt - improve error messages so that in case of SERVFAILs or other
+        DNS errors it is clear which record was queried from which DNS server (https://github.com/ansible-collections/community.dns/pull/105).
+      release_summary: Feature release.
+    fragments:
+    - 105-wait_for_txt-improve-error-msg.yml
+    - 106-inventory-templating.yml
+    - 2.2.0.yml
+    - update-psl.yml
+    release_date: '2022-06-03'
