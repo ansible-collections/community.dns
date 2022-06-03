@@ -14,6 +14,15 @@ short_description: Create inventory from Hosttech DNS records
 
 version_added: 2.0.0
 
+options:
+    # We need to overwrite zone_id to be of type string, otherwise templating cannot be passed in
+    zone_id:
+        type: raw
+        # If there wouldn't be ansible-base 2.10, this should be string instead. ansible-base will
+        # not accept an integer for type=string options, whence type=string breaks backwards
+        # compatibility with previous type=int...
+        #   type: string
+
 extends_documentation_fragment:
     - community.dns.hosttech
     - community.dns.hosttech.plugin
@@ -21,6 +30,9 @@ extends_documentation_fragment:
     - community.dns.hosttech.zone_id_type
     - community.dns.inventory_records
     - community.dns.options.record_transformation
+
+notes:
+    - The provider-specific I(hosttech_username), I(hosttech_password), and I(hosttech_token) options can be templated.
 
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
@@ -36,6 +48,10 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech.api import 
     create_hosttech_provider_information,
 )
 
+from ansible_collections.community.dns.plugins.plugin_utils.templated_options import (
+    TemplatedOptionProvider,
+)
+
 from ansible_collections.community.dns.plugins.plugin_utils.inventory.records import (
     RecordsInventoryModule,
 )
@@ -47,4 +63,4 @@ class InventoryModule(RecordsInventoryModule):
 
     def setup_api(self):
         self.provider_information = create_hosttech_provider_information()
-        self.api = create_hosttech_api(self, OpenURLHelper())
+        self.api = create_hosttech_api(TemplatedOptionProvider(self, self.templar), OpenURLHelper())

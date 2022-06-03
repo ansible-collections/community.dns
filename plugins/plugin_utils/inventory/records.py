@@ -13,6 +13,11 @@ from ansible.errors import AnsibleError
 from ansible.module_utils import six
 from ansible.module_utils.common._collections_compat import Sequence
 from ansible.plugins.inventory import BaseInventoryPlugin
+from ansible.template import Templar
+
+from ansible_collections.community.dns.plugins.module_utils.provider import (
+    ensure_type,
+)
 
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
@@ -53,12 +58,26 @@ class RecordsInventoryModule(BaseInventoryPlugin):
 
         self._read_config_data(path)
 
+        self.templar = Templar(loader=loader)
+
         try:
             self.setup_api()
             self.record_converter = RecordConverter(self.provider_information, self)
 
             zone_name = self.get_option('zone_name')
+            if self.templar.is_template(zone_name):
+                zone_name = self.templar.template(variable=zone_name, disable_lookups=False)
             zone_id = self.get_option('zone_id')
+            if zone_id is not None:
+                if self.templar.is_template(zone_id):
+                    zone_id = self.templar.template(variable=zone_id, disable_lookups=False)
+                # For templating, we need to make the zone_id type 'string' or 'raw'.
+                # This converts the value to its proper type expected by the API.
+                zone_id_type = self.provider_information.get_record_id_type()
+                try:
+                    zone_id = ensure_type(zone_id, zone_id_type)
+                except TypeError as exc:
+                    raise AnsibleError(u'Error while ensuring that zone_id is of type {0}: {1}'.format(zone_id_type, exc))
 
             if zone_name is not None:
                 zone_with_records = self.api.get_zone_with_records_by_name(zone_name)
