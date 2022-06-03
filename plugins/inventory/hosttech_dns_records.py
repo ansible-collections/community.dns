@@ -14,6 +14,11 @@ short_description: Create inventory from Hosttech DNS records
 
 version_added: 2.0.0
 
+options:
+    # We need to overwrite zone_id to be of type string, otherwise templating cannot be passed in
+    zone_id:
+        type: str
+
 extends_documentation_fragment:
     - community.dns.hosttech
     - community.dns.hosttech.plugin

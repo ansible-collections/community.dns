@@ -203,8 +203,8 @@ def test_inventory_file_collision(mocker):
     inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hosttech_dns_records
-    hosttech_token: foo
-    zone_name: example.com
+    hosttech_token: "{{ 'foo' }}"
+    zone_name: "{{ 'example' ~ '.com' }}"
     filters:
       type:
         - A
@@ -323,7 +323,7 @@ def test_inventory_file_zone_not_found(mocker):
     ---
     plugin: community.dns.hosttech_dns_records
     hosttech_token: foo
-    zone_id: 23
+    zone_id: "{{ 11 + 12 }}"
     """)}
 
     open_url = OpenUrlProxy([
