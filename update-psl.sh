@@ -1,7 +1,13 @@
 #!/bin/sh
+# Copyright (c) Ansible Project
+# GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 set +eux
 
 curl https://publicsuffix.org/list/public_suffix_list.dat --output plugins/public_suffix_list.dat
+
+sed -i '4i // SPDX-License-Identifier: MPL-2.0' plugins/public_suffix_list.dat
 
 git status plugins/public_suffix_list.dat
 
