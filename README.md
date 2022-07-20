@@ -96,8 +96,10 @@ We currently are not planning any deprecations or new major releases like 2.0.0 
 
 ## Licensing
 
-All files except specifially noted are licensed under the GNU General Public License v3.0 or later.
+This collection is primarily licensed and distributed as a whole under the GNU General Public License v3.0 or later.
 
-See [COPYING](https://www.gnu.org/licenses/gpl-3.0.txt) to see the full text.
+See [LICENSES/GPL-3.0-or-later.txt](https://github.com/ansible-collections/community.dns/blob/main/COPYING) for the full text.
 
-The only exception is `plugins/public_suffix_list.dat`, which is subject to the terms of the Mozilla Public License, v. 2.0. See [MPL](https://mozilla.org/MPL/2.0/) for the full text.
+The only content of this collection that is not GPL v3.0+ licensed is `plugins/public_suffix_list.dat`, which is subject to the terms of the Mozilla Public License, v. 2.0. See [LICENSES/MPL-2.0.txt](https://github.com/ansible-collections/community.dns/blob/main/LICENSES/MPL-2.0.txt) for the full text.
+
+Most files in the collection that are not automatically generated have a machine readable `SDPX-License-Identifier:` comment denoting its respective license(s).
