@@ -97,7 +97,7 @@ def main():
             if os.stat(path).st_size == 0:
                 continue
         valid_licenses_for_path = valid_licenses
-        if path.startswith('plugins/') and not path.startswith(('plugins/modules/', 'plugins/module_utils/')):
+        if path.startswith('plugins/') and path.count('/') > 1 and not path.startswith(('plugins/modules/', 'plugins/module_utils/')):
             valid_licenses_for_path = [license for license in valid_licenses if license == 'GPL-3.0-or-later']
         licenses = find_licenses(path, relax=path in no_comments_allowed)
         if not licenses:
