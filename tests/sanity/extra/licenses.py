@@ -21,7 +21,7 @@ def find_licenses(filename, relax=False):
     spdx_license_identifiers = []
     other_license_identifiers = []
     has_copyright = False
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding='utf-8') as f:
         for line in f:
             line = line.rstrip()
             if 'Copyright ' in line:
@@ -58,6 +58,7 @@ def main():
     """Main entry point."""
     paths = sys.argv[1:] or sys.stdin.read().splitlines()
 
+    # The following paths are allowed to have no license identifier
     no_comments_allowed = [
         'changelogs/fragments/*.yml',
         'plugins/public_suffix_list.dat',
@@ -67,11 +68,13 @@ def main():
         'COPYING',
     ]
 
+    # Files of this name are allowed to be empty
     empty_allowed = [
         '.keep',
         '__init__.py',
     ]
 
+    # These files are completely ignored
     ignore_paths = [
         'CHANGELOG.rst',
         'changelogs/changelog.yaml',
@@ -94,7 +97,7 @@ def main():
             if os.stat(path).st_size == 0:
                 continue
         valid_licenses_for_path = valid_licenses
-        if path.startswith('plugins/') and path.count('/') > 1 and not path.startswith(('plugins/modules/', 'plugins/module_utils/')):
+        if path.startswith('plugins/') and not path.startswith(('plugins/modules/', 'plugins/module_utils/')):
             valid_licenses_for_path = [license for license in valid_licenses if license == 'GPL-3.0-or-later']
         licenses = find_licenses(path, relax=path in no_comments_allowed)
         if not licenses:
