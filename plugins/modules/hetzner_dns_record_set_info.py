@@ -30,6 +30,11 @@ extends_documentation_fragment:
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
     - Felix Fontein (@felixfontein)
+
+seealso:
+    - module: community.dns.hetzner_dns_record_info
+    - plugin: community.dns.hetzner_dns_records
+      plugin_type: inventory
 '''
 
 EXAMPLES = '''
@@ -50,7 +55,7 @@ RETURN = '''
 set:
     description: The fetched record set. Is empty if record set does not exist.
     type: dict
-    returned: success and I(what) is C(single_record)
+    returned: success and O(what) is V(single_record)
     contains:
         record:
             description: The record name.
@@ -69,7 +74,7 @@ set:
             description:
               - The TTL.
               - If there are records in this set with different TTLs, the minimum of the TTLs will be presented here.
-              - Will return C(none) if the zone's default TTL is used.
+              - Will return V(none) if the zone's default TTL is used.
             type: int
             sample: 3600
         ttls:
@@ -102,7 +107,7 @@ sets:
     description: The list of fetched record sets.
     type: list
     elements: dict
-    returned: success and I(what) is not C(single_record)
+    returned: success and O(what) is not V(single_record)
     contains:
         record:
             description: The record name.
@@ -121,7 +126,7 @@ sets:
             description:
               - The TTL.
               - If there are records in this set with different TTLs, the minimum of the TTLs will be presented here.
-              - Will return C(none) if the zone's default TTL is used.
+              - Will return V(none) if the zone's default TTL is used.
             type: int
             sample: 3600
         ttls:

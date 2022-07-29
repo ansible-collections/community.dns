@@ -60,6 +60,12 @@ jobs:
       # Install the head of the given branch (devel, stable-2.10)
       - name: Install ansible-core (${{ matrix.ansible }})
         run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
+        if: matrix.ansible != 'devel'
+
+      # Install the head of the given branch (devel, stable-2.10)
+      - name: Install ansible-core (${{ matrix.ansible }}) from my branch
+        run: pip install https://github.com/felixfontein/ansible/archive/semantic-markup.tar.gz --disable-pip-version-check
+        if: matrix.ansible == 'devel'
 
       # run ansible-test sanity inside of Docker.
       # The docker container has all the pinned dependencies that are required

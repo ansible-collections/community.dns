@@ -5,6 +5,6 @@
     ],
     "output": "path-line-column-message",
     "requirements": [
-        "antsibull-docs"
+        "https://github.com/felixfontein/antsibull-docs/archive/semantic-markup.zip"
     ]
 }

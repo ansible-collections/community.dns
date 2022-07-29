@@ -26,8 +26,8 @@ options:
     keep_unknown_suffix:
         description:
             - This treats unknown TLDs as valid public suffixes. So for example the public suffix
-              of C(example.tlddoesnotexist) is C(.tlddoesnotexist) if this is C(true). If set to
-              C(false), it will return an empty string in this case.
+              of C(example.tlddoesnotexist) is C(.tlddoesnotexist) if this is V(true). If set to
+              V(false), it will return an empty string in this case.
             - This option corresponds to whether the global wildcard rule C(*) in the Public
               Suffix List is used or not.
         type: boolean
@@ -40,17 +40,17 @@ options:
         description:
             - This controls the behavior in case there is no label in front of the public suffix.
               This is the case if the DNS name itself is a public suffix.
-            - If set to C(false), in this case the public suffix is treated as a registrable domain.
-            - If set to C(true) (default), the registrable domain of a public suffix is interpreted as an
+            - If set to V(false), in this case the public suffix is treated as a registrable domain.
+            - If set to V(true) (default), the registrable domain of a public suffix is interpreted as an
               empty string.
         type: boolean
         default: true
     keep_unknown_suffix:
         description:
             - This treats unknown TLDs as valid public suffixes. So for example the public suffix of
-              C(example.tlddoesnotexist) is C(.tlddoesnotexist) if this is C(true), and hence the
+              C(example.tlddoesnotexist) is C(.tlddoesnotexist) if this is V(true), and hence the
               registrable domain of C(www.example.tlddoesnotexist) is C(example.tlddoesnotexist).
-              If set to C(false), the registrable domain of C(www.example.tlddoesnotexist) is
+              If set to V(false), the registrable domain of C(www.example.tlddoesnotexist) is
               C(tlddoesnotexist).
             - This option corresponds to whether the global wildcard rule C(*) in the Public Suffix List
               is used or not.
