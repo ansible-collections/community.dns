@@ -448,3 +448,17 @@ releases:
     - 2.2.1.yml
     - update-psl.yml
     release_date: '2022-07-11'
+  2.3.0:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      minor_changes:
+      - All software licenses are now in the ``LICENSES/`` directory of the collection
+        root. Moreover, ``SPDX-License-Identifier:`` is used to declare the applicable
+        license for every file that is not automatically generated (https://github.com/ansible-collections/community.dns/pull/109).
+      release_summary: Maintenance release including an updated Public Suffix List.
+    fragments:
+    - 109-licenses.yml
+    - 2.3.0.yml
+    - update-psl.yml
+    release_date: '2022-07-31'

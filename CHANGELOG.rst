@@ -5,6 +5,24 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v2.3.0
+======
+
+Release Summary
+---------------
+
+Maintenance release including an updated Public Suffix List.
+
+Minor Changes
+-------------
+
+- All software licenses are now in the ``LICENSES/`` directory of the collection root. Moreover, ``SPDX-License-Identifier:`` is used to declare the applicable license for every file that is not automatically generated (https://github.com/ansible-collections/community.dns/pull/109).
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+
 v2.2.1
 ======
 
