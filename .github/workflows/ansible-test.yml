@@ -68,7 +68,7 @@ jobs:
           testing-type: units
           # NOTE: we're installing with git to work around Galaxy being a huge PITA (https://github.com/ansible/galaxy/issues/2429)
           pre-test-cmd: >-
-            git clone --depth=1 --single-branch https://github.com/ansible-collections/community.internal_test_tools.git ./ansible_collections/community/internal_test_tools ;
+            git clone --depth=1 --single-branch https://github.com/ansible-collections/community.internal_test_tools.git ./ansible_collections/community/internal_test_tools
 
   integration:
     runs-on: ubuntu-latest
@@ -122,6 +122,6 @@ jobs:
           ansible-core-version: ${{ matrix.ansible }}
           # NOTE: we're installing with git to work around Galaxy being a huge PITA (https://github.com/ansible/galaxy/issues/2429)
           pre-test-cmd: >-
-            git clone --depth=1 --single-branch https://github.com/ansible-collections/community.general.git ./ansible_collections/community/general ;
+            git clone --depth=1 --single-branch https://github.com/ansible-collections/community.general.git ./ansible_collections/community/general
           target-python-version: ${{ matrix.python }}
           testing-type: integration
