@@ -3,6 +3,9 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# For the comprehensive list of the inputs supported by the ansible-community/ansible-test-gh-action GitHub Action, see
+# https://github.com/marketplace/actions/ansible-test
+
 name: CI
 on:
   # Run CI against all pushes (direct commits, also merged PRs), Pull Requests
@@ -12,7 +15,6 @@ on:
       - stable-*
   pull_request:
   # Run CI once per day (at 04:30 UTC)
-  # This ensures that even if there haven't been commits that we are still testing against latest version of ansible-test for each ansible-core version
   schedule:
     - cron: '30 4 * * *'
 env:
@@ -20,12 +22,6 @@ env:
   COLLECTION_NAME: dns
 
 jobs:
-
-###
-# Sanity tests (REQUIRED)
-#
-# https://docs.ansible.com/ansible/latest/dev_guide/testing_sanity.html
-
   sanity:
     name: Sanity (Ⓐ${{ matrix.ansible }})
     strategy:
@@ -41,47 +37,11 @@ jobs:
           - devel
     runs-on: ubuntu-latest
     steps:
-
-      # ansible-test requires the collection to be in a directory in the form
-      # .../ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}/
-
-      - name: Check out code
-        uses: actions/checkout@v3
+      - name: Perform sanity testing
+        uses: ansible-community/ansible-test-gh-action@release/v1
         with:
-          path: ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
-
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          # it is just required to run that once as "ansible-test sanity" in the docker image
-          # will run on all python versions it supports.
-          python-version: '3.10'
-
-      # Install the head of the given branch (devel, stable-2.10)
-      - name: Install ansible-core (${{ matrix.ansible }})
-        run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
-
-      # run ansible-test sanity inside of Docker.
-      # The docker container has all the pinned dependencies that are required
-      # and all python versions ansible supports.
-      - name: Run sanity tests
-        run: ansible-test sanity --docker -v --color --coverage
-        working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
-
-        # ansible-test support producing code coverage date
-      - name: Generate coverage report
-        run: ansible-test coverage xml -v --requirements --group-by command --group-by version
-        working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
-
-      # See the reports at https://codecov.io/gh/ansible-collections/community.dns
-      - uses: codecov/codecov-action@v3
-        with:
-          fail_ci_if_error: false
-
-###
-# Unit tests (OPTIONAL)
-#
-# https://docs.ansible.com/ansible/latest/dev_guide/testing_units.html
+          ansible-core-version: ${{ matrix.ansible }}
+          testing-type: sanity
 
   units:
     runs-on: ubuntu-latest
@@ -99,52 +59,16 @@ jobs:
           - devel
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+      - name: >-
+          Perform unit testing against
+          Ansible version ${{ matrix.ansible }}
+        uses: ansible-community/ansible-test-gh-action@release/v1
         with:
-          path: ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
-
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          # it is just required to run that once as "ansible-test units" in the docker image
-          # will run on all python versions it supports.
-          python-version: '3.10'
-
-      - name: Install ansible-core (${{ matrix.ansible }})
-        run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
-
-      # OPTIONAL If your unit test requires Python libraries from other collections
-      # Install them like this
-      - name: Install collection dependencies
-        run: git clone --depth=1 --single-branch https://github.com/ansible-collections/community.internal_test_tools.git ./ansible_collections/community/internal_test_tools
-        # NOTE: we're installing with git to work around Galaxy being a huge PITA (https://github.com/ansible/galaxy/issues/2429)
-        # run: ansible-galaxy collection install community.internal_test_tools -p .
-
-      # Run the unit tests
-      - name: Run unit test
-        run: ansible-test units -v --color --docker --coverage
-        working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
-
-        # ansible-test support producing code coverage date
-      - name: Generate coverage report
-        run: ansible-test coverage xml -v --requirements --group-by command --group-by version
-        working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
-
-      # See the reports at https://codecov.io/gh/ansible-collections/community.dns
-      - uses: codecov/codecov-action@v3
-        with:
-          fail_ci_if_error: false
-
-###
-# Integration tests (RECOMMENDED)
-#
-# https://docs.ansible.com/ansible/latest/dev_guide/testing_integration.html
-
-
-# If the application you are testing is available as a docker container and you want to test
-# multiple versions see the following for an example:
-# https://github.com/ansible-collections/community.zabbix/tree/master/.github/workflows
+          ansible-core-version: ${{ matrix.ansible }}
+          testing-type: units
+          # NOTE: we're installing with git to work around Galaxy being a huge PITA (https://github.com/ansible/galaxy/issues/2429)
+          pre-test-cmd: >-
+            git clone --depth=1 --single-branch https://github.com/ansible-collections/community.internal_test_tools.git ../../community/internal_test_tools
 
   integration:
     runs-on: ubuntu-latest
@@ -163,10 +87,6 @@ jobs:
           - 3.9
           - "3.10"
           - "3.11"
-        exclude:
-          # Because ansible-test doesn't support python3.10 for ansible-core 2.11
-          - ansible: stable-2.11
-            python: "3.10"
         include:
           # 2.9
           - ansible: stable-2.9
@@ -193,39 +113,15 @@ jobs:
             python: 3.6
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v3
+      - name: >-
+          Perform integration testing against
+          Ansible version ${{ matrix.ansible }}
+          under Python ${{ matrix.python }}
+        uses: ansible-community/ansible-test-gh-action@release/v1
         with:
-          path: ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
-
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          # it is just required to run that once as "ansible-test integration" in the docker image
-          # will run on all python versions it supports.
-          python-version: '3.10'
-
-      - name: Install ansible-core (${{ matrix.ansible }})
-        run: pip install https://github.com/ansible/ansible/archive/${{ matrix.ansible }}.tar.gz --disable-pip-version-check
-
-      # OPTIONAL If your integration test requires Python libraries or modules from other collections
-      # Install them like this
-      - name: Install collection dependencies
-        run: git clone --depth=1 --single-branch https://github.com/ansible-collections/community.general.git ./ansible_collections/community/general
-        # NOTE: we're installing with git to work around Galaxy being a huge PITA (https://github.com/ansible/galaxy/issues/2429)
-        # run: ansible-galaxy collection install community.general -p .
-
-      # Run the integration tests
-      - name: Run integration test
-        run: ansible-test integration -v --color --retry-on-error --continue-on-error --diff --python ${{ matrix.python }} --docker --coverage
-        working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
-
-        # ansible-test support producing code coverage date
-      - name: Generate coverage report
-        run: ansible-test coverage xml -v --requirements --group-by command --group-by version
-        working-directory: ./ansible_collections/${{env.NAMESPACE}}/${{env.COLLECTION_NAME}}
-
-      # See the reports at https://codecov.io/gh/ansible-collections/community.dns
-      - uses: codecov/codecov-action@v3
-        with:
-          fail_ci_if_error: false
+          ansible-core-version: ${{ matrix.ansible }}
+          # NOTE: we're installing with git to work around Galaxy being a huge PITA (https://github.com/ansible/galaxy/issues/2429)
+          pre-test-cmd: >-
+            git clone --depth=1 --single-branch https://github.com/ansible-collections/community.general.git ../../community/general
+          target-python-version: ${{ matrix.python }}
+          testing-type: integration
