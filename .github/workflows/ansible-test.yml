@@ -42,7 +42,6 @@ jobs:
         with:
           ansible-core-version: ${{ matrix.ansible }}
           testing-type: sanity
-          collection-root: ''
 
   units:
     runs-on: ubuntu-latest
@@ -70,7 +69,6 @@ jobs:
           # NOTE: we're installing with git to work around Galaxy being a huge PITA (https://github.com/ansible/galaxy/issues/2429)
           pre-test-cmd: >-
             git clone --depth=1 --single-branch https://github.com/ansible-collections/community.internal_test_tools.git ../../community/internal_test_tools
-          collection-root: ''
 
   integration:
     runs-on: ubuntu-latest
@@ -127,4 +125,3 @@ jobs:
             git clone --depth=1 --single-branch https://github.com/ansible-collections/community.general.git ../../community/general
           target-python-version: ${{ matrix.python }}
           testing-type: integration
-          collection-root: ''
