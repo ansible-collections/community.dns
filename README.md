@@ -102,4 +102,4 @@ See [LICENSES/GPL-3.0-or-later.txt](https://github.com/ansible-collections/commu
 
 The only content of this collection that is not GPL v3.0+ licensed is `plugins/public_suffix_list.dat`, which is subject to the terms of the Mozilla Public License, v. 2.0. See [LICENSES/MPL-2.0.txt](https://github.com/ansible-collections/community.dns/blob/main/LICENSES/MPL-2.0.txt) for the full text.
 
-Most files in the collection that are not automatically generated have a machine readable `SDPX-License-Identifier:` comment denoting its respective license(s).
+All files except changelog fragments (that will not be part of a release) have a machine readable `SDPX-License-Identifier:` comment denoting its respective license(s), or an equivalent entry in an accompanying ``.license`` file. This conforms to the `REUSE specification <https://reuse.software/spec/>`_.
