@@ -7,8 +7,6 @@ set +eux
 
 curl https://publicsuffix.org/list/public_suffix_list.dat --output plugins/public_suffix_list.dat
 
-sed -i '4i // SPDX-License-Identifier: MPL-2.0' plugins/public_suffix_list.dat
-
 git status plugins/public_suffix_list.dat
 
 if [ -n "$(git status --porcelain=v1 plugins/public_suffix_list.dat)" ]; then
