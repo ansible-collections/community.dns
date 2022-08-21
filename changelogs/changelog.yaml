@@ -462,3 +462,16 @@ releases:
     - 2.3.0.yml
     - update-psl.yml
     release_date: '2022-07-31'
+  2.3.1:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      minor_changes:
+      - The collection repository conforms to the `REUSE specification <https://reuse.software/spec/>`__
+        except for the changelog fragments (https://github.com/ansible-collections/community.dns/pull/112).
+      release_summary: Maintenance release including an updated Public Suffix List.
+    fragments:
+    - 2.3.1.yml
+    - licenses.yml
+    - update-psl.yml
+    release_date: '2022-08-21'

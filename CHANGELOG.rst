@@ -5,6 +5,24 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v2.3.1
+======
+
+Release Summary
+---------------
+
+Maintenance release including an updated Public Suffix List.
+
+Minor Changes
+-------------
+
+- The collection repository conforms to the `REUSE specification <https://reuse.software/spec/>`__ except for the changelog fragments (https://github.com/ansible-collections/community.dns/pull/112).
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+
 v2.3.0
 ======
 
