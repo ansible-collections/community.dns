@@ -5,6 +5,19 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v2.3.4
+======
+
+Release Summary
+---------------
+
+Maintenance release with updated Public Suffix List.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+
 v2.3.3
 ======
 
