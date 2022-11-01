@@ -11,7 +11,8 @@
           {{ query('community.general.dig', 'github.com', 'qtype=TXT') | map('regex_replace', '" "', '') | list }}
       - name: github.io
         values: []
-    timeout: 0
+    query_timeout: 20
+    timeout: 60
   register: success
 
 - name: Validate results

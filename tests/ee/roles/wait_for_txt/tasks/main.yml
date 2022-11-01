@@ -15,7 +15,8 @@
         values: "{{ dig.stdout_lines }}"
       - name: github.io
         values: []
-    timeout: 0
+    query_timeout: 20
+    timeout: 60
   register: success
 
 - name: Validate results
