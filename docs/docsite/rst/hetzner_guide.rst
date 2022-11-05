@@ -43,6 +43,37 @@ To use Hetzner's API, you need to create an API token. You can manage API tokens
 
 In the examples in this guide, we will leave the authentication options away. Please note that you can set them globally with ``module_defaults`` (see :ref:`module_defaults`) or with an environment variable for the user and machine where the modules are run on.
 
+Using the ``community.dns.hetzner`` module defaults group
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To avoid having to specify common parameters for all Hetzner DNS modules in every task, you can use the ``community.dns.hetzner`` module defaults group:
+
+.. code-block:: yaml+jinja
+
+    ---
+    - name: Hetzner DNS
+      hosts: localhost
+      gather_facts: false
+      module_defaults:
+        group/community.dns.hetzner
+          hetzner_token: '{{ token }}'
+      tasks:
+        - name: Query zone information
+          community.dns.hetzner_dns_zone_info:
+            zone_name: example.com
+          register: result
+
+        - name: Set A records for www.example.com
+          community.dns.hetzner_dns_record_set:
+            state: present
+            zone_name: example.com
+            type: A
+            prefix: www
+            value:
+              - 192.168.0.1
+
+Here all two tasks will use the options set for the module defaults group.
+
 Working with DNS zones
 ----------------------
 
