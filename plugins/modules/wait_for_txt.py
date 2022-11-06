@@ -20,7 +20,8 @@ extends_documentation_fragment:
     - community.dns.attributes
 attributes:
     check_mode:
-        support: none
+        support: full
+        version_added: 2.4.0
     diff_mode:
         support: full
 author:
@@ -247,6 +248,7 @@ def main():
             max_sleep=dict(type='float', default=10),
             always_ask_default_resolver=dict(type='bool', default=True),
         ),
+        supports_check_mode=True,
     )
     assert_requirements_present(module)
 
