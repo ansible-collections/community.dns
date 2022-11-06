@@ -32,6 +32,16 @@ extends_documentation_fragment:
     - community.dns.hosttech.zone_id_type
     - community.dns.module_record
     - community.dns.options.record_transformation
+    - community.dns.attributes
+    - community.dns.attributes.actiongroup_hosttech
+
+attributes:
+    action_group:
+        version_added: 2.4.0
+    check_mode:
+        support: full
+    diff_mode:
+        support: full
 
 author:
     - Felix Fontein (@felixfontein)

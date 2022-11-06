@@ -24,6 +24,13 @@ extends_documentation_fragment:
     - community.dns.hetzner
     - community.dns.hetzner.zone_id_type
     - community.dns.module_zone_info
+    - community.dns.attributes
+    - community.dns.attributes.actiongroup_hetzner
+    - community.dns.attributes.info_module
+
+attributes:
+    action_group:
+        version_added: 2.4.0
 
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>

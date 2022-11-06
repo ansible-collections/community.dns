@@ -87,7 +87,4 @@ options:
           - keep_and_fail
           - keep_and_warn
           - keep
-
-notes:
-    - "Supports C(check_mode) and C(--diff)."
 '''

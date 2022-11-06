@@ -66,6 +66,38 @@ You also need to install the `lxml Python module <https://pypi.org/project/lxml/
 
 In the examples in this guide, we will leave the authentication options away. Please note that you can set them globally with ``module_defaults`` (see :ref:`module_defaults`).
 
+Using the ``community.dns.hosttech`` module defaults group
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To avoid having to specify common parameters for all Hosttech DNS modules in every task, you can use the ``community.dns.hosttech`` module defaults group:
+
+.. code-block:: yaml+jinja
+
+    ---
+    - name: Hosttech DNS
+      hosts: localhost
+      gather_facts: false
+      module_defaults:
+        group/community.dns.hosttech
+          hosttech_username: '{{ username }}'
+          hosttech_password: '{{ password }}'
+      tasks:
+        - name: Query zone information
+          community.dns.hosttech_dns_zone_info:
+            zone_name: example.com
+          register: result
+
+        - name: Set A records for www.example.com
+          community.dns.hosttech_dns_record_set:
+            state: present
+            zone_name: example.com
+            type: A
+            prefix: www
+            value:
+              - 192.168.0.1
+
+Here all two tasks will use the options set for the module defaults group.
+
 Working with DNS zones
 ----------------------
 

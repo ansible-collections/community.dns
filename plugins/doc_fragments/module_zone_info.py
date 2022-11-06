@@ -25,7 +25,4 @@ options:
           - The ID of the DNS zone to query.
           - Exactly one of I(zone_name) and I(zone_id) must be specified.
         version_added: 0.2.0
-
-notes:
-    - "Supports C(check_mode)."
 '''

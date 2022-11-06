@@ -16,6 +16,18 @@ short_description: Wait for TXT entries to be available on all authoritative nam
 version_added: 0.1.0
 description:
     - Wait for TXT entries with specific values to show up on B(all) authoritative nameservers for the DNS name.
+extends_documentation_fragment:
+    - community.dns.attributes
+attributes:
+    check_mode:
+        support: full
+        details:
+            - This action does not modify state.
+        version_added: 2.4.0
+    diff_mode:
+        support: N/A
+        details:
+            - This action does not modify state.
 author:
     - Felix Fontein (@felixfontein)
 options:
@@ -240,6 +252,7 @@ def main():
             max_sleep=dict(type='float', default=10),
             always_ask_default_resolver=dict(type='bool', default=True),
         ),
+        supports_check_mode=True,
     )
     assert_requirements_present(module)
 
