@@ -53,7 +53,4 @@ options:
           - The type of DNS record to retrieve.
           - Required if I(what) is C(single_record).
         type: str
-
-notes:
-    - "Supports C(check_mode)."
 '''

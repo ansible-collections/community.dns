@@ -66,7 +66,4 @@ options:
             not be deleted.
         required: true
         type: str
-
-notes:
-    - "Supports C(check_mode) and C(--diff)."
 '''

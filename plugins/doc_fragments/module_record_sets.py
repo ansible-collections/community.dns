@@ -85,7 +85,4 @@ options:
                     without having to know their current value.
                 type: bool
                 default: false
-
-notes:
-    - "Supports C(check_mode) and C(--diff)."
 '''
