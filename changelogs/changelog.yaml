@@ -502,3 +502,25 @@ releases:
     - 2.3.4.yml
     - update-psl.yml
     release_date: '2022-10-24'
+  2.4.0:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      minor_changes:
+      - Added a ``community.dns.hetzner`` module defaults group / action group. Use
+        with ``group/community.dns.hetzner`` to provide options for all Hetzner DNS
+        modules (https://github.com/ansible-collections/community.dns/pull/119).
+      - Added a ``community.dns.hosttech`` module defaults group / action group. Use
+        with ``group/community.dns.hosttech`` to provide options for all Hosttech
+        DNS modules (https://github.com/ansible-collections/community.dns/pull/119).
+      - wait_for_txt - the module now supports check mode. The only practical change
+        in behavior is that in check mode, the module is now executed instead of skipped.
+        Since the module does not change anything, it should have been marked as supporting
+        check mode since it was originally added (https://github.com/ansible-collections/community.dns/pull/119).
+      release_summary: Feature and maintenance release.
+    fragments:
+    - 2.4.0.yml
+    - action_groups.yml
+    - update-psl.yml
+    - wait_for_txt-check_mode.yml
+    release_date: '2022-11-06'
