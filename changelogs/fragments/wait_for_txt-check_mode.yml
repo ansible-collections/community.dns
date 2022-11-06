@@ -1,2 +1,2 @@
 minor_changes:
-  - "wait_for_txt - the module now supports check mode. The only practical change in behavior is that in check mode, the module is now executed instead of skipped. Since the module does not change anything, it should have been marked as supporting check mode since it has been added (https://github.com/ansible-collections/community.dns/pull/119)."
+  - "wait_for_txt - the module now supports check mode. The only practical change in behavior is that in check mode, the module is now executed instead of skipped. Since the module does not change anything, it should have been marked as supporting check mode since it was originally added (https://github.com/ansible-collections/community.dns/pull/119)."
