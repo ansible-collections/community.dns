@@ -21,9 +21,13 @@ extends_documentation_fragment:
 attributes:
     check_mode:
         support: full
+        details:
+            - This action does not modify state.
         version_added: 2.4.0
     diff_mode:
-        support: full
+        support: N/A
+        details:
+            - This action does not modify state.
 author:
     - Felix Fontein (@felixfontein)
 options:

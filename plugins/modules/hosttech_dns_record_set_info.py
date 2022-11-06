@@ -36,8 +36,12 @@ attributes:
         version_added: 2.4.0
     check_mode:
         support: full
+        details:
+            - This action does not modify state.
     diff_mode:
-        support: full
+        support: N/A
+        details:
+            - This action does not modify state.
 
 author:
     - Felix Fontein (@felixfontein)
