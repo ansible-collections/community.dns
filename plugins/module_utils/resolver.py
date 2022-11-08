@@ -94,21 +94,28 @@ class ResolveDirectlyFromNameServers(object):
                 new_nameservers.extend(str(ns_record.target) for ns_record in rrset)
         return sorted(set(new_nameservers)) if new_nameservers else None, cname
 
-    def _lookup_address(self, target):
-        result = self.cache.get((target, 'addr'))
-        if not result:
+    def _lookup_address_impl(self, target, rdtype):
+        try:
             try:
-                answer = self._handle_timeout(self.default_resolver.resolve, target, lifetime=self.timeout)
+                answer = self._handle_timeout(self.default_resolver.resolve, target, rdtype=rdtype, lifetime=self.timeout)
             except AttributeError:
                 # For dnspython < 2.0.0
                 self.default_resolver.search = False
                 try:
-                    answer = self._handle_timeout(self.default_resolver.query, target, lifetime=self.timeout)
+                    answer = self._handle_timeout(self.default_resolver.query, target, rdtype=rdtype, lifetime=self.timeout)
                 except TypeError:
                     # For dnspython < 1.6.0
                     self.default_resolver.lifetime = self.timeout
-                    answer = self._handle_timeout(self.default_resolver.query, target)
-            result = [str(res) for res in answer.rrset]
+                    answer = self._handle_timeout(self.default_resolver.query, target, rdtype=rdtype)
+            return [str(res) for res in answer.rrset]
+        except dns.resolver.NoAnswer:
+            return []
+
+    def _lookup_address(self, target):
+        result = self.cache.get((target, 'addr'))
+        if not result:
+            result = self._lookup_address_impl(target, dns.rdatatype.A)
+            result.extend(self._lookup_address_impl(target, dns.rdatatype.AAAA))
             self.cache[(target, 'addr')] = result
         return result
 
