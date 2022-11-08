@@ -11,7 +11,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import patch
+from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import MagicMock, patch
 
 from ansible_collections.community.internal_test_tools.tests.unit.plugins.modules.utils import (
     set_module_args,
@@ -49,10 +49,13 @@ def mock_monotonic(call_sequence):
 
 class TestWaitForTXT(ModuleTestCase):
     def test_single(self):
+        fake_query = MagicMock()
+        fake_query.question = 'Doctor Who?'
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
                     'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'ns.example.com',
@@ -61,7 +64,18 @@ class TestWaitForTXT(ModuleTestCase):
                     )),
                 },
                 {
+                    'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.AAAA,
+                    'lifetime': 10,
+                    'result': create_mock_answer(dns.rrset.from_rdata(
+                        'ns.example.com',
+                        300,
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.AAAA, '1:2::3'),
+                    )),
+                },
+                {
                     'target': 'ns.example.org',
+                    'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'ns.example.org',
@@ -69,8 +83,14 @@ class TestWaitForTXT(ModuleTestCase):
                         dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '4.4.4.4'),
                     )),
                 },
+                {
+                    'target': 'ns.example.org',
+                    'rdtype': dns.rdatatype.AAAA,
+                    'lifetime': 10,
+                    'raise': dns.resolver.NoAnswer(response=fake_query),
+                },
             ],
-            ('3.3.3.3', ): [
+            ('1:2::3', '3.3.3.3'): [
                 {
                     'target': dns.name.from_unicode(u'example.org'),
                     'rdtype': dns.rdatatype.TXT,
@@ -197,16 +217,25 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['check_count'] == 1
 
     def test_double(self):
+        fake_query = MagicMock()
+        fake_query.question = 'Doctor Who?'
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
                     'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'ns.example.com',
                         300,
                         dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '3.3.3.3'),
                     )),
+                },
+                {
+                    'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.AAAA,
+                    'lifetime': 10,
+                    'raise': dns.resolver.NoAnswer(response=fake_query),
                 },
             ],
             ('3.3.3.3', ): [
@@ -352,16 +381,25 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][1]['check_count'] == 1
 
     def test_subset(self):
+        fake_query = MagicMock()
+        fake_query.question = 'Doctor Who?'
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
                     'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'ns.example.com',
                         300,
                         dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '3.3.3.3'),
                     )),
+                },
+                {
+                    'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.AAAA,
+                    'lifetime': 10,
+                    'raise': dns.resolver.NoAnswer(response=fake_query),
                 },
             ],
             ('3.3.3.3', ): [
@@ -461,16 +499,25 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['check_count'] == 3
 
     def test_superset(self):
+        fake_query = MagicMock()
+        fake_query.question = 'Doctor Who?'
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
                     'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'ns.example.com',
                         300,
                         dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '3.3.3.3'),
                     )),
+                },
+                {
+                    'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.AAAA,
+                    'lifetime': 10,
+                    'raise': dns.resolver.NoAnswer(response=fake_query),
                 },
             ],
             ('3.3.3.3', ): [
@@ -613,16 +660,25 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][1]['check_count'] == 1
 
     def test_superset_not_empty(self):
+        fake_query = MagicMock()
+        fake_query.question = 'Doctor Who?'
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
                     'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'ns.example.com',
                         300,
                         dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '3.3.3.3'),
                     )),
+                },
+                {
+                    'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.AAAA,
+                    'lifetime': 10,
+                    'raise': dns.resolver.NoAnswer(response=fake_query),
                 },
             ],
             ('3.3.3.3', ): [
@@ -726,16 +782,25 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['check_count'] == 4
 
     def test_equals(self):
+        fake_query = MagicMock()
+        fake_query.question = 'Doctor Who?'
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
                     'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'ns.example.com',
                         300,
                         dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '3.3.3.3'),
                     )),
+                },
+                {
+                    'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.AAAA,
+                    'lifetime': 10,
+                    'raise': dns.resolver.NoAnswer(response=fake_query),
                 },
             ],
             ('3.3.3.3', ): [
@@ -840,16 +905,25 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['check_count'] == 4
 
     def test_equals_ordered(self):
+        fake_query = MagicMock()
+        fake_query.question = 'Doctor Who?'
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
                     'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'ns.example.com',
                         300,
                         dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '3.3.3.3'),
                     )),
+                },
+                {
+                    'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.AAAA,
+                    'lifetime': 10,
+                    'raise': dns.resolver.NoAnswer(response=fake_query),
                 },
             ],
             ('3.3.3.3', ): [
@@ -955,16 +1029,25 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['check_count'] == 4
 
     def test_timeout(self):
+        fake_query = MagicMock()
+        fake_query.question = 'Doctor Who?'
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
                     'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'ns.example.com',
                         300,
                         dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '3.3.3.3'),
                     )),
+                },
+                {
+                    'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.AAAA,
+                    'lifetime': 10,
+                    'raise': dns.resolver.NoAnswer(response=fake_query),
                 },
             ],
             ('3.3.3.3', ): [
@@ -1202,10 +1285,13 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['check_count'] == 0
 
     def test_cname_loop(self):
+        fake_query = MagicMock()
+        fake_query.question = 'Doctor Who?'
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
                     'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'ns.example.com',
@@ -1214,13 +1300,26 @@ class TestWaitForTXT(ModuleTestCase):
                     )),
                 },
                 {
+                    'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.AAAA,
+                    'lifetime': 10,
+                    'raise': dns.resolver.NoAnswer(response=fake_query),
+                },
+                {
                     'target': 'ns.example.org',
+                    'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
                         'ns.example.org',
                         300,
                         dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '4.4.4.4'),
                     )),
+                },
+                {
+                    'target': 'ns.example.org',
+                    'rdtype': dns.rdatatype.AAAA,
+                    'lifetime': 10,
+                    'raise': dns.resolver.NoAnswer(response=fake_query),
                 },
             ],
         })
