@@ -110,10 +110,13 @@ def test_lookup_ns_names():
 
 
 def test_resolver():
+    fake_query = MagicMock()
+    fake_query.question = 'Doctor Who?'
     resolver = mock_resolver(['1.1.1.1'], {
         ('1.1.1.1', ): [
             {
                 'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.A,
                 'lifetime': 10,
                 'result': create_mock_answer(dns.rrset.from_rdata(
                     'ns.example.com',
@@ -122,7 +125,19 @@ def test_resolver():
                 )),
             },
             {
+                'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'result': create_mock_answer(dns.rrset.from_rdata(
+                    'ns.example.com',
+                    300,
+                    dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.AAAA, '1:2::3'),
+                    dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.AAAA, '2:3::4'),
+                )),
+            },
+            {
                 'target': 'ns.example.org',
+                'rdtype': dns.rdatatype.A,
                 'lifetime': 10,
                 'result': create_mock_answer(dns.rrset.from_rdata(
                     'ns.example.org',
@@ -131,7 +146,14 @@ def test_resolver():
                 )),
             },
             {
+                'target': 'ns.example.org',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'raise': dns.resolver.NoAnswer(response=fake_query),
+            },
+            {
                 'target': 'ns.com',
+                'rdtype': dns.rdatatype.A,
                 'lifetime': 10,
                 'result': create_mock_answer(dns.rrset.from_rdata(
                     'ns.com',
@@ -139,8 +161,14 @@ def test_resolver():
                     dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '2.2.2.2'),
                 )),
             },
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'raise': dns.resolver.NoAnswer(response=fake_query),
+            },
         ],
-        ('3.3.3.3', ): [
+        ('1:2::3', '2:3::4', '3.3.3.3'): [
             {
                 'target': dns.name.from_unicode(u'example.org'),
                 'lifetime': 10,
@@ -239,7 +267,7 @@ def test_resolver():
         with patch('dns.resolver.Resolver', resolver):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                 resolver = ResolveDirectlyFromNameServers()
-                assert resolver.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
+                assert resolver.resolve_nameservers('example.com', resolve_addresses=True) == ['1:2::3', '2:3::4', '3.3.3.3']
                 # www.example.com is a CNAME for example.org
                 rrset_dict = resolver.resolve('www.example.com')
                 assert sorted(rrset_dict.keys()) == ['ns.example.com', 'ns.example.org']
@@ -261,15 +289,19 @@ def test_resolver():
 
 
 def test_timeout_handling():
+    fake_query = MagicMock()
+    fake_query.question = 'Doctor Who?'
     resolver = mock_resolver(['1.1.1.1'], {
         ('1.1.1.1', ): [
             {
                 'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.A,
                 'lifetime': 10,
                 'raise': dns.exception.Timeout(timeout=10),
             },
             {
                 'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.A,
                 'lifetime': 10,
                 'result': create_mock_answer(dns.rrset.from_rdata(
                     'ns.example.com',
@@ -278,23 +310,44 @@ def test_timeout_handling():
                 )),
             },
             {
+                'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'raise': dns.exception.Timeout(timeout=10),
+            },
+            {
+                'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'raise': dns.resolver.NoAnswer(response=fake_query),
+            },
+            {
                 'target': 'ns.com',
+                'rdtype': dns.rdatatype.A,
                 'lifetime': 10,
                 'raise': dns.exception.Timeout(timeout=10),
             },
             {
                 'target': 'ns.com',
+                'rdtype': dns.rdatatype.A,
                 'lifetime': 10,
                 'raise': dns.exception.Timeout(timeout=10),
             },
             {
                 'target': 'ns.com',
+                'rdtype': dns.rdatatype.A,
                 'lifetime': 10,
                 'result': create_mock_answer(dns.rrset.from_rdata(
                     'ns.com',
                     300,
                     dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '2.2.2.2'),
                 )),
+            },
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'raise': dns.resolver.NoAnswer(response=fake_query),
             },
         ],
     })
@@ -447,6 +500,7 @@ def test_no_response():
         ('1.1.1.1', ): [
             {
                 'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.A,
                 'lifetime': 10,
                 'result': create_mock_answer(dns.rrset.from_rdata(
                     'ns.example.com',
@@ -456,13 +510,26 @@ def test_no_response():
                 )),
             },
             {
+                'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'raise': dns.resolver.NoAnswer(response=fake_query),
+            },
+            {
                 'target': 'ns2.example.com',
+                'rdtype': dns.rdatatype.A,
                 'lifetime': 10,
                 'result': create_mock_answer(dns.rrset.from_rdata(
                     'ns.example.com',
                     300,
                     dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '4.4.4.4'),
                 )),
+            },
+            {
+                'target': 'ns2.example.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'raise': dns.resolver.NoAnswer(response=fake_query),
             },
         ],
         ('3.3.3.3', '5.5.5.5'): [
@@ -648,10 +715,13 @@ def test_cname_loop():
 
 
 def test_resolver_non_default():
+    fake_query = MagicMock()
+    fake_query.question = 'Doctor Who?'
     resolver = mock_resolver(['1.1.1.1'], {
         ('1.1.1.1', ): [
             {
                 'target': 'ns.com',
+                'rdtype': dns.rdatatype.A,
                 'lifetime': 10,
                 'result': create_mock_answer(dns.rrset.from_rdata(
                     'ns.com',
@@ -660,7 +730,14 @@ def test_resolver_non_default():
                 )),
             },
             {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'raise': dns.resolver.NoAnswer(response=fake_query),
+            },
+            {
                 'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.A,
                 'lifetime': 10,
                 'result': create_mock_answer(dns.rrset.from_rdata(
                     'ns.example.com',
@@ -669,7 +746,14 @@ def test_resolver_non_default():
                 )),
             },
             {
+                'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'raise': dns.resolver.NoAnswer(response=fake_query),
+            },
+            {
                 'target': 'ns.org',
+                'rdtype': dns.rdatatype.A,
                 'lifetime': 10,
                 'result': create_mock_answer(dns.rrset.from_rdata(
                     'ns.com',
@@ -678,13 +762,26 @@ def test_resolver_non_default():
                 )),
             },
             {
+                'target': 'ns.org',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'raise': dns.resolver.NoAnswer(response=fake_query),
+            },
+            {
                 'target': 'ns.example.org',
+                'rdtype': dns.rdatatype.A,
                 'lifetime': 10,
                 'result': create_mock_answer(dns.rrset.from_rdata(
                     'ns.example.org',
                     300,
                     dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '4.4.4.4'),
                 )),
+            },
+            {
+                'target': 'ns.example.org',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'raise': dns.resolver.NoAnswer(response=fake_query),
             },
         ],
         ('3.3.3.3', ): [
