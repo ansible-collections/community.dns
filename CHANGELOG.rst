@@ -5,6 +5,20 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v2.4.1
+======
+
+Release Summary
+---------------
+
+Regular maintenance release.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- wait_for_txt - also retrieve IPv6 addresses of nameservers. Prevents failures with IPv6 only nameservers (https://github.com/ansible-collections/community.dns/issues/120, https://github.com/ansible-collections/community.dns/pull/121).
+
 v2.4.0
 ======
 

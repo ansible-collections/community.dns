@@ -524,3 +524,16 @@ releases:
     - update-psl.yml
     - wait_for_txt-check_mode.yml
     release_date: '2022-11-06'
+  2.4.1:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      - wait_for_txt - also retrieve IPv6 addresses of nameservers. Prevents failures
+        with IPv6 only nameservers (https://github.com/ansible-collections/community.dns/issues/120,
+        https://github.com/ansible-collections/community.dns/pull/121).
+      release_summary: Regular maintenance release.
+    fragments:
+    - 121-wait_for_txt-ipv6.yml
+    - 2.4.1.yml
+    - update-psl.yml
+    release_date: '2022-11-14'
