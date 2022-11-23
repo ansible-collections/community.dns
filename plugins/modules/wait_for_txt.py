@@ -23,6 +23,7 @@ attributes:
         support: full
         details:
             - This action does not modify state.
+            - Foo!
         version_added: 2.4.0
     diff_mode:
         support: N/A
