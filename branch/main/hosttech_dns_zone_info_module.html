@@ -5,23 +5,23 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>community.dns.hosttech_dns_zone_info module – Retrieve zone information in Hosttech DNS service &mdash; Ansible collections  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/ansible.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/antsibull-minimal.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/rtd-ethical-ads.css" type="text/css" />
-    <link rel="shortcut icon" href="../../../_static/images/Ansible-Mark-RGB_Black.png"/>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/ansible.css" type="text/css" />
+      <link rel="stylesheet" href="_static/antsibull-minimal.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/rtd-ethical-ads.css" type="text/css" />
+    <link rel="shortcut icon" href="_static/images/Ansible-Mark-RGB_Black.png"/>
   <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
+    <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
-    <script src="../../../_static/js/theme.js"></script>
-    <link rel="search" title="Search" href="../../../search.html" />
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="community.dns.wait_for_txt module – Wait for TXT entries to be available on all authoritative nameservers" href="wait_for_txt_module.html" />
     <link rel="prev" title="community.dns.hosttech_dns_record_sets module – Bulk synchronize DNS record sets in Hosttech DNS service" href="hosttech_dns_record_sets_module.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
 
@@ -45,7 +45,7 @@
 <a class="DocSite-nav" href="/" style="padding-bottom: 30px;">
 
   <img class="DocSiteNav-logo"
-    src="../../../_static/images/Ansible-Mark-RGB_White.png"
+    src="_static/images/Ansible-Mark-RGB_White.png"
     alt="Ansible Logo">
   <div class="DocSiteNav-title">Ansible Collections Documentation</div>
 </a>
@@ -53,7 +53,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> Ansible collections
+            <a href="index.html" class="icon icon-home"> Ansible collections
           </a><!--- Based on https://github.com/rtfd/sphinx_rtd_theme/pull/438/files -->
 
 <div class="version">
@@ -62,7 +62,7 @@
   
 </div>
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <label class="sr-only" for="q">Search docs:</label>
     <input type="text" class="st-default-search-input" id="q" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
@@ -71,27 +71,43 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
   
-              <p class="caption" role="heading"><span class="caption-text">Collections:</span></p>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="docsite/filter_guide.html">Community.Dns Filter Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docsite/hetzner_guide.html">Hetzner DNS Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docsite/hosttech_guide.html">HostTech DNS Guide</a></li>
+</ul>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Collection Index</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Collections in the Community Namespace</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="index.html">Community.Dns</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="index.html#description">Description</a></li>
-<li class="toctree-l4"><a class="reference internal" href="index.html#communication">Communication</a></li>
-<li class="toctree-l4"><a class="reference internal" href="index.html#guides">Guides</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="index.html#plugin-index">Plugin Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_public_suffix_filter.html">community.dns.get_public_suffix filter – Returns the public suffix of a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_registrable_domain_filter.html">community.dns.get_registrable_domain filter – Returns the registrable domain name of a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remove_public_suffix_filter.html">community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remove_registrable_domain_filter.html">community.dns.remove_registrable_domain filter – Removes the registrable domain name from a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_records_inventory.html">community.dns.hetzner_dns_records inventory – Create inventory from Hetzner DNS records</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_records_inventory.html">community.dns.hosttech_dns_records inventory – Create inventory from Hosttech DNS records</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_module.html">community.dns.hetzner_dns_record module – Add or delete a single record in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_info_module.html">community.dns.hetzner_dns_record_info module – Retrieve records in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_set_module.html">community.dns.hetzner_dns_record_set module – Add or delete record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_set_info_module.html">community.dns.hetzner_dns_record_set_info module – Retrieve record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_sets_module.html">community.dns.hetzner_dns_record_sets module – Bulk synchronize DNS record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_zone_info_module.html">community.dns.hetzner_dns_zone_info module – Retrieve zone information in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_module.html">community.dns.hosttech_dns_record module – Add or delete a single record in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_info_module.html">community.dns.hosttech_dns_record_info module – Retrieve records in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_set_module.html">community.dns.hosttech_dns_record_set module – Add or delete record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_set_info_module.html">community.dns.hosttech_dns_record_set_info module – Retrieve record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_sets_module.html">community.dns.hosttech_dns_record_sets module – Bulk synchronize DNS record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">community.dns.hosttech_dns_zone_info module – Retrieve zone information in Hosttech DNS service</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#attributes">Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#return-values">Return Values</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#authors">Authors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#collection-links">Collection links</a></li>
 </ul>
 </li>
 </ul>
 </li>
-</ul>
-</li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Plugin indexes:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index_filter.html">Index of all Filter Plugins</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index_inventory.html">Index of all Inventory Plugins</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index_module.html">Index of all Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wait_for_txt_module.html">community.dns.wait_for_txt module – Wait for TXT entries to be available on all authoritative nameservers</a></li>
 </ul>
 <!-- extra nav elements for Ansible beyond RTD Sphinx Theme -->
 
@@ -101,17 +117,14 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Ansible collections</a>
+          <a href="index.html">Ansible collections</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Collection Index</a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Collections in the Community Namespace</a></li>
-          <li class="breadcrumb-item"><a href="index.html">Community.Dns</a></li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
       <li class="breadcrumb-item active">community.dns.hosttech_dns_zone_info module – Retrieve zone information in Hosttech DNS service</li>
       <li class="wy-breadcrumbs-aside">
               <!-- User defined GitHub URL -->
