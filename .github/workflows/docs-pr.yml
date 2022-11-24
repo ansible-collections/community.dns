@@ -21,7 +21,9 @@ jobs:
     name: Build Ansible Docs
     uses: ansible-community/github-docs-build/.github/workflows/_shared-docs-build-pr.yml@main
     with:
+      init-lenient: false
       init-fail-on-error: true
+      squash-hierarchy: true
       render-file-line: '> * `$<status>` [$<path_tail>](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr/${{ github.event.number }}/$<path_tail>)'
 
   publish-docs-gh-pages:

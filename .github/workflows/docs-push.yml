@@ -27,6 +27,7 @@ jobs:
     with:
       init-lenient: false
       init-fail-on-error: true
+      squash-hierarchy: true
 
   publish-docs-gh-pages:
     # for now we won't run this on forks
