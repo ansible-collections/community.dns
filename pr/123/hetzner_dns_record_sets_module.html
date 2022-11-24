@@ -4,26 +4,26 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>community.dns.hosttech_dns_record_sets module – Bulk synchronize DNS record sets in Hosttech DNS service &mdash; Ansible collections  documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/ansible.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/antsibull-minimal.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/rtd-ethical-ads.css" type="text/css" />
-    <link rel="shortcut icon" href="../../../_static/images/Ansible-Mark-RGB_Black.png"/>
+  <title>community.dns.hetzner_dns_record_sets module – Bulk synchronize DNS record sets in Hetzner DNS service &mdash; Ansible collections  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/ansible.css" type="text/css" />
+      <link rel="stylesheet" href="_static/antsibull-minimal.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/rtd-ethical-ads.css" type="text/css" />
+    <link rel="shortcut icon" href="_static/images/Ansible-Mark-RGB_Black.png"/>
   <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
+    <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
-    <script src="../../../_static/js/theme.js"></script>
-    <link rel="search" title="Search" href="../../../search.html" />
-    <link rel="next" title="community.dns.hosttech_dns_zone_info module – Retrieve zone information in Hosttech DNS service" href="hosttech_dns_zone_info_module.html" />
-    <link rel="prev" title="community.dns.hosttech_dns_record_set_info module – Retrieve record sets in Hosttech DNS service" href="hosttech_dns_record_set_info_module.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="community.dns.hetzner_dns_zone_info module – Retrieve zone information in Hetzner DNS service" href="hetzner_dns_zone_info_module.html" />
+    <link rel="prev" title="community.dns.hetzner_dns_record_set_info module – Retrieve record sets in Hetzner DNS service" href="hetzner_dns_record_set_info_module.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
 
 
 
@@ -45,7 +45,7 @@
 <a class="DocSite-nav" href="/" style="padding-bottom: 30px;">
 
   <img class="DocSiteNav-logo"
-    src="../../../_static/images/Ansible-Mark-RGB_White.png"
+    src="_static/images/Ansible-Mark-RGB_White.png"
     alt="Ansible Logo">
   <div class="DocSiteNav-title">Ansible Collections Documentation</div>
 </a>
@@ -53,7 +53,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../../index.html" class="icon icon-home"> Ansible collections
+            <a href="index.html" class="icon icon-home"> Ansible collections
           </a><!--- Based on https://github.com/rtfd/sphinx_rtd_theme/pull/438/files -->
 
 <div class="version">
@@ -62,7 +62,7 @@
   
 </div>
 <div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <label class="sr-only" for="q">Search docs:</label>
     <input type="text" class="st-default-search-input" id="q" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
@@ -71,27 +71,42 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
   
-              <p class="caption" role="heading"><span class="caption-text">Collections:</span></p>
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="docsite/filter_guide.html">Community.Dns Filter Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docsite/hetzner_guide.html">Hetzner DNS Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docsite/hosttech_guide.html">HostTech DNS Guide</a></li>
+</ul>
 <ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">Collection Index</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../index.html">Collections in the Community Namespace</a><ul class="current">
-<li class="toctree-l3 current"><a class="reference internal" href="index.html">Community.Dns</a><ul class="current">
-<li class="toctree-l4"><a class="reference internal" href="index.html#description">Description</a></li>
-<li class="toctree-l4"><a class="reference internal" href="index.html#communication">Communication</a></li>
-<li class="toctree-l4"><a class="reference internal" href="index.html#guides">Guides</a></li>
-<li class="toctree-l4 current"><a class="reference internal" href="index.html#plugin-index">Plugin Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_public_suffix_filter.html">community.dns.get_public_suffix filter – Returns the public suffix of a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_registrable_domain_filter.html">community.dns.get_registrable_domain filter – Returns the registrable domain name of a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remove_public_suffix_filter.html">community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remove_registrable_domain_filter.html">community.dns.remove_registrable_domain filter – Removes the registrable domain name from a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_records_inventory.html">community.dns.hetzner_dns_records inventory – Create inventory from Hetzner DNS records</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_records_inventory.html">community.dns.hosttech_dns_records inventory – Create inventory from Hosttech DNS records</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_module.html">community.dns.hetzner_dns_record module – Add or delete a single record in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_info_module.html">community.dns.hetzner_dns_record_info module – Retrieve records in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_set_module.html">community.dns.hetzner_dns_record_set module – Add or delete record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_set_info_module.html">community.dns.hetzner_dns_record_set_info module – Retrieve record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">community.dns.hetzner_dns_record_sets module – Bulk synchronize DNS record sets in Hetzner DNS service</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#attributes">Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#return-values">Return Values</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#authors">Authors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#collection-links">Collection links</a></li>
 </ul>
 </li>
 </ul>
 </li>
-</ul>
-</li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Plugin indexes:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../index_filter.html">Index of all Filter Plugins</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index_inventory.html">Index of all Inventory Plugins</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../index_module.html">Index of all Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_zone_info_module.html">community.dns.hetzner_dns_zone_info module – Retrieve zone information in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_module.html">community.dns.hosttech_dns_record module – Add or delete a single record in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_info_module.html">community.dns.hosttech_dns_record_info module – Retrieve records in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_set_module.html">community.dns.hosttech_dns_record_set module – Add or delete record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_set_info_module.html">community.dns.hosttech_dns_record_set_info module – Retrieve record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_sets_module.html">community.dns.hosttech_dns_record_sets module – Bulk synchronize DNS record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_zone_info_module.html">community.dns.hosttech_dns_zone_info module – Retrieve zone information in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wait_for_txt_module.html">community.dns.wait_for_txt module – Wait for TXT entries to be available on all authoritative nameservers</a></li>
 </ul>
 <!-- extra nav elements for Ansible beyond RTD Sphinx Theme -->
 
@@ -101,21 +116,18 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../index.html">Ansible collections</a>
+          <a href="index.html">Ansible collections</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a></li>
-          <li class="breadcrumb-item"><a href="../../index.html">Collection Index</a></li>
-          <li class="breadcrumb-item"><a href="../index.html">Collections in the Community Namespace</a></li>
-          <li class="breadcrumb-item"><a href="index.html">Community.Dns</a></li>
-      <li class="breadcrumb-item active">community.dns.hosttech_dns_record_sets module – Bulk synchronize DNS record sets in Hosttech DNS service</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">community.dns.hetzner_dns_record_sets module – Bulk synchronize DNS record sets in Hetzner DNS service</li>
       <li class="wy-breadcrumbs-aside">
               <!-- User defined GitHub URL -->
-              <a href="https://github.com/ansible-collections/community.dns/edit/main/plugins/modules/hosttech_dns_record_sets.py?description=%23%23%23%23%23%20SUMMARY%0A%3C!—%20Your%20description%20here%20–%3E%0A%0A%0A%23%23%23%23%23%20ISSUE%20TYPE%0A-%20Docs%20Pull%20Request%0A%0A%2Blabel:%20docsite_pr" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/ansible-collections/community.dns/edit/main/plugins/modules/hetzner_dns_record_sets.py?description=%23%23%23%23%23%20SUMMARY%0A%3C!—%20Your%20description%20here%20–%3E%0A%0A%0A%23%23%23%23%23%20ISSUE%20TYPE%0A-%20Docs%20Pull%20Request%0A%0A%2Blabel:%20docsite_pr" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -125,46 +137,35 @@
   
            <div itemprop="articleBody">
              
-  <span class="target" id="ansible-collections-community-dns-hosttech-dns-record-sets-module"></span><section id="community-dns-hosttech-dns-record-sets-module-bulk-synchronize-dns-record-sets-in-hosttech-dns-service">
-<h1>community.dns.hosttech_dns_record_sets module – Bulk synchronize DNS record sets in Hosttech DNS service<a class="headerlink" href="#community-dns-hosttech-dns-record-sets-module-bulk-synchronize-dns-record-sets-in-hosttech-dns-service" title="Permalink to this heading"></a></h1>
+  <span class="target" id="ansible-collections-community-dns-hetzner-dns-record-sets-module"></span><section id="community-dns-hetzner-dns-record-sets-module-bulk-synchronize-dns-record-sets-in-hetzner-dns-service">
+<h1>community.dns.hetzner_dns_record_sets module – Bulk synchronize DNS record sets in Hetzner DNS service<a class="headerlink" href="#community-dns-hetzner-dns-record-sets-module-bulk-synchronize-dns-record-sets-in-hetzner-dns-service" title="Permalink to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/community/dns">community.dns collection</a> (version 2.4.1).</p>
-<p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">community.dns</span></code>.
-You need further requirements to be able to use this module,
-see <a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-sets-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
-<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">community.dns.hosttech_dns_record_sets</span></code>.</p>
+<p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">community.dns</span></code>.</p>
+<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">community.dns.hetzner_dns_record_sets</span></code>.</p>
 </div>
 <p class="ansible-version-added">New in community.dns 2.0.0</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
-<li><p><a class="reference internal" href="#requirements" id="id2">Requirements</a></p></li>
-<li><p><a class="reference internal" href="#parameters" id="id3">Parameters</a></p></li>
-<li><p><a class="reference internal" href="#attributes" id="id4">Attributes</a></p></li>
-<li><p><a class="reference internal" href="#examples" id="id5">Examples</a></p></li>
-<li><p><a class="reference internal" href="#return-values" id="id6">Return Values</a></p></li>
+<li><p><a class="reference internal" href="#parameters" id="id2">Parameters</a></p></li>
+<li><p><a class="reference internal" href="#attributes" id="id3">Attributes</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id4">Examples</a></p></li>
+<li><p><a class="reference internal" href="#return-values" id="id5">Return Values</a></p></li>
 </ul>
 </div>
 <section id="synopsis">
 <h2><a class="toc-backref" href="#id1">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
 <ul class="simple">
-<li><p>Bulk synchronize DNS record sets in Hosttech DNS service.</p></li>
+<li><p>Bulk synchronize DNS record sets in Hetzner DNS service.</p></li>
 <li><p>It is possible to ignore certain record sets by specifying <em>ignore: true</em> for that record set.</p></li>
 <li><p>The module allows to set, modify and delete multiple DNS record sets at once.</p></li>
-<li><p>This module replaces <code class="docutils literal notranslate"><span class="pre">hosttech_dns_records</span></code> from community.dns before 2.0.0.</p></li>
 <li><p>With the <em>purge</em> option, it is also possible to delete existing record sets that are not mentioned in the module parameters. With this, it is possible to synchronize the expected state of a DNS zone with the expected state.</p></li>
 </ul>
 </section>
-<section id="requirements">
-<span id="ansible-collections-community-dns-hosttech-dns-record-sets-module-requirements"></span><h2><a class="toc-backref" href="#id2">Requirements</a><a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
-<p>The below requirements are needed on the host that executes this module.</p>
-<ul class="simple">
-<li><p>lxml</p></li>
-</ul>
-</section>
 <section id="parameters">
-<h2><a class="toc-backref" href="#id3">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id2">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
 <table class="colwidths-auto ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameter</p></th>
@@ -173,37 +174,26 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-hosttech_password"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-hosttech-password"><strong>hosttech_password</strong></p>
-<a class="ansibleOptionLink" href="#parameter-hosttech_password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+<div class="ansibleOptionAnchor" id="parameter-bulk_operation_threshold"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-bulk-operation-threshold"><strong>bulk_operation_threshold</strong></p>
+<a class="ansibleOptionLink" href="#parameter-bulk_operation_threshold" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>The password for the Hosttech API user.</p>
-<p>If provided, <em>hosttech_username</em> must also be provided.</p>
-<p>Mutually exclusive with <em>hosttech_token</em>.</p>
+<td><div class="ansible-option-cell"><p>Determines the threshold from when on bulk operations are used.</p>
+<p>The default value 2 means that if 2 or more operations of a kind are planned, and the API supports bulk operations for this kind of operation, they will be used.</p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">2</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-hosttech_token"></div>
-<div class="ansibleOptionAnchor" id="parameter-api_token"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-hosttech-token"><span id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-api-token"></span><strong>hosttech_token</strong></p>
-<a class="ansibleOptionLink" href="#parameter-hosttech_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: api_token</span></p>
-<p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-<p><span class="ansible-option-versionadded">added in community.dns 0.2.0</span></p>
+<div class="ansibleOptionAnchor" id="parameter-hetzner_token"></div>
+<div class="ansibleOptionAnchor" id="parameter-api_token"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-hetzner-token"><span id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-api-token"></span><strong>hetzner_token</strong></p>
+<a class="ansibleOptionLink" href="#parameter-hetzner_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: api_token</span></p>
+<p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>The password for the Hosttech API user.</p>
-<p>Mutually exclusive with <em>hosttech_username</em> and <em>hosttech_password</em>.</p>
-<p>Since community.dns 1.2.0, the alias <em>api_token</em> can be used.</p>
+<td><div class="ansible-option-cell"><p>The token for the Hetzner API.</p>
+<p>If not provided, will be read from the environment variable <code class="docutils literal notranslate"><span class="pre">HETZNER_DNS_TOKEN</span></code>.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-hosttech_username"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-hosttech-username"><strong>hosttech_username</strong></p>
-<a class="ansibleOptionLink" href="#parameter-hosttech_username" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The username for the Hosttech API user.</p>
-<p>If provided, <em>hosttech_password</em> must also be provided.</p>
-<p>Mutually exclusive with <em>hosttech_token</em>.</p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-prune"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-prune"><strong>prune</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-prune"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-prune"><strong>prune</strong></p>
 <a class="ansibleOptionLink" href="#parameter-prune" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>If set to <code class="docutils literal notranslate"><span class="pre">true</span></code>, will remove all existing records in the zone that are not listed in <em>records</em>.</p>
@@ -214,18 +204,18 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 </ul>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-record_sets"></div>
-<div class="ansibleOptionAnchor" id="parameter-records"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-records"><span id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-record-sets"></span><strong>record_sets</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-records"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-records"><span id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-record-sets"></span><strong>record_sets</strong></p>
 <a class="ansibleOptionLink" href="#parameter-record_sets" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: records</span></p>
 <p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The records that should be present in the zone.</p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-record_sets/ignore"></div>
-<div class="ansibleOptionAnchor" id="parameter-records/ignore"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-records-ignore"><span id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-record-sets-ignore"></span><strong>ignore</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-records/ignore"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-records-ignore"><span id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-record-sets-ignore"></span><strong>ignore</strong></p>
 <a class="ansibleOptionLink" href="#parameter-record_sets/ignore" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>If set to <code class="docutils literal notranslate"><span class="pre">true</span></code>, <em>value</em> will be ignored.</p>
@@ -237,9 +227,9 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 </ul>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-record_sets/prefix"></div>
-<div class="ansibleOptionAnchor" id="parameter-records/prefix"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-records-prefix"><span id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-record-sets-prefix"></span><strong>prefix</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-records/prefix"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-records-prefix"><span id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-record-sets-prefix"></span><strong>prefix</strong></p>
 <a class="ansibleOptionLink" href="#parameter-record_sets/prefix" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The prefix of the DNS record.</p>
@@ -247,27 +237,26 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <p>Exactly one of <em>record</em> and <em>prefix</em> must be specified.</p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-record_sets/record"></div>
-<div class="ansibleOptionAnchor" id="parameter-records/record"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-records-record"><span id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-record-sets-record"></span><strong>record</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-records/record"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-records-record"><span id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-record-sets-record"></span><strong>record</strong></p>
 <a class="ansibleOptionLink" href="#parameter-record_sets/record" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The full DNS record to create or delete.</p>
 <p>Exactly one of <em>record</em> and <em>prefix</em> must be specified.</p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-record_sets/ttl"></div>
-<div class="ansibleOptionAnchor" id="parameter-records/ttl"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-records-ttl"><span id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-record-sets-ttl"></span><strong>ttl</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-records/ttl"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-records-ttl"><span id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-record-sets-ttl"></span><strong>ttl</strong></p>
 <a class="ansibleOptionLink" href="#parameter-record_sets/ttl" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The TTL to give the new record, in seconds.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">3600</span></code></p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-record_sets/type"></div>
-<div class="ansibleOptionAnchor" id="parameter-records/type"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-records-type"><span id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-record-sets-type"></span><strong>type</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-records/type"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-records-type"><span id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-record-sets-type"></span><strong>type</strong></p>
 <a class="ansibleOptionLink" href="#parameter-record_sets/type" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The type of DNS record to create or delete.</p>
@@ -277,18 +266,22 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;AAAA&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;CAA&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;CNAME&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;DANE&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;DS&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;HINFO&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;MX&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;NS&quot;</span></code></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;PTR&quot;</span></code></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;SPF&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;RP&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;SOA&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;SRV&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;TLSA&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;TXT&quot;</span></code></p></li>
 </ul>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-record_sets/value"></div>
-<div class="ansibleOptionAnchor" id="parameter-records/value"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-records-value"><span id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-record-sets-value"></span><strong>value</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-records/value"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-records-value"><span id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-record-sets-value"></span><strong>value</strong></p>
 <a class="ansibleOptionLink" href="#parameter-record_sets/value" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The new value when creating a DNS record.</p>
@@ -297,8 +290,8 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <p>Must be specified if <em>ignore=false</em>.</p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-txt_transformation"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-txt-transformation"><strong>txt_transformation</strong></p>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-txt_transformation"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-txt-transformation"><strong>txt_transformation</strong></p>
 <a class="ansibleOptionLink" href="#parameter-txt_transformation" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Determines how TXT entry values are converted between the API and this module’s input and output.</p>
@@ -315,17 +308,17 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 </ul>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-zone-id"><strong>zone_id</strong></p>
-<a class="ansibleOptionLink" href="#parameter-zone_id" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-zone-id"><strong>zone_id</strong></p>
+<a class="ansibleOptionLink" href="#parameter-zone_id" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The ID of the DNS zone to modify.</p>
 <p>Exactly one of <em>zone_name</em> and <em>zone_id</em> must be specified.</p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-zone_name"></div>
-<div class="ansibleOptionAnchor" id="parameter-zone"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-zone-name"><span id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-zone"></span><strong>zone_name</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-zone"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-zone-name"><span id="ansible-collections-community-dns-hetzner-dns-record-sets-module-parameter-zone"></span><strong>zone_name</strong></p>
 <a class="ansibleOptionLink" href="#parameter-zone_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: zone</span></p>
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -337,7 +330,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 </table>
 </section>
 <section id="attributes">
-<h2><a class="toc-backref" href="#id4">Attributes</a><a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id3">Attributes</a><a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h2>
 <table class="colwidths-auto ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute</p></th>
@@ -347,16 +340,16 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="attribute-action_group"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-attribute-action-group"><strong>action_group</strong></p>
+<div class="ansibleOptionAnchor" id="attribute-action_group"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-attribute-action-group"><strong>action_group</strong></p>
 <a class="ansibleOptionLink" href="#attribute-action_group" title="Permalink to this attribute"></a></div></td>
-<td><div class="ansible-option-cell"><p><span class="ansible-attribute-support-property">Action group:</span> <span class="ansible-attribute-support-full">community.dns.hosttech</span></p>
+<td><div class="ansible-option-cell"><p><span class="ansible-attribute-support-property">Action group:</span> <span class="ansible-attribute-support-full">community.dns.hetzner</span></p>
 <p><span class="ansible-option-versionadded">added in community.dns 2.4.0</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Use <code class="docutils literal notranslate"><span class="pre">group/community.dns.hosttech</span></code> in <code class="docutils literal notranslate"><span class="pre">module_defaults</span></code> to set defaults for this module.</p>
+<td><div class="ansible-option-cell"><p>Use <code class="docutils literal notranslate"><span class="pre">group/community.dns.hetzner</span></code> in <code class="docutils literal notranslate"><span class="pre">module_defaults</span></code> to set defaults for this module.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="attribute-check_mode"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-attribute-check-mode"><strong>check_mode</strong></p>
+<div class="ansibleOptionAnchor" id="attribute-check_mode"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-attribute-check-mode"><strong>check_mode</strong></p>
 <a class="ansibleOptionLink" href="#attribute-check_mode" title="Permalink to this attribute"></a></div></td>
 <td><div class="ansible-option-cell"><p><span class="ansible-attribute-support-label">Support: </span><span class="ansible-attribute-support-full">full</span></p>
 </div></td>
@@ -364,7 +357,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="attribute-diff_mode"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-attribute-diff-mode"><strong>diff_mode</strong></p>
+<div class="ansibleOptionAnchor" id="attribute-diff_mode"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-attribute-diff-mode"><strong>diff_mode</strong></p>
 <a class="ansibleOptionLink" href="#attribute-diff_mode" title="Permalink to this attribute"></a></div></td>
 <td><div class="ansible-option-cell"><p><span class="ansible-attribute-support-label">Support: </span><span class="ansible-attribute-support-full">full</span></p>
 </div></td>
@@ -375,10 +368,10 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 </table>
 </section>
 <section id="examples">
-<h2><a class="toc-backref" href="#id5">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id4">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Make sure some records exist and have the expected values</span><span class="w"></span>
-<span class="w">  </span><span class="nt">community.dns.hosttech_dns_record_sets</span><span class="p">:</span><span class="w"></span>
-<span class="w">    </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span><span class="w"></span>
+<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_sets</span><span class="p">:</span><span class="w"></span>
+<span class="w">    </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span><span class="w"></span>
 <span class="w">    </span><span class="nt">records</span><span class="p">:</span><span class="w"></span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">new</span><span class="w"></span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A</span><span class="w"></span>
@@ -395,11 +388,11 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TXT</span><span class="w"></span>
 <span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"></span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span><span class="w"></span>
-<span class="w">    </span><span class="nt">hosttech_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span><span class="w"></span>
+<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span><span class="w"></span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Synchronize DNS zone with a fixed set of records</span><span class="w"></span>
 <span class="w">  </span><span class="c1"># If a record exists that is not mentioned here, it will be deleted</span><span class="w"></span>
-<span class="w">  </span><span class="nt">community.dns.hosttech_dns_record_sets</span><span class="p">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_sets</span><span class="p">:</span><span class="w"></span>
 <span class="w">    </span><span class="nt">zone_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">23</span><span class="w"></span>
 <span class="w">    </span><span class="nt">purge</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w"></span>
 <span class="w">    </span><span class="nt">records</span><span class="p">:</span><span class="w"></span>
@@ -415,12 +408,12 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ns-1.hoster.com</span><span class="w"></span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ns-2.hoster.com</span><span class="w"></span>
 <span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ns-3.hoster.com</span><span class="w"></span>
-<span class="w">    </span><span class="nt">hosttech_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span><span class="w"></span>
+<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
 <section id="return-values">
-<h2><a class="toc-backref" href="#id6">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id5">Return Values</a><a class="headerlink" href="#return-values" title="Permalink to this heading"></a></h2>
 <p>Common return values are documented <a class="reference external" href="https://docs.ansible.com/ansible/devel/reference_appendices/common_return_values.html#common-return-values" title="(in Ansible vdevel)"><span class="xref std std-ref">here</span></a>, the following are the fields unique to this module:</p>
 <table class="colwidths-auto ansible-option-table docutils align-default" style="width: 100%">
 <thead>
@@ -430,12 +423,12 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-return-zone-id"><strong>zone_id</strong></p>
-<a class="ansibleOptionLink" href="#return-zone_id" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
+<div class="ansibleOptionAnchor" id="return-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-sets-module-return-zone-id"><strong>zone_id</strong></p>
+<a class="ansibleOptionLink" href="#return-zone_id" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The ID of the zone.</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> success</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">23</span></code></p>
+<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">&quot;23&quot;</span></code></p>
 </div></td>
 </tr>
 </tbody>
@@ -443,6 +436,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <section id="authors">
 <h3>Authors<a class="headerlink" href="#authors" title="Permalink to this heading"></a></h3>
 <ul class="simple">
+<li><p>Markus Bergholz (&#64;markuman)</p></li>
 <li><p>Felix Fontein (&#64;felixfontein)</p></li>
 </ul>
 </section>
@@ -464,8 +458,8 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
           
 
 <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="hosttech_dns_record_set_info_module.html" class="btn btn-neutral float-left" title="community.dns.hosttech_dns_record_set_info module – Retrieve record sets in Hosttech DNS service" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="hosttech_dns_zone_info_module.html" class="btn btn-neutral float-right" title="community.dns.hosttech_dns_zone_info module – Retrieve zone information in Hosttech DNS service" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="hetzner_dns_record_set_info_module.html" class="btn btn-neutral float-left" title="community.dns.hetzner_dns_record_set_info module – Retrieve record sets in Hetzner DNS service" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hetzner_dns_zone_info_module.html" class="btn btn-neutral float-right" title="community.dns.hetzner_dns_zone_info module – Retrieve zone information in Hetzner DNS service" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
