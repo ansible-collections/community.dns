@@ -19,9 +19,7 @@ jobs:
     permissions:
       contents: read
     name: Build Ansible Docs
-    # TODO: temporarily use shared workflow from my branch so we can use the init-antsibull-docs-(version|repository) options below
-    uses: felixfontein/github-docs-build/.github/workflows/_shared-docs-build-pr.yml@repo
-    # uses: ansible-community/github-docs-build/.github/workflows/_shared-docs-build-pr.yml@main
+    uses: ansible-community/github-docs-build/.github/workflows/_shared-docs-build-pr.yml@main
     with:
       init-lenient: false
       init-fail-on-error: true
