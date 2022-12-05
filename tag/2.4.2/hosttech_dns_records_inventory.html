@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>community.dns.hosttech_dns_records inventory – Create inventory from Hosttech DNS records &mdash; Ansible collections  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/ansible.css" type="text/css" />
+      <link rel="stylesheet" href="_static/antsibull-minimal.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/rtd-ethical-ads.css" type="text/css" />
+    <link rel="shortcut icon" href="_static/images/Ansible-Mark-RGB_Black.png"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="community.dns.hetzner_dns_record module – Add or delete a single record in Hetzner DNS service" href="hetzner_dns_record_module.html" />
+    <link rel="prev" title="community.dns.hetzner_dns_records inventory – Create inventory from Hetzner DNS records" href="hetzner_dns_records_inventory.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
+
+
+
+
+</head>
+
+<body class="wy-body-for-nav"><!-- extra body elements for Ansible beyond RTD Sphinx Theme -->
+
+<div class="DocSite-globalNav ansibleNav">
+  <ul>
+    <li><a href="https://www.ansible.com/ansiblefest" target="_blank">AnsibleFest</a></li>
+    <li><a href="https://www.ansible.com/tower" target="_blank">Products</a></li>
+    <li><a href="https://www.ansible.com/community" target="_blank">Community</a></li>
+    <li><a href="https://www.ansible.com/webinars-training" target="_blank">Webinars & Training</a></li>
+    <li><a href="https://www.ansible.com/blog" target="_blank">Blog</a></li>
+  </ul>
+</div>
+
+<a class="DocSite-nav" href="/" style="padding-bottom: 30px;">
+
+  <img class="DocSiteNav-logo"
+    src="_static/images/Ansible-Mark-RGB_White.png"
+    alt="Ansible Logo">
+  <div class="DocSiteNav-title">Ansible Collections Documentation</div>
+</a>
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> Ansible collections
+          </a><!--- Based on https://github.com/rtfd/sphinx_rtd_theme/pull/438/files -->
+
+<div class="version">
+  
+    
+  
+</div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <label class="sr-only" for="q">Search docs:</label>
+    <input type="text" class="st-default-search-input" id="q" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="docsite/filter_guide.html">Community.Dns Filter Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docsite/hetzner_guide.html">Hetzner DNS Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docsite/hosttech_guide.html">HostTech DNS Guide</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="get_public_suffix_filter.html">community.dns.get_public_suffix filter – Returns the public suffix of a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_registrable_domain_filter.html">community.dns.get_registrable_domain filter – Returns the registrable domain name of a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remove_public_suffix_filter.html">community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remove_registrable_domain_filter.html">community.dns.remove_registrable_domain filter – Removes the registrable domain name from a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_records_inventory.html">community.dns.hetzner_dns_records inventory – Create inventory from Hetzner DNS records</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">community.dns.hosttech_dns_records inventory – Create inventory from Hosttech DNS records</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#authors">Authors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#collection-links">Collection links</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_module.html">community.dns.hetzner_dns_record module – Add or delete a single record in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_info_module.html">community.dns.hetzner_dns_record_info module – Retrieve records in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_set_module.html">community.dns.hetzner_dns_record_set module – Add or delete record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_set_info_module.html">community.dns.hetzner_dns_record_set_info module – Retrieve record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_sets_module.html">community.dns.hetzner_dns_record_sets module – Bulk synchronize DNS record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_zone_info_module.html">community.dns.hetzner_dns_zone_info module – Retrieve zone information in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_module.html">community.dns.hosttech_dns_record module – Add or delete a single record in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_info_module.html">community.dns.hosttech_dns_record_info module – Retrieve records in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_set_module.html">community.dns.hosttech_dns_record_set module – Add or delete record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_set_info_module.html">community.dns.hosttech_dns_record_set_info module – Retrieve record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_sets_module.html">community.dns.hosttech_dns_record_sets module – Bulk synchronize DNS record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_zone_info_module.html">community.dns.hosttech_dns_zone_info module – Retrieve zone information in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wait_for_txt_module.html">community.dns.wait_for_txt module – Wait for TXT entries to be available on all authoritative nameservers</a></li>
+</ul>
+<!-- extra nav elements for Ansible beyond RTD Sphinx Theme -->
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Ansible collections</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">community.dns.hosttech_dns_records inventory – Create inventory from Hosttech DNS records</li>
+      <li class="wy-breadcrumbs-aside">
+              <!-- User defined GitHub URL -->
+              <a href="https://github.com/ansible-collections/community.dns/edit/main/plugins/inventory/hosttech_dns_records.py?description=%23%23%23%23%23%20SUMMARY%0A%3C!—%20Your%20description%20here%20–%3E%0A%0A%0A%23%23%23%23%23%20ISSUE%20TYPE%0A-%20Docs%20Pull%20Request%0A%0A%2Blabel:%20docsite_pr" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+  
+           <div itemprop="articleBody">
+             
+  <span class="target" id="ansible-collections-community-dns-hosttech-dns-records-inventory"></span><section id="community-dns-hosttech-dns-records-inventory-create-inventory-from-hosttech-dns-records">
+<h1>community.dns.hosttech_dns_records inventory – Create inventory from Hosttech DNS records<a class="headerlink" href="#community-dns-hosttech-dns-records-inventory-create-inventory-from-hosttech-dns-records" title="Permalink to this heading"></a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This inventory plugin is part of the <a class="reference external" href="https://galaxy.ansible.com/community/dns">community.dns collection</a> (version 2.4.2).</p>
+<p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">community.dns</span></code>.
+You need further requirements to be able to use this inventory plugin,
+see <a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-records-inventory-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
+<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">community.dns.hosttech_dns_records</span></code>.</p>
+</div>
+<p class="ansible-version-added">New in community.dns 2.0.0</p>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
+<li><p><a class="reference internal" href="#requirements" id="id2">Requirements</a></p></li>
+<li><p><a class="reference internal" href="#parameters" id="id3">Parameters</a></p></li>
+<li><p><a class="reference internal" href="#notes" id="id4">Notes</a></p></li>
+</ul>
+</div>
+<section id="synopsis">
+<h2><a class="toc-backref" href="#id1">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Records are matched by prefix / record name and value.</p></li>
+</ul>
+</section>
+<section id="requirements">
+<span id="ansible-collections-community-dns-hosttech-dns-records-inventory-requirements"></span><h2><a class="toc-backref" href="#id2">Requirements</a><a class="headerlink" href="#requirements" title="Permalink to this heading"></a></h2>
+<p>The below requirements are needed on the local controller node that executes this inventory.</p>
+<ul class="simple">
+<li><p>lxml</p></li>
+</ul>
+</section>
+<section id="parameters">
+<h2><a class="toc-backref" href="#id3">Parameters</a><a class="headerlink" href="#parameters" title="Permalink to this heading"></a></h2>
+<table class="colwidths-auto ansible-option-table docutils align-default" style="width: 100%">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Comments</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-filters"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-records-inventory-parameter-filters"><strong>filters</strong></p>
+<a class="ansibleOptionLink" href="#parameter-filters" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>A dictionary of filter value pairs.</p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">{}</span></code></p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-filters/type"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-records-inventory-parameter-filters-type"><strong>type</strong></p>
+<a class="ansibleOptionLink" href="#parameter-filters/type" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Record types whose values to use.</p>
+<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
+<ul class="simple">
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">&quot;A&quot;</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">&quot;AAAA&quot;</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;CAA&quot;</span></code></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">&quot;CNAME&quot;</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;MX&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;NS&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;PTR&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;SPF&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;SRV&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;TXT&quot;</span></code></p></li>
+</ul>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">[&quot;A&quot;,</span> <span class="pre">&quot;AAAA&quot;,</span> <span class="pre">&quot;CNAME&quot;]</span></code></p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-hosttech_password"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-records-inventory-parameter-hosttech-password"><strong>hosttech_password</strong></p>
+<a class="ansibleOptionLink" href="#parameter-hosttech_password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The password for the Hosttech API user.</p>
+<p>If provided, <em>hosttech_username</em> must also be provided.</p>
+<p>Mutually exclusive with <em>hosttech_token</em>.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-hosttech_token"></div>
+<div class="ansibleOptionAnchor" id="parameter-api_token"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-records-inventory-parameter-hosttech-token"><span id="ansible-collections-community-dns-hosttech-dns-records-inventory-parameter-api-token"></span><strong>hosttech_token</strong></p>
+<a class="ansibleOptionLink" href="#parameter-hosttech_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: api_token</span></p>
+<p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+<p><span class="ansible-option-versionadded">added in community.dns 0.2.0</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The password for the Hosttech API user.</p>
+<p>Mutually exclusive with <em>hosttech_username</em> and <em>hosttech_password</em>.</p>
+<p>Since community.dns 1.2.0, the alias <em>api_token</em> can be used.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-hosttech_username"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-records-inventory-parameter-hosttech-username"><strong>hosttech_username</strong></p>
+<a class="ansibleOptionLink" href="#parameter-hosttech_username" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The username for the Hosttech API user.</p>
+<p>If provided, <em>hosttech_password</em> must also be provided.</p>
+<p>Mutually exclusive with <em>hosttech_token</em>.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-txt_transformation"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-records-inventory-parameter-txt-transformation"><strong>txt_transformation</strong></p>
+<a class="ansibleOptionLink" href="#parameter-txt_transformation" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Determines how TXT entry values are converted between the API and this module’s input and output.</p>
+<p>The value <code class="docutils literal notranslate"><span class="pre">api</span></code> means that values are returned from this module as they are returned from the API, and pushed to the API as they have been passed to this module. For idempotency checks, the input string will be compared to the strings returned by the API. The API might automatically transform some values, like splitting long values or adding quotes, which can cause problems with idempotency.</p>
+<p>The value <code class="docutils literal notranslate"><span class="pre">unquoted</span></code> automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.</p>
+<p>The value <code class="docutils literal notranslate"><span class="pre">quoted</span></code> automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.</p>
+<p>The default value, <code class="docutils literal notranslate"><span class="pre">unquoted</span></code>, ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of <code class="docutils literal notranslate"><span class="pre">unquoted</span></code> or <code class="docutils literal notranslate"><span class="pre">quoted</span></code>, but not <code class="docutils literal notranslate"><span class="pre">api</span></code>.</p>
+<p><strong>Note:</strong> the conversion code assumes UTF-8 encoding for values. If you need another encoding use <em>txt_transformation=api</em> and handle the encoding yourself.</p>
+<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
+<ul class="simple">
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;api&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;quoted&quot;</span></code></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">&quot;unquoted&quot;</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+</ul>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-records-inventory-parameter-zone-id"><strong>zone_id</strong></p>
+<a class="ansibleOptionLink" href="#parameter-zone_id" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">any</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The ID of the DNS zone to modify.</p>
+<p>Exactly one of <em>zone_name</em> and <em>zone_id</em> must be specified.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-zone_name"></div>
+<div class="ansibleOptionAnchor" id="parameter-zone"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-records-inventory-parameter-zone-name"><span id="ansible-collections-community-dns-hosttech-dns-records-inventory-parameter-zone"></span><strong>zone_name</strong></p>
+<a class="ansibleOptionLink" href="#parameter-zone_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: zone</span></p>
+<p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The DNS zone to modify.</p>
+<p>Exactly one of <em>zone_name</em> and <em>zone_id</em> must be specified.</p>
+</div></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="notes">
+<h2><a class="toc-backref" href="#id4">Notes</a><a class="headerlink" href="#notes" title="Permalink to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The provider-specific <em>hosttech_username</em>, <em>hosttech_password</em>, and <em>hosttech_token</em> options can be templated.</p></li>
+<li><p>The <em>zone_name</em> and <em>zone_id</em> options can be templated.</p></li>
+</ul>
+</div>
+<section id="authors">
+<h3>Authors<a class="headerlink" href="#authors" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>Markus Bergholz (&#64;markuman)</p></li>
+<li><p>Felix Fontein (&#64;felixfontein)</p></li>
+</ul>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Configuration entries for each entry type have a low to high priority order. For example, a variable that is lower in the list will override a variable that is higher up.</p>
+</div>
+</section>
+<section id="collection-links">
+<h3>Collection links<a class="headerlink" href="#collection-links" title="Permalink to this heading"></a></h3>
+<p class="ansible-links">
+  <a href="https://github.com/ansible-collections/community.dns/issues" aria-role="button" target="_blank" rel="noopener external">Issue Tracker</a>
+  <a href="https://github.com/ansible-collections/community.dns" aria-role="button" target="_blank" rel="noopener external">Repository (Sources)</a>
+  <a href="https://github.com/ansible-collections/community.dns/issues/new?assignees=&amp;labels=&amp;template=bug_report.md" aria-role="button" target="_blank" rel="noopener external">Submit a bug report</a>
+  <a href="https://github.com/ansible-collections/community.dns/issues/new?assignees=&amp;labels=&amp;template=feature_request.md" aria-role="button" target="_blank" rel="noopener external">Request a feature</a>
+  <a href="./#communication-for-community-dns" aria-role="button" target="_blank">Communication</a>
+</p></section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+<footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="hetzner_dns_records_inventory.html" class="btn btn-neutral float-left" title="community.dns.hetzner_dns_records inventory – Create inventory from Hetzner DNS records" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hetzner_dns_record_module.html" class="btn btn-neutral float-right" title="community.dns.hetzner_dns_record module – Add or delete a single record in Hetzner DNS service" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Ansible contributors.</p>
+  </div>
+
+  
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script><!-- extra footer elements for Ansible beyond RTD Sphinx Theme -->
+
+</body>
+</html>
