@@ -537,3 +537,12 @@ releases:
     - 2.4.1.yml
     - update-psl.yml
     release_date: '2022-11-14'
+  2.4.2:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      release_summary: Maintenance release with updated Public Suffix List.
+    fragments:
+    - 2.4.2.yml
+    - update-psl.yml
+    release_date: '2022-12-05'
