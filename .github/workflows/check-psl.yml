@@ -5,6 +5,11 @@
 
 name: Check for Public Suffix List updates
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - plugins/public_suffix_list.dat
   # Run CI once per day (at 04:30 UTC)
   schedule:
     - cron: '30 4 * * *'
