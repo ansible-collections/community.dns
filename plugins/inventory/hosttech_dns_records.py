@@ -18,7 +18,7 @@ version_added: 2.0.0
 description:
     - This plugin allows to create an inventory from Hosttech DNS records.
     - >-
-      For Ansible to be able to identify a YAML file as an inventory for this plugin, the plugin must contain
+      For Ansible to be able to identify a YAML file as an inventory for this plugin, the inventory file must contain
       C(plugin: community.dns.hosttech_dns_records) and its filename must end with C(hosttech_dns.yaml) or C(hosttech_dns.yml)
 
 options:

@@ -18,7 +18,7 @@ version_added: 2.0.0
 description:
     - This plugin allows to create an inventory from Hetzner DNS records.
     - >-
-      For Ansible to be able to identify a YAML file as an inventory for this plugin, the plugin must contain
+      For Ansible to be able to identify a YAML file as an inventory for this plugin, the inventory file must contain
       C(plugin: community.dns.hetzner_dns_records) and its filename must end with C(hetzner_dns.yaml) or C(hetzner_dns.yml)
 
 options:
