@@ -14,6 +14,7 @@ from ansible.errors import AnsibleError
 from ansible.module_utils import six
 from ansible.module_utils.common._collections_compat import Sequence
 from ansible.plugins.inventory import BaseInventoryPlugin
+from ansible.utils.display import Display
 from ansible.template import Templar
 
 from ansible_collections.community.dns.plugins.module_utils.provider import (
@@ -32,6 +33,8 @@ from ansible_collections.community.dns.plugins.module_utils.conversion.base impo
 from ansible_collections.community.dns.plugins.module_utils.conversion.converter import (
     RecordConverter,
 )
+
+display = Display()
 
 
 @six.add_metaclass(abc.ABCMeta)
@@ -52,6 +55,11 @@ class RecordsInventoryModule(BaseInventoryPlugin):
         if super(RecordsInventoryModule, self).verify_file(path):
             if path.endswith(self.VALID_ENDINGS):
                 return True
+            else:
+                display.debug("{name} inventory filename must end with {endings}".format(
+                    name=self.NAME,
+                    endings=' or '.join(["'{0}'".format(ending) for ending in self.VALID_ENDINGS])
+                ))
         return False
 
     def parse(self, inventory, loader, path, cache=False):
