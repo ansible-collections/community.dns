@@ -15,7 +15,21 @@ short_description: Create inventory from Hosttech DNS records
 
 version_added: 2.0.0
 
+description:
+    - This plugin allows to create an inventory from Hosttech DNS records.
+    - >-
+      For Ansible to be able to identify a YAML file as an inventory for this plugin, the inventory file must contain
+      C(plugin: community.dns.hosttech_dns_records) and its filename must end with C(hosttech_dns.yaml) or C(hosttech_dns.yml)
+
 options:
+    plugin:
+        description: The name of this plugin. Should always be set to C(community.dns.hosttech_dns_records) for this plugin to recognize it as its own.
+        # TODO: add `required: true` in 3.0.0
+        # required: true
+        choices:
+            - community.dns.hosttech_dns_records
+        type: str
+
     # We need to overwrite zone_id to be of type string, otherwise templating cannot be passed in
     zone_id:
         type: raw
@@ -38,6 +52,26 @@ notes:
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
     - Felix Fontein (@felixfontein)
+
+seealso:
+    - module: community.dns.hosttech_dns_record_set_info
+    - module: community.dns.hosttech_dns_record_info
+'''
+
+EXAMPLES = '''
+# filename must end with hosttech_dns.yaml or hosttech_dns.yml
+
+plugin: community.dns.hosttech_dns_records
+zone_name: domain.ch
+filters:
+  type:
+    - AAAA
+
+# You can also configure the token by putting secret value into this file,
+# but this is discouraged. Use a lookup like below, or leave it away and
+# set it with the ANSIBLE_HOSTTECH_DNS_TOKEN environment variable.
+hosttech_token: >-
+    {{ (lookup('community.sops.sops', 'keys/hosttech.sops.yml') | from_yaml).hosttech_dns_token }}
 '''
 
 from ansible_collections.community.dns.plugins.module_utils.http import (
