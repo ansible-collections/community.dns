@@ -101,7 +101,9 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">community.dns.hetzner_dns_records inventory – Create inventory from Hetzner DNS records</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#synopsis">Synopsis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#see-also">See Also</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#authors">Authors</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#collection-links">Collection links</a></li>
 </ul>
@@ -153,12 +155,16 @@
 <li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
 <li><p><a class="reference internal" href="#parameters" id="id2">Parameters</a></p></li>
 <li><p><a class="reference internal" href="#notes" id="id3">Notes</a></p></li>
+<li><p><a class="reference internal" href="#see-also" id="id4">See Also</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id5">Examples</a></p></li>
 </ul>
 </div>
 <section id="synopsis">
 <h2><a class="toc-backref" href="#id1">Synopsis</a><a class="headerlink" href="#synopsis" title="Permalink to this heading"></a></h2>
 <ul class="simple">
+<li><p>For Ansible to be able to identify a YAML file as an inventory for this plugin, the inventory file must contain <code class="docutils literal notranslate"><span class="pre">plugin:</span> <span class="pre">community.dns.hetzner_dns_records</span></code> and its filename must end with <code class="docutils literal notranslate"><span class="pre">hetzner_dns.yaml</span></code> or <code class="docutils literal notranslate"><span class="pre">hetzner_dns.yml</span></code></p></li>
 <li><p>Records are matched by prefix / record name and value.</p></li>
+<li><p>This plugin allows to create an inventory from Hetzner DNS records.</p></li>
 </ul>
 </section>
 <section id="parameters">
@@ -218,6 +224,17 @@
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-plugin"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-plugin"><strong>plugin</strong></p>
+<a class="ansibleOptionLink" href="#parameter-plugin" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The name of this plugin. Should always be set to <code class="docutils literal notranslate"><span class="pre">community.dns.hetzner_dns_records</span></code> for this plugin to recognize it as its own.</p>
+<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
+<ul class="simple">
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;community.dns.hetzner_dns_records&quot;</span></code></p></li>
+</ul>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-txt_transformation"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-txt-transformation"><strong>txt_transformation</strong></p>
 <a class="ansibleOptionLink" href="#parameter-txt_transformation" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -235,7 +252,7 @@
 </ul>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone-id"><strong>zone_id</strong></p>
 <a class="ansibleOptionLink" href="#parameter-zone_id" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -243,7 +260,7 @@
 <p>Exactly one of <em>zone_name</em> and <em>zone_id</em> must be specified.</p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-zone_name"></div>
 <div class="ansibleOptionAnchor" id="parameter-zone"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone-name"><span id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone"></span><strong>zone_name</strong></p>
 <a class="ansibleOptionLink" href="#parameter-zone_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: zone</span></p>
@@ -264,6 +281,37 @@
 <li><p>The provider-specific <em>hetzner_token</em> option can be templated.</p></li>
 <li><p>The <em>zone_name</em> and <em>zone_id</em> options can be templated.</p></li>
 </ul>
+</div>
+</section>
+<section id="see-also">
+<h2><a class="toc-backref" href="#id4">See Also</a><a class="headerlink" href="#see-also" title="Permalink to this heading"></a></h2>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<dl class="simple">
+<dt><a class="reference internal" href="hetzner_dns_record_set_info_module.html#ansible-collections-community-dns-hetzner-dns-record-set-info-module"><span class="std std-ref">community.dns.hetzner_dns_record_set_info</span></a></dt><dd><p>Retrieve record sets in Hetzner DNS service.</p>
+</dd>
+<dt><a class="reference internal" href="hetzner_dns_record_info_module.html#ansible-collections-community-dns-hetzner-dns-record-info-module"><span class="std std-ref">community.dns.hetzner_dns_record_info</span></a></dt><dd><p>Retrieve records in Hetzner DNS service.</p>
+</dd>
+</dl>
+</div>
+</section>
+<section id="examples">
+<h2><a class="toc-backref" href="#id5">Examples</a><a class="headerlink" href="#examples" title="Permalink to this heading"></a></h2>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="c1"># filename must end with hetzner_dns.yaml or hetzner_dns.yml</span>
+
+<span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">community.dns.hetzner_dns_records</span>
+<span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">domain.de</span>
+<span class="nt">filters</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TXT</span>
+<span class="nt">txt_transformation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unquoted</span>
+
+<span class="c1"># You can also configure the token by putting secret value into this file,</span>
+<span class="c1"># but this is discouraged. Use a lookup like below, or leave it away and</span>
+<span class="c1"># set it with the HETZNER_DNS_TOKEN environment variable.</span>
+<span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">    </span><span class="cp">{{</span> <span class="o">(</span><span class="nv">lookup</span><span class="o">(</span><span class="s1">&#39;community.sops.sops&#39;</span><span class="o">,</span> <span class="s1">&#39;keys/hetzner.sops.yml&#39;</span><span class="o">)</span> <span class="o">|</span> <span class="nf">from_yaml</span><span class="o">)</span><span class="nv">.hetzner_dns_token</span> <span class="cp">}}</span>
+</pre></div>
 </div>
 <section id="authors">
 <h3>Authors<a class="headerlink" href="#authors" title="Permalink to this heading"></a></h3>
