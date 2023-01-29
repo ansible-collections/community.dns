@@ -9,6 +9,8 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
+import warnings
+
 import pytest
 
 from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
@@ -213,3 +215,64 @@ def test_decode_error(encoded, character_encoding, error):
         decode_txt_value(encoded, character_encoding=character_encoding)
     print(exc.value.error_message)
     assert exc.value.error_message == error
+
+
+def test_validation():
+    with pytest.raises(ValueError) as exc:
+        decode_txt_value('foo', character_encoding='foo')
+    print(exc.value.args)
+    assert exc.value.args == ('character_encoding must be set to "octal" or "decimal"', )
+
+    with pytest.raises(ValueError) as exc:
+        encode_txt_value('foo', character_encoding='foo')
+    print(exc.value.args)
+    assert exc.value.args == ('character_encoding must be set to "octal" or "decimal"', )
+
+
+def test_deprecation():
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter('always')
+        encode_txt_value('foo')
+
+        print(len(w), w)
+        assert len(w) >= 1
+        warning = w[0]
+        assert issubclass(warning.category, DeprecationWarning)
+        msg = (
+            'The default value of the encode_txt_value parameter character_encoding is deprecated.'
+            ' Set explicitly to "octal" for the old behavior, or set to "decimal" for the new and correct behavior.'
+        )
+        print(str(warning.message))
+        assert msg == str(warning.message)
+
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter('always')
+        encode_txt_value('foo', use_octal=True, character_encoding='octal')
+
+        print(len(w), w)
+        assert len(w) >= 1
+        warning = w[0]
+        assert issubclass(warning.category, DeprecationWarning)
+        msg = 'The encode_txt_value parameter use_octal is deprecated. Use use_character_encoding instead.'
+        print(str(warning.message))
+        assert msg == str(warning.message)
+
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter('always')
+        decode_txt_value('foo')
+
+        print(len(w), w)
+        assert len(w) >= 1
+        warning = w[0]
+        assert issubclass(warning.category, DeprecationWarning)
+        msg = (
+            'The default value of the decode_txt_value parameter character_encoding is deprecated.'
+            ' Set explicitly to "octal" for the old behavior, or set to "decimal" for the new and correct behavior.'
+        )
+        print(str(warning.message))
+        assert msg == str(warning.message)
+
+    with pytest.raises(ValueError) as exc:
+        encode_txt_value('foo', use_octal=True, use_character_encoding=True)
+    print(exc.value.args)
+    assert exc.value.args == ('Cannot use both use_character_encoding and use_octal. Use only use_character_encoding!', )
