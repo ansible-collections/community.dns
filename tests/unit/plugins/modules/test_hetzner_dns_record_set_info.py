@@ -681,7 +681,7 @@ class TestHetznerDNSRecordSetInfoJSON(BaseTestModule):
         assert 'deprecations' in result
         found = False
         for deprecation in result['deprecations']:
-            if deprecation['collection_name'] != 'community.dns':
+            if 'collection_name' in deprecation and deprecation['collection_name'] != 'community.dns':
                 continue
             found = True
             assert deprecation['msg'] == (
