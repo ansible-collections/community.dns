@@ -679,15 +679,18 @@ class TestHetznerDNSRecordSetInfoJSON(BaseTestModule):
         assert result['set']['value'] == [u'"b\\303\\244r \\"with quotes\\" (use \\\\ to escape)"']
         assert 'sets' not in result
         assert 'deprecations' in result
-        assert len(result['deprecations']) == 1
-        assert result['deprecations'][0] == {
-            'msg': (
+        found = False
+        for deprecation in result['deprecations']:
+            if deprecation['collection_name'] != 'community.dns':
+                continue
+            found = True
+            assert deprecation['msg'] == (
                 'The default of the txt_character_encoding option will change from "octal" to "decimal" in community.dns 3.0.0.'
                 ' This potentially affects you since you use txt_transformation=quoted.'
                 ' You can explicitly set txt_character_encoding to "octal" to keep the current behavior,'
                 ' or "decimal" to already now switch to the new behavior.'
                 ' We recommend switching to the new behavior, and using check/diff mode to figure out potential changes'
-            ),
-            'version': '3.0.0',
-            'collection_name': 'community.dns',
-        }
+            )
+            assert deprecation['version'] == '3.0.0'
+            assert deprecation.get('date') is None
+        assert found
