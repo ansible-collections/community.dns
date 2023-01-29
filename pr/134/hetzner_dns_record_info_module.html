@@ -206,7 +206,7 @@
 <a class="ansibleOptionLink" href="#parameter-txt_character_encoding" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 <p><span class="ansible-option-versionadded">added in community.dns 2.5.0</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Whether to treat numeric escape sequences (<code class="docutils literal notranslate"><span class="pre">\xyz</span></code>) as octal or decimal numbers.</p>
+<td><div class="ansible-option-cell"><p>Whether to treat numeric escape sequences (<code class="docutils literal notranslate"><span class="pre">\xyz</span></code>) as octal or decimal numbers. This is only used when <em>txt_transformation=quoted</em>.</p>
 <p>The current default is <code class="docutils literal notranslate"><span class="pre">octal</span></code> which is deprecated. It will change to <code class="docutils literal notranslate"><span class="pre">decimal</span></code> in community.dns 3.0.0. The value <code class="docutils literal notranslate"><span class="pre">decimal</span></code> is compatible to <a class="reference external" href="https://www.ietf.org/rfc/rfc1035.txt">RFC 1035</a>.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
