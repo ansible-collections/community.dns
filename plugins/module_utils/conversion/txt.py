@@ -9,6 +9,7 @@ __metaclass__ = type
 
 
 import sys
+import warnings
 
 from ansible.module_utils.common.text.converters import to_bytes, to_text
 
@@ -17,7 +18,7 @@ from ansible_collections.community.dns.plugins.module_utils.conversion.base impo
 )
 
 
-_OCTAL_DIGITS = b'0123456789'
+_DECIMAL_DIGITS = b'0123456789'
 
 _STATE_OUTSIDE = 0
 _STATE_QUOTED_STRING = 1
@@ -31,44 +32,60 @@ else:
         return bytes((value, ))
 
 
-def _parse_quoted(value, index):
+def _parse_quoted(value, index, use_octal):
     if index == len(value):
         raise DNSConversionError(u'Unexpected backslash at end of string')
     letter = value[index:index + 1]
     index += 1
     if letter in (b'\\', b'"'):
         return letter, index
-    # This must be an octal sequence
-    v2 = _OCTAL_DIGITS.find(letter)
-    if v2 < 0:
+    # This must be a decimal sequence
+    v2 = _DECIMAL_DIGITS.find(letter)
+    if v2 < 0 or (use_octal and v2 >= 8):
         # It is apparently not - error out
         raise DNSConversionError(
             u'A backslash must not be followed by "{letter}" (index {index})'.format(letter=to_text(letter), index=index))
     if index + 1 >= len(value):
-        # We need more letters for a three-digit octal sequence
+        # We need more letters for a three-digit decimal sequence
         raise DNSConversionError(
-            u'The octal sequence at the end requires {missing} more digit(s)'.format(missing=index + 2 - len(value)))
+            u'The {type} sequence at the end requires {missing} more digit(s)'.format(
+                type='octal' if use_octal else 'decimal', missing=index + 2 - len(value)))
     letter = value[index:index + 1]
     index += 1
-    v1 = _OCTAL_DIGITS.find(letter)
-    if v1 < 0:
+    v1 = _DECIMAL_DIGITS.find(letter)
+    if v1 < 0 or (use_octal and v1 >= 8):
         raise DNSConversionError(
-            u'The second letter of the octal sequence at index {index} is not an octal digit, but "{letter}"'.format(letter=to_text(letter), index=index))
+            u'The second letter of the {type} sequence at index {index} is not a {type} digit, but "{letter}"'.format(
+                type='octal' if use_octal else 'decimal', letter=to_text(letter), index=index))
     letter = value[index:index + 1]
     index += 1
-    v0 = _OCTAL_DIGITS.find(letter)
-    if v0 < 0:
+    v0 = _DECIMAL_DIGITS.find(letter)
+    if v0 < 0 or (use_octal and v0 >= 8):
         raise DNSConversionError(
-            u'The third letter of the octal sequence at index {index} is not an octal digit, but "{letter}"'.format(letter=to_text(letter), index=index))
-    return _int_to_byte((v2 << 6) | (v1 << 3) | v0), index
+            u'The third letter of the {type} sequence at index {index} is not a {type} digit, but "{letter}"'.format(
+                type='octal' if use_octal else 'decimal', letter=to_text(letter), index=index))
+    if use_octal:
+        return _int_to_byte(v2 * 64 + v1 * 8 + v0), index
+    return _int_to_byte(v2 * 100 + v1 * 10 + v0), index
 
 
-def decode_txt_value(value):
+_SENTINEL = object()
+
+
+def decode_txt_value(value, character_encoding=_SENTINEL):
     """
     Given an encoded TXT value, decodes it.
 
     Raises DNSConversionError in case of errors.
     """
+    if character_encoding is _SENTINEL:
+        warnings.warn(
+            'The default value of the encode_txt_value parameter character_encoding is deprecated.'
+            ' Set explicitly to "octal" for the old behavior, or set to "decimal" for the new and correct behavior.'
+        )
+        character_encoding = 'octal'
+    if character_encoding not in ('octal', 'decimal'):
+        raise ValueError('character_encoding must be set to "octal" or "decimal"')
     value = to_bytes(value)
     state = _STATE_OUTSIDE
     index = 0
@@ -85,7 +102,7 @@ def decode_txt_value(value):
         elif letter == b'\\':
             if state != _STATE_QUOTED_STRING:
                 state = _STATE_UNQUOTED_STRING
-            letter, index = _parse_quoted(value, index)
+            letter, index = _parse_quoted(value, index, character_encoding == 'octal')
             result.append(letter)
         elif letter == b'"':
             if state == _STATE_QUOTED_STRING:
@@ -120,13 +137,29 @@ def _get_utf8_length(first_byte_value):
     return 1
 
 
-def encode_txt_value(value, always_quote=False, use_octal=True):
+def encode_txt_value(value, always_quote=False, use_character_encoding=_SENTINEL, use_octal=_SENTINEL, character_encoding=_SENTINEL):
     """
     Given a decoded TXT value, encodes it.
 
     If always_quote is set to True, always use double quotes for all strings.
-    If use_octal is set to False, do not use octal encoding.
+    If use_character_encoding (default: True) is set to False, do not use octal encoding.
     """
+    if use_octal is not _SENTINEL:
+        warnings.warn('The encode_txt_value parameter use_octal is deprecated. Use use_character_encoding instead.')
+        if use_character_encoding is not _SENTINEL:
+            raise ValueError('Cannot use both use_character_encoding and use_octal. Use only use_character_encoding!')
+        use_character_encoding = use_octal
+    if use_character_encoding is _SENTINEL:
+        use_character_encoding = True
+    if character_encoding is _SENTINEL:
+        warnings.warn(
+            'The default value of the encode_txt_value parameter character_encoding is deprecated.'
+            ' Set explicitly to "octal" for the old behavior, or set to "decimal" for the new and correct behavior.'
+        )
+        character_encoding = 'octal'
+    if character_encoding not in ('octal', 'decimal'):
+        raise ValueError('character_encoding must be set to "octal" or "decimal"')
+
     value = to_bytes(value)
     buffer = []
     output = []
@@ -147,20 +180,25 @@ def encode_txt_value(value, always_quote=False, use_octal=True):
         if letter in (b'"', b'\\'):
             buffer.append(b'\\')
             buffer.append(letter)
-        elif use_octal and not (0o40 <= ord(letter) < 0o177):
-            # Make sure that we don't split up an octal sequence over multiple TXT strings
+        elif use_character_encoding and not (0x20 <= ord(letter) < 0x7F):
+            # Make sure that we don't split up a decimal sequence over multiple TXT strings
             if len(buffer) + 4 > 255:
                 append(buffer[:255])
                 buffer = buffer[255:]
             letter_value = ord(letter)
             buffer.append(b'\\')
-            v2 = (letter_value >> 6) & 7
-            v1 = (letter_value >> 3) & 7
-            v0 = letter_value & 7
-            buffer.append(_OCTAL_DIGITS[v2:v2 + 1])
-            buffer.append(_OCTAL_DIGITS[v1:v1 + 1])
-            buffer.append(_OCTAL_DIGITS[v0:v0 + 1])
-        elif not use_octal and (ord(letter) & 0x80) != 0:
+            if character_encoding == 'octal':
+                v2 = (letter_value >> 6) & 7
+                v1 = (letter_value >> 3) & 7
+                v0 = letter_value & 7
+            else:
+                v2 = (letter_value // 100) % 10
+                v1 = (letter_value // 10) % 10
+                v0 = letter_value % 10
+            buffer.append(_DECIMAL_DIGITS[v2:v2 + 1])
+            buffer.append(_DECIMAL_DIGITS[v1:v1 + 1])
+            buffer.append(_DECIMAL_DIGITS[v0:v0 + 1])
+        elif not use_character_encoding and (ord(letter) & 0x80) != 0:
             utf8_length = min(_get_utf8_length(ord(letter)), length - index + 1)
             # Make sure that we don't split up a UTF-8 letter over multiple TXT strings
             if len(buffer) + utf8_length > 255:

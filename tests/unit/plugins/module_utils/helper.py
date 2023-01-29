@@ -15,9 +15,10 @@ from ansible_collections.community.dns.plugins.module_utils.provider import (
 
 
 class CustomProviderInformation(ProviderInformation):
-    def __init__(self, txt_record_handling='decoded'):
+    def __init__(self, txt_record_handling='decoded', txt_character_encoding='decimal'):
         super(CustomProviderInformation, self).__init__()
         self._txt_record_handling = txt_record_handling
+        self._txt_character_encoding = txt_character_encoding
 
     def get_supported_record_types(self):
         return ['A']
@@ -33,6 +34,9 @@ class CustomProviderInformation(ProviderInformation):
 
     def txt_record_handling(self):
         return self._txt_record_handling
+
+    def txt_character_encoding(self):
+        return self._txt_character_encoding
 
 
 class CustomProvideOptions(object):

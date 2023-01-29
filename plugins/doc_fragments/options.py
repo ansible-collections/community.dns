@@ -51,4 +51,14 @@ options:
             - quoted
             - unquoted
         default: unquoted
+    txt_character_encoding:
+        description:
+            - Whether to treat numeric escape sequences (C(\xyz)) as octal or decimal numbers.
+            - The current default is C(octal) which is deprecated. It will change to C(decimal) in
+              community.dns 3.0.0. The value C(decimal) is compatible to L(RFC 1035, https://www.ietf.org/rfc/rfc1035.txt).
+        type: str
+        choices:
+            - decimal
+            - octal
+        version_added: 2.5.0
 '''

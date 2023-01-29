@@ -582,6 +582,59 @@ class TestHetznerDNSRecordSetInfoJSON(BaseTestModule):
                 'prefix': 'foo',
                 'type': 'TXT',
                 'txt_transformation': 'quoted',
+                'txt_character_encoding': 'decimal',
+                '_ansible_remote_tmp': '/tmp/tmp',
+                '_ansible_keep_remote_files': True,
+            }, [
+                FetchUrlCall('GET', 429)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+                .expect_query_values('name', 'example.com')
+                .return_header('Retry-After', '5')
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+                .expect_query_values('name', 'example.com')
+                .return_header('Retry-After', '10')
+                .result_str(''),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+                .expect_query_values('name', 'example.com')
+                .return_header('Content-Type', 'application/json')
+                .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+                .expect_query_values('zone_id', '42')
+                .expect_query_values('page', '1')
+                .expect_query_values('per_page', '100')
+                .return_header('Content-Type', 'application/json')
+                .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            ])
+        assert result['changed'] is False
+        assert result['zone_id'] == '42'
+        assert 'set' in result
+        assert result['set']['record'] == 'foo.example.com'
+        assert result['set']['prefix'] == 'foo'
+        assert result['set']['ttl'] is None
+        assert result['set']['type'] == 'TXT'
+        assert result['set']['value'] == [u'"b\\195\\164r \\"with quotes\\" (use \\\\ to escape)"']
+        assert 'sets' not in result
+
+    def test_get_single_txt_quoted_deprecation(self, mocker):
+        with patch('time.sleep', mock_sleep):
+            result = self.run_module_success(mocker, hetzner_dns_record_set_info, {
+                'hetzner_token': 'foo',
+                'zone_name': 'example.com',
+                'prefix': 'foo',
+                'type': 'TXT',
+                'txt_transformation': 'quoted',
                 '_ansible_remote_tmp': '/tmp/tmp',
                 '_ansible_keep_remote_files': True,
             }, [
@@ -625,3 +678,16 @@ class TestHetznerDNSRecordSetInfoJSON(BaseTestModule):
         assert result['set']['type'] == 'TXT'
         assert result['set']['value'] == [u'"b\\303\\244r \\"with quotes\\" (use \\\\ to escape)"']
         assert 'sets' not in result
+        assert 'deprecations' in result
+        assert len(result['deprecations']) == 1
+        assert result['deprecations'][0] == {
+            'msg': (
+                'The default of the txt_character_encoding option will change from "octal" to "decimal" in community.dns 3.0.0.'
+                ' This potentially affects you since you use txt_transformation=quoted.'
+                ' You can explicitly set txt_character_encoding to "octal" to keep the current behavior,'
+                ' or "decimal" to already now switch to the new behavior.'
+                ' We recommend switching to the new behavior, and using check/diff mode to figure out potential changes'
+            ),
+            'version': '3.0.0',
+            'collection_name': 'community.dns',
+        }

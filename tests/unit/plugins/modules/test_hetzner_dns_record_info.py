@@ -691,6 +691,64 @@ class TestHetznerDNSRecordInfoJSON(BaseTestModule):
                 'prefix': 'foo',
                 'type': 'TXT',
                 'txt_transformation': 'quoted',
+                'txt_character_encoding': 'decimal',
+                '_ansible_remote_tmp': '/tmp/tmp',
+                '_ansible_keep_remote_files': True,
+            }, [
+                FetchUrlCall('GET', 429)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+                .expect_query_values('name', 'example.com')
+                .return_header('Retry-After', '5')
+                .result_str(''),
+                FetchUrlCall('GET', 429)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+                .expect_query_values('name', 'example.com')
+                .return_header('Retry-After', '10')
+                .result_str(''),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+                .expect_query_values('name', 'example.com')
+                .return_header('Content-Type', 'application/json')
+                .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('auth-api-token', 'foo')
+                .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+                .expect_query_values('zone_id', '42')
+                .expect_query_values('page', '1')
+                .expect_query_values('per_page', '100')
+                .return_header('Content-Type', 'application/json')
+                .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+            ])
+        assert result['changed'] is False
+        assert result['zone_id'] == '42'
+        assert result['records'] == [{
+            'record': 'foo.example.com',
+            'prefix': 'foo',
+            'ttl': None,
+            'type': 'TXT',
+            'value': u'"b\\195\\164r \\"with quotes\\" (use \\\\ to escape)"',
+            'extra': {
+                'created': '2021-07-09T11:18:37Z',
+                'modified': '2021-07-09T11:18:37Z',
+            },
+        }]
+
+    def test_get_single_txt_quoted_octal(self, mocker):
+        with patch('time.sleep', mock_sleep):
+            result = self.run_module_success(mocker, hetzner_dns_record_info, {
+                'hetzner_token': 'foo',
+                'zone_name': 'example.com',
+                'prefix': 'foo',
+                'type': 'TXT',
+                'txt_transformation': 'quoted',
+                'txt_character_encoding': 'octal',
                 '_ansible_remote_tmp': '/tmp/tmp',
                 '_ansible_keep_remote_files': True,
             }, [

@@ -75,6 +75,7 @@ def create_module_argument_spec(provider_information):
 def run_module(module, create_api, provider_information):
     option_provider = ModuleOptionProvider(module)
     record_converter = RecordConverter(provider_information, option_provider)
+    record_converter.emit_deprecations(module.deprecate)
 
     filter_record_type = NOT_PROVIDED
     filter_prefix = NOT_PROVIDED

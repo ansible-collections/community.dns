@@ -392,9 +392,9 @@ class HetznerProviderInformation(ProviderInformation):
         Returns one of the following strings:
         * 'decoded' - the API works with unencoded values
         * 'encoded' - the API works with encoded values
-        * 'encoded-no-octal' - the API works with encoded values, but without octal encoding
+        * 'encoded-no-char-encoding' - the API works with encoded values, but without character encoding
         """
-        return 'encoded-no-octal'
+        return 'encoded-no-char-encoding'
 
 
 def create_hetzner_provider_information():

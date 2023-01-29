@@ -1,0 +1,4 @@
+minor_changes:
+  - "various modules and inventory plugins - add new option ``txt_character_encoding`` which allows whether numeric escape sequences are interpreted as octals or decimals when ``txt_transformation=quoted`` (https://github.com/ansible-collections/community.dns/pull/134)."
+deprecated_features:
+  - "The default of the newly added option ``txt_character_encoding`` will change from ``octal`` to ``decimal`` in community.dns 3.0.0. The new default will be compatible with `RFC 1035 <https://www.ietf.org/rfc/rfc1035.txt>`__ (https://github.com/ansible-collections/community.dns/pull/134)."

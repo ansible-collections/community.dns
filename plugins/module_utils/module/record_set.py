@@ -87,6 +87,7 @@ def create_module_argument_spec(provider_information):
 def run_module(module, create_api, provider_information):
     option_provider = ModuleOptionProvider(module)
     record_converter = RecordConverter(provider_information, option_provider)
+    record_converter.emit_deprecations(module.deprecate)
 
     record_in = normalize_dns_name(module.params.get('record'))
     prefix_in = module.params.get('prefix')

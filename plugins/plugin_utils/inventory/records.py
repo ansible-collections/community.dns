@@ -72,6 +72,7 @@ class RecordsInventoryModule(BaseInventoryPlugin):
         try:
             self.setup_api()
             self.record_converter = RecordConverter(self.provider_information, self)
+            self.record_converter.emit_deprecations(display.deprecated)
 
             zone_name = self.get_option('zone_name')
             if self.templar.is_template(zone_name):
