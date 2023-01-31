@@ -31,8 +31,8 @@ from ..helper import (
 
 def test_user_api():
     converter = RecordConverter(
-        CustomProviderInformation(txt_record_handling='decoded'),
-        CustomProvideOptions({'txt_transformation': 'api'}))
+        CustomProviderInformation(txt_record_handling='decoded', txt_character_encoding='decimal'),
+        CustomProvideOptions({'txt_transformation': 'api', 'txt_character_encoding': 'decimal'}))
     assert converter.process_value_from_user('TXT', u'"xyz \\') == u'"xyz \\'
     assert converter.process_values_from_user('TXT', [u'"xyz \\']) == [u'"xyz \\']
     assert converter.process_value_to_user('TXT', u'"xyz \\') == u'"xyz \\'
@@ -60,31 +60,31 @@ def test_user_api():
 
 def test_user_quoted():
     converter = RecordConverter(
-        CustomProviderInformation(txt_record_handling='decoded'),
-        CustomProvideOptions({'txt_transformation': 'quoted'}))
-    assert converter.process_value_from_user('TXT', u'hëllo " w\\303\\266rld"') == u'hëllo wörld'
-    assert converter.process_values_from_user('TXT', [u'hëllo " w\\303\\266rld"']) == [u'hëllo wörld']
-    assert converter.process_value_to_user('TXT', u'hello wörld') == u'"hello w\\303\\266rld"'
-    assert converter.process_values_to_user('TXT', [u'hello wörld']) == [u'"hello w\\303\\266rld"']
+        CustomProviderInformation(txt_record_handling='decoded', txt_character_encoding='decimal'),
+        CustomProvideOptions({'txt_transformation': 'quoted', 'txt_character_encoding': 'decimal'}))
+    assert converter.process_value_from_user('TXT', u'hëllo " w\\195\\182rld"') == u'hëllo wörld'
+    assert converter.process_values_from_user('TXT', [u'hëllo " w\\195\\182rld"']) == [u'hëllo wörld']
+    assert converter.process_value_to_user('TXT', u'hello wörld') == u'"hello w\\195\\182rld"'
+    assert converter.process_values_to_user('TXT', [u'hello wörld']) == [u'"hello w\\195\\182rld"']
 
     record = DNSRecord()
     record.type = 'TXT'
 
-    record.target = u'hëllo " w\\303\\266rld"'
+    record.target = u'hëllo " w\\195\\182rld"'
     converter.process_from_user(record)
     assert record.target == u'hëllo wörld'
 
-    record.target = u'hëllo " w\\303\\266rld"'
+    record.target = u'hëllo " w\\195\\182rld"'
     converter.process_multiple_from_user([record])
     assert record.target == u'hëllo wörld'
 
     record.target = u'hello wörld'
     converter.process_to_user(record)
-    assert record.target == u'"hello w\\303\\266rld"'
+    assert record.target == u'"hello w\\195\\182rld"'
 
     record.target = u'hello wörld'
     converter.process_multiple_to_user([record])
-    assert record.target == u'"hello w\\303\\266rld"'
+    assert record.target == u'"hello w\\195\\182rld"'
 
     record.target = u'"a\\o'
     with pytest.raises(DNSConversionError) as exc:
@@ -97,8 +97,8 @@ def test_user_quoted():
 
 def test_user_unquoted():
     converter = RecordConverter(
-        CustomProviderInformation(txt_record_handling='decoded'),
-        CustomProvideOptions({'txt_transformation': 'unquoted'}))
+        CustomProviderInformation(txt_record_handling='decoded', txt_character_encoding='decimal'),
+        CustomProvideOptions({'txt_transformation': 'unquoted', 'txt_character_encoding': 'decimal'}))
     assert converter.process_value_from_user('TXT', u'hello "wörl\\d"') == u'hello "wörl\\d"'
     assert converter.process_values_from_user('TXT', [u'hello "wörl\\d"']) == [u'hello "wörl\\d"']
     assert converter.process_value_to_user('TXT', u'hello "wörl\\d"') == u'hello "wörl\\d"'
@@ -126,8 +126,8 @@ def test_user_unquoted():
 
 def test_api_decoded():
     converter = RecordConverter(
-        CustomProviderInformation(txt_record_handling='decoded'),
-        CustomProvideOptions({'txt_transformation': 'unquoted'}))
+        CustomProviderInformation(txt_record_handling='decoded', txt_character_encoding='decimal'),
+        CustomProvideOptions({'txt_transformation': 'unquoted', 'txt_character_encoding': 'decimal'}))
     record = DNSRecord()
     record.type = 'TXT'
 
@@ -168,25 +168,25 @@ def test_api_decoded():
 
 def test_api_encoded():
     converter = RecordConverter(
-        CustomProviderInformation(txt_record_handling='encoded'),
-        CustomProvideOptions({'txt_transformation': 'unquoted'}))
+        CustomProviderInformation(txt_record_handling='encoded', txt_character_encoding='decimal'),
+        CustomProvideOptions({'txt_transformation': 'unquoted', 'txt_character_encoding': 'decimal'}))
     record = DNSRecord()
     record.type = 'TXT'
 
-    record.target = u'xyz " " \\\\\\303\\266'
+    record.target = u'xyz " " \\\\\\195\\182'
     record_2 = converter.clone_from_api(record)
     assert record is not record_2
-    assert record.target == u'xyz " " \\\\\\303\\266'
+    assert record.target == u'xyz " " \\\\\\195\\182'
     print(record_2.target)
     assert record_2.target == u'xyz \\ö'
     converter.process_from_api(record)
     assert record.target == u'xyz \\ö'
 
-    record.target = u'xyz " " \\\\\\303\\266'
+    record.target = u'xyz " " \\\\\\195\\182'
     records = converter.clone_multiple_from_api([record])
     assert len(records) == 1
     assert record is not records[0]
-    assert record.target == u'xyz " " \\\\\\303\\266'
+    assert record.target == u'xyz " " \\\\\\195\\182'
     assert records[0].target == u'xyz \\ö'
     converter.process_multiple_from_api([record])
     assert record.target == u'xyz \\ö'
@@ -195,18 +195,18 @@ def test_api_encoded():
     record_2 = converter.clone_to_api(record)
     assert record is not record_2
     assert record.target == u'xyz \\ö'
-    assert record_2.target == u'"xyz \\\\\\303\\266"'
+    assert record_2.target == u'"xyz \\\\\\195\\182"'
     converter.process_to_api(record)
-    assert record.target == u'"xyz \\\\\\303\\266"'
+    assert record.target == u'"xyz \\\\\\195\\182"'
 
     record.target = u'xyz \\ö'
     records = converter.clone_multiple_to_api([record])
     assert len(records) == 1
     assert record is not records[0]
     assert record.target == u'xyz \\ö'
-    assert records[0].target == u'"xyz \\\\\\303\\266"'
+    assert records[0].target == u'"xyz \\\\\\195\\182"'
     converter.process_multiple_to_api([record])
-    assert record.target == u'"xyz \\\\\\303\\266"'
+    assert record.target == u'"xyz \\\\\\195\\182"'
 
     record.target = u'"a'
     with pytest.raises(DNSConversionError) as exc:
@@ -219,25 +219,25 @@ def test_api_encoded():
 
 def test_api_encoded_no_octal():
     converter = RecordConverter(
-        CustomProviderInformation(txt_record_handling='encoded-no-octal'),
-        CustomProvideOptions({'txt_transformation': 'unquoted'}))
+        CustomProviderInformation(txt_record_handling='encoded-no-octal', txt_character_encoding='decimal'),
+        CustomProvideOptions({'txt_transformation': 'unquoted', 'txt_character_encoding': 'decimal'}))
     record = DNSRecord()
     record.type = 'TXT'
 
-    record.target = u'xyz " " \\\\\\303\\266'
+    record.target = u'xyz " " \\\\\\195\\182'
     record_2 = converter.clone_from_api(record)
     assert record is not record_2
-    assert record.target == u'xyz " " \\\\\\303\\266'
+    assert record.target == u'xyz " " \\\\\\195\\182'
     print(record_2.target)
     assert record_2.target == u'xyz \\ö'
     converter.process_from_api(record)
     assert record.target == u'xyz \\ö'
 
-    record.target = u'xyz " " \\\\\\303\\266'
+    record.target = u'xyz " " \\\\\\195\\182'
     records = converter.clone_multiple_from_api([record])
     assert len(records) == 1
     assert record is not records[0]
-    assert record.target == u'xyz " " \\\\\\303\\266'
+    assert record.target == u'xyz " " \\\\\\195\\182'
     assert records[0].target == u'xyz \\ö'
     converter.process_multiple_from_api([record])
     assert record.target == u'xyz \\ö'

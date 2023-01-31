@@ -8,6 +8,8 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 
+import warnings
+
 from ansible.module_utils.common.text.converters import to_text
 from ansible.module_utils.six import raise_from
 
@@ -33,8 +35,32 @@ class RecordConverter(object):
         self._provider_information = provider_information
         self._option_provider = option_provider
 
-        self._txt_api_handling = self._provider_information.txt_record_handling()  # 'decoded', 'encoded', 'encoded-no-octal'
-        self._txt_transformation = self._option_provider.get_option('txt_transformation')  # 'api', 'quoted', 'unquoted'
+        # Valid values: 'decoded', 'encoded', 'encoded-no-octal' (deprecated), 'encoded-no-char-encoding'
+        self._txt_api_handling = self._provider_information.txt_record_handling()
+        if self._txt_api_handling == 'encoded-no-octal':
+            warnings.warn('provider_information.txt_record_handling() returned deprecated value "encoded-no-octal"')
+        self._txt_api_character_encoding = self._provider_information.txt_character_encoding()
+        # Valid values: 'api', 'quoted', 'unquoted'
+        self._txt_transformation = self._option_provider.get_option('txt_transformation')
+        # Valid values: 'decimal', 'octal'
+        self._txt_character_encoding = self._option_provider.get_option('txt_character_encoding')
+        self._txt_character_encoding_deprecation = False
+        if self._txt_character_encoding is None:
+            # TODO: remove implicit default in community.dns 3.0.0
+            self._txt_character_encoding = 'octal'
+            if self._txt_transformation == 'quoted':
+                self._txt_character_encoding_deprecation = True
+
+    def emit_deprecations(self, deprecator):
+        if self._txt_character_encoding_deprecation:
+            deprecator(
+                'The default of the txt_character_encoding option will change from "octal" to "decimal" in community.dns 3.0.0.'
+                ' This potentially affects you since you use txt_transformation=quoted. You can explicitly set txt_character_encoding'
+                ' to "octal" to keep the current behavior, or "decimal" to already now switch to the new behavior. We recommend'
+                ' switching to the new behavior, and using check/diff mode to figure out potential changes',
+                version='3.0.0',
+                collection_name='community.dns',
+            )
 
     def _handle_txt_api(self, to_api, record):
         """
@@ -45,11 +71,14 @@ class RecordConverter(object):
             return
 
         # We assume that records internally use decoded values
-        if self._txt_api_handling in ('encoded', 'encoded-no-octal'):
+        if self._txt_api_handling in ('encoded', 'encoded-no-octal', 'encoded-no-char-encoding'):
             if to_api:
-                record.target = encode_txt_value(record.target, use_octal=self._txt_api_handling == 'encoded')
+                record.target = encode_txt_value(
+                    record.target,
+                    use_character_encoding=self._txt_api_handling == 'encoded',
+                    character_encoding=self._txt_api_character_encoding)
             else:
-                record.target = decode_txt_value(record.target)
+                record.target = decode_txt_value(record.target, character_encoding=self._txt_api_character_encoding)
 
     def _handle_txt_user(self, to_user, record):
         """
@@ -62,9 +91,9 @@ class RecordConverter(object):
         # We assume that records internally use decoded values
         if self._txt_transformation == 'quoted':
             if to_user:
-                record.target = encode_txt_value(record.target)
+                record.target = encode_txt_value(record.target, character_encoding=self._txt_character_encoding)
             else:
-                record.target = decode_txt_value(record.target)
+                record.target = decode_txt_value(record.target, character_encoding=self._txt_character_encoding)
 
     def process_from_api(self, record):
         """
