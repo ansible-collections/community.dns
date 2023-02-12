@@ -9,11 +9,9 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-import json
-
 import pytest
 
-from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import MagicMock, patch
+from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import MagicMock
 
 from ansible_collections.community.dns.plugins.module_utils.record import (
     DNSRecord,
@@ -24,8 +22,6 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 )
 
 from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
-    _create_record_from_json,
-    _record_to_json,
     HetznerAPI,
 )
 

@@ -18,7 +18,6 @@ from ansible_collections.community.dns.plugins.module_utils.conversion.base impo
 )
 
 from ansible_collections.community.dns.plugins.module_utils.conversion.txt import (
-    _parse_quoted,
     _get_utf8_length,
     decode_txt_value,
     encode_txt_value,
