@@ -16,7 +16,7 @@ from ansible_collections.community.internal_test_tools.tests.unit.utils.fetch_ur
 from ansible_collections.community.dns.plugins.modules import hosttech_dns_record
 
 # These imports are needed so patching below works
-import ansible_collections.community.dns.plugins.module_utils.http  # noqa
+import ansible_collections.community.dns.plugins.module_utils.http  # noqa: F401, pylint: disable=unused-import
 
 from .hosttech import (
     expect_wsdl_authentication,
