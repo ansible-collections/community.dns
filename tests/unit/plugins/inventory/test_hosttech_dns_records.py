@@ -6,17 +6,10 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 
-import json
 import os
 import textwrap
 
-import pytest
-
-from mock import MagicMock
-
 from ansible import constants as C
-from ansible.errors import AnsibleError
-from ansible.inventory.data import InventoryData
 from ansible.inventory.manager import InventoryManager
 from ansible.module_utils.common.text.converters import to_native
 
@@ -26,8 +19,6 @@ from ansible_collections.community.internal_test_tools.tests.unit.utils.open_url
     OpenUrlCall,
     OpenUrlProxy,
 )
-
-from ansible_collections.community.dns.plugins.inventory.hosttech_dns_records import InventoryModule
 
 
 HOSTTECH_WSDL_DEFAULT_ENTRIES = [
