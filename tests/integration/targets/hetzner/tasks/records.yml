@@ -15,7 +15,7 @@
         ttl: 300
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
-      ignore_errors: yes
+      ignore_errors: true
 
     - name: verify graceful error handling
       assert:
@@ -34,7 +34,7 @@
       hetzner_dns_zone_info:
         zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
-      check_mode: yes
+      check_mode: true
       register: ZONES
 
     - name: add record
@@ -79,7 +79,7 @@
         type: CNAME
         zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
-      check_mode: yes
+      check_mode: true
 
     - name: add record no change
       hetzner_dns_record:
@@ -113,7 +113,7 @@
         type: CNAME
         ttl: 60
         hetzner_token: "{{ hetzner_token }}"
-      check_mode: yes
+      check_mode: true
       register: RECORD
       diff: true
 
