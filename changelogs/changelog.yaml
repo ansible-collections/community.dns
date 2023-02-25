@@ -571,3 +571,12 @@ releases:
     - txt-quoting.yml
     - update-psl.yml
     release_date: '2023-01-31'
+  2.5.1:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      release_summary: Maintenance release (updated PSL).
+    fragments:
+    - 2.5.1.yml
+    - update-psl.yml
+    release_date: '2023-02-25'
