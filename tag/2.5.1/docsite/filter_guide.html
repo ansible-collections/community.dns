@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community.Dns Filter Guide &mdash; Community.Dns Collection  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/ansible.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/antsibull-minimal.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/rtd-ethical-ads.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/images/Ansible-Mark-RGB_Black.png"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Hetzner DNS Guide" href="hetzner_guide.html" />
+    <link rel="prev" title="Community.Dns" href="../index.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
+
+
+
+
+</head>
+
+<body class="wy-body-for-nav"><!-- extra body elements for Ansible beyond RTD Sphinx Theme -->
+
+<div class="DocSite-globalNav ansibleNav">
+  <ul>
+    <li><a href="https://www.ansible.com/ansiblefest" target="_blank">AnsibleFest</a></li>
+    <li><a href="https://www.ansible.com/tower" target="_blank">Products</a></li>
+    <li><a href="https://www.ansible.com/community" target="_blank">Community</a></li>
+    <li><a href="https://www.ansible.com/webinars-training" target="_blank">Webinars & Training</a></li>
+    <li><a href="https://www.ansible.com/blog" target="_blank">Blog</a></li>
+  </ul>
+</div>
+
+<a class="DocSite-nav" href="https://ansible-collections.github.io/community.dns/branch/main/" style="padding-bottom: 30px;">
+
+  <img class="DocSiteNav-logo"
+    src="../_static/images/Ansible-Mark-RGB_White.png"
+    alt="Ansible Logo">
+  <div class="DocSiteNav-title">Community.Dns Collection Docs</div>
+</a>
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Community.Dns Collection
+          </a><!--- Based on https://github.com/rtfd/sphinx_rtd_theme/pull/438/files -->
+
+<div class="version">
+  
+    
+  
+</div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <label class="sr-only" for="q">Search docs:</label>
+    <input type="text" class="st-default-search-input" id="q" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Community.Dns Filter Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#working-with-public-suffixes">Working with public suffixes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#working-with-registrable-domain-names">Working with registrable domain names</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_guide.html">Hetzner DNS Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_guide.html">HostTech DNS Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hetzner_dns_record_module.html">community.dns.hetzner_dns_record module – Add or delete a single record in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hetzner_dns_record_info_module.html">community.dns.hetzner_dns_record_info module – Retrieve records in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hetzner_dns_record_set_module.html">community.dns.hetzner_dns_record_set module – Add or delete record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hetzner_dns_record_set_info_module.html">community.dns.hetzner_dns_record_set_info module – Retrieve record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hetzner_dns_record_sets_module.html">community.dns.hetzner_dns_record_sets module – Bulk synchronize DNS record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hetzner_dns_zone_info_module.html">community.dns.hetzner_dns_zone_info module – Retrieve zone information in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hosttech_dns_record_module.html">community.dns.hosttech_dns_record module – Add or delete a single record in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hosttech_dns_record_info_module.html">community.dns.hosttech_dns_record_info module – Retrieve records in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hosttech_dns_record_set_module.html">community.dns.hosttech_dns_record_set module – Add or delete record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hosttech_dns_record_set_info_module.html">community.dns.hosttech_dns_record_set_info module – Retrieve record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hosttech_dns_record_sets_module.html">community.dns.hosttech_dns_record_sets module – Bulk synchronize DNS record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hosttech_dns_zone_info_module.html">community.dns.hosttech_dns_zone_info module – Retrieve zone information in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wait_for_txt_module.html">community.dns.wait_for_txt module – Wait for TXT entries to be available on all authoritative nameservers</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../get_public_suffix_filter.html">community.dns.get_public_suffix filter – Returns the public suffix of a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_registrable_domain_filter.html">community.dns.get_registrable_domain filter – Returns the registrable domain name of a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../remove_public_suffix_filter.html">community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../remove_registrable_domain_filter.html">community.dns.remove_registrable_domain filter – Removes the registrable domain name from a DNS name</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hetzner_dns_records_inventory.html">community.dns.hetzner_dns_records inventory – Create inventory from Hetzner DNS records</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hosttech_dns_records_inventory.html">community.dns.hosttech_dns_records inventory – Create inventory from Hosttech DNS records</a></li>
+</ul>
+<!-- extra nav elements for Ansible beyond RTD Sphinx Theme -->
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Community.Dns Collection</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Community.Dns Filter Guide</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+  
+           <div itemprop="articleBody">
+             
+  <section id="community-dns-filter-guide">
+<span id="ansible-collections-community-dns-docsite-filter-guide"></span><h1>Community.Dns Filter Guide<a class="headerlink" href="#community-dns-filter-guide" title="Permalink to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#working-with-public-suffixes" id="id1">Working with public suffixes</a></p></li>
+<li><p><a class="reference internal" href="#working-with-registrable-domain-names" id="id2">Working with registrable domain names</a></p></li>
+</ul>
+</nav>
+<p>The <a class="reference internal" href="../index.html#plugins-in-community-dns"><span class="std std-ref">community.dns collection</span></a> offers several filters for working with DNS names:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../get_public_suffix_filter.html#ansible-collections-community-dns-get-public-suffix-filter"><span class="std std-ref">community.dns.get_public_suffix</span></a>: given a domain name, returns the public suffix;</p></li>
+<li><p><a class="reference internal" href="../get_registrable_domain_filter.html#ansible-collections-community-dns-get-registrable-domain-filter"><span class="std std-ref">community.dns.get_registrable_domain</span></a>: given a domain name, returns the registrable domain name;</p></li>
+<li><p><a class="reference internal" href="../remove_public_suffix_filter.html#ansible-collections-community-dns-remove-public-suffix-filter"><span class="std std-ref">community.dns.remove_public_suffix</span></a>: given a domain name, returns the part before the public suffix;</p></li>
+<li><p><a class="reference internal" href="../remove_registrable_domain_filter.html#ansible-collections-community-dns-remove-registrable-domain-filter"><span class="std std-ref">community.dns.remove_registrable_domain</span></a>: given a domain name, returns the part before the registrable domain name.</p></li>
+</ul>
+<p>These filters allow to work with <a class="reference external" href="https://en.wikipedia.org/wiki/Public_Suffix_List">public suffixes</a>; a <em>public suffix</em> is a DNS suffix under which users can (or could) directly register names. They use the <a class="reference external" href="https://publicsuffix.org/">Public Suffix List</a>, a Mozilla initiative maintained as a community resource which tries to list all such public suffixes. Common examples for public suffixes are <code class="docutils literal notranslate"><span class="pre">.com</span></code>, <code class="docutils literal notranslate"><span class="pre">.net</span></code>, but also longer suffixes such as <code class="docutils literal notranslate"><span class="pre">.co.uk</span></code> or <code class="docutils literal notranslate"><span class="pre">.github.io</span></code>.</p>
+<p>The label directly before the public suffix together with the suffix is called the <em>registrable domain name</em> or <em>registered domain name</em>, since these are usually the names that people can register. Examples for registrable domain names are <code class="docutils literal notranslate"><span class="pre">example.com</span></code> and <code class="docutils literal notranslate"><span class="pre">example.co.uk</span></code>, while <code class="docutils literal notranslate"><span class="pre">www.example.com</span></code> is not a registrable domain name. A public suffix itself is also not a registrable domain name, as for example <code class="docutils literal notranslate"><span class="pre">github.io</span></code>.</p>
+<section id="working-with-public-suffixes">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Working with public suffixes</a><a class="headerlink" href="#working-with-public-suffixes" title="Permalink to this heading"></a></h2>
+<p>The <a class="reference internal" href="../get_public_suffix_filter.html#ansible-collections-community-dns-get-public-suffix-filter"><span class="std std-ref">community.dns.get_public_suffix</span></a> and <a class="reference internal" href="../remove_public_suffix_filter.html#ansible-collections-community-dns-remove-public-suffix-filter"><span class="std std-ref">community.dns.remove_public_suffix</span></a> filters allow to extract and remove public suffixes from DNS names:</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">assert</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">that</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">        </span><span class="no">&quot;www.ansible.com&quot; | community.dns.get_public_suffix == &quot;.com&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">        </span><span class="no">&quot;some.random.prefixes.ansible.co.uk&quot; | community.dns.get_public_suffix == &quot;.co.uk&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">        </span><span class="no">&quot;www.ansible.com&quot; | community.dns.remove_public_suffix == &quot;www.ansible&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">        </span><span class="no">&quot;some.random.prefixes.ansible.co.uk&quot; | community.dns.remove_public_suffix == &quot;some.random.prefixes.ansible&quot;</span>
+</pre></div>
+</div>
+<p>The filters also allow additional options (keyword arguments):</p>
+<dl class="field-list simple">
+<dt class="field-odd">keep_unknown_suffix<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A boolean with default value <code class="docutils literal notranslate"><span class="pre">true</span></code>. This treats unknown TLDs as valid public suffixes. So for example the public suffix of <code class="docutils literal notranslate"><span class="pre">example.tlddoesnotexist</span></code> is <code class="docutils literal notranslate"><span class="pre">.tlddoesnotexist</span></code> if this is <code class="docutils literal notranslate"><span class="pre">true</span></code>. If set to <code class="docutils literal notranslate"><span class="pre">false</span></code>, it will return an empty string in this case. This option corresponds to whether the global wildcard rule <code class="docutils literal notranslate"><span class="pre">*</span></code> in the Public Suffix List is used or not.</p>
+</dd>
+<dt class="field-even">icann_only<span class="colon">:</span></dt>
+<dd class="field-even"><p>A boolean with default value <code class="docutils literal notranslate"><span class="pre">false</span></code>. This controls whether only entries from the ICANN section of the Public Suffix List are used, or also entries from the Private section. For example, <code class="docutils literal notranslate"><span class="pre">.co.uk</span></code> is in the ICANN section, but <code class="docutils literal notranslate"><span class="pre">github.io</span></code> is in the Private section.</p>
+</dd>
+<dt class="field-odd">normalize_result<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(Only for <a class="reference internal" href="../get_public_suffix_filter.html#ansible-collections-community-dns-get-public-suffix-filter"><span class="std std-ref">community.dns.get_public_suffix</span></a>) A boolean with default value <code class="docutils literal notranslate"><span class="pre">false</span></code>. This controls whether the result is reconstructed from the normalized name used during lookup. During normalization, ulabels are converted to alabels, and every label is converted to lowercase. For example, the ulabel <code class="docutils literal notranslate"><span class="pre">ëçãmplê</span></code> is converted to <code class="docutils literal notranslate"><span class="pre">xn--mpl-llatwb</span></code> (puny-code), and <code class="docutils literal notranslate"><span class="pre">Example.COM</span></code> is converted to <code class="docutils literal notranslate"><span class="pre">example.com</span></code>.</p>
+</dd>
+<dt class="field-even">keep_leading_period<span class="colon">:</span></dt>
+<dd class="field-even"><p>(Only for <a class="reference internal" href="../get_public_suffix_filter.html#ansible-collections-community-dns-get-public-suffix-filter"><span class="std std-ref">community.dns.get_public_suffix</span></a>) A boolean with default value <code class="docutils literal notranslate"><span class="pre">true</span></code>. This controls whether the leading period of a public suffix is preserved or not.</p>
+</dd>
+<dt class="field-odd">keep_trailing_period<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(Only for <a class="reference internal" href="../remove_public_suffix_filter.html#ansible-collections-community-dns-remove-public-suffix-filter"><span class="std std-ref">community.dns.remove_public_suffix</span></a>) A boolean with default value <code class="docutils literal notranslate"><span class="pre">false</span></code>. This controls whether the trailing period of the prefix (that is, the part before the public suffix) is preserved or not.</p>
+</dd>
+</dl>
+</section>
+<section id="working-with-registrable-domain-names">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Working with registrable domain names</a><a class="headerlink" href="#working-with-registrable-domain-names" title="Permalink to this heading"></a></h2>
+<p>The <a class="reference internal" href="../get_registrable_domain_filter.html#ansible-collections-community-dns-get-registrable-domain-filter"><span class="std std-ref">community.dns.get_registrable_domain</span></a> and <a class="reference internal" href="../remove_registrable_domain_filter.html#ansible-collections-community-dns-remove-registrable-domain-filter"><span class="std std-ref">community.dns.remove_registrable_domain</span></a> filters allow to extract and remove registrable domain names from DNS names:</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">assert</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">that</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">        </span><span class="no">&quot;www.ansible.com&quot; | community.dns.get_registrable_domain == &quot;ansible.com&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">        </span><span class="no">&quot;some.random.prefixes.ansible.co.uk&quot; | community.dns.get_registrable_domain == &quot;ansible.co.uk&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">        </span><span class="no">&quot;www.ansible.com&quot; | community.dns.remove_registrable_domain == &quot;www&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">        </span><span class="no">&quot;some.random.prefixes.ansible.co.uk&quot; | community.dns.remove_registrable_domain == &quot;some.random.prefixes&quot;</span>
+</pre></div>
+</div>
+<p>The filters also allow additional options (keyword arguments):</p>
+<dl class="field-list simple">
+<dt class="field-odd">keep_unknown_suffix<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A boolean with default value <code class="docutils literal notranslate"><span class="pre">true</span></code>. This treats unknown TLDs as valid public suffixes. So for example the public suffix of <code class="docutils literal notranslate"><span class="pre">example.tlddoesnotexist</span></code> is <code class="docutils literal notranslate"><span class="pre">.tlddoesnotexist</span></code> if this is <code class="docutils literal notranslate"><span class="pre">true</span></code>, and hence the registrable domain of <code class="docutils literal notranslate"><span class="pre">www.example.tlddoesnotexist</span></code> is <code class="docutils literal notranslate"><span class="pre">example.tlddoesnotexist</span></code>. If set to <code class="docutils literal notranslate"><span class="pre">false</span></code>, the registrable domain of <code class="docutils literal notranslate"><span class="pre">www.example.tlddoesnotexist</span></code> is <code class="docutils literal notranslate"><span class="pre">tlddoesnotexist</span></code>. This option corresponds to whether the global wildcard rule <code class="docutils literal notranslate"><span class="pre">*</span></code> in the Public Suffix List is used or not.</p>
+</dd>
+<dt class="field-even">icann_only<span class="colon">:</span></dt>
+<dd class="field-even"><p>A boolean with default value <code class="docutils literal notranslate"><span class="pre">false</span></code>. This controls whether only entries from the ICANN section of the Public Suffix List are used, or also entries from the Private section. For example, <code class="docutils literal notranslate"><span class="pre">.co.uk</span></code> is in the ICANN section, but <code class="docutils literal notranslate"><span class="pre">github.io</span></code> is in the Private section.</p>
+</dd>
+<dt class="field-odd">only_if_registerable<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A boolean with default value <code class="docutils literal notranslate"><span class="pre">true</span></code>. This controls the behavior in case there is no label in front of the public suffix. This is the case if the DNS name itself is a public suffix. If set to <code class="docutils literal notranslate"><span class="pre">false</span></code>, in this case the public suffix is treated as a registrable domain. If set to <code class="docutils literal notranslate"><span class="pre">true</span></code> (default), the registrable domain of a public suffix is interpreted as an empty string.</p>
+</dd>
+<dt class="field-even">normalize_result<span class="colon">:</span></dt>
+<dd class="field-even"><p>(Only for <a class="reference internal" href="../get_registrable_domain_filter.html#ansible-collections-community-dns-get-registrable-domain-filter"><span class="std std-ref">community.dns.get_registrable_domain</span></a>) A boolean with default value <code class="docutils literal notranslate"><span class="pre">false</span></code>. This controls whether the result is reconstructed from the normalized name used during lookup. During normalization, ulabels are converted to alabels, and every label is converted to lowercase. For example, the ulabel <code class="docutils literal notranslate"><span class="pre">ëçãmplê</span></code> is converted to <code class="docutils literal notranslate"><span class="pre">xn--mpl-llatwb</span></code> (puny-code), and <code class="docutils literal notranslate"><span class="pre">Example.COM</span></code> is converted to <code class="docutils literal notranslate"><span class="pre">example.com</span></code>.</p>
+</dd>
+<dt class="field-odd">keep_trailing_period<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(Only for <a class="reference internal" href="../remove_registrable_domain_filter.html#ansible-collections-community-dns-remove-registrable-domain-filter"><span class="std std-ref">community.dns.remove_registrable_domain</span></a>) A boolean with default value <code class="docutils literal notranslate"><span class="pre">false</span></code>. This controls whether the trailing period of the prefix (that is, the part before the registrable domain) is preserved or not.</p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+<footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Community.Dns" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="hetzner_guide.html" class="btn btn-neutral float-right" title="Hetzner DNS Guide" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Community.Dns Contributors.</p>
+  </div>
+
+  
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script><!-- extra footer elements for Ansible beyond RTD Sphinx Theme -->
+
+</body>
+</html>
