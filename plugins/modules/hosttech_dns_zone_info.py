@@ -69,7 +69,12 @@ zone_info:
     type: dict
     returned: success
     version_added: 2.0.0
-    sample: {'dnssec': True, 'dnssec_email': 'test@example.com', 'ds_records': [], 'email': 'test@example.com', 'ttl': 3600}
+    sample:
+        dnssec: true
+        dnssec_email: test@example.com
+        ds_records: []
+        email: test@example.com
+        ttl: 3600
     contains:
         dnssec:
             description:
