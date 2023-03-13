@@ -32,9 +32,6 @@ jobs:
       init-extra-html-theme-options: |
         documentation_home_url=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/branch/main/
       render-file-line: '> * `$<status>` [$<path_tail>](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr/${{ github.event.number }}/$<path_tail>)'
-      # TODO: remove the next two lines when semantic markup has been finalized
-      init-antsibull-docs-version: semantic-markup
-      init-antsibull-docs-repository: felixfontein/antsibull-docs
 
   publish-docs-gh-pages:
     # for now we won't run this on forks
