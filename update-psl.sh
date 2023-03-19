@@ -5,7 +5,11 @@
 
 set +eux
 
-curl https://publicsuffix.org/list/public_suffix_list.dat --output plugins/public_suffix_list.dat
+# Sometimes the version on publicsuffix.org differs depending on from where you request it over many hours,
+# so for now let's directly fetch it from GitHub.
+
+# curl https://publicsuffix.org/list/public_suffix_list.dat --output plugins/public_suffix_list.dat
+curl https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat --output plugins/public_suffix_list.dat
 
 git status plugins/public_suffix_list.dat
 
