@@ -147,7 +147,7 @@
 <h1>community.dns.hosttech_dns_record_sets module – Bulk synchronize DNS record sets in Hosttech DNS service<a class="headerlink" href="#community-dns-hosttech-dns-record-sets-module-bulk-synchronize-dns-record-sets-in-hosttech-dns-service" title="Permalink to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/community/dns">community.dns collection</a> (version 2.5.1).</p>
+<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/community/dns">community.dns collection</a> (version 2.5.2).</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">community.dns</span></code>.
 You need further requirements to be able to use this module,
 see <a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-sets-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
@@ -208,7 +208,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 </div></td>
 <td><div class="ansible-option-cell"><p>The password for the Hosttech API user.</p>
 <p>Mutually exclusive with <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-hosttech-username"><span class="std std-ref"><span class="pre">hosttech_username</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-hosttech-password"><span class="std std-ref"><span class="pre">hosttech_password</span></span></a></strong></code>.</p>
-<p>Since community.dns 1.2.0, the alias <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-api-token"><span class="std std-ref"><span class="pre">api_token</span></span></a></strong></code> can be used.</p>
+<p>Since community.dns 1.2.0, the alias <code class="ansible-option docutils literal notranslate"><strong><span class="pre">api_token</span></strong></code> can be used.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -224,7 +224,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <div class="ansibleOptionAnchor" id="parameter-prune"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-prune"><strong>prune</strong></p>
 <a class="ansibleOptionLink" href="#parameter-prune" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>If set to <code class="ansible-value docutils literal notranslate"><span class="pre">true</span></code>, will remove all existing records in the zone that are not listed in <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-records"><span class="std std-ref"><span class="pre">records</span></span></a></strong></code>.</p>
+<td><div class="ansible-option-cell"><p>If set to <code class="ansible-value docutils literal notranslate"><span class="pre">true</span></code>, will remove all existing records in the zone that are not listed in <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-record-sets"><span class="std std-ref"><span class="pre">record_sets</span></span></a></strong></code>.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
 <li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">false</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
