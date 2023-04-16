@@ -16,6 +16,7 @@ short_description: Wait for TXT entries to be available on all authoritative nam
 version_added: 0.1.0
 description:
     - Wait for TXT entries with specific values to show up on B(all) authoritative nameservers for the DNS name.
+    - M(foo).
 extends_documentation_fragment:
     - community.dns.attributes
 attributes:
