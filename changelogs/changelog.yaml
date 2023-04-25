@@ -590,3 +590,12 @@ releases:
     - 2.5.2.yml
     - update-psl.yml
     release_date: '2023-03-27'
+  2.5.3:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      release_summary: Maintenance release with updated PSL.
+    fragments:
+    - 2.5.3.yml
+    - update-psl.yml
+    release_date: '2023-04-25'
