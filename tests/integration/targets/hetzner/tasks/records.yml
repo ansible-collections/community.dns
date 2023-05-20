@@ -15,13 +15,12 @@
         ttl: 300
         hetzner_token: "{{ hetzner_token }}"
       register: RECORD
-      ignore_errors: true
+      failed_when: RECORD is not failed
 
     - name: verify graceful error handling
       assert:
         that:
           - RECORD is not changed
-          - RECORD is failed
           - 'RECORD.msg == "Zone not found"'
 
     - name: fetch zone info
