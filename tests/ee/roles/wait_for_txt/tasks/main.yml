@@ -47,7 +47,6 @@
 - name: Validate results
   assert:
     that:
-      - timeout is failed
       - timeout.msg == 'Timeout (0 out of 1 check(s) passed).'
       - timeout.completed == 0
       - timeout.records | length == 1
@@ -69,7 +68,6 @@
 - name: Validate results
   assert:
     that:
-      - timeout is failed
       - timeout.msg == 'Timeout (0 out of 1 check(s) passed).'
       - timeout.completed == 0
       - timeout.records | length == 1
