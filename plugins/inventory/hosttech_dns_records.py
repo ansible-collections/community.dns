@@ -23,7 +23,7 @@ description:
 
 options:
     plugin:
-        description: The name of this plugin. Should always be set to C(community.dns.hosttech_dns_records) for this plugin to recognize it as its own.
+        description: The name of this plugin. Should always be set to V(community.dns.hosttech_dns_records) for this plugin to recognize it as its own.
         # TODO: add `required: true` in 3.0.0
         # required: true
         choices:

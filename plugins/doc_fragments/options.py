@@ -53,7 +53,7 @@ options:
         default: unquoted
     txt_character_encoding:
         description:
-            - Whether to treat numeric escape sequences (C(\xyz)) as octal or decimal numbers.
+            - Whether to treat numeric escape sequences (V(\\xyz)) as octal or decimal numbers.
               This is only used when O(txt_transformation=quoted).
             - The current default is V(octal) which is deprecated. It will change to V(decimal) in
               community.dns 3.0.0. The value V(decimal) is compatible to L(RFC 1035, https://www.ietf.org/rfc/rfc1035.txt).
