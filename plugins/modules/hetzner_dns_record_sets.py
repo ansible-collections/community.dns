@@ -22,6 +22,7 @@ description:
 
 extends_documentation_fragment:
     - community.dns.hetzner
+    - community.dns.hetzner.record_notes
     - community.dns.hetzner.record_type_choices_record_sets_module
     - community.dns.hetzner.zone_id_type
     - community.dns.module_record_sets
