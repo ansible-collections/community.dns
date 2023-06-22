@@ -193,8 +193,8 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <a class="ansibleOptionLink" href="#parameter-hosttech_password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The password for the Hosttech API user.</p>
-<p>If provided, <em>hosttech_username</em> must also be provided.</p>
-<p>Mutually exclusive with <em>hosttech_token</em>.</p>
+<p>If provided, <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-zone-info-module-parameter-hosttech-username"><span class="std std-ref"><span class="pre">hosttech_username</span></span></a></strong></code> must also be provided.</p>
+<p>Mutually exclusive with <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-zone-info-module-parameter-hosttech-token"><span class="std std-ref"><span class="pre">hosttech_token</span></span></a></strong></code>.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -205,8 +205,8 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <p><span class="ansible-option-versionadded">added in community.dns 0.2.0</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The password for the Hosttech API user.</p>
-<p>Mutually exclusive with <em>hosttech_username</em> and <em>hosttech_password</em>.</p>
-<p>Since community.dns 1.2.0, the alias <em>api_token</em> can be used.</p>
+<p>Mutually exclusive with <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-zone-info-module-parameter-hosttech-username"><span class="std std-ref"><span class="pre">hosttech_username</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-zone-info-module-parameter-hosttech-password"><span class="std std-ref"><span class="pre">hosttech_password</span></span></a></strong></code>.</p>
+<p>Since community.dns 1.2.0, the alias <code class="ansible-option docutils literal notranslate"><strong><span class="pre">api_token</span></strong></code> can be used.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -214,8 +214,8 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <a class="ansibleOptionLink" href="#parameter-hosttech_username" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The username for the Hosttech API user.</p>
-<p>If provided, <em>hosttech_password</em> must also be provided.</p>
-<p>Mutually exclusive with <em>hosttech_token</em>.</p>
+<p>If provided, <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-zone-info-module-parameter-hosttech-password"><span class="std std-ref"><span class="pre">hosttech_password</span></span></a></strong></code> must also be provided.</p>
+<p>Mutually exclusive with <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-zone-info-module-parameter-hosttech-token"><span class="std std-ref"><span class="pre">hosttech_token</span></span></a></strong></code>.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -224,7 +224,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <p><span class="ansible-option-versionadded">added in community.dns 0.2.0</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The ID of the DNS zone to query.</p>
-<p>Exactly one of <em>zone_name</em> and <em>zone_id</em> must be specified.</p>
+<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-zone-info-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-zone-info-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -234,7 +234,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The DNS zone to query.</p>
-<p>Exactly one of <em>zone_name</em> and <em>zone_id</em> must be specified.</p>
+<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-zone-info-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-zone-info-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
 </tbody>
@@ -330,7 +330,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <a class="ansibleOptionLink" href="#return-zone_info/dnssec" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Whether DNSSEC is enabled for the zone or not.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> When <em>hosttech_token</em> has been specified.</p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> When <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-zone-info-module-parameter-hosttech-token"><span class="std std-ref"><span class="pre">hosttech_token</span></span></a></strong></code> has been specified.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -338,8 +338,8 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <a class="ansibleOptionLink" href="#return-zone_info/dnssec_email" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The email address contacted when the DNSSEC key is changed.</p>
-<p>Is <code class="docutils literal notranslate"><span class="pre">none</span></code> if DNSSEC is not enabled.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> When <em>hosttech_token</em> has been specified.</p>
+<p>Is <code class="ansible-value docutils literal notranslate"><span class="pre">none</span></code> if DNSSEC is not enabled.</p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> When <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-zone-info-module-parameter-hosttech-token"><span class="std std-ref"><span class="pre">hosttech_token</span></span></a></strong></code> has been specified.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -348,8 +348,8 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The DS records.</p>
 <p>See <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc4034#section-5">Section 5 of RFC 4034</a> and <a class="reference external" href="https://datatracker.ietf.org/doc/html/rfc4034#section-2.1">Section 2.1 of RFC 4034</a> for details.</p>
-<p>Is <code class="docutils literal notranslate"><span class="pre">none</span></code> if DNSSEC is not enabled.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> When <em>hosttech_token</em> has been specified.</p>
+<p>Is <code class="ansible-value docutils literal notranslate"><span class="pre">none</span></code> if DNSSEC is not enabled.</p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> When <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-zone-info-module-parameter-hosttech-token"><span class="std std-ref"><span class="pre">hosttech_token</span></span></a></strong></code> has been specified.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">

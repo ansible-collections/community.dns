@@ -194,8 +194,8 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <a class="ansibleOptionLink" href="#parameter-hosttech_password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The password for the Hosttech API user.</p>
-<p>If provided, <em>hosttech_username</em> must also be provided.</p>
-<p>Mutually exclusive with <em>hosttech_token</em>.</p>
+<p>If provided, <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-hosttech-username"><span class="std std-ref"><span class="pre">hosttech_username</span></span></a></strong></code> must also be provided.</p>
+<p>Mutually exclusive with <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-hosttech-token"><span class="std std-ref"><span class="pre">hosttech_token</span></span></a></strong></code>.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -206,8 +206,8 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <p><span class="ansible-option-versionadded">added in community.dns 0.2.0</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The password for the Hosttech API user.</p>
-<p>Mutually exclusive with <em>hosttech_username</em> and <em>hosttech_password</em>.</p>
-<p>Since community.dns 1.2.0, the alias <em>api_token</em> can be used.</p>
+<p>Mutually exclusive with <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-hosttech-username"><span class="std std-ref"><span class="pre">hosttech_username</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-hosttech-password"><span class="std std-ref"><span class="pre">hosttech_password</span></span></a></strong></code>.</p>
+<p>Since community.dns 1.2.0, the alias <code class="ansible-option docutils literal notranslate"><strong><span class="pre">api_token</span></strong></code> can be used.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -215,20 +215,20 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <a class="ansibleOptionLink" href="#parameter-hosttech_username" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The username for the Hosttech API user.</p>
-<p>If provided, <em>hosttech_password</em> must also be provided.</p>
-<p>Mutually exclusive with <em>hosttech_token</em>.</p>
+<p>If provided, <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-hosttech-password"><span class="std std-ref"><span class="pre">hosttech_password</span></span></a></strong></code> must also be provided.</p>
+<p>Mutually exclusive with <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-hosttech-token"><span class="std std-ref"><span class="pre">hosttech_token</span></span></a></strong></code>.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-on_existing"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-on-existing"><strong>on_existing</strong></p>
 <a class="ansibleOptionLink" href="#parameter-on_existing" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>This option defines the behavior if the record set already exists, but differs from the specified record set. For this comparison, <em>value</em> and <em>ttl</em> are used for all records of type <em>type</em> matching the <em>prefix</em> resp. <em>record</em>.</p>
-<p>If set to <code class="docutils literal notranslate"><span class="pre">replace</span></code>, the record will be updated (<em>state=present</em>) or removed (<em>state=absent</em>). This is the old <em>overwrite=true</em> behavior.</p>
-<p>If set to <code class="docutils literal notranslate"><span class="pre">keep_and_fail</span></code>, the module will fail and not modify the records. This is the old <em>overwrite=false</em> behavior if <em>state=present</em>.</p>
-<p>If set to <code class="docutils literal notranslate"><span class="pre">keep_and_warn</span></code>, the module will warn and not modify the records.</p>
-<p>If set to <code class="docutils literal notranslate"><span class="pre">keep</span></code>, the module will not modify the records. This is the old <em>overwrite=false</em> behavior if <em>state=absent</em>.</p>
-<p>If <em>state=absent</em> and the value is not <code class="docutils literal notranslate"><span class="pre">replace</span></code>, <em>value</em> must be specified.</p>
+<td><div class="ansible-option-cell"><p>This option defines the behavior if the record set already exists, but differs from the specified record set. For this comparison, <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-value"><span class="std std-ref"><span class="pre">value</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-ttl"><span class="std std-ref"><span class="pre">ttl</span></span></a></strong></code> are used for all records of type <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-type"><span class="std std-ref"><span class="pre">type</span></span></a></strong></code> matching the <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-prefix"><span class="std std-ref"><span class="pre">prefix</span></span></a></strong></code> resp. <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-record"><span class="std std-ref"><span class="pre">record</span></span></a></strong></code>.</p>
+<p>If set to <code class="ansible-value docutils literal notranslate"><span class="pre">replace</span></code>, the record will be updated (<code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>) or removed (<code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code>). This is the old <code class="ansible-option-value docutils literal notranslate"><span class="pre">overwrite=true</span></code> behavior.</p>
+<p>If set to <code class="ansible-value docutils literal notranslate"><span class="pre">keep_and_fail</span></code>, the module will fail and not modify the records. This is the old <code class="ansible-option-value docutils literal notranslate"><span class="pre">overwrite=false</span></code> behavior if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>.</p>
+<p>If set to <code class="ansible-value docutils literal notranslate"><span class="pre">keep_and_warn</span></code>, the module will warn and not modify the records.</p>
+<p>If set to <code class="ansible-value docutils literal notranslate"><span class="pre">keep</span></code>, the module will not modify the records. This is the old <code class="ansible-option-value docutils literal notranslate"><span class="pre">overwrite=false</span></code> behavior if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code>.</p>
+<p>If <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code> and the value is not <code class="ansible-value docutils literal notranslate"><span class="pre">replace</span></code>, <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-value"><span class="std std-ref"><span class="pre">value</span></span></a></strong></code> must be specified.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
 <li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">&quot;replace&quot;</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
@@ -244,8 +244,8 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <p><span class="ansible-option-versionadded">added in community.dns 0.2.0</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The prefix of the DNS record.</p>
-<p>This is the part of <em>record</em> before <em>zone_name</em>. For example, if the record to be modified is <code class="docutils literal notranslate"><span class="pre">www.example.com</span></code> for the zone <code class="docutils literal notranslate"><span class="pre">example.com</span></code>, the prefix is <code class="docutils literal notranslate"><span class="pre">www</span></code>. If the record in this example would be <code class="docutils literal notranslate"><span class="pre">example.com</span></code>, the prefix would be <code class="docutils literal notranslate"><span class="pre">''</span></code> (empty string).</p>
-<p>Exactly one of <em>record</em> and <em>prefix</em> must be specified.</p>
+<p>This is the part of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-record"><span class="std std-ref"><span class="pre">record</span></span></a></strong></code> before <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code>. For example, if the record to be modified is <code class="docutils literal notranslate"><span class="pre">www.example.com</span></code> for the zone <code class="docutils literal notranslate"><span class="pre">example.com</span></code>, the prefix is <code class="ansible-value docutils literal notranslate"><span class="pre">www</span></code>. If the record in this example would be <code class="docutils literal notranslate"><span class="pre">example.com</span></code>, the prefix would be <code class="ansible-value docutils literal notranslate"><span class="pre">''</span></code> (empty string).</p>
+<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-record"><span class="std std-ref"><span class="pre">record</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-prefix"><span class="std std-ref"><span class="pre">prefix</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -253,7 +253,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <a class="ansibleOptionLink" href="#parameter-record" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The full DNS record to create or delete.</p>
-<p>Exactly one of <em>record</em> and <em>prefix</em> must be specified.</p>
+<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-record"><span class="std std-ref"><span class="pre">record</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-prefix"><span class="std std-ref"><span class="pre">prefix</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -273,7 +273,6 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <a class="ansibleOptionLink" href="#parameter-ttl" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The TTL to give the new record, in seconds.</p>
-<p>Will be ignored if <em>state=absent</em> and <em>on_existing=replace</em>.</p>
 <p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">3600</span></code></p>
 </div></td>
 </tr>
@@ -282,8 +281,8 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <a class="ansibleOptionLink" href="#parameter-txt_character_encoding" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 <p><span class="ansible-option-versionadded">added in community.dns 2.5.0</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Whether to treat numeric escape sequences (<code class="docutils literal notranslate"><span class="pre">\xyz</span></code>) as octal or decimal numbers. This is only used when <em>txt_transformation=quoted</em>.</p>
-<p>The current default is <code class="docutils literal notranslate"><span class="pre">octal</span></code> which is deprecated. It will change to <code class="docutils literal notranslate"><span class="pre">decimal</span></code> in community.dns 3.0.0. The value <code class="docutils literal notranslate"><span class="pre">decimal</span></code> is compatible to <a class="reference external" href="https://www.ietf.org/rfc/rfc1035.txt">RFC 1035</a>.</p>
+<td><div class="ansible-option-cell"><p>Whether to treat numeric escape sequences (<code class="ansible-value docutils literal notranslate"><span class="pre">\xyz</span></code>) as octal or decimal numbers. This is only used when <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-txt-transformation"><span class="std std-ref"><span class="pre">txt_transformation=quoted</span></span></a></code>.</p>
+<p>The current default is <code class="ansible-value docutils literal notranslate"><span class="pre">octal</span></code> which is deprecated. It will change to <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> in community.dns 3.0.0. The value <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> is compatible to <a class="reference external" href="https://www.ietf.org/rfc/rfc1035.txt">RFC 1035</a>.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;decimal&quot;</span></code></p></li>
@@ -296,11 +295,11 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <a class="ansibleOptionLink" href="#parameter-txt_transformation" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Determines how TXT entry values are converted between the API and this module’s input and output.</p>
-<p>The value <code class="docutils literal notranslate"><span class="pre">api</span></code> means that values are returned from this module as they are returned from the API, and pushed to the API as they have been passed to this module. For idempotency checks, the input string will be compared to the strings returned by the API. The API might automatically transform some values, like splitting long values or adding quotes, which can cause problems with idempotency.</p>
-<p>The value <code class="docutils literal notranslate"><span class="pre">unquoted</span></code> automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.</p>
-<p>The value <code class="docutils literal notranslate"><span class="pre">quoted</span></code> automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.</p>
-<p>The default value, <code class="docutils literal notranslate"><span class="pre">unquoted</span></code>, ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of <code class="docutils literal notranslate"><span class="pre">unquoted</span></code> or <code class="docutils literal notranslate"><span class="pre">quoted</span></code>, but not <code class="docutils literal notranslate"><span class="pre">api</span></code>.</p>
-<p><strong>Note:</strong> the conversion code assumes UTF-8 encoding for values. If you need another encoding use <em>txt_transformation=api</em> and handle the encoding yourself.</p>
+<p>The value <code class="ansible-value docutils literal notranslate"><span class="pre">api</span></code> means that values are returned from this module as they are returned from the API, and pushed to the API as they have been passed to this module. For idempotency checks, the input string will be compared to the strings returned by the API. The API might automatically transform some values, like splitting long values or adding quotes, which can cause problems with idempotency.</p>
+<p>The value <code class="ansible-value docutils literal notranslate"><span class="pre">unquoted</span></code> automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.</p>
+<p>The value <code class="ansible-value docutils literal notranslate"><span class="pre">quoted</span></code> automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.</p>
+<p>The default value, <code class="ansible-value docutils literal notranslate"><span class="pre">unquoted</span></code>, ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of <code class="ansible-value docutils literal notranslate"><span class="pre">unquoted</span></code> or <code class="ansible-value docutils literal notranslate"><span class="pre">quoted</span></code>, but not <code class="ansible-value docutils literal notranslate"><span class="pre">api</span></code>.</p>
+<p><strong>Note:</strong> the conversion code assumes UTF-8 encoding for values. If you need another encoding use <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-txt-transformation"><span class="std std-ref"><span class="pre">txt_transformation=api</span></span></a></code> and handle the encoding yourself.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;api&quot;</span></code></p></li>
@@ -336,8 +335,8 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <td><div class="ansible-option-cell"><p>The new value when creating a DNS record.</p>
 <p>YAML lists or multiple comma-spaced values are allowed.</p>
 <p>When deleting a record all values for the record must be specified or it will not be deleted.</p>
-<p>Must be specified if <em>state=present</em> or when <em>on_existing</em> is not <code class="docutils literal notranslate"><span class="pre">replace</span></code>.</p>
-<p>Will be ignored if <em>state=absent</em> and <em>on_existing=replace</em>.</p>
+<p>Must be specified if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code> or when <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-on-existing"><span class="std std-ref"><span class="pre">on_existing</span></span></a></strong></code> is not <code class="ansible-value docutils literal notranslate"><span class="pre">replace</span></code>.</p>
+<p>Will be ignored if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code> and <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-on-existing"><span class="std std-ref"><span class="pre">on_existing=replace</span></span></a></code>.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -346,7 +345,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <p><span class="ansible-option-versionadded">added in community.dns 0.2.0</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The ID of the DNS zone to modify.</p>
-<p>Exactly one of <em>zone_name</em> and <em>zone_id</em> must be specified.</p>
+<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -356,7 +355,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The DNS zone to modify.</p>
-<p>Exactly one of <em>zone_name</em> and <em>zone_id</em> must be specified.</p>
+<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
 </tbody>
