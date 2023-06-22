@@ -148,7 +148,7 @@
 <h1>community.dns.get_public_suffix filter – Returns the public suffix of a DNS name<a class="headerlink" href="#community-dns-get-public-suffix-filter-returns-the-public-suffix-of-a-dns-name" title="Permalink to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This filter plugin is part of the <a class="reference external" href="https://galaxy.ansible.com/community/dns">community.dns collection</a> (version 2.5.5).</p>
+<p>This filter plugin is part of the <a class="reference external" href="https://galaxy.ansible.com/community/dns">community.dns collection</a> (version 2.5.6).</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">community.dns</span></code>.</p>
 <p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">community.dns.get_public_suffix</span></code>.</p>
 </div>
@@ -227,7 +227,7 @@ example: <code class="docutils literal notranslate"><span class="pre">input</spa
 <div class="ansibleOptionAnchor" id="parameter-keep_unknown_suffix"></div><p class="ansible-option-title" id="ansible-collections-community-dns-get-public-suffix-filter-parameter-keep-unknown-suffix"><strong>keep_unknown_suffix</strong></p>
 <a class="ansibleOptionLink" href="#parameter-keep_unknown_suffix" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>This treats unknown TLDs as valid public suffixes. So for example the public suffix of <code class="docutils literal notranslate"><span class="pre">example.tlddoesnotexist</span></code> is <code class="docutils literal notranslate"><span class="pre">.tlddoesnotexist</span></code> if this is <code class="docutils literal notranslate"><span class="pre">true</span></code>. If set to <code class="docutils literal notranslate"><span class="pre">false</span></code>, it will return an empty string in this case.</p>
+<td><div class="ansible-option-cell"><p>This treats unknown TLDs as valid public suffixes. So for example the public suffix of <code class="docutils literal notranslate"><span class="pre">example.tlddoesnotexist</span></code> is <code class="docutils literal notranslate"><span class="pre">.tlddoesnotexist</span></code> if this is <code class="ansible-value docutils literal notranslate"><span class="pre">true</span></code>. If set to <code class="ansible-value docutils literal notranslate"><span class="pre">false</span></code>, it will return an empty string in this case.</p>
 <p>This option corresponds to whether the global wildcard rule <code class="docutils literal notranslate"><span class="pre">*</span></code> in the Public Suffix List is used or not.</p>
 <p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
 <ul class="simple">
