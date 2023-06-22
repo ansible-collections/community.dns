@@ -388,7 +388,7 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>For <code class="docutils literal notranslate"><span class="pre">CNAME</span></code> records, use absolute DNS names for values. Absolute DNS names are DNS names ending with a period <code class="docutils literal notranslate"><span class="pre">.</span></code>, for example <code class="docutils literal notranslate"><span class="pre">foo.example.com.</span></code>. If you use a relative DNS name, that is one without a trailing period, it will be treated relative to the zone of the <code class="docutils literal notranslate"><span class="pre">CNAME</span></code> record.</p></li>
+<li><p>For <code class="docutils literal notranslate"><span class="pre">CNAME</span></code> records, use absolute DNS names for values. Absolute DNS names end with a trailing period <code class="docutils literal notranslate"><span class="pre">.</span></code>, for example <code class="docutils literal notranslate"><span class="pre">foo.example.com.</span></code>. If you use a relative DNS name, with no trailing period, the value will be relative to the zone of the <code class="docutils literal notranslate"><span class="pre">CNAME</span></code> record.</p></li>
 </ul>
 </div>
 </section>
