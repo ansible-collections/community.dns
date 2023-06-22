@@ -121,7 +121,7 @@ zone_info:
         status:
             description:
                 - Status of the zone.
-                - Can be one of C(verified), C(failed) and C(pending).
+                - Can be one of V(verified), V(failed) and V(pending).
             type: str
             sample: verified
             # choices:

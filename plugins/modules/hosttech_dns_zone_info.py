@@ -80,22 +80,22 @@ zone_info:
             description:
                 - Whether DNSSEC is enabled for the zone or not.
             type: bool
-            returned: When I(hosttech_token) has been specified.
+            returned: When O(hosttech_token) has been specified.
         dnssec_email:
             description:
                 - The email address contacted when the DNSSEC key is changed.
-                - Is C(none) if DNSSEC is not enabled.
+                - Is V(none) if DNSSEC is not enabled.
             type: str
-            returned: When I(hosttech_token) has been specified.
+            returned: When O(hosttech_token) has been specified.
         ds_records:
             description:
                 - The DS records.
                 - See L(Section 5 of RFC 4034,https://datatracker.ietf.org/doc/html/rfc4034#section-5) and
                   L(Section 2.1 of RFC 4034,https://datatracker.ietf.org/doc/html/rfc4034#section-2.1) for details.
-                - Is C(none) if DNSSEC is not enabled.
+                - Is V(none) if DNSSEC is not enabled.
             type: list
             elements: dict
-            returned: When I(hosttech_token) has been specified.
+            returned: When O(hosttech_token) has been specified.
             contains:
                 algorithm:
                     description:

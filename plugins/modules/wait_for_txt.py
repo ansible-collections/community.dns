@@ -40,7 +40,7 @@ options:
         suboptions:
             name:
                 description:
-                    - A DNS name, like C(www.example.com).
+                    - A DNS name, like V(www.example.com).
                 type: str
                 required: true
             values:
@@ -51,17 +51,17 @@ options:
                 required: true
             mode:
                 description:
-                    - Comparison modes for the values in I(values).
-                    - If C(subset), I(values) should be a (not necessarily proper) subset of the TXT values set for
+                    - Comparison modes for the values in O(records[].values).
+                    - If V(subset), O(records[].values) should be a (not necessarily proper) subset of the TXT values set for
                       the DNS name.
-                    - If C(superset), I(values) should be a (not necessarily proper) superset of the TXT values set
+                    - If V(superset), O(records[].values) should be a (not necessarily proper) superset of the TXT values set
                       for the DNS name.
                       This includes the case that no TXT entries are set.
-                    - If C(superset_not_empty), I(values) should be a (not necessarily proper) superset of the TXT
+                    - If V(superset_not_empty), O(records[].values) should be a (not necessarily proper) superset of the TXT
                       values set for the DNS name, assuming at least one TXT record is present.
-                    - If C(equals), I(values) should be the same set of strings as the TXT values for the DNS name
+                    - If V(equals), O(records[].values) should be the same set of strings as the TXT values for the DNS name
                       (up to order).
-                    - If C(equals_ordered), I(values) should be the same ordered list of strings as the TXT values
+                    - If V(equals_ordered), O(records[].values) should be the same ordered list of strings as the TXT values
                       for the DNS name.
                 type: str
                 default: subset
@@ -93,9 +93,9 @@ options:
         default: 10
     always_ask_default_resolver:
         description:
-            - When set to C(true) (default), will use the default resolver to find the authoritative nameservers
+            - When set to V(true) (default), will use the default resolver to find the authoritative nameservers
               of a subzone.
-            - When set to C(false), will use the authoritative nameservers of the parent zone to find the
+            - When set to V(false), will use the authoritative nameservers of the parent zone to find the
               authoritative nameservers of a subzone. This only makes sense when the nameservers were recently
               changed and haven't propagated.
         type: bool
@@ -124,7 +124,7 @@ RETURN = r'''
 records:
     description:
         - Results on the TXT records queried.
-        - The entries are in a 1:1 correspondence to the entries of the I(records) parameter,
+        - The entries are in a 1:1 correspondence to the entries of the O(records) parameter,
           in exactly the same order.
     returned: always
     type: list

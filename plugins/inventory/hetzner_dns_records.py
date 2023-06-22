@@ -23,7 +23,7 @@ description:
 
 options:
     plugin:
-        description: The name of this plugin. Should always be set to C(community.dns.hetzner_dns_records) for this plugin to recognize it as its own.
+        description: The name of this plugin. Should always be set to V(community.dns.hetzner_dns_records) for this plugin to recognize it as its own.
         # TODO: add `required: true` in 3.0.0
         # required: true
         choices:
@@ -39,7 +39,7 @@ extends_documentation_fragment:
     - community.dns.options.record_transformation
 
 notes:
-    - The provider-specific I(hetzner_token) option can be templated.
+    - The provider-specific O(hetzner_token) option can be templated.
 
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>

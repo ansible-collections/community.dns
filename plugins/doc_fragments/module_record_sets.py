@@ -14,27 +14,27 @@ class ModuleDocFragment(object):
     DOCUMENTATION = r'''
 description:
     - The module allows to set, modify and delete multiple DNS record sets at once.
-    - With the I(purge) option, it is also possible to delete existing record sets
+    - With the O(prune) option, it is also possible to delete existing record sets
       that are not mentioned in the module parameters. With this, it is possible
       to synchronize the expected state of a DNS zone with the expected state.
-    - "It is possible to ignore certain record sets by specifying I(ignore: true) for
+    - "It is possible to ignore certain record sets by specifying O(record_sets[].ignore=true) for
        that record set."
 
 options:
     zone_name:
         description:
           - The DNS zone to modify.
-          - Exactly one of I(zone_name) and I(zone_id) must be specified.
+          - Exactly one of O(zone_name) and O(zone_id) must be specified.
         type: str
         aliases:
           - zone
     zone_id:
         description:
           - The ID of the DNS zone to modify.
-          - Exactly one of I(zone_name) and I(zone_id) must be specified.
+          - Exactly one of O(zone_name) and O(zone_id) must be specified.
     prune:
         description:
-          - If set to C(true), will remove all existing records in the zone that are not listed in I(records).
+          - If set to V(true), will remove all existing records in the zone that are not listed in O(record_sets).
         type: bool
         default: false
     record_sets:
@@ -50,15 +50,15 @@ options:
             record:
                 description:
                   - The full DNS record to create or delete.
-                  - Exactly one of I(record) and I(prefix) must be specified.
+                  - Exactly one of O(record_sets[].record) and O(record_sets[].prefix) must be specified.
                 type: str
             prefix:
                 description:
                   - The prefix of the DNS record.
-                  - This is the part of I(record) before I(zone_name). For example, if the record to be modified is C(www.example.com)
-                    for the zone C(example.com), the prefix is C(www). If the record in this example would be C(example.com), the
-                    prefix would be C('') (empty string).
-                  - Exactly one of I(record) and I(prefix) must be specified.
+                  - This is the part of O(record_sets[].record) before O(zone_name). For example, if the record to be modified is C(www.example.com)
+                    for the zone C(example.com), the prefix is V(www). If the record in this example would be C(example.com), the
+                    prefix would be V('') (empty string).
+                  - Exactly one of O(record_sets[].record) and O(record_sets[].prefix) must be specified.
                 type: str
             ttl:
                 description:
@@ -75,13 +75,13 @@ options:
                   - YAML lists or multiple comma-spaced values are allowed.
                   - When deleting a record all values for the record must be specified or it will
                     not be deleted.
-                  - Must be specified if I(ignore=false).
+                  - Must be specified if O(record_sets[].ignore=false).
                 type: list
                 elements: str
             ignore:
                 description:
-                  - If set to C(true), I(value) will be ignored.
-                  - This is useful when I(prune=true), but you do not want certain entries to be removed
+                  - If set to V(true), O(record_sets[].value) will be ignored.
+                  - This is useful when O(prune=true), but you do not want certain entries to be removed
                     without having to know their current value.
                 type: bool
                 default: false

@@ -17,20 +17,20 @@ description:
     - Records are matched by prefix / record name and value.
 
 notes:
-    - The I(zone_name) and I(zone_id) options can be templated.
+    - The O(zone_name) and O(zone_id) options can be templated.
 
 options:
     zone_name:
         description:
           - The DNS zone to modify.
-          - Exactly one of I(zone_name) and I(zone_id) must be specified.
+          - Exactly one of O(zone_name) and O(zone_id) must be specified.
         type: str
         aliases:
           - zone
     zone_id:
         description:
           - The ID of the DNS zone to modify.
-          - Exactly one of I(zone_name) and I(zone_id) must be specified.
+          - Exactly one of O(zone_name) and O(zone_id) must be specified.
     filters:
         description:
           - A dictionary of filter value pairs.

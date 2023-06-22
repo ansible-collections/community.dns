@@ -19,7 +19,7 @@ version_added: 0.1.0
 
 description:
     - "Retrieves DNS record sets in Hosttech DNS service."
-    - This module was renamed from C(community.dns.hosttech_dns_record_info) to C(community.dns.hosttech_dns_record_set_info)
+    - This module was renamed from C(community.dns.hosttech_dns_record_info) to M(community.dns.hosttech_dns_record_set_info)
       in community.dns 2.0.0.
 
 extends_documentation_fragment:
@@ -38,6 +38,11 @@ attributes:
 
 author:
     - Felix Fontein (@felixfontein)
+
+seealso:
+    - module: community.dns.hosttech_dns_record_info
+    - plugin: community.dns.hosttech_dns_records
+      plugin_type: inventory
 '''
 
 EXAMPLES = '''
@@ -58,7 +63,7 @@ RETURN = '''
 set:
     description: The fetched record set. Is empty if record set does not exist.
     type: dict
-    returned: success and I(what) is C(single_record)
+    returned: success and O(what=single_record)
     contains:
         record:
             description: The record name.
@@ -109,7 +114,7 @@ sets:
     description: The list of fetched record sets.
     type: list
     elements: dict
-    returned: success and I(what) is not C(single_record)
+    returned: success and O(what=single_record)
     contains:
         record:
             description: The record name.
