@@ -89,6 +89,8 @@ jobs:
           # NOTE: we're installing with git to work around Galaxy being a huge PITA (https://github.com/ansible/galaxy/issues/2429)
           pre-test-cmd: >-
             git clone --depth=1 --single-branch https://github.com/ansible-collections/community.internal_test_tools.git ../../community/internal_test_tools
+            ;
+            tests/unit/replace-requirements.sh requirements-${{ matrix.ansible }}.txt
 
   integration:
     # Ansible-test on various stable branches does not yet work well with cgroups v2.
