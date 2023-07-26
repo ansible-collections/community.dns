@@ -129,10 +129,10 @@ EXAMPLES = '''
     zone: foo.com
     record: foo.com
     type: CAA
-    ttl: 3600
+    ttl: null
     value:
-    - "128 issue letsencrypt.org"
-    - "128 iodef mailto:webmaster@foo.com"
+    - "128 issue \"letsencrypt.org\""
+    - "128 iodef \"mailto:webmaster@foo.com\""
     hetzner_token: access_token
 
 - name: Add an MX record
