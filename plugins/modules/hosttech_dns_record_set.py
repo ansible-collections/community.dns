@@ -129,8 +129,8 @@ EXAMPLES = '''
     type: CAA
     ttl: 3600
     value:
-    - "128 issue letsencrypt.org"
-    - "128 iodef mailto:webmaster@foo.com"
+    - '128 issue "letsencrypt.org"'
+    - '128 iodef "mailto:webmaster@foo.com"'
     hosttech_token: access_token
 
 - name: Add an MX record
