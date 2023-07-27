@@ -129,7 +129,6 @@ EXAMPLES = '''
     zone: foo.com
     record: foo.com
     type: CAA
-    ttl: null
     value:
     - "128 issue \"letsencrypt.org\""
     - "128 iodef \"mailto:webmaster@foo.com\""
