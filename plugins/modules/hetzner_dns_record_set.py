@@ -130,7 +130,7 @@ EXAMPLES = '''
     record: foo.com
     type: CAA
     value:
-    - "128 issue \"letsencrypt.org\""
+    - '128 issue "letsencrypt.org"'
     - '128 iodef "mailto:webmaster@foo.com"'
     hetzner_token: access_token
 
