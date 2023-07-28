@@ -76,7 +76,7 @@ options:
               of a subzone.
             - When set to V(false), will use the authoritative nameservers of the parent zone to find the
               authoritative nameservers of a subzone. This only makes sense when the nameservers were recently
-              changed and haven't propagated.
+              changed and have not yet propagated.
         type: bool
         default: true
 requirements:
