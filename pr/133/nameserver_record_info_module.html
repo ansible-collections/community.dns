@@ -374,7 +374,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The records of type <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type</span></span></a></strong></code>.</p>
 <p>Depending on <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type</span></span></a></strong></code>, different fields are returned.</p>
-<p>For <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TXT</span></span></a></code> and <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SPF</span></span></a></code>, also the concatenated value is returned as <code class="docutils literal notranslate"><span class="pre">values</span></code>.</p>
+<p>For <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TXT</span></span></a></code> and <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SPF</span></span></a></code>, also the concatenated value is returned as <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-return-results-result-values-value"><span class="std std-ref"><span class="pre">results[].result[].values[].value</span></span></a></code>.</p>
 <p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> success</p>
 <p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[{&quot;address&quot;:</span> <span class="pre">&quot;127.0.0.1&quot;}]</span></code></p>
 </div></td>
@@ -384,7 +384,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/address" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>A IPv4 respectively IPv6 address.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=A</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=AAAA</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=A</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=AAAA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -392,7 +392,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/algorithm" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The algorithm ID.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SSHFP</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SSHFP</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -400,7 +400,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/altitude" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">float</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The altitute.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -408,7 +408,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/cert" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The certificate.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -416,7 +416,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/cpu" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The CPU.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=HINFO</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=HINFO</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -424,7 +424,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/digest" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The digest.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -432,7 +432,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/digest_type" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The digest’s type.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -440,7 +440,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/exchange" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The exchange server.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=MX</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=MX</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -448,7 +448,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/expiration" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The expiration Unix timestamp.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -456,7 +456,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/expire" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Number of seconds after which secondary name servers should stop answering request for this zone if the main name server does not respond.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -464,7 +464,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/fingerprint" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The fingerprint.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SSHFP</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SSHFP</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -473,7 +473,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Flags.</p>
 <p>This is actually of type <code class="docutils literal notranslate"><span class="pre">string</span></code> for <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code>.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=CAA</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=CAA</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -481,7 +481,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/fp_type" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The fingerprint’s type.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SSHFP</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SSHFP</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -489,7 +489,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/horizontal_precision" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">float</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The horizontal precision of the location.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -497,7 +497,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/inception" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The inception Unix timestamp.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -505,7 +505,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/iterations" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The number of iterations.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -513,7 +513,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/key" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The key.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -521,7 +521,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/key_tag" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The key’s tag.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -529,7 +529,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/labels" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The labels.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -537,7 +537,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/latitude" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The location’s latitude.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -545,7 +545,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/longitude" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The location’s longitude.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -553,7 +553,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/mbox" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The mbox.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RP</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RP</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -561,7 +561,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/minimum" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Used to calculate the TTL for purposes of negative caching.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -569,7 +569,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/mname" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Primary main name server for this zone.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -577,7 +577,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/mtype" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The mtype.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -585,7 +585,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/next" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The next value.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -593,7 +593,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/order" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The order value.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -601,7 +601,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/original_ttl" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The original TTL.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -609,7 +609,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/os" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The operating system.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=HINFO</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=HINFO</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -617,7 +617,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/port" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The port.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -625,7 +625,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/preference" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The preference value for this record.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=MX</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=MX</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -633,7 +633,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/priority" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The priority value for this record.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -641,7 +641,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/protocol" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The protocol.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -649,7 +649,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/refresh" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Number of seconds after which secondary name servers should query the main name server for the SOA record to detect zone changes.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -657,7 +657,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/regexp" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>A regular expression.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -665,7 +665,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/replacement" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The replacement.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -673,7 +673,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/retry" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Number of seconds after which secondary name servers should retry to request the serial number from the main name server if the main name server does not respond.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -681,7 +681,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/rname" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>E-mail address of the administrator responsible for this zone.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -689,7 +689,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/salt" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The salt.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -697,7 +697,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/selector" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The selector.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -705,7 +705,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/serial" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Serial number for this zone.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -713,7 +713,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/service" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The service.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -721,7 +721,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/signature" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The signature.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -729,7 +729,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/signer" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The signer.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -737,7 +737,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/size" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">float</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The size of the location.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -746,7 +746,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of strings for this record.</p>
 <p>See <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-return-results-result-values-value"><span class="std std-ref"><span class="pre">results[].result[].values[].value</span></span></a></code> for the concatenated result.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SPF</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TXT</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SPF</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TXT</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -754,7 +754,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/tag" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The tag.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=CAA</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=CAA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -762,7 +762,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/target" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The target.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=CNAME</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DNAME</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NS</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=PTR</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=CNAME</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=DNAME</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NS</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=PTR</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -770,7 +770,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/txt" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The TXT value.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RP</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RP</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -778,7 +778,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/type_covered" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The type covered.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -786,7 +786,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/usage" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The usage flag.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -795,7 +795,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The value.</p>
 <p>For <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SPF</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TXT</span></span></a></code>, this is the concatenation of <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-return-results-result-values-strings"><span class="std std-ref"><span class="pre">results[].result[].values[].strings</span></span></a></code>.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=CAA</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SPF</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TXT</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=CAA</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SPF</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=TXT</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -803,7 +803,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/vertical_precision" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">float</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The vertical precision of the location.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -811,7 +811,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/weight" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The service’s weight.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -819,7 +819,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <a class="ansibleOptionLink" href="#return-results/result/values/windows" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The windows.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code></p>
+<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-nameserver-record-info-module-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code></p>
 </div></td>
 </tr>
 </tbody>
