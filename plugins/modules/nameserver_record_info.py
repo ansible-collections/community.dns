@@ -140,7 +140,7 @@ results:
                     description:
                         - The records of type O(type).
                         - Depending on O(type), different fields are returned.
-                        - For O(type=TXT) and O(type=SPF), also the concatenated value is returned as C(values).
+                        - For O(type=TXT) and O(type=SPF), also the concatenated value is returned as RV(results[].result[].values[].value).
                     returned: success
                     type: list
                     elements: dict
@@ -151,286 +151,286 @@ results:
                             description:
                                 - A IPv4 respectively IPv6 address.
                             type: str
-                            returned: O(type=A) or O(type=AAAA)
+                            returned: if O(type=A) or O(type=AAAA)
                         algorithm:
                             description:
                                 - The algorithm ID.
                             type: int
-                            returned: O(type=DNSKEY) or O(type=DS) or O(type=NSEC3) or O(type=NSEC3PARAM) or O(type=RRSIG) or O(type=SSHFP)
+                            returned: if O(type=DNSKEY) or O(type=DS) or O(type=NSEC3) or O(type=NSEC3PARAM) or O(type=RRSIG) or O(type=SSHFP)
                         altitude:
                             description:
                                 - The altitute.
                             type: float
-                            returned: O(type=LOC)
+                            returned: if O(type=LOC)
                         cert:
                             description:
                                 - The certificate.
                             type: str
-                            returned: O(type=TLSA)
+                            returned: if O(type=TLSA)
                         cpu:
                             description:
                                 - The CPU.
                             type: str
-                            returned: O(type=HINFO)
+                            returned: if O(type=HINFO)
                         digest:
                             description:
                                 - The digest.
                             type: str
-                            returned: O(type=DS)
+                            returned: if O(type=DS)
                         digest_type:
                             description:
                                 - The digest's type.
                             type: int
-                            returned: O(type=DS)
+                            returned: if O(type=DS)
                         exchange:
                             description:
                                 - The exchange server.
                             type: str
-                            returned: O(type=MX)
+                            returned: if O(type=MX)
                         expiration:
                             description:
                                 - The expiration Unix timestamp.
                             type: int
-                            returned: O(type=RRSIG)
+                            returned: if O(type=RRSIG)
                         expire:
                             description:
                                 - Number of seconds after which secondary name servers should stop answering request
                                   for this zone if the main name server does not respond.
                             type: int
-                            returned: O(type=SOA)
+                            returned: if O(type=SOA)
                         fingerprint:
                             description:
                                 - The fingerprint.
                             type: str
-                            returned: O(type=SSHFP)
+                            returned: if O(type=SSHFP)
                         flags:
                             description:
                                 - Flags.
                                 - This is actually of type C(string) for O(type=NAPTR).
                             type: int
-                            returned: O(type=CAA) or O(type=DNSKEY) or O(type=NAPTR) or O(type=NSEC3) or O(type=NSEC3PARAM)
+                            returned: if O(type=CAA) or O(type=DNSKEY) or O(type=NAPTR) or O(type=NSEC3) or O(type=NSEC3PARAM)
                         fp_type:
                             description:
                                 - The fingerprint's type.
                             type: int
-                            returned: O(type=SSHFP)
+                            returned: if O(type=SSHFP)
                         horizontal_precision:
                             description:
                                 - The horizontal precision of the location.
                             type: float
-                            returned: O(type=LOC)
+                            returned: if O(type=LOC)
                         inception:
                             description:
                                 - The inception Unix timestamp.
                             type: int
-                            returned: O(type=RRSIG)
+                            returned: if O(type=RRSIG)
                         iterations:
                             description:
                                 - The number of iterations.
                             type: int
-                            returned: O(type=NSEC3) or O(type=NSEC3PARAM)
+                            returned: if O(type=NSEC3) or O(type=NSEC3PARAM)
                         key:
                             description:
                                 - The key.
                             type: str
-                            returned: O(type=DNSKEY)
+                            returned: if O(type=DNSKEY)
                         key_tag:
                             description:
                                 - The key's tag.
                             type: int
-                            returned: O(type=DS) or O(type=RRSIG)
+                            returned: if O(type=DS) or O(type=RRSIG)
                         labels:
                             description:
                                 - The labels.
                             type: int
-                            returned: O(type=RRSIG)
+                            returned: if O(type=RRSIG)
                         latitude:
                             description:
                                 - The location's latitude.
                             type: list
                             elements: int
-                            returned: O(type=LOC)
+                            returned: if O(type=LOC)
                         longitude:
                             description:
                                 - The location's longitude.
                             type: list
                             elements: int
-                            returned: O(type=LOC)
+                            returned: if O(type=LOC)
                         mbox:
                             description:
                                 - The mbox.
                             type: str
-                            returned: O(type=RP)
+                            returned: if O(type=RP)
                         minimum:
                             description:
                                 - Used to calculate the TTL for purposes of negative caching.
                             type: int
-                            returned: O(type=SOA)
+                            returned: if O(type=SOA)
                         mname:
                             description:
                                 - Primary main name server for this zone.
                             type: str
-                            returned: O(type=SOA)
+                            returned: if O(type=SOA)
                         mtype:
                             description:
                                 - The mtype.
                             type: int
-                            returned: O(type=TLSA)
+                            returned: if O(type=TLSA)
                         next:
                             description:
                                 - The next value.
                             type: str
-                            returned: O(type=NSEC) or O(type=NSEC3)
+                            returned: if O(type=NSEC) or O(type=NSEC3)
                         order:
                             description:
                                 - The order value.
                             type: int
-                            returned: O(type=NAPTR)
+                            returned: if O(type=NAPTR)
                         original_ttl:
                             description:
                                 - The original TTL.
                             type: int
-                            returned: O(type=RRSIG)
+                            returned: if O(type=RRSIG)
                         os:
                             description:
                                 - The operating system.
                             type: str
-                            returned: O(type=HINFO)
+                            returned: if O(type=HINFO)
                         port:
                             description:
                                 - The port.
                             type: int
-                            returned: O(type=SRV)
+                            returned: if O(type=SRV)
                         preference:
                             description:
                                 - The preference value for this record.
                             type: int
-                            returned: O(type=MX) or O(type=NAPTR)
+                            returned: if O(type=MX) or O(type=NAPTR)
                         priority:
                             description:
                                 - The priority value for this record.
                             type: int
-                            returned: O(type=SRV)
+                            returned: if O(type=SRV)
                         protocol:
                             description:
                                 - The protocol.
                             type: int
-                            returned: O(type=DNSKEY)
+                            returned: if O(type=DNSKEY)
                         refresh:
                             description:
                                 - Number of seconds after which secondary name servers should query the main
                                   name server for the SOA record to detect zone changes.
                             type: int
-                            returned: O(type=SOA)
+                            returned: if O(type=SOA)
                         regexp:
                             description:
                                 - A regular expression.
                             type: str
-                            returned: O(type=NAPTR)
+                            returned: if O(type=NAPTR)
                         replacement:
                             description:
                                 - The replacement.
                             type: str
-                            returned: O(type=NAPTR)
+                            returned: if O(type=NAPTR)
                         retry:
                             description:
                                 - Number of seconds after which secondary name servers should retry to request
                                   the serial number from the main name server if the main name server does not respond.
                             type: int
-                            returned: O(type=SOA)
+                            returned: if O(type=SOA)
                         rname:
                             description:
                                 - E-mail address of the administrator responsible for this zone.
                             type: str
-                            returned: O(type=SOA)
+                            returned: if O(type=SOA)
                         salt:
                             description:
                                 - The salt.
                             type: str
-                            returned: O(type=NSEC3) or O(type=NSEC3PARAM)
+                            returned: if O(type=NSEC3) or O(type=NSEC3PARAM)
                         selector:
                             description:
                                 - The selector.
                             type: int
-                            returned: O(type=TLSA)
+                            returned: if O(type=TLSA)
                         serial:
                             description:
                                 - Serial number for this zone.
                             type: int
-                            returned: O(type=SOA)
+                            returned: if O(type=SOA)
                         service:
                             description:
                                 - The service.
                             type: str
-                            returned: O(type=NAPTR)
+                            returned: if O(type=NAPTR)
                         signature:
                             description:
                                 - The signature.
                             type: str
-                            returned: O(type=RRSIG)
+                            returned: if O(type=RRSIG)
                         signer:
                             description:
                                 - The signer.
                             type: str
-                            returned: O(type=RRSIG)
+                            returned: if O(type=RRSIG)
                         size:
                             description:
                                 - The size of the location.
                             type: float
-                            returned: O(type=LOC)
+                            returned: if O(type=LOC)
                         strings:
                             description:
                                 - List of strings for this record.
                                 - See RV(results[].result[].values[].value) for the concatenated result.
                             type: list
                             elements: str
-                            returned: O(type=SPF) or O(type=TXT)
+                            returned: if O(type=SPF) or O(type=TXT)
                         tag:
                             description:
                                 - The tag.
                             type: str
-                            returned: O(type=CAA)
+                            returned: if O(type=CAA)
                         target:
                             description:
                                 - The target.
                             type: str
-                            returned: O(type=CNAME) or O(type=DNAME) or O(type=NS) or O(type=PTR) or O(type=SRV)
+                            returned: if O(type=CNAME) or O(type=DNAME) or O(type=NS) or O(type=PTR) or O(type=SRV)
                         txt:
                             description:
                                 - The TXT value.
                             type: str
-                            returned: O(type=RP)
+                            returned: if O(type=RP)
                         type_covered:
                             description:
                                 - The type covered.
                             type: str
-                            returned: O(type=RRSIG)
+                            returned: if O(type=RRSIG)
                         usage:
                             description:
                                 - The usage flag.
                             type: int
-                            returned: O(type=TLSA)
+                            returned: if O(type=TLSA)
                         value:
                             description:
                                 - The value.
                                 - For O(type=SPF) or O(type=TXT), this is the concatenation of RV(results[].result[].values[].strings).
                             type: str
-                            returned: O(type=CAA) or O(type=SPF) or O(type=TXT)
+                            returned: if O(type=CAA) or O(type=SPF) or O(type=TXT)
                         vertical_precision:
                             description:
                                 - The vertical precision of the location.
                             type: float
-                            returned: O(type=LOC)
+                            returned: if O(type=LOC)
                         weight:
                             description:
                                 - The service's weight.
                             type: int
-                            returned: O(type=SRV)
+                            returned: if O(type=SRV)
                         windows:
                             description:
                                 - The windows.
                             type: str
-                            returned: O(type=NSEC) or O(type=NSEC3)
+                            returned: if O(type=NSEC) or O(type=NSEC3)
     sample:
         - name: www.example.com
           result:
