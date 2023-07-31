@@ -1,0 +1,169 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# Copyright (c) 2022, Felix Fontein <felix@fontein.de>
+# GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
+
+DOCUMENTATION = r'''
+---
+module: nameserver_info
+short_description: Look up nameservers for a DNS name
+version_added: 2.6.0
+description:
+    - Retrieve all nameservers that are responsible for a DNS name.
+extends_documentation_fragment:
+    - community.dns.attributes
+    - community.dns.attributes.info_module
+author:
+    - Felix Fontein (@felixfontein)
+options:
+    name:
+        description:
+            - A list of DNS names whose nameservers to retrieve.
+        required: true
+        type: list
+        elements: str
+    resolve_addresses:
+        description:
+            - Whether to resolve the nameserver names to IP addresses.
+        type: bool
+        default: false
+    query_retry:
+        description:
+            - Number of retries for DNS query timeouts.
+        type: int
+        default: 3
+    query_timeout:
+        description:
+            - Timeout per DNS query in seconds.
+        type: float
+        default: 10
+    always_ask_default_resolver:
+        description:
+            - When set to V(true) (default), will use the default resolver to find the authoritative nameservers
+              of a subzone.
+            - When set to V(false), will use the authoritative nameservers of the parent zone to find the
+              authoritative nameservers of a subzone. This only makes sense when the nameservers were recently
+              changed and have not yet propagated.
+        type: bool
+        default: true
+requirements:
+    - dnspython >= 1.15.0 (maybe older versions also work)
+'''
+
+EXAMPLES = r'''
+- name: Retrieve name servers of two DNS names
+  community.dns.nameserver_info:
+    name:
+      - www.example.com
+      - example.org
+  register: result
+
+- name: Show nameservers for www.example.com
+  ansible.builtin.debug:
+    msg: '{{ result.results[0].nameserver }}'
+'''
+
+RETURN = r'''
+results:
+    description:
+        - Information on the nameservers for every DNS name provided in O(name).
+    returned: always
+    type: list
+    elements: dict
+    contains:
+        name:
+            description:
+                - The DNS name this entry is for.
+            returned: always
+            type: str
+            sample: www.example.com
+        nameservers:
+            description:
+                - A list of nameservers for this DNS name.
+            returned: success
+            type: list
+            elements: str
+            sample:
+                - ns1.example.com
+                - ns2.example.com
+    sample:
+        - name: www.example.com
+          nameservers:
+            - ns1.example.com
+            - ns2.example.com
+        - name: example.org
+          nameservers:
+            - ns1.example.org
+            - ns2.example.org
+            - ns3.example.org
+'''
+
+import traceback
+
+from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.common.text.converters import to_native
+
+from ansible_collections.community.dns.plugins.module_utils.resolver import (
+    ResolveDirectlyFromNameServers,
+    ResolverError,
+    assert_requirements_present,
+)
+
+try:
+    import dns.exception
+    import dns.rdatatype
+except ImportError:
+    pass  # handled in assert_requirements_present()
+
+
+def main():
+    module = AnsibleModule(
+        argument_spec=dict(
+            name=dict(required=True, type='list', elements='str'),
+            resolve_addresses=dict(type='bool', default=False),
+            query_retry=dict(type='int', default=3),
+            query_timeout=dict(type='float', default=10),
+            always_ask_default_resolver=dict(type='bool', default=True),
+        ),
+        supports_check_mode=True,
+    )
+    assert_requirements_present(module)
+
+    names = module.params['name']
+    resolve_addresses = module.params['resolve_addresses']
+
+    resolver = ResolveDirectlyFromNameServers(
+        timeout=module.params['query_timeout'],
+        timeout_retries=module.params['query_retry'],
+        always_ask_default_resolver=module.params['always_ask_default_resolver'],
+    )
+    results = [None] * len(names)
+    for index, name in enumerate(names):
+        results[index] = {
+            'name': name,
+        }
+
+    try:
+        for index, name in enumerate(names):
+            results[index]['nameservers'] = sorted(resolver.resolve_nameservers(name, resolve_addresses=resolve_addresses))
+        module.exit_json(results=results)
+    except ResolverError as e:
+        module.fail_json(
+            msg='Unexpected resolving error: {0}'.format(to_native(e)),
+            results=results,
+            exception=traceback.format_exc())
+    except dns.exception.DNSException as e:
+        module.fail_json(
+            msg='Unexpected DNS error: {0}'.format(to_native(e)),
+            results=results,
+            exception=traceback.format_exc())
+
+
+if __name__ == "__main__":
+    main()
