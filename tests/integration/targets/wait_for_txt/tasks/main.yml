@@ -8,7 +8,7 @@
     records:
       - name: github.com
         values: |
-          {{ query('community.general.dig', 'github.com', 'qtype=TXT') | map('regex_replace', '" "', '') | list }}
+          {{ query('community.dns.lookup_as_dict', 'github.com', type='TXT') | map(attribute='value') | list }}
       - name: github.io
         values: []
     query_timeout: 20
