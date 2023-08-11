@@ -1,0 +1,2 @@
+bugfixes:
+  - "wait_for_txt, resolver module utils - improve error handling (https://github.com/ansible-collections/community.dns/pull/158)."
