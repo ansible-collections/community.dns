@@ -495,6 +495,306 @@ def test_error_servfail():
                 assert exc.value.args[0] == 'Error SERVFAIL while querying 1.1.1.1 with query get NS for "com."'
 
 
+def test_error_servfail_retry_success():
+    resolver = mock_resolver(['1.1.1.1'], {})
+    udp_sequence = [
+        {
+            'query_target': dns.name.from_unicode(u'com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.SERVFAIL),
+        },
+        {
+            'query_target': dns.name.from_unicode(u'com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.SERVFAIL),
+        },
+        {
+            'query_target': dns.name.from_unicode(u'com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NOERROR, authority=[dns.rrset.from_rdata(
+                'com',
+                3600,
+                dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.NS, 'ns.com'),
+            )]),
+        },
+    ]
+    with patch('dns.resolver.get_default_resolver', resolver):
+        with patch('dns.resolver.Resolver', resolver):
+            with patch('dns.query.udp', mock_query_udp(udp_sequence)):
+                resolver = ResolveDirectlyFromNameServers(servfail_retries=2)
+                assert resolver.resolve_nameservers('com') == ['ns.com']
+
+
+def test_error_servfail_retry_fail():
+    resolver = mock_resolver(['1.1.1.1'], {})
+    udp_sequence = [
+        {
+            'query_target': dns.name.from_unicode(u'com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.SERVFAIL),
+        },
+        {
+            'query_target': dns.name.from_unicode(u'com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.SERVFAIL),
+        },
+        {
+            'query_target': dns.name.from_unicode(u'com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.SERVFAIL),
+        },
+    ]
+    with patch('dns.resolver.get_default_resolver', resolver):
+        with patch('dns.resolver.Resolver', resolver):
+            with patch('dns.query.udp', mock_query_udp(udp_sequence)):
+                with pytest.raises(ResolverError) as exc:
+                    resolver = ResolveDirectlyFromNameServers(servfail_retries=2)
+                    resolver.resolve_nameservers('example.com')
+                assert exc.value.args[0] == 'Error SERVFAIL while querying 1.1.1.1 with query get NS for "com."'
+
+
+def test_servfail_handling():
+    fake_query = MagicMock()
+    fake_query.question = 'Doctor Who?'
+    resolver = mock_resolver(['1.1.1.1'], {
+        ('1.1.1.1', ): [
+            {
+                'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.A,
+                'lifetime': 10,
+                'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
+            },
+            {
+                'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.A,
+                'lifetime': 10,
+                'result': create_mock_answer(dns.rrset.from_rdata(
+                    'ns.example.com',
+                    300,
+                    dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '3.3.3.3'),
+                )),
+            },
+            {
+                'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
+            },
+            {
+                'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'raise': dns.resolver.NoAnswer(response=fake_query),
+            },
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.A,
+                'lifetime': 10,
+                'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
+            },
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.A,
+                'lifetime': 10,
+                'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
+            },
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.A,
+                'lifetime': 10,
+                'result': create_mock_answer(dns.rrset.from_rdata(
+                    'ns.com',
+                    300,
+                    dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '2.2.2.2'),
+                )),
+            },
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'raise': dns.resolver.NoAnswer(response=fake_query),
+            },
+        ],
+    })
+    udp_sequence = [
+        {
+            'query_target': dns.name.from_unicode(u'com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NOERROR, answer=[dns.rrset.from_rdata(
+                'com',
+                3600,
+                dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.NS, 'ns.com'),
+            )]),
+        },
+        {
+            'query_target': dns.name.from_unicode(u'example.com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NOERROR, authority=[dns.rrset.from_rdata(
+                'example.com',
+                3600,
+                dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.NS, 'ns.example.com'),
+            )]),
+        },
+    ]
+    with patch('dns.resolver.get_default_resolver', resolver):
+        with patch('dns.resolver.Resolver', resolver):
+            with patch('dns.query.udp', mock_query_udp(udp_sequence)):
+                resolver = ResolveDirectlyFromNameServers(servfail_retries=2)
+                assert resolver.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
+                # The following results should be cached:
+                assert resolver.resolve_nameservers('com') == ['ns.com']
+                assert resolver.resolve_nameservers('com', resolve_addresses=True) == ['2.2.2.2']
+                assert resolver.resolve_nameservers('example.com') == ['ns.example.com']
+                assert resolver.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
+
+
+def test_servfail_failing():
+    fake_query = MagicMock()
+    fake_query.question = 'Doctor Who?'
+    resolver = mock_resolver(['1.1.1.1'], {
+        ('1.1.1.1', ): [
+            {
+                'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.A,
+                'lifetime': 10,
+                'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
+            },
+            {
+                'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.A,
+                'lifetime': 10,
+                'result': create_mock_answer(dns.rrset.from_rdata(
+                    'ns.example.com',
+                    300,
+                    dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '3.3.3.3'),
+                )),
+            },
+            {
+                'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
+            },
+            {
+                'target': 'ns.example.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'raise': dns.resolver.NoAnswer(response=fake_query),
+            },
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.A,
+                'lifetime': 10,
+                'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
+            },
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.A,
+                'lifetime': 10,
+                'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
+            },
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.A,
+                'lifetime': 10,
+                'result': create_mock_answer(dns.rrset.from_rdata(
+                    'ns.com',
+                    300,
+                    dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '2.2.2.2'),
+                )),
+            },
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
+            },
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
+            },
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
+            },
+        ],
+    })
+    udp_sequence = [
+        {
+            'query_target': dns.name.from_unicode(u'com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NOERROR, answer=[dns.rrset.from_rdata(
+                'com',
+                3600,
+                dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.NS, 'ns.com'),
+            )]),
+        },
+        {
+            'query_target': dns.name.from_unicode(u'example.com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NOERROR, authority=[dns.rrset.from_rdata(
+                'example.com',
+                3600,
+                dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.NS, 'ns.example.com'),
+            )]),
+        },
+    ]
+    with patch('dns.resolver.get_default_resolver', resolver):
+        with patch('dns.resolver.Resolver', resolver):
+            with patch('dns.query.udp', mock_query_udp(udp_sequence)):
+                resolver = ResolveDirectlyFromNameServers(servfail_retries=2)
+                assert resolver.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
+                # The following results should be cached:
+                assert resolver.resolve_nameservers('com') == ['ns.com']
+                with pytest.raises(ResolverError) as exc:
+                    resolver.resolve_nameservers('com', resolve_addresses=True)
+                assert exc.value.args[0] == "Error SERVFAIL while querying ['1.1.1.1']"
+
+
 def test_no_response():
     fake_query = MagicMock()
     fake_query.question = 'Doctor Who?'
