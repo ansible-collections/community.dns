@@ -185,6 +185,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-looku
 <p>The below requirements are needed on the local controller node that executes this lookup.</p>
 <ul class="simple">
 <li><p>dnspython &gt;= 1.15.0 (maybe older versions also work)</p></li>
+<li><p>ipaddress (on Python 2.7 when using <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-lookup-lookup-parameter-server"><span class="std std-ref"><span class="pre">server</span></span></a></strong></code>)</p></li>
 </ul>
 </section>
 <section id="terms">
@@ -218,6 +219,22 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-nxdomain_handling"></div><p class="ansible-option-title" id="ansible-collections-community-dns-lookup-lookup-parameter-nxdomain-handling"><strong>nxdomain_handling</strong></p>
+<a class="ansibleOptionLink" href="#parameter-nxdomain_handling" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>How to handle NXDOMAIN errors. These appear if an unknown domain name is queried.</p>
+<p><code class="ansible-value docutils literal notranslate"><span class="pre">empty</span></code> (default) returns an empty result for that domain name. This means that for the corresponding domain name, nothing is added to <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-lookup-return-result"><span class="std std-ref"><span class="pre">_result</span></span></a></code>.</p>
+<p><code class="ansible-value docutils literal notranslate"><span class="pre">fail</span></code> makes the lookup fail.</p>
+<p><code class="ansible-value docutils literal notranslate"><span class="pre">message</span></code> adds the string <code class="ansible-value docutils literal notranslate"><span class="pre">NXDOMAIN</span></code> to <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-lookup-return-result"><span class="std std-ref"><span class="pre">_result</span></span></a></code>.</p>
+<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
+<ul class="simple">
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">&quot;empty&quot;</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;fail&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;message&quot;</span></code></p></li>
+</ul>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-query_retry"></div><p class="ansible-option-title" id="ansible-collections-community-dns-lookup-lookup-parameter-query-retry"><strong>query_retry</strong></p>
 <a class="ansibleOptionLink" href="#parameter-query_retry" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
@@ -225,7 +242,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">3</span></code></p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-query_timeout"></div><p class="ansible-option-title" id="ansible-collections-community-dns-lookup-lookup-parameter-query-timeout"><strong>query_timeout</strong></p>
 <a class="ansibleOptionLink" href="#parameter-query_timeout" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">float</span></p>
 </div></td>
@@ -233,12 +250,20 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">10.0</span></code></p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-server"></div><p class="ansible-option-title" id="ansible-collections-community-dns-lookup-lookup-parameter-server"><strong>server</strong></p>
 <a class="ansibleOptionLink" href="#parameter-server" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The DNS server(s) to use to look up the result.</p>
 <p>By default, the system’s standard resolver is used.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-servfail_retries"></div><p class="ansible-option-title" id="ansible-collections-community-dns-lookup-lookup-parameter-servfail-retries"><strong>servfail_retries</strong></p>
+<a class="ansibleOptionLink" href="#parameter-servfail_retries" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>How often to retry on SERVFAIL errors.</p>
+<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">0</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
