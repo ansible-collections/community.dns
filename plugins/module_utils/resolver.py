@@ -35,9 +35,10 @@ class ResolverError(Exception):
 
 
 class _Resolve(object):
-    def __init__(self, timeout=10, timeout_retries=3):
+    def __init__(self, timeout=10, timeout_retries=3, servfail_retries=0):
         self.timeout = timeout
         self.timeout_retries = timeout_retries
+        self.servfail_retries = servfail_retries
         self.default_resolver = dns.resolver.get_default_resolver()
 
     def _handle_reponse_errors(self, target, response, nameserver=None, query=None):
@@ -64,25 +65,34 @@ class _Resolve(object):
                 retry += 1
 
     def _resolve(self, resolver, dnsname, handle_response_errors=False, **kwargs):
-        try:
-            response = self._handle_timeout(resolver.resolve, dnsname, lifetime=self.timeout, **kwargs)
-        except AttributeError:
-            # For dnspython < 2.0.0
-            resolver.search = False
+        retry = 0
+        while True:
             try:
-                response = self._handle_timeout(resolver.query, dnsname, lifetime=self.timeout, **kwargs)
-            except TypeError:
-                # For dnspython < 1.6.0
-                resolver.lifetime = self.timeout
-                response = self._handle_timeout(resolver.query, dnsname, **kwargs)
-        if handle_response_errors:
-            self._handle_reponse_errors(dnsname, response.response, nameserver=resolver.nameservers)
-        return response.rrset
+                response = self._handle_timeout(resolver.resolve, dnsname, lifetime=self.timeout, **kwargs)
+            except AttributeError:
+                # For dnspython < 2.0.0
+                resolver.search = False
+                try:
+                    response = self._handle_timeout(resolver.query, dnsname, lifetime=self.timeout, **kwargs)
+                except TypeError:
+                    # For dnspython < 1.6.0
+                    resolver.lifetime = self.timeout
+                    response = self._handle_timeout(resolver.query, dnsname, **kwargs)
+            if response.response.rcode() == dns.rcode.SERVFAIL and retry < self.servfail_retries:
+                retry += 1
+                continue
+            if handle_response_errors:
+                self._handle_reponse_errors(dnsname, response.response, nameserver=resolver.nameservers)
+            return response.rrset
 
 
 class ResolveDirectlyFromNameServers(_Resolve):
-    def __init__(self, timeout=10, timeout_retries=3, always_ask_default_resolver=True):
-        super(ResolveDirectlyFromNameServers, self).__init__(timeout=timeout, timeout_retries=timeout_retries)
+    def __init__(self, timeout=10, timeout_retries=3, servfail_retries=0, always_ask_default_resolver=True):
+        super(ResolveDirectlyFromNameServers, self).__init__(
+            timeout=timeout,
+            timeout_retries=timeout_retries,
+            servfail_retries=servfail_retries,
+        )
         self.cache = {}
         self.default_nameservers = self.default_resolver.nameservers
         self.always_ask_default_resolver = always_ask_default_resolver
@@ -99,7 +109,13 @@ class ResolveDirectlyFromNameServers(_Resolve):
             raise ResolverError('Have neither nameservers nor nameserver IPs')
 
         query = dns.message.make_query(target, dns.rdatatype.NS)
-        response = self._handle_timeout(dns.query.udp, query, nameserver_ips[0], timeout=self.timeout)
+        retry = 0
+        while True:
+            response = self._handle_timeout(dns.query.udp, query, nameserver_ips[0], timeout=self.timeout)
+            if response.rcode() == dns.rcode.SERVFAIL and retry < self.servfail_retries:
+                retry += 1
+                continue
+            break
         self._handle_reponse_errors(target, response, nameserver=nameserver_ips[0], query='get NS for "%s"' % target)
 
         cname = None
