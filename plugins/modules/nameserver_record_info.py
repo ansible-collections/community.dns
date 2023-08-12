@@ -454,26 +454,18 @@ results:
                 - address: 127.0.0.1
 '''
 
-import traceback
-
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.common.text.converters import to_native
 
 from ansible_collections.community.dns.plugins.module_utils.resolver import (
     ResolveDirectlyFromNameServers,
-    ResolverError,
     assert_requirements_present,
+    guarded_run,
 )
 
 from ansible_collections.community.dns.plugins.module_utils.dnspython_records import (
     NAME_TO_RDTYPE,
     convert_rdata_to_dict,
 )
-
-try:
-    import dns.exception
-except ImportError:
-    pass  # handled in assert_requirements_present()
 
 
 def main():
@@ -535,7 +527,7 @@ def main():
 
     rdtype = NAME_TO_RDTYPE[record_type]
 
-    try:
+    def f():
         for index, name in enumerate(names):
             result = []
             results[index]['result'] = result
@@ -551,17 +543,9 @@ def main():
                         values.append(convert_rdata_to_dict(data))
                 ns_result['values'] = sorted(values)
             result.sort(key=lambda v: v['nameserver'])
-        module.exit_json(results=results)
-    except ResolverError as e:
-        module.fail_json(
-            msg='Unexpected resolving error: {0}'.format(to_native(e)),
-            results=results,
-            exception=traceback.format_exc())
-    except dns.exception.DNSException as e:
-        module.fail_json(
-            msg='Unexpected DNS error: {0}'.format(to_native(e)),
-            results=results,
-            exception=traceback.format_exc())
+
+    guarded_run(f, module, generate_additional_results=lambda: dict(results=results))
+    module.exit_json(results=results)
 
 
 if __name__ == "__main__":

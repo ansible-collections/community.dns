@@ -180,7 +180,6 @@ completed:
 '''
 
 import time
-import traceback
 
 try:
     from time import monotonic
@@ -188,16 +187,15 @@ except ImportError:
     from time import clock as monotonic
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.common.text.converters import to_native, to_text
+from ansible.module_utils.common.text.converters import to_text
 
 from ansible_collections.community.dns.plugins.module_utils.resolver import (
     ResolveDirectlyFromNameServers,
-    ResolverError,
     assert_requirements_present,
+    guarded_run,
 )
 
 try:
-    import dns.exception
     import dns.rdatatype
 except ImportError:
     pass  # handled in assert_requirements_present()
@@ -238,6 +236,83 @@ def validate_check(record_values, expected_values, comparison_mode):
     raise Exception('Internal error!')
 
 
+class Waiter(object):
+    def __init__(self, module):
+        self.module = module
+
+        self.resolver = ResolveDirectlyFromNameServers(
+            timeout=self.module.params['query_timeout'],
+            timeout_retries=self.module.params['query_retry'],
+            always_ask_default_resolver=self.module.params['always_ask_default_resolver'],
+        )
+        self.records = self.module.params['records']
+        self.timeout = self.module.params['timeout']
+        self.max_sleep = self.module.params['max_sleep']
+
+        self.results = [None] * len(self.records)
+        for index in range(len(self.records)):
+            self.results[index] = {
+                'name': self.records[index]['name'],
+                'done': False,
+                'check_count': 0,
+            }
+        self.finished_checks = 0
+
+    def _run(self):
+        self.start_time = monotonic()
+
+        step = 0
+        while True:
+            has_timeout = False
+            if self.timeout is not None:
+                expired = monotonic() - self.start_time
+                has_timeout = expired > self.timeout
+
+            done = True
+            for index, record in enumerate(self.records):
+                if self.results[index]['done']:
+                    continue
+                txts = lookup(self.resolver, record['name'])
+                self.results[index]['values'] = txts
+                self.results[index]['check_count'] += 1
+                if txts and all(validate_check(txt, record['values'], record['mode']) for txt in txts.values()):
+                    self.results[index]['done'] = True
+                    self.finished_checks += 1
+                else:
+                    done = False
+
+            if done:
+                self.module.exit_json(
+                    msg='All checks passed',
+                    **self._generate_additional_results()
+                )
+
+            if has_timeout:
+                self.module.fail_json(
+                    msg='Timeout ({0} out of {1} check(s) passed).'.format(self.finished_checks, len(self.records)),
+                    **self._generate_additional_results()
+                )
+
+            # Simple quadratic sleep with maximum wait of max_sleep seconds
+            wait = min(2 + step * 0.5, self.max_sleep)
+            if self.timeout is not None:
+                # Make sure we do not exceed the timeout by much by waiting
+                expired = monotonic() - self.start_time
+                wait = max(min(wait, self.timeout - expired + 0.1), 0.1)
+
+            time.sleep(wait)
+            step += 1
+
+    def _generate_additional_results(self):
+        return dict(
+            records=self.results,
+            completed=self.finished_checks,
+        )
+
+    def run(self):
+        guarded_run(self._run, self.module, generate_additional_results=self._generate_additional_results)
+
+
 def main():
     module = AnsibleModule(
         argument_spec=dict(
@@ -256,79 +331,8 @@ def main():
     )
     assert_requirements_present(module)
 
-    resolver = ResolveDirectlyFromNameServers(
-        timeout=module.params['query_timeout'],
-        timeout_retries=module.params['query_retry'],
-        always_ask_default_resolver=module.params['always_ask_default_resolver'],
-    )
-    records = module.params['records']
-    timeout = module.params['timeout']
-    max_sleep = module.params['max_sleep']
-
-    results = [None] * len(records)
-    for index in range(len(records)):
-        results[index] = {
-            'name': records[index]['name'],
-            'done': False,
-            'check_count': 0,
-        }
-    finished_checks = 0
-
-    start_time = monotonic()
-    try:
-        step = 0
-        while True:
-            has_timeout = False
-            if timeout is not None:
-                expired = monotonic() - start_time
-                has_timeout = expired > timeout
-
-            done = True
-            for index, record in enumerate(records):
-                if results[index]['done']:
-                    continue
-                txts = lookup(resolver, record['name'])
-                results[index]['values'] = txts
-                results[index]['check_count'] += 1
-                if txts and all(validate_check(txt, record['values'], record['mode']) for txt in txts.values()):
-                    results[index]['done'] = True
-                    finished_checks += 1
-                else:
-                    done = False
-
-            if done:
-                module.exit_json(
-                    msg='All checks passed',
-                    records=results,
-                    completed=finished_checks)
-
-            if has_timeout:
-                module.fail_json(
-                    msg='Timeout ({0} out of {1} check(s) passed).'.format(finished_checks, len(records)),
-                    records=results,
-                    completed=finished_checks)
-
-            # Simple quadratic sleep with maximum wait of max_sleep seconds
-            wait = min(2 + step * 0.5, max_sleep)
-            if timeout is not None:
-                # Make sure we do not exceed the timeout by much by waiting
-                expired = monotonic() - start_time
-                wait = max(min(wait, timeout - expired + 0.1), 0.1)
-
-            time.sleep(wait)
-            step += 1
-    except ResolverError as e:
-        module.fail_json(
-            msg='Unexpected resolving error: {0}'.format(to_native(e)),
-            records=results,
-            completed=finished_checks,
-            exception=traceback.format_exc())
-    except dns.exception.DNSException as e:
-        module.fail_json(
-            msg='Unexpected DNS error: {0}'.format(to_native(e)),
-            records=results,
-            completed=finished_checks,
-            exception=traceback.format_exc())
+    waiter = Waiter(module)
+    waiter.run()
 
 
 if __name__ == "__main__":
