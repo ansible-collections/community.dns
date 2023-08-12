@@ -27,6 +27,9 @@ else:
     DNSPYTHON_IMPORTERROR = None
 
 
+_EDNS_SIZE = 1232  # equals dns.message.DEFAULT_EDNS_PAYLOAD; larger values cause problems with Route53 nameservers for me
+
+
 class ResolverError(Exception):
     pass
 
@@ -60,7 +63,7 @@ class _Resolve(object):
                     raise exc
                 retry += 1
 
-    def _resolve(self, resolver, dnsname, **kwargs):
+    def _resolve(self, resolver, dnsname, handle_response_errors=False, **kwargs):
         try:
             response = self._handle_timeout(resolver.resolve, dnsname, lifetime=self.timeout, **kwargs)
         except AttributeError:
@@ -72,6 +75,8 @@ class _Resolve(object):
                 # For dnspython < 1.6.0
                 resolver.lifetime = self.timeout
                 response = self._handle_timeout(resolver.query, dnsname, **kwargs)
+        if handle_response_errors:
+            self._handle_reponse_errors(dnsname, response.response, nameserver=resolver.nameservers)
         return response.rrset
 
 
@@ -115,7 +120,7 @@ class ResolveDirectlyFromNameServers(_Resolve):
 
     def _lookup_address_impl(self, target, rdtype):
         try:
-            answer = self._resolve(self.default_resolver, target, rdtype=rdtype)
+            answer = self._resolve(self.default_resolver, target, handle_response_errors=True, rdtype=rdtype)
             return [str(res) for res in answer]
         except dns.resolver.NoAnswer:
             return []
@@ -159,6 +164,7 @@ class ResolveDirectlyFromNameServers(_Resolve):
         resolver = self.cache.get(cache_index)
         if resolver is None:
             resolver = dns.resolver.Resolver(configure=False)
+            resolver.use_edns(0, ednsflags=dns.flags.DO, payload=_EDNS_SIZE)
             resolver.timeout = self.timeout
             nameserver_ips = set()
             for nameserver in nameservers:
@@ -199,7 +205,7 @@ class ResolveDirectlyFromNameServers(_Resolve):
             results[nameserver] = None
             resolver = self._get_resolver(dnsname, [nameserver])
             try:
-                results[nameserver] = self._resolve(resolver, dnsname, **kwargs)
+                results[nameserver] = self._resolve(resolver, dnsname, handle_response_errors=True, **kwargs)
             except dns.resolver.NoAnswer:
                 pass
         return results

@@ -11,6 +11,11 @@ __metaclass__ = type
 
 from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import MagicMock
 
+try:
+    import dns.rcode
+except ImportError:
+    pass
+
 
 def mock_resolver(default_nameservers, nameserver_resolve_sequence):
     def create_resolver(configure=True):
@@ -59,15 +64,16 @@ def mock_query_udp(call_sequence):
     return udp
 
 
-def create_mock_answer(rrset=None):
-    answer = MagicMock()
-    answer.rrset = rrset
-    return answer
-
-
 def create_mock_response(rcode, authority=None, answer=None):
     response = MagicMock()
     response.rcode = MagicMock(return_value=rcode)
     response.authority = authority or []
     response.answer = answer or []
     return response
+
+
+def create_mock_answer(rrset=None, rcode=None):
+    answer = MagicMock()
+    answer.response = create_mock_response(dns.rcode.NOERROR if rcode is None else rcode, answer=[rrset] if rrset else None)
+    answer.rrset = rrset
+    return answer
