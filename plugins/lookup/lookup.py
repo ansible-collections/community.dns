@@ -76,6 +76,19 @@ options:
             - How often to retry on SERVFAIL errors.
         type: int
         default: 0
+    nxdomain_handling:
+        description:
+            - How to handle NXDOMAIN errors. These appear if an unknown domain name is queried.
+            - V(empty) (default) returns an empty result for that domain name.
+              This means that for the corresponding domain name, nothing is added to RV(_result).
+            - V(fail) makes the lookup fail.
+            - V(message) adds the string V(NXDOMAIN) to RV(_result).
+        type: str
+        choices:
+            - empty
+            - fail
+            - message
+        default: empty
 '''
 
 EXAMPLES = """
@@ -124,8 +137,38 @@ from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
     guarded_run,
 )
 
+try:
+    import dns.resolver
+except ImportError:
+    # handled by assert_requirements_present_dnspython
+    pass
+
 
 class LookupModule(LookupBase):
+    @staticmethod
+    def _resolve(resolver, name, rdtype, server_addresses, nxdomain_handling):
+        def callback():
+            try:
+                rrset = resolver.resolve(
+                    name,
+                    rdtype=rdtype,
+                    server_addresses=server_addresses,
+                    nxdomain_is_empty=nxdomain_handling == 'empty',
+                )
+                if not rrset:
+                    return []
+                return [to_text(data) for data in rrset]
+            except dns.resolver.NXDOMAIN:
+                if nxdomain_handling == 'message':
+                    return ['NXDOMAIN']
+                raise AnsibleLookupError('Got NXDOMAIN when querying {name}'.format(name=name))
+
+        return guarded_run(
+            callback,
+            error_class=AnsibleLookupError,
+            server=name,
+        )
+
     def run(self, terms, variables=None, **kwargs):
         assert_requirements_present_dnspython('community.dns.lookup', 'lookup')
 
@@ -138,6 +181,8 @@ class LookupModule(LookupBase):
         )
 
         rdtype = NAME_TO_RDTYPE[self.get_option('type')]
+
+        nxdomain_handling = self.get_option('nxdomain_handling')
 
         server_addresses = None
         if self.get_option('server'):
@@ -156,12 +201,5 @@ class LookupModule(LookupBase):
 
         result = []
         for name in terms:
-            rrset = guarded_run(
-                lambda: resolver.resolve(name, rdtype=rdtype, server_addresses=server_addresses),
-                error_class=AnsibleLookupError,
-                server=name,
-            )
-            if rrset:
-                for data in rrset:
-                    result.append(to_text(data))
+            result.extend(self._resolve(resolver, name, rdtype, server_addresses, nxdomain_handling))
         return result

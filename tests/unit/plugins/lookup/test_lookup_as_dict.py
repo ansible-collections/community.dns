@@ -147,7 +147,7 @@ class TestLookupAsDict(TestCase):
         print(exc.value.args[0])
         assert exc.value.args[0].startswith('Unexpected DNS error for www.example.com: The DNS operation timed out after 10')
 
-    def test_simple_nxdomain(self):
+    def test_simple_nxdomain_empty(self):
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
@@ -161,10 +161,30 @@ class TestLookupAsDict(TestCase):
         with patch('dns.resolver.get_default_resolver', resolver):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp([])):
-                    result = self.lookup.run(['www.example.com'])
+                    result = self.lookup.run(['www.example.com'], nxdomain_handling='empty')
 
         print(result)
         assert len(result) == 0
+
+    def test_simple_nxdomain_fail(self):
+        resolver = mock_resolver(['1.1.1.1'], {
+            ('1.1.1.1', ): [
+                {
+                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'rdtype': dns.rdatatype.A,
+                    'lifetime': 10,
+                    'result': create_mock_answer(rcode=dns.rcode.NXDOMAIN),
+                },
+            ],
+        })
+        with patch('dns.resolver.get_default_resolver', resolver):
+            with patch('dns.resolver.Resolver', resolver):
+                with patch('dns.query.udp', mock_query_udp([])):
+                    with pytest.raises(AnsibleLookupError) as exc:
+                        self.lookup.run(['www.example.com'], nxdomain_handling='fail')
+
+        print(exc.value.args[0])
+        assert exc.value.args[0] == 'Got NXDOMAIN when querying www.example.com'
 
     def test_simple_servfail(self):
         resolver = mock_resolver(['1.1.1.1'], {
