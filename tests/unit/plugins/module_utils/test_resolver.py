@@ -36,24 +36,26 @@ def test_assert_requirements_present():
     class ModuleFailException(Exception):
         pass
 
-    def fail_json(**kwargs):
-        raise ModuleFailException(kwargs)
+    class FakeModule(object):
+        def fail_json(self, **kwargs):
+            raise ModuleFailException(kwargs)
 
-    module = MagicMock()
-    module.fail_json = MagicMock(side_effect=fail_json)
+    module = FakeModule()
 
     orig_importerror = resolver.DNSPYTHON_IMPORTERROR
-    resolver.DNSPYTHON_IMPORTERROR = None
-    assert_requirements_present(module)
-
-    resolver.DNSPYTHON_IMPORTERROR = 'asdf'
-    with pytest.raises(ModuleFailException) as exc:
+    try:
+        resolver.DNSPYTHON_IMPORTERROR = None
         assert_requirements_present(module)
 
-    assert 'dnspython' in exc.value.args[0]['msg']
-    assert 'asdf' == exc.value.args[0]['exception']
+        resolver.DNSPYTHON_IMPORTERROR = 'asdf'
+        with pytest.raises(ModuleFailException) as exc:
+            assert_requirements_present(module)
 
-    resolver.DNSPYTHON_IMPORTERROR = orig_importerror
+        assert 'dnspython' in exc.value.args[0]['msg']
+        assert 'asdf' == exc.value.args[0]['exception']
+
+    finally:
+        resolver.DNSPYTHON_IMPORTERROR = orig_importerror
 
 
 def test_lookup_ns_names():

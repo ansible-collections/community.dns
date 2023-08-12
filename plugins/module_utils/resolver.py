@@ -10,7 +10,7 @@ __metaclass__ = type
 import traceback
 
 from ansible.module_utils.basic import missing_required_lib
-from ansible.module_utils.common.text.converters import to_text
+from ansible.module_utils.common.text.converters import to_native, to_text
 
 try:
     import dns
@@ -31,14 +31,11 @@ class ResolverError(Exception):
     pass
 
 
-class ResolveDirectlyFromNameServers(object):
-    def __init__(self, timeout=10, timeout_retries=3, always_ask_default_resolver=True):
-        self.cache = {}
+class _Resolve(object):
+    def __init__(self, timeout=10, timeout_retries=3):
         self.timeout = timeout
         self.timeout_retries = timeout_retries
         self.default_resolver = dns.resolver.get_default_resolver()
-        self.default_nameservers = self.default_resolver.nameservers
-        self.always_ask_default_resolver = always_ask_default_resolver
 
     def _handle_reponse_errors(self, target, response, nameserver=None, query=None):
         rcode = response.rcode()
@@ -62,6 +59,28 @@ class ResolveDirectlyFromNameServers(object):
                 if retry >= self.timeout_retries:
                     raise exc
                 retry += 1
+
+    def _resolve(self, resolver, dnsname, **kwargs):
+        try:
+            response = self._handle_timeout(resolver.resolve, dnsname, lifetime=self.timeout, **kwargs)
+        except AttributeError:
+            # For dnspython < 2.0.0
+            resolver.search = False
+            try:
+                response = self._handle_timeout(resolver.query, dnsname, lifetime=self.timeout, **kwargs)
+            except TypeError:
+                # For dnspython < 1.6.0
+                resolver.lifetime = self.timeout
+                response = self._handle_timeout(resolver.query, dnsname, **kwargs)
+        return response.rrset
+
+
+class ResolveDirectlyFromNameServers(_Resolve):
+    def __init__(self, timeout=10, timeout_retries=3, always_ask_default_resolver=True):
+        super(ResolveDirectlyFromNameServers, self).__init__(timeout=timeout, timeout_retries=timeout_retries)
+        self.cache = {}
+        self.default_nameservers = self.default_resolver.nameservers
+        self.always_ask_default_resolver = always_ask_default_resolver
 
     def _lookup_ns_names(self, target, nameservers=None, nameserver_ips=None):
         if self.always_ask_default_resolver:
@@ -96,18 +115,8 @@ class ResolveDirectlyFromNameServers(object):
 
     def _lookup_address_impl(self, target, rdtype):
         try:
-            try:
-                answer = self._handle_timeout(self.default_resolver.resolve, target, rdtype=rdtype, lifetime=self.timeout)
-            except AttributeError:
-                # For dnspython < 2.0.0
-                self.default_resolver.search = False
-                try:
-                    answer = self._handle_timeout(self.default_resolver.query, target, rdtype=rdtype, lifetime=self.timeout)
-                except TypeError:
-                    # For dnspython < 1.6.0
-                    self.default_resolver.lifetime = self.timeout
-                    answer = self._handle_timeout(self.default_resolver.query, target, rdtype=rdtype)
-            return [str(res) for res in answer.rrset]
+            answer = self._resolve(self.default_resolver, target, rdtype=rdtype)
+            return [str(res) for res in answer]
         except dns.resolver.NoAnswer:
             return []
 
@@ -190,24 +199,38 @@ class ResolveDirectlyFromNameServers(object):
             results[nameserver] = None
             resolver = self._get_resolver(dnsname, [nameserver])
             try:
-                try:
-                    response = self._handle_timeout(resolver.resolve, dnsname, lifetime=self.timeout, **kwargs)
-                except AttributeError:
-                    # For dnspython < 2.0.0
-                    resolver.search = False
-                    try:
-                        response = self._handle_timeout(resolver.query, dnsname, lifetime=self.timeout, **kwargs)
-                    except TypeError:
-                        # For dnspython < 1.6.0
-                        resolver.lifetime = self.timeout
-                        response = self._handle_timeout(resolver.query, dnsname, **kwargs)
-                if response.rrset:
-                    results[nameserver] = response.rrset
+                results[nameserver] = self._resolve(resolver, dnsname, **kwargs)
             except dns.resolver.NoAnswer:
                 pass
         return results
 
 
+def guarded_run(runner, module, server=None, generate_additional_results=None):
+    suffix = ' for {0}'.format(server) if server is not None else ''
+    kwargs = {}
+    try:
+        return runner()
+    except ResolverError as e:
+        if generate_additional_results is not None:
+            kwargs = generate_additional_results()
+        module.fail_json(
+            msg='Unexpected resolving error{0}: {1}'.format(suffix, to_native(e)),
+            exception=traceback.format_exc(),
+            **kwargs
+        )
+    except dns.exception.DNSException as e:
+        if generate_additional_results is not None:
+            kwargs = generate_additional_results()
+        module.fail_json(
+            msg='Unexpected DNS error{0}: {1}'.format(suffix, to_native(e)),
+            exception=traceback.format_exc(),
+            **kwargs
+        )
+
+
 def assert_requirements_present(module):
     if DNSPYTHON_IMPORTERROR is not None:
-        module.fail_json(msg=missing_required_lib('dnspython'), exception=DNSPYTHON_IMPORTERROR)
+        module.fail_json(
+            msg=missing_required_lib('dnspython'),
+            exception=DNSPYTHON_IMPORTERROR,
+        )

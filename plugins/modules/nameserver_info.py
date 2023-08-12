@@ -104,22 +104,13 @@ results:
             - ns3.example.org
 '''
 
-import traceback
-
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.common.text.converters import to_native
 
 from ansible_collections.community.dns.plugins.module_utils.resolver import (
     ResolveDirectlyFromNameServers,
-    ResolverError,
     assert_requirements_present,
+    guarded_run,
 )
-
-try:
-    import dns.exception
-    import dns.rdatatype
-except ImportError:
-    pass  # handled in assert_requirements_present()
 
 
 def main():
@@ -149,20 +140,12 @@ def main():
             'name': name,
         }
 
-    try:
+    def f():
         for index, name in enumerate(names):
             results[index]['nameservers'] = sorted(resolver.resolve_nameservers(name, resolve_addresses=resolve_addresses))
-        module.exit_json(results=results)
-    except ResolverError as e:
-        module.fail_json(
-            msg='Unexpected resolving error: {0}'.format(to_native(e)),
-            results=results,
-            exception=traceback.format_exc())
-    except dns.exception.DNSException as e:
-        module.fail_json(
-            msg='Unexpected DNS error: {0}'.format(to_native(e)),
-            results=results,
-            exception=traceback.format_exc())
+
+    guarded_run(f, module, generate_additional_results=lambda: dict(results=results))
+    module.exit_json(results=results)
 
 
 if __name__ == "__main__":
