@@ -100,6 +100,12 @@ options:
               changed and have not yet propagated.
         type: bool
         default: true
+    servfail_retries:
+        description:
+            - How often to retry on SERVFAIL errors.
+        type: int
+        default: 0
+        version_added: 2.6.0
 requirements:
     - dnspython >= 1.15.0 (maybe older versions also work)
 '''
@@ -243,6 +249,7 @@ class Waiter(object):
         self.resolver = ResolveDirectlyFromNameServers(
             timeout=self.module.params['query_timeout'],
             timeout_retries=self.module.params['query_retry'],
+            servfail_retries=self.module.params['servfail_retries'],
             always_ask_default_resolver=self.module.params['always_ask_default_resolver'],
         )
         self.records = self.module.params['records']
@@ -326,6 +333,7 @@ def main():
             timeout=dict(type='float'),
             max_sleep=dict(type='float', default=10),
             always_ask_default_resolver=dict(type='bool', default=True),
+            servfail_retries=dict(type='int', default=0),
         ),
         supports_check_mode=True,
     )

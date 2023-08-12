@@ -1,0 +1,2 @@
+minor_changes:
+  - "wait_for_txt - add ``servfail_retries`` parameter that allows retrying after SERVFAIL errors (https://github.com/ansible-collections/community.dns/pull/159)."
