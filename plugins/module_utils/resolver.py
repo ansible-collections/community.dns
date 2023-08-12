@@ -27,6 +27,9 @@ else:
     DNSPYTHON_IMPORTERROR = None
 
 
+_EDNS_SIZE = 1232  # equals dns.message.DEFAULT_EDNS_PAYLOAD; larger values cause problems with Route53 nameservers for me
+
+
 class ResolverError(Exception):
     pass
 
@@ -161,6 +164,7 @@ class ResolveDirectlyFromNameServers(_Resolve):
         resolver = self.cache.get(cache_index)
         if resolver is None:
             resolver = dns.resolver.Resolver(configure=False)
+            resolver.use_edns(0, ednsflags=dns.flags.DO, payload=_EDNS_SIZE)
             resolver.timeout = self.timeout
             nameserver_ips = set()
             for nameserver in nameservers:

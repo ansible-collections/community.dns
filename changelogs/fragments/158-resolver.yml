@@ -1,2 +1,4 @@
 bugfixes:
   - "wait_for_txt, resolver module utils - improve error handling (https://github.com/ansible-collections/community.dns/pull/158)."
+minor_changes:
+  - "wait_for_txt, resolver module utils - use `EDNS <https://en.wikipedia.org/wiki/Extension_Mechanisms_for_DNS>`__ (https://github.com/ansible-collections/community.dns/pull/158)."
