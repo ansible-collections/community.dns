@@ -658,3 +658,35 @@ releases:
     - 2.5.7.yml
     - update-psl.yml
     release_date: '2023-07-17'
+  2.6.0:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      - wait_for_txt, resolver module utils - improve error handling (https://github.com/ansible-collections/community.dns/pull/158).
+      minor_changes:
+      - wait_for_txt - add ``servfail_retries`` parameter that allows retrying after
+        SERVFAIL errors (https://github.com/ansible-collections/community.dns/pull/159).
+      - wait_for_txt, resolver module utils - use `EDNS <https://en.wikipedia.org/wiki/Extension_Mechanisms_for_DNS>`__
+        (https://github.com/ansible-collections/community.dns/pull/158).
+      release_summary: Feature release with an updated Public Suffix List.
+    fragments:
+    - 158-resolver.yml
+    - 159-servfail.yml
+    - 2.6.0.yml
+    - update-psl.yml
+    modules:
+    - description: Look up nameservers for a DNS name
+      name: nameserver_info
+      namespace: ''
+    - description: Look up all records of a type from all nameservers for a DNS name
+      name: nameserver_record_info
+      namespace: ''
+    plugins:
+      lookup:
+      - description: Look up DNS records
+        name: lookup
+        namespace: null
+      - description: Look up DNS records as dictionaries
+        name: lookup_as_dict
+        namespace: null
+    release_date: '2023-08-15'

@@ -5,6 +5,41 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v2.6.0
+======
+
+Release Summary
+---------------
+
+Feature release with an updated Public Suffix List.
+
+Minor Changes
+-------------
+
+- wait_for_txt - add ``servfail_retries`` parameter that allows retrying after SERVFAIL errors (https://github.com/ansible-collections/community.dns/pull/159).
+- wait_for_txt, resolver module utils - use `EDNS <https://en.wikipedia.org/wiki/Extension_Mechanisms_for_DNS>`__ (https://github.com/ansible-collections/community.dns/pull/158).
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- wait_for_txt, resolver module utils - improve error handling (https://github.com/ansible-collections/community.dns/pull/158).
+
+New Plugins
+-----------
+
+Lookup
+~~~~~~
+
+- community.dns.lookup - Look up DNS records
+- community.dns.lookup_as_dict - Look up DNS records as dictionaries
+
+New Modules
+-----------
+
+- community.dns.nameserver_info - Look up nameservers for a DNS name
+- community.dns.nameserver_record_info - Look up all records of a type from all nameservers for a DNS name
+
 v2.5.7
 ======
 
