@@ -7,7 +7,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-DOCUMENTATION = '''
+DOCUMENTATION = r'''
 name: lookup
 author: Felix Fontein (@felixfontein)
 short_description: Look up DNS records
@@ -89,16 +89,21 @@ options:
             - fail
             - message
         default: empty
+notes:
+    - Note that when using this lookup plugin with V(lookup(\)), and the result is a one-element list,
+      Ansible simply returns the one element not as a list. Since this behavior is surprising and
+      can cause problems, it is better to use V(query(\)) instead of V(lookup(\)). See the examples
+      and also R(Forcing lookups to return lists, query) in the Ansible documentation.
 '''
 
 EXAMPLES = """
 - name: Look up A (IPv4) records for example.org
   ansible.builtin.debug:
-    msg: "{{ lookup('community.dns.lookup', 'example.org.') }}"
+    msg: "{{ query('community.dns.lookup', 'example.org.') }}"
 
 - name: Look up AAAA (IPv6) records for example.org
   ansible.builtin.debug:
-    msg: "{{ lookup('community.dns.lookup', 'example.org.', type='AAAA' ) }}"
+    msg: "{{ query('community.dns.lookup', 'example.org.', type='AAAA' ) }}"
 """
 
 RETURN = """

@@ -7,7 +7,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-DOCUMENTATION = '''
+DOCUMENTATION = r'''
 name: lookup_as_dict
 author: Felix Fontein (@felixfontein)
 short_description: Look up DNS records as dictionaries
@@ -87,20 +87,25 @@ options:
             - empty
             - fail
         default: empty
+notes:
+    - Note that when using this lookup plugin with V(lookup(\)), and the result is a one-element list,
+      Ansible simply returns the one element not as a list. Since this behavior is surprising and
+      can cause problems, it is better to use V(query(\)) instead of V(lookup(\)). See the examples
+      and also R(Forcing lookups to return lists, query) in the Ansible documentation.
 '''
 
 EXAMPLES = """
 - name: Look up A (IPv4) records for example.org as a list of dictionaries
   ansible.builtin.debug:
-    msg: "{{ lookup('community.dns.lookup_as_dict', 'example.org.') }}"
+    msg: "{{ query('community.dns.lookup_as_dict', 'example.org.') }}"
 
 - name: Look up AAAA (IPv6) records for example.org as a list of IPv6 addresses
   ansible.builtin.debug:
-    msg: "{{ lookup('community.dns.lookup_as_dict', 'example.org.', type='AAAA' ) | map(attribute='address') }}"
+    msg: "{{ query('community.dns.lookup_as_dict', 'example.org.', type='AAAA' ) | map(attribute='address') }}"
 
 - name: Look up TXT records for ansible.com as a list of strings
   ansible.builtin.debug:
-    msg: "{{ lookup('community.dns.lookup_as_dict', 'ansible.com.', type='TXT' ) | map(attribute='value') }}"
+    msg: "{{ query('community.dns.lookup_as_dict', 'ansible.com.', type='TXT' ) | map(attribute='value') }}"
 """
 
 RETURN = """
