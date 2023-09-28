@@ -2,6 +2,7 @@
 <html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+<meta content="2.4.0" name="antsibull-docs" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>community.dns.lookup_as_dict lookup – Look up DNS records as dictionaries &mdash; Community.Dns Collection  documentation</title>
@@ -156,6 +157,8 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This lookup plugin is part of the <a class="reference external" href="https://galaxy.ansible.com/community/dns">community.dns collection</a> (version 2.6.1).</p>
+<p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
+To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">community.dns</span></code>.
 You need further requirements to be able to use this lookup plugin,
 see <a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
@@ -189,7 +192,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-looku
 </section>
 <section id="terms">
 <h2><a class="toc-backref" href="#id3" role="doc-backlink">Terms</a><a class="headerlink" href="#terms" title="Link to this heading"></a></h2>
-<table class="ansible-option-table docutils align-default" style="width: 100%">
+<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameter</p></th>
 <th class="head"><p>Comments</p></th>
@@ -210,7 +213,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-looku
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Keyword parameters</a><a class="headerlink" href="#keyword-parameters" title="Link to this heading"></a></h2>
 <p>This describes keyword parameters of the lookup. These are the values <code class="docutils literal notranslate"><span class="pre">key1=value1</span></code>, <code class="docutils literal notranslate"><span class="pre">key2=value2</span></code> and so on in the following
 examples: <code class="docutils literal notranslate"><span class="pre">lookup('community.dns.lookup_as_dict',</span> <span class="pre">key1=value1,</span> <span class="pre">key2=value2,</span> <span class="pre">...)</span></code> and <code class="docutils literal notranslate"><span class="pre">query('community.dns.lookup_as_dict',</span> <span class="pre">key1=value1,</span> <span class="pre">key2=value2,</span> <span class="pre">...)</span></code></p>
-<table class="ansible-option-table docutils align-default" style="width: 100%">
+<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameter</p></th>
 <th class="head"><p>Comments</p></th>
@@ -224,9 +227,9 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <td><div class="ansible-option-cell"><p>How to handle NXDOMAIN errors. These appear if an unknown domain name is queried.</p>
 <p><code class="ansible-value docutils literal notranslate"><span class="pre">empty</span></code> (default) returns an empty result for that domain name. This means that for the corresponding domain name, nothing is added to <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-return-result"><span class="std std-ref"><span class="pre">_result</span></span></a></code>.</p>
 <p><code class="ansible-value docutils literal notranslate"><span class="pre">fail</span></code> makes the lookup fail.</p>
-<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
 <ul class="simple">
-<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">&quot;empty&quot;</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">&quot;empty&quot;</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;fail&quot;</span></code></p></li>
 </ul>
 </div></td>
@@ -236,7 +239,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#parameter-query_retry" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Number of retries for DNS query timeouts.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">3</span></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">3</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -244,7 +247,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#parameter-query_timeout" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">float</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Timeout per DNS query in seconds.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">10.0</span></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">10.0</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -260,7 +263,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#parameter-servfail_retries" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>How often to retry on SERVFAIL errors.</p>
-<p class="ansible-option-line"><span class="ansible-option-default-bold">Default:</span> <code class="ansible-option-default docutils literal notranslate"><span class="pre">0</span></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">0</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
@@ -268,9 +271,9 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#parameter-type" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The record type to retrieve.</p>
-<p class="ansible-option-line"><span class="ansible-option-choices">Choices:</span></p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
 <ul class="simple">
-<li><p><code class="ansible-option-default-bold docutils literal notranslate"><span class="pre">&quot;A&quot;</span></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">&quot;A&quot;</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;ALL&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;AAAA&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;CAA&quot;</span></code></p></li>
@@ -330,7 +333,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 </section>
 <section id="return-value">
 <h2><a class="toc-backref" href="#id7" role="doc-backlink">Return Value</a><a class="headerlink" href="#return-value" title="Link to this heading"></a></h2>
-<table class="ansible-option-table docutils align-default" style="width: 100%">
+<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Key</p></th>
 <th class="head"><p>Description</p></th>
@@ -345,8 +348,8 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <p>If multiple DNS names are queried in <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-terms"><span class="std std-ref"><span class="pre">_terms</span></span></a></strong></code>, the resulting lists have been concatenated.</p>
 <p>Depending on <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type</span></span></a></strong></code>, different fields are returned.</p>
 <p>For <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=TXT</span></span></a></code> and <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SPF</span></span></a></code>, also the concatenated value is returned as <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-return-result-value"><span class="std std-ref"><span class="pre">_result[].value</span></span></a></code>.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> success</p>
-<p class="ansible-option-line ansible-option-sample"><span class="ansible-option-sample-bold">Sample:</span> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[{&quot;address&quot;:</span> <span class="pre">&quot;127.0.0.1&quot;}]</span></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
+<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[{&quot;address&quot;:</span> <span class="pre">&quot;127.0.0.1&quot;}]</span></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -354,7 +357,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/address" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>A IPv4 respectively IPv6 address.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=A</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=AAAA</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=A</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=AAAA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -362,7 +365,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/algorithm" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The algorithm ID.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SSHFP</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SSHFP</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -370,7 +373,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/altitude" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">float</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The altitute.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -378,7 +381,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/cert" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The certificate.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -386,7 +389,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/cpu" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The CPU.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=HINFO</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=HINFO</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -394,7 +397,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/digest" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The digest.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -402,7 +405,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/digest_type" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The digest’s type.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -410,7 +413,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/exchange" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The exchange server.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=MX</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=MX</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -418,7 +421,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/expiration" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The expiration Unix timestamp.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -426,7 +429,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/expire" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Number of seconds after which secondary name servers should stop answering request for this zone if the main name server does not respond.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -434,7 +437,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/fingerprint" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The fingerprint.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SSHFP</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SSHFP</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -443,7 +446,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Flags.</p>
 <p>This is actually of type <code class="docutils literal notranslate"><span class="pre">string</span></code> for <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code>.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=CAA</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=CAA</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -451,7 +454,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/fp_type" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The fingerprint’s type.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SSHFP</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SSHFP</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -459,7 +462,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/horizontal_precision" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">float</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The horizontal precision of the location.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -467,7 +470,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/inception" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The inception Unix timestamp.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -475,7 +478,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/iterations" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The number of iterations.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -483,7 +486,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/key" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The key.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -491,7 +494,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/key_tag" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The key’s tag.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DS</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -499,7 +502,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/labels" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The labels.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -507,7 +510,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/latitude" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The location’s latitude.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -515,7 +518,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/longitude" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The location’s longitude.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -523,7 +526,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/mbox" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The mbox.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RP</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RP</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -531,7 +534,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/minimum" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Used to calculate the TTL for purposes of negative caching.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -539,7 +542,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/mname" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Primary main name server for this zone.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -547,7 +550,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/mtype" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The mtype.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -555,7 +558,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/next" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The next value.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -563,7 +566,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/order" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The order value.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -571,7 +574,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/original_ttl" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The original TTL.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -579,7 +582,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/os" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The operating system.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=HINFO</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=HINFO</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -587,7 +590,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/port" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The port.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -595,7 +598,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/preference" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The preference value for this record.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=MX</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=MX</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -603,7 +606,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/priority" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The priority value for this record.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -611,7 +614,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/protocol" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The protocol.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DNSKEY</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -619,7 +622,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/refresh" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Number of seconds after which secondary name servers should query the main name server for the SOA record to detect zone changes.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -627,7 +630,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/regexp" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>A regular expression.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -635,7 +638,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/replacement" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The replacement.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -643,7 +646,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/retry" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Number of seconds after which secondary name servers should retry to request the serial number from the main name server if the main name server does not respond.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -651,7 +654,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/rname" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>E-mail address of the administrator responsible for this zone.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -659,7 +662,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/salt" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The salt.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3PARAM</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -667,7 +670,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/selector" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The selector.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -675,7 +678,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/serial" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Serial number for this zone.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SOA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -683,7 +686,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/service" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The service.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NAPTR</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -691,7 +694,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/signature" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The signature.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -699,7 +702,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/signer" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The signer.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -707,7 +710,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/size" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">float</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The size of the location.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -716,7 +719,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>List of strings for this record.</p>
 <p>See <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-return-result-value"><span class="std std-ref"><span class="pre">_result[].value</span></span></a></code> for the concatenated result.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SPF</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=TXT</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SPF</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=TXT</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -724,7 +727,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/tag" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The tag.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=CAA</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=CAA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -732,7 +735,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/target" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The target.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=CNAME</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DNAME</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NS</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=PTR</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=CNAME</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=DNAME</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NS</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=PTR</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -740,7 +743,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/txt" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The TXT value.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RP</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RP</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -748,7 +751,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/type_covered" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The type covered.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=RRSIG</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -756,7 +759,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/usage" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The usage flag.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=TLSA</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -765,7 +768,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The value.</p>
 <p>For <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SPF</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=TXT</span></span></a></code>, this is the concatenation of <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-return-result-strings"><span class="std std-ref"><span class="pre">_result[].strings</span></span></a></code>.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=CAA</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SPF</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=TXT</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=CAA</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SPF</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=TXT</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -773,7 +776,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/vertical_precision" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">float</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The vertical precision of the location.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=LOC</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -781,7 +784,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/weight" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The service’s weight.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=SRV</span></span></a></code></p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -789,7 +792,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <a class="ansibleOptionLink" href="#return-_result/windows" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The windows.</p>
-<p class="ansible-option-line"><span class="ansible-option-returned-bold">Returned:</span> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code></p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC</span></span></a></code> or <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-as-dict-lookup-parameter-type"><span class="std std-ref"><span class="pre">type=NSEC3</span></span></a></code></p>
 </div></td>
 </tr>
 </tbody>
@@ -806,13 +809,14 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 </section>
 <section id="collection-links">
 <h3>Collection links<a class="headerlink" href="#collection-links" title="Link to this heading"></a></h3>
-<p class="ansible-links">
-  <a href="https://github.com/ansible-collections/community.dns/issues" aria-role="button" target="_blank" rel="noopener external">Issue Tracker</a>
-  <a href="https://github.com/ansible-collections/community.dns" aria-role="button" target="_blank" rel="noopener external">Repository (Sources)</a>
-  <a href="https://github.com/ansible-collections/community.dns/issues/new?assignees=&amp;labels=&amp;template=bug_report.md" aria-role="button" target="_blank" rel="noopener external">Submit a bug report</a>
-  <a href="https://github.com/ansible-collections/community.dns/issues/new?assignees=&amp;labels=&amp;template=feature_request.md" aria-role="button" target="_blank" rel="noopener external">Request a feature</a>
-  <a href="./#communication-for-community-dns" aria-role="button" target="_blank">Communication</a>
-</p></section>
+<ul class="ansible-links">
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/ansible-collections/community.dns/issues" rel="noopener external" target="_blank">Issue Tracker</a></span></li>
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/ansible-collections/community.dns" rel="noopener external" target="_blank">Repository (Sources)</a></span></li>
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/ansible-collections/community.dns/issues/new?assignees=&amp;labels=&amp;template=bug_report.md" rel="noopener external" target="_blank">Submit a bug report</a></span></li>
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/ansible-collections/community.dns/issues/new?assignees=&amp;labels=&amp;template=feature_request.md" rel="noopener external" target="_blank">Request a feature</a></span></li>
+<li><span><a class="reference internal" href="index.html#communication-for-community-dns"><span class="std std-ref">Communication</span></a></span></li>
+</ul>
+</section>
 </section>
 </section>
 
