@@ -24,7 +24,7 @@ The collection provides six modules for working with Hetzner DNS:
 - :ref:`community.dns.hetzner_dns_record_sets <ansible_collections.community.dns.hetzner_dns_record_sets_module>`: bulk synchronize DNS record sets
 - :ref:`community.dns.hetzner_dns_zone_info <ansible_collections.community.dns.hetzner_dns_zone_info_module>`: retrieve zone information
 
-If you are interested in migrating from the `markuman.hetzner_dns collection <https://galaxy.ansible.com/markuman/hetzner_dns>`_, please see :ref:`ansible_collections.community.dns.docsite.hetzner_guide.migration_markuman_hetzner_dns`.
+If you are interested in migrating from the `markuman.hetzner_dns collection <https://galaxy.ansible.com/ui/repo/published/markuman/hetzner_dns/>`_, please see :ref:`ansible_collections.community.dns.docsite.hetzner_guide.migration_markuman_hetzner_dns`.
 
 It also provides an inventory plugin:
 
@@ -318,7 +318,7 @@ The next example shows how to make sure that only the given records are availabl
 Migrating from ``markuman.hetzner_dns``
 ---------------------------------------
 
-This section describes how to migrate playbooks and roles from using the `markuman.hetzner_dns collection <https://galaxy.ansible.com/markuman/hetzner_dns>`_ to the Hetzner modules and plugins in the ``community.dns`` collection.
+This section describes how to migrate playbooks and roles from using the `markuman.hetzner_dns collection <https://galaxy.ansible.com/ui/repo/published/markuman/hetzner_dns/>`_ to the Hetzner modules and plugins in the ``community.dns`` collection.
 
 There are three steps for migrating. Two of these steps must be done on migration, the third step can also be done later:
 
@@ -326,7 +326,7 @@ There are three steps for migrating. Two of these steps must be done on migratio
 2. Adjust module and plugin options if necessary.
 3. Avoid deprecated aliases which ease the transition.
 
-The `markuman.hetzner_dns collection <https://galaxy.ansible.com/markuman/hetzner_dns>`_ collection provides three modules and one inventory plugin.
+The `markuman.hetzner_dns collection <https://galaxy.ansible.com/ui/repo/published/markuman/hetzner_dns/>`_ collection provides three modules and one inventory plugin.
 
 .. note::
 
