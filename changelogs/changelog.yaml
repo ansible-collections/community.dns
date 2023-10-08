@@ -699,3 +699,12 @@ releases:
     - 2.6.1.yml
     - update-psl.yml
     release_date: '2023-09-12'
+  2.6.2:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      release_summary: Maintenance release with updated PSL.
+    fragments:
+    - 2.6.2.yml
+    - update-psl.yml
+    release_date: '2023-10-08'
