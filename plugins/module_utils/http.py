@@ -13,7 +13,8 @@ import abc
 from ansible.module_utils import six
 from ansible.module_utils.common.text.converters import to_native
 from ansible.module_utils.six import PY3
-from ansible.module_utils.urls import fetch_url, open_url, urllib_error, NoSSLError, ConnectionError
+from ansible.module_utils.urls import fetch_url, open_url, NoSSLError, ConnectionError
+import ansible.module_utils.six.moves.urllib.error as urllib_error
 
 
 class NetworkError(Exception):
