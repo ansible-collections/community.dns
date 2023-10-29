@@ -193,7 +193,7 @@ The modules support both the old <a class="reference external" href="https://ns1
 </ul>
 <section id="authentication-requirements-and-apis">
 <h2><a class="toc-backref" href="#id1" role="doc-backlink">Authentication, Requirements and APIs</a><a class="headerlink" href="#authentication-requirements-and-apis" title="Link to this heading"></a></h2>
-<p>HostTech currently has two APIs for working with DNS records: the old WSDL-based API, and the new JSON-based REST API. We recommend using the new REST API if possible.</p>
+<p>HostTech currently has two APIs for working with DNS records: the old WSDL-based API, and the new JSON-based REST API. We recommend using the new JSON REST API if possible.</p>
 <section id="json-rest-api">
 <h3><a class="toc-backref" href="#id2" role="doc-backlink">JSON REST API</a><a class="headerlink" href="#json-rest-api" title="Link to this heading"></a></h3>
 <p>To use the JSON REST API, you need to create a API token. You can manage API tokens in the “DNS Editor” in the “API” section. You must provide the token to the <code class="ansible-option docutils literal notranslate"><strong><span><span class="pre">hosttech_token</span></span></strong></code> option of the modules:</p>
@@ -340,7 +340,7 @@ The modules support both the old <a class="reference external" href="https://ns1
 <span class="w">  </span><span class="nt">loop</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result.sets</span>
 </pre></div>
 </div>
-<p>If you are interested in individual DNS records, and not record sets, you should use the <a class="reference internal" href="../hosttech_dns_record_info_module.html#ansible-collections-community-dns-hosttech-dns-record-info-module"><span class="std std-ref">community.dns.hosttech_dns_record_info module</span></a>. It supports the same limiting options as the <code class="docutils literal notranslate"><span class="pre">community.dns.hosttech_dns_record_set_info</span></code> module.</p>
+<p>If you are interested in individual DNS records, and not record sets, you should use the <a class="reference internal" href="../hosttech_dns_record_info_module.html#ansible-collections-community-dns-hosttech-dns-record-info-module"><span class="std std-ref">community.dns.hosttech_dns_record_info module</span></a>. It supports the same limiting options as the <a class="reference internal" href="../hosttech_dns_record_set_info_module.html#ansible-collections-community-dns-hosttech-dns-record-set-info-module"><span class="std std-ref">community.dns.hosttech_dns_record_set_info module</span></a>.</p>
 </section>
 <section id="creating-and-updating-dns-single-records">
 <h3><a class="toc-backref" href="#id8" role="doc-backlink">Creating and updating DNS single records</a><a class="headerlink" href="#creating-and-updating-dns-single-records" title="Link to this heading"></a></h3>
