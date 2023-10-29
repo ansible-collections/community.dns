@@ -26,7 +26,7 @@ The label directly before the public suffix together with the suffix is called t
 Working with public suffixes
 ----------------------------
 
-The :ansplugin:`community.dns.get_public_suffix#filter` and :ansplugin:`community.dns.remove_public_suffix#filter>` filters allow to extract and remove public suffixes from DNS names:
+The :ansplugin:`community.dns.get_public_suffix#filter` and :ansplugin:`community.dns.remove_public_suffix#filter` filters allow to extract and remove public suffixes from DNS names:
 
 .. code-block:: yaml+jinja
 
