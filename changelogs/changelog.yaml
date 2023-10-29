@@ -35,7 +35,7 @@ releases:
     changes:
       breaking_changes:
       - hosttech_* module_utils - completely rewrite and refactor to support new JSON
-        API and allow to re-use provider-independent module logic (https://github.com/ansible-collections/community.dns/pull/4).
+        API and allow to reuse provider-independent module logic (https://github.com/ansible-collections/community.dns/pull/4).
       bugfixes:
       - Update Public Suffix List.
       - hosttech_record - fix diff mode for ``state=absent`` (https://github.com/ansible-collections/community.dns/pull/4).

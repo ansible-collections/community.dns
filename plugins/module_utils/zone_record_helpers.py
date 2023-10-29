@@ -37,7 +37,7 @@ def bulk_apply_changes(api,
     @param stop_early_on_errors: If set to ``True``, try to stop changes after the first error happens.
                                  This might only work on some APIs.
     @return A tuple (changed, errors, success) where ``changed`` is a boolean which indicates whether a
-            change was made, ``errors`` is a list of ``DNSAPIError`` instances for the errors occured,
+            change was made, ``errors`` is a list of ``DNSAPIError`` instances for the errors occurred,
             and ``success`` is a dictionary with three lists ``success['deleted']``,
             ``success['changed']`` and ``success['created']``, which list all records that were deleted,
             changed and created, respectively.

@@ -689,7 +689,7 @@ Minor Changes
 Breaking Changes / Porting Guide
 --------------------------------
 
-- hosttech_* module_utils - completely rewrite and refactor to support new JSON API and allow to re-use provider-independent module logic (https://github.com/ansible-collections/community.dns/pull/4).
+- hosttech_* module_utils - completely rewrite and refactor to support new JSON API and allow to reuse provider-independent module logic (https://github.com/ansible-collections/community.dns/pull/4).
 
 Bugfixes
 --------

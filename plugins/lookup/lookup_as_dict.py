@@ -132,7 +132,7 @@ _result:
             returned: if O(type=DNSKEY) or O(type=DS) or O(type=NSEC3) or O(type=NSEC3PARAM) or O(type=RRSIG) or O(type=SSHFP)
         altitude:
             description:
-                - The altitute.
+                - The altitude.
             type: float
             returned: if O(type=LOC)
         cert:
