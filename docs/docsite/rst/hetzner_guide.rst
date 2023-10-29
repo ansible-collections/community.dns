@@ -17,18 +17,18 @@ The modules use the `JSON REST based API <https://dns.hetzner.com/api-docs/>`_.
 
 The collection provides six modules for working with Hetzner DNS:
 
-- :ref:`community.dns.hetzner_dns_record <ansible_collections.community.dns.hetzner_dns_record_module>`: create/update/delete single DNS records
-- :ref:`community.dns.hetzner_dns_record_info <ansible_collections.community.dns.hetzner_dns_record_info_module>`: retrieve information on DNS records
-- :ref:`community.dns.hetzner_dns_record_set <ansible_collections.community.dns.hetzner_dns_record_set_module>`: create/update/delete DNS record sets
-- :ref:`community.dns.hetzner_dns_record_set_info <ansible_collections.community.dns.hetzner_dns_record_set_info_module>`: retrieve information on DNS record sets
-- :ref:`community.dns.hetzner_dns_record_sets <ansible_collections.community.dns.hetzner_dns_record_sets_module>`: bulk synchronize DNS record sets
-- :ref:`community.dns.hetzner_dns_zone_info <ansible_collections.community.dns.hetzner_dns_zone_info_module>`: retrieve zone information
+- :ansplugin:`community.dns.hetzner_dns_record#module`: create/update/delete single DNS records
+- :ansplugin:`community.dns.hetzner_dns_record_info#module`: retrieve information on DNS records
+- :ansplugin:`community.dns.hetzner_dns_record_set#module`: create/update/delete DNS record sets
+- :ansplugin:`community.dns.hetzner_dns_record_set_info#module`: retrieve information on DNS record sets
+- :ansplugin:`community.dns.hetzner_dns_record_sets#module`: bulk synchronize DNS record sets
+- :ansplugin:`community.dns.hetzner_dns_zone_info#module`: retrieve zone information
 
 If you are interested in migrating from the `markuman.hetzner_dns collection <https://galaxy.ansible.com/ui/repo/published/markuman/hetzner_dns/>`_, please see :ref:`ansible_collections.community.dns.docsite.hetzner_guide.migration_markuman_hetzner_dns`.
 
 It also provides an inventory plugin:
 
-- :ref:`community.dns.hetzner_dns_records <ansible_collections.community.dns.hetzner_dns_records_inventory>`: create inventory from DNS records
+- :ansplugin:`community.dns.hetzner_dns_records#inventory`: create inventory from DNS records
 
 Authentication
 --------------
@@ -77,7 +77,7 @@ Here all two tasks will use the options set for the module defaults group.
 Working with DNS zones
 ----------------------
 
-The :ref:`community.dns.hetzner_dns_zone_info module <ansible_collections.community.dns.hetzner_dns_zone_info_module>` allows to query information on a zone. The zone can be identified both by its name and by its ID (which is an integer):
+The :ansplugin:`community.dns.hetzner_dns_zone_info module <community.dns.hetzner_dns_zone_info#module>` allows to query information on a zone. The zone can be identified both by its name and by its ID (which is an integer):
 
 .. code-block:: yaml+jinja
 
@@ -110,7 +110,7 @@ Working with DNS records
 Querying DNS records and record sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :ref:`community.dns.hetzner_dns_record_set_info module <ansible_collections.community.dns.hetzner_dns_record_set_info_module>` allows to query DNS record sets from the API. It can be used to query a single record set:
+The :ansplugin:`community.dns.hetzner_dns_record_set_info module <community.dns.hetzner_dns_record_set_info#module>` allows to query DNS record sets from the API. It can be used to query a single record set:
 
 .. code-block:: yaml+jinja
 
@@ -177,14 +177,14 @@ Finally you can query all record sets for a zone:
           TTL {{ item.ttl }} has values {{ item.value | join(', ') }}
       loop: result.sets
 
-If you are interested in individual DNS records, and not record sets, you should use the :ref:`community.dns.hetzner_dns_record_info module <ansible_collections.community.dns.hetzner_dns_record_info_module>`. It supports the same limiting options as the ``community.dns.hetzner_dns_record_set_info`` module.
+If you are interested in individual DNS records, and not record sets, you should use the :ansplugin:`community.dns.hetzner_dns_record_info module <community.dns.hetzner_dns_record_info#module>`. It supports the same limiting options as the :ansplugin:`community.dns.hetzner_dns_record_set_info module <community.dns.hetzner_dns_record_set_info#module>`.
 
 Creating and updating DNS single records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you do not want to add/remove values, but replace values, you will be interested in modifying a **record set** and not a single record. This is in particular important when working with ``CNAME`` and ``SOA`` records.
 
-The :ref:`community.dns.hetzner_dns_record module <ansible_collections.community.dns.hetzner_dns_record_module>` allows to set, update and remove single DNS records. Setting and updating can be done as follows. Records will be matched by record name and type, and the TTL value will be updated if necessary:
+The :ansplugin:`community.dns.hetzner_dns_record module <community.dns.hetzner_dns_record#module>` allows to set, update and remove single DNS records. Setting and updating can be done as follows. Records will be matched by record name and type, and the TTL value will be updated if necessary:
 
 .. code-block:: yaml+jinja
 
@@ -217,7 +217,7 @@ Records of the same type for the same record name with other values are ignored.
 Creating and updating DNS record sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :ref:`community.dns.hetzner_dns_record_set module <ansible_collections.community.dns.hetzner_dns_record_set_module>` allows to set, update and remove DNS record sets. Setting and updating can be done as follows:
+The :ansplugin:`community.dns.hetzner_dns_record_set module <community.dns.hetzner_dns_record_set#module>` allows to set, update and remove DNS record sets. Setting and updating can be done as follows:
 
 .. code-block:: yaml+jinja
 
@@ -271,7 +271,7 @@ In the third example, :ansopt:`community.dns.hetzner_dns_record_set#module:on_ex
 Bulk synchronization of DNS record sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you want to set/update multiple records at once, or even make sure that the precise set of records you are providing are present and nothing else, you can use the :ref:`community.dns.hetzner_dns_record_sets module <ansible_collections.community.dns.hetzner_dns_record_sets_module>`.
+If you want to set/update multiple records at once, or even make sure that the precise set of records you are providing are present and nothing else, you can use the :ansplugin:`community.dns.hetzner_dns_record_sets module <community.dns.hetzner_dns_record_sets#module>`.
 
 The following example shows up to set/update multiple records at once:
 
@@ -335,9 +335,9 @@ The `markuman.hetzner_dns collection <https://galaxy.ansible.com/ui/repo/publish
 The markuman.hetzner_dns.record module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``markuman.hetzner_dns.zone_info`` module can be replaced by the :ref:`community.dns.hetzner_dns_record module <ansible_collections.community.dns.hetzner_dns_record_module>` and the :ref:`community.dns.hetzner_dns_record_set module <ansible_collections.community.dns.hetzner_dns_record_set_module>`, depending on what it is used for.
+The ``markuman.hetzner_dns.zone_info`` module can be replaced by the :ansplugin:`community.dns.hetzner_dns_record module <community.dns.hetzner_dns_record#module>` and the :ansplugin:`community.dns.hetzner_dns_record_set module <community.dns.hetzner_dns_record_set#module>`, depending on what it is used for.
 
-When creating, updating or removing single records, the :ref:`community.dns.hetzner_dns_record module <ansible_collections.community.dns.hetzner_dns_record_module>` should be used. This is the case when :ansopt:`purge=false` is specified (the default value). Note that :ansopt:`replace`, :ansopt:`overwrite` and :ansopt:`solo` are aliases of :ansopt:`purge`.
+When creating, updating or removing single records, the :ansplugin:`community.dns.hetzner_dns_record module <community.dns.hetzner_dns_record#module>` should be used. This is the case when :ansopt:`purge=false` is specified (the default value). Note that :ansopt:`replace`, :ansopt:`overwrite` and :ansopt:`solo` are aliases of :ansopt:`purge`.
 
 .. code-block:: yaml+jinja
 
@@ -370,7 +370,7 @@ When creating, updating or removing single records, the :ref:`community.dns.hetz
         # or keep the following option:
         txt_transformation: api
 
-When the ``markuman.hetzner_dns.record`` module is in replace mode, it should be replaced by the :ref:`community.dns.hetzner_dns_record_set module <ansible_collections.community.dns.hetzner_dns_record_set_module>`, since then it operates on the *record set* and not just on a single record:
+When the ``markuman.hetzner_dns.record`` module is in replace mode, it should be replaced by the :ansplugin:`community.dns.hetzner_dns_record_set module <community.dns.hetzner_dns_record_set#module>`, since then it operates on the *record set* and not just on a single record:
 
 .. code-block:: yaml+jinja
 
@@ -410,7 +410,7 @@ When the ``markuman.hetzner_dns.record`` module is in replace mode, it should be
         # or keep the following option:
         txt_transformation: api
 
-When deleting a record, it depends on whether :ansopt:`value` is specified or not. If :ansopt:`value` is specified, the module is deleting a single DNS record, and the :ref:`community.dns.hetzner_dns_record module <ansible_collections.community.dns.hetzner_dns_record_module>` should be used:
+When deleting a record, it depends on whether :ansopt:`value` is specified or not. If :ansopt:`value` is specified, the module is deleting a single DNS record, and the :ansplugin:`community.dns.hetzner_dns_record module <community.dns.hetzner_dns_record#module>` should be used:
 
 .. code-block:: yaml+jinja
 
@@ -440,7 +440,7 @@ When deleting a record, it depends on whether :ansopt:`value` is specified or no
         # or keep the following option:
         txt_transformation: api
 
-When :ansopt:`value` is not specified, the ``markuman.hetzner_dns.record`` module will delete all records for this prefix and type. In that case, it operates on a record set and the :ref:`community.dns.hetzner_dns_record_set module <ansible_collections.community.dns.hetzner_dns_record_set_module>` should be used:
+When :ansopt:`value` is not specified, the ``markuman.hetzner_dns.record`` module will delete all records for this prefix and type. In that case, it operates on a record set and the :ansplugin:`community.dns.hetzner_dns_record_set module <community.dns.hetzner_dns_record_set#module>` should be used:
 
 .. code-block:: yaml+jinja
 
@@ -468,12 +468,12 @@ A last step is replacing the deprecated alias :ansopt:`community.dns.hetzner_dns
 The markuman.hetzner_dns.record_info module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``markuman.hetzner_dns.record_info`` module can be replaced by the :ref:`community.dns.hetzner_dns_record_info module <ansible_collections.community.dns.hetzner_dns_record_info_module>`. The main difference is that instead of by the :ansopt:`filters` option, the output is controlled by the :ansopt:`community.dns.hetzner_dns_record_info#module:what` option (choices :ansval:`single_record`, :ansval:`all_types_for_record`, and :ansval:`all_records`), the :ansopt:`community.dns.hetzner_dns_record_info#module:type` option (needed when :ansopt:`community.dns.hetzner_dns_record_info#module:what=single_record`), and the :ansopt:`community.dns.hetzner_dns_record_info#module:record` and :ansopt:`community.dns.hetzner_dns_record_info#module:prefix` options (needed when :ansopt:`community.dns.hetzner_dns_record_info#module:what` is not :ansval:`all_records`).
+The ``markuman.hetzner_dns.record_info`` module can be replaced by the :ansplugin:`community.dns.hetzner_dns_record_info module <community.dns.hetzner_dns_record_info#module>`. The main difference is that instead of by the :ansopt:`filters` option, the output is controlled by the :ansopt:`community.dns.hetzner_dns_record_info#module:what` option (choices :ansval:`single_record`, :ansval:`all_types_for_record`, and :ansval:`all_records`), the :ansopt:`community.dns.hetzner_dns_record_info#module:type` option (needed when :ansopt:`community.dns.hetzner_dns_record_info#module:what=single_record`), and the :ansopt:`community.dns.hetzner_dns_record_info#module:record` and :ansopt:`community.dns.hetzner_dns_record_info#module:prefix` options (needed when :ansopt:`community.dns.hetzner_dns_record_info#module:what` is not :ansval:`all_records`).
 
 The markuman.hetzner_dns.zone_info module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``markuman.hetzner_dns.zone_info`` module can be replaced by the :ref:`community.dns.hetzner_dns_zone_info module <ansible_collections.community.dns.hetzner_dns_zone_info_module>`. The main differences are:
+The ``markuman.hetzner_dns.zone_info`` module can be replaced by the :ansplugin:`community.dns.hetzner_dns_zone_info module <community.dns.hetzner_dns_zone_info#module>`. The main differences are:
 
 1. The parameter :ansopt:`name` must be changed to :ansopt:`community.dns.hetzner_dns_zone_info#module:zone_name` or :ansopt:`community.dns.hetzner_dns_zone_info#module:zone`.
 2. The return value :ansretval:`community.dns.hetzner_dns_zone_info#module:zone_info` no longer has the ``name`` and ``id`` entries. Use the return values :ansretval:`community.dns.hetzner_dns_zone_info#module:zone_name` and :ansretval:`community.dns.hetzner_dns_zone_info#module:zone_id` instead.
@@ -481,4 +481,4 @@ The ``markuman.hetzner_dns.zone_info`` module can be replaced by the :ref:`commu
 The markuman.hetzner_dns.inventory inventory plugin
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``markuman.hetzner_dns.inventory`` inventory plugin can be replaced by the :ref:`community.dns.hetzner_dns_records inventory plugin <ansible_collections.community.dns.hetzner_dns_records_inventory>`. Besides the plugin name, no change should be necessary.
+The ``markuman.hetzner_dns.inventory`` inventory plugin can be replaced by the :ansplugin:`community.dns.hetzner_dns_records inventory plugin <community.dns.hetzner_dns_records#inventory>`. Besides the plugin name, no change should be necessary.

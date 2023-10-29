@@ -17,21 +17,21 @@ The modules support both the old `WSDL-based API <https://ns1.hosttech.eu/public
 
 The collection provides six modules for working with HostTech DNS:
 
-- :ref:`community.dns.hosttech_dns_record <ansible_collections.community.dns.hosttech_dns_record_module>`: create/update/delete single DNS records
-- :ref:`community.dns.hosttech_dns_record_info <ansible_collections.community.dns.hosttech_dns_record_info_module>`: retrieve information on DNS records
-- :ref:`community.dns.hosttech_dns_record_set <ansible_collections.community.dns.hosttech_dns_record_set_module>`: create/update/delete DNS record sets
-- :ref:`community.dns.hosttech_dns_record_set_info <ansible_collections.community.dns.hosttech_dns_record_set_info_module>`: retrieve information on DNS record sets
-- :ref:`community.dns.hosttech_dns_record_sets <ansible_collections.community.dns.hosttech_dns_record_sets_module>`: bulk synchronize DNS record sets
-- :ref:`community.dns.hosttech_dns_zone_info <ansible_collections.community.dns.hosttech_dns_zone_info_module>`: retrieve zone information
+- :ansplugin:`community.dns.hosttech_dns_record#module`: create/update/delete single DNS records
+- :ansplugin:`community.dns.hosttech_dns_record_info#module`: retrieve information on DNS records
+- :ansplugin:`community.dns.hosttech_dns_record_set#module`: create/update/delete DNS record sets
+- :ansplugin:`community.dns.hosttech_dns_record_set_info#module`: retrieve information on DNS record sets
+- :ansplugin:`community.dns.hosttech_dns_record_sets#module`: bulk synchronize DNS record sets
+- :ansplugin:`community.dns.hosttech_dns_zone_info#module`: retrieve zone information
 
 It also provides an inventory plugin:
 
-- :ref:`community.dns.hosttech_dns_records <ansible_collections.community.dns.hosttech_dns_records_inventory>`: create inventory from DNS records
+- :ansplugin:`community.dns.hosttech_dns_records#inventory`: create inventory from DNS records
 
 Authentication, Requirements and APIs
 -------------------------------------
 
-HostTech currently has two APIs for working with DNS records: the old WSDL-based API, and the new JSON-based REST API. We recommend using the new REST API if possible.
+HostTech currently has two APIs for working with DNS records: the old WSDL-based API, and the new JSON-based REST API. We recommend using the new JSON REST API if possible.
 
 JSON REST API
 ~~~~~~~~~~~~~
@@ -101,7 +101,7 @@ Here all two tasks will use the options set for the module defaults group.
 Working with DNS zones
 ----------------------
 
-The :ref:`community.dns.hosttech_dns_zone_info module <ansible_collections.community.dns.hosttech_dns_zone_info_module>` allows to query information on a zone. The zone can be identified both by its name and by its ID (which is an integer):
+The :ansplugin:`community.dns.hosttech_dns_zone_info module <community.dns.hosttech_dns_zone_info#module>` allows to query information on a zone. The zone can be identified both by its name and by its ID (which is an integer):
 
 .. code-block:: yaml+jinja
 
@@ -134,7 +134,7 @@ Working with DNS records
 Querying DNS records and record sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :ref:`community.dns.hosttech_dns_record_set_info module <ansible_collections.community.dns.hosttech_dns_record_set_info_module>` allows to query DNS record sets from the API. It can be used to query a single record set:
+The :ansplugin:`community.dns.hosttech_dns_record_set_info module <community.dns.hosttech_dns_record_set_info#module>` allows to query DNS record sets from the API. It can be used to query a single record set:
 
 .. code-block:: yaml+jinja
 
@@ -201,14 +201,14 @@ Finally you can query all record sets for a zone:
           TTL {{ item.ttl }} has values {{ item.value | join(', ') }}
       loop: result.sets
 
-If you are interested in individual DNS records, and not record sets, you should use the :ref:`community.dns.hosttech_dns_record_info module <ansible_collections.community.dns.hosttech_dns_record_info_module>`. It supports the same limiting options as the ``community.dns.hosttech_dns_record_set_info`` module.
+If you are interested in individual DNS records, and not record sets, you should use the :ansplugin:`community.dns.hosttech_dns_record_info module <community.dns.hosttech_dns_record_info#module>`. It supports the same limiting options as the :ansplugin:`community.dns.hosttech_dns_record_set_info module <community.dns.hosttech_dns_record_set_info#module>`.
 
 Creating and updating DNS single records
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you do not want to add/remove values, but replace values, you will be interested in modifying a **record set** and not a single record. This is in particular important when working with ``CNAME`` and ``SOA`` records.
 
-The :ref:`community.dns.hosttech_dns_record module <ansible_collections.community.dns.hosttech_dns_record_module>` allows to set, update and remove single DNS records. Setting and updating can be done as follows. Records will be matched by record name and type, and the TTL value will be updated if necessary:
+The :ansplugin:`community.dns.hosttech_dns_record module <community.dns.hosttech_dns_record#module>` allows to set, update and remove single DNS records. Setting and updating can be done as follows. Records will be matched by record name and type, and the TTL value will be updated if necessary:
 
 .. code-block:: yaml+jinja
 
@@ -241,7 +241,7 @@ Records of the same type for the same record name with other values are ignored.
 Creating and updating DNS record sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The :ref:`community.dns.hosttech_dns_record_set module <ansible_collections.community.dns.hosttech_dns_record_set_module>` allows to set, update and remove DNS record sets. Setting and updating can be done as follows:
+The :ansplugin:`community.dns.hosttech_dns_record_set module <community.dns.hosttech_dns_record_set#module>` allows to set, update and remove DNS record sets. Setting and updating can be done as follows:
 
 .. code-block:: yaml+jinja
 
@@ -295,7 +295,7 @@ In the third example, :ansopt:`community.dns.hosttech_dns_record_set#module:on_e
 Bulk synchronization of DNS record sets
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you want to set/update multiple records at once, or even make sure that the precise set of records you are providing are present and nothing else, you can use the :ref:`community.dns.hosttech_dns_record_sets module <ansible_collections.community.dns.hosttech_dns_record_sets_module>`.
+If you want to set/update multiple records at once, or even make sure that the precise set of records you are providing are present and nothing else, you can use the :ansplugin:`community.dns.hosttech_dns_record_sets module <community.dns.hosttech_dns_record_sets#module>`.
 
 The following example shows up to set/update multiple records at once:
 

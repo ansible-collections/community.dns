@@ -14,10 +14,10 @@ Community.Dns Filter Guide
 
 The :ref:`community.dns collection <plugins_in_community.dns>` offers several filters for working with DNS names:
 
-- :ref:`community.dns.get_public_suffix <ansible_collections.community.dns.get_public_suffix_filter>`: given a domain name, returns the public suffix;
-- :ref:`community.dns.get_registrable_domain <ansible_collections.community.dns.get_registrable_domain_filter>`: given a domain name, returns the registrable domain name;
-- :ref:`community.dns.remove_public_suffix <ansible_collections.community.dns.remove_public_suffix_filter>`: given a domain name, returns the part before the public suffix;
-- :ref:`community.dns.remove_registrable_domain <ansible_collections.community.dns.remove_registrable_domain_filter>`: given a domain name, returns the part before the registrable domain name.
+- :ansplugin:`community.dns.get_public_suffix#filter`: given a domain name, returns the public suffix;
+- :ansplugin:`community.dns.get_registrable_domain#filter`: given a domain name, returns the registrable domain name;
+- :ansplugin:`community.dns.remove_public_suffix#filter`: given a domain name, returns the part before the public suffix;
+- :ansplugin:`community.dns.remove_registrable_domain#filter`: given a domain name, returns the part before the registrable domain name.
 
 These filters allow to work with `public suffixes <https://en.wikipedia.org/wiki/Public_Suffix_List>`_; a *public suffix* is a DNS suffix under which users can (or could) directly register names. They use the `Public Suffix List <https://publicsuffix.org/>`_, a Mozilla initiative maintained as a community resource which tries to list all such public suffixes. Common examples for public suffixes are ``.com``, ``.net``, but also longer suffixes such as ``.co.uk`` or ``.github.io``.
 
@@ -26,7 +26,7 @@ The label directly before the public suffix together with the suffix is called t
 Working with public suffixes
 ----------------------------
 
-The :ref:`community.dns.get_public_suffix <ansible_collections.community.dns.get_public_suffix_filter>` and :ref:`community.dns.remove_public_suffix <ansible_collections.community.dns.remove_public_suffix_filter>` filters allow to extract and remove public suffixes from DNS names:
+The :ansplugin:`community.dns.get_public_suffix#filter` and :ansplugin:`community.dns.remove_public_suffix#filter>` filters allow to extract and remove public suffixes from DNS names:
 
 .. code-block:: yaml+jinja
 
@@ -53,20 +53,20 @@ The filters also allow additional options (keyword arguments):
 
 :normalize_result:
 
-  (Only for :ref:`community.dns.get_public_suffix <ansible_collections.community.dns.get_public_suffix_filter>`) A boolean with default value :ansval:`false`. This controls whether the result is reconstructed from the normalized name used during lookup. During normalization, ulabels are converted to alabels, and every label is converted to lowercase. For example, the ulabel :ansval:`ëçãmplê` is converted to ``xn--mpl-llatwb`` (puny-code), and :ansval:`Example.COM` is converted to ``example.com``.
+  (Only for :ansplugin:`community.dns.get_public_suffix#filter`) A boolean with default value :ansval:`false`. This controls whether the result is reconstructed from the normalized name used during lookup. During normalization, ulabels are converted to alabels, and every label is converted to lowercase. For example, the ulabel :ansval:`ëçãmplê` is converted to ``xn--mpl-llatwb`` (puny-code), and :ansval:`Example.COM` is converted to ``example.com``.
 
 :keep_leading_period:
 
-  (Only for :ref:`community.dns.get_public_suffix <ansible_collections.community.dns.get_public_suffix_filter>`) A boolean with default value :ansval:`true`. This controls whether the leading period of a public suffix is preserved or not.
+  (Only for :ansplugin:`community.dns.get_public_suffix#filter`) A boolean with default value :ansval:`true`. This controls whether the leading period of a public suffix is preserved or not.
 
 :keep_trailing_period:
 
-  (Only for :ref:`community.dns.remove_public_suffix <ansible_collections.community.dns.remove_public_suffix_filter>`) A boolean with default value :ansval:`false`. This controls whether the trailing period of the prefix (that is, the part before the public suffix) is preserved or not.
+  (Only for :ansplugin:`community.dns.remove_public_suffix#filter`) A boolean with default value :ansval:`false`. This controls whether the trailing period of the prefix (that is, the part before the public suffix) is preserved or not.
 
 Working with registrable domain names
 -------------------------------------
 
-The :ref:`community.dns.get_registrable_domain <ansible_collections.community.dns.get_registrable_domain_filter>` and :ref:`community.dns.remove_registrable_domain <ansible_collections.community.dns.remove_registrable_domain_filter>` filters allow to extract and remove registrable domain names from DNS names:
+The :ansplugin:`community.dns.get_registrable_domain#filter` and :ansplugin:`community.dns.remove_registrable_domain#filter` filters allow to extract and remove registrable domain names from DNS names:
 
 .. code-block:: yaml+jinja
 
@@ -97,8 +97,8 @@ The filters also allow additional options (keyword arguments):
 
 :normalize_result:
 
-  (Only for :ref:`community.dns.get_registrable_domain <ansible_collections.community.dns.get_registrable_domain_filter>`) A boolean with default value :ansval:`false`. This controls whether the result is reconstructed from the normalized name used during lookup. During normalization, ulabels are converted to alabels, and every label is converted to lowercase. For example, the ulabel :ansval:`ëçãmplê` is converted to ``xn--mpl-llatwb`` (puny-code), and :ansval:`Example.COM` is converted to ``example.com``.
+  (Only for :ansplugin:`community.dns.get_registrable_domain#filter`) A boolean with default value :ansval:`false`. This controls whether the result is reconstructed from the normalized name used during lookup. During normalization, ulabels are converted to alabels, and every label is converted to lowercase. For example, the ulabel :ansval:`ëçãmplê` is converted to ``xn--mpl-llatwb`` (puny-code), and :ansval:`Example.COM` is converted to ``example.com``.
 
 :keep_trailing_period:
 
-  (Only for :ref:`community.dns.remove_registrable_domain <ansible_collections.community.dns.remove_registrable_domain_filter>`) A boolean with default value :ansval:`false`. This controls whether the trailing period of the prefix (that is, the part before the registrable domain) is preserved or not.
+  (Only for :ansplugin:`community.dns.remove_registrable_domain#filter`) A boolean with default value :ansval:`false`. This controls whether the trailing period of the prefix (that is, the part before the registrable domain) is preserved or not.
