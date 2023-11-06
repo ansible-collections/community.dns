@@ -5,6 +5,20 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v2.6.3
+======
+
+Release Summary
+---------------
+
+Maintenance release with updated PSL.
+
+Bugfixes
+--------
+
+- HTTP module utils - make compatible with ansible-core 2.17 (https://github.com/ansible-collections/community.dns/pull/165).
+- Update Public Suffix List.
+
 v2.6.2
 ======
 

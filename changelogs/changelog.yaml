@@ -708,3 +708,14 @@ releases:
     - 2.6.2.yml
     - update-psl.yml
     release_date: '2023-10-08'
+  2.6.3:
+    changes:
+      bugfixes:
+      - HTTP module utils - make compatible with ansible-core 2.17 (https://github.com/ansible-collections/community.dns/pull/165).
+      - Update Public Suffix List.
+      release_summary: Maintenance release with updated PSL.
+    fragments:
+    - 165-url.yml
+    - 2.6.3.yml
+    - update-psl.yml
+    release_date: '2023-11-06'

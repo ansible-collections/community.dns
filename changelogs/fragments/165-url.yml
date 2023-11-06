@@ -1,2 +1,0 @@
-bugfixes:
-  - "HTTP module utils - make compatible with ansible-core 2.17 (https://github.com/ansible-collections/community.dns/pull/165)."
