@@ -132,14 +132,14 @@ class SimpleResolver(_Resolve):
 
 
 class ResolveDirectlyFromNameServers(_Resolve):
-    def __init__(self, timeout=10, timeout_retries=3, servfail_retries=0, always_ask_default_resolver=True):
+    def __init__(self, timeout=10, timeout_retries=3, servfail_retries=0, always_ask_default_resolver=True, server_addresses=None):
         super(ResolveDirectlyFromNameServers, self).__init__(
             timeout=timeout,
             timeout_retries=timeout_retries,
             servfail_retries=servfail_retries,
         )
         self.cache = {}
-        self.default_nameservers = self.default_resolver.nameservers
+        self.default_nameservers = self.default_resolver.nameservers if server_addresses is None else server_addresses
         self.always_ask_default_resolver = always_ask_default_resolver
 
     def _lookup_ns_names(self, target, nameservers=None, nameserver_ips=None):
@@ -221,6 +221,8 @@ class ResolveDirectlyFromNameServers(_Resolve):
         return result
 
     def _get_resolver(self, dnsname, nameservers):
+        if self.default_nameservers != self.default_resolver.nameservers:
+            nameservers = self.default_nameservers
         cache_index = ('|'.join([str(dnsname)] + sorted(nameservers)), 'resolver')
         resolver = self.cache.get(cache_index)
         if resolver is None:
