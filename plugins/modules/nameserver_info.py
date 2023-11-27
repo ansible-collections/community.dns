@@ -64,6 +64,7 @@ options:
         type: list
         elements: str
         required: false
+        default: null
 requirements:
     - dnspython >= 1.15.0 (maybe older versions also work)
 '''
