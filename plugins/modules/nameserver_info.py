@@ -143,9 +143,8 @@ def main():
 
     names = module.params['name']
     resolve_addresses = module.params['resolve_addresses']
-
     servers = module.params['servers']
-    
+
     resolver = ResolveDirectlyFromNameServers(
         timeout=module.params['query_timeout'],
         timeout_retries=module.params['query_retry'],
