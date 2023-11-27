@@ -57,6 +57,13 @@ options:
             - How often to retry on SERVFAIL errors.
         type: int
         default: 0
+    servers:
+        description:
+            - A list of DNS server IP addresses to use for resolving nameserver information.
+            - When specified, these servers are used instead of the system's default DNS settings.
+        type: list
+        elements: str
+        required: false
 requirements:
     - dnspython >= 1.15.0 (maybe older versions also work)
 '''
