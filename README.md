@@ -48,9 +48,12 @@ If you use the Ansible package and do not update collections independently, use 
   - `hosttech_dns_record_set`: bulk synchronize DNS record sets in Hosttech DNS service.
   - `hosttech_dns_zone_info`: retrieve zone information from HostTech DNS.
   - `wait_for_txt`: wait for TXT records to propagate to all name servers.
+- Lookup plugins:
+  - `lookup`: look up DNS records and return them as a list of strings.
+  - `lookup_as_dict`: look up DNS records and return them as a list of dictionaries.
 - Inventory plugins:
-  - `hetzner_dns_records`: create inventory from Hetzner DNS records
-  - `hosttech_dns_records`: create inventory from HostTech DNS records
+  - `hetzner_dns_records`: create inventory from Hetzner DNS records.
+  - `hosttech_dns_records`: create inventory from HostTech DNS records.
 - Filters:
   - `get_public_suffix`: given a domain name, returns the public suffix. For example, `"www.ansible.com" | community.dns.get_public_suffix == ".com"` and `"some.random.prefixes.ansible.co.uk" | community.dns.get_public_suffix == ".co.uk"`.
   - `get_registrable_domain`: given a domain name, returns the *registrable domain name* (also called *registered domain name*). For example, `"www.ansible.com" | community.dns.get_registrable_domain == "ansible.com"` and `"some.random.prefixes.ansible.co.uk" | community.dns.get_registrable_domain == "ansible.co.uk"`.
