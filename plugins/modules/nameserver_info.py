@@ -134,7 +134,7 @@ def main():
             query_timeout=dict(type='float', default=10),
             always_ask_default_resolver=dict(type='bool', default=True),
             servfail_retries=dict(type='int', default=0),
-            servers=dict(required=False, type='list', elements='str'),
+            servers=dict(type='list', elements='str'),
         ),
         supports_check_mode=True,
     )
