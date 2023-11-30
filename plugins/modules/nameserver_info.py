@@ -63,8 +63,7 @@ options:
             - When specified, these servers are used instead of the system's default DNS settings.
         type: list
         elements: str
-        required: false
-        default: null
+        version_added: 2.7.0
 requirements:
     - dnspython >= 1.15.0 (maybe older versions also work)
 '''
