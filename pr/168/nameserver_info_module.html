@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 <meta content="2.5.0" name="antsibull-docs" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>community.dns.nameserver_info module – Look up nameservers for a DNS name &mdash; Community.Dns Collection  documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/ansible.css" type="text/css" />
-      <link rel="stylesheet" href="_static/antsibull-minimal.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/rtd-ethical-ads.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5707b69d" />
+      <link rel="stylesheet" type="text/css" href="_static/css/ansible.css?v=35b70fdb" />
+      <link rel="stylesheet" type="text/css" href="_static/antsibull-minimal.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/rtd-ethical-ads.css?v=289b023e" />
+
+  
     <link rel="shortcut icon" href="_static/images/Ansible-Mark-RGB_Black.png"/>
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
@@ -248,9 +250,11 @@ see <a class="reference internal" href="#ansible-collections-community-dns-names
 <tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-servers"></div><p class="ansible-option-title" id="ansible-collections-community-dns-nameserver-info-module-parameter-servers"><strong>servers</strong></p>
 <a class="ansibleOptionLink" href="#parameter-servers" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+<p><em class="ansible-option-versionadded">added in community.dns 2.7.0</em></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>A list of DNS server IP addresses to use for resolving nameserver information.</p>
 <p>When specified, these servers are used instead of the system’s default DNS settings.</p>
+<p>This must be a list of IP addresses.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
