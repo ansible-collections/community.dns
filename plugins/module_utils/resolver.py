@@ -221,8 +221,6 @@ class ResolveDirectlyFromNameServers(_Resolve):
         return result
 
     def _get_resolver(self, dnsname, nameservers):
-        if self.default_nameservers != self.default_resolver.nameservers:
-            nameservers = self.default_nameservers
         cache_index = ('|'.join([str(dnsname)] + sorted(nameservers)), 'resolver')
         resolver = self.cache.get(cache_index)
         if resolver is None:
