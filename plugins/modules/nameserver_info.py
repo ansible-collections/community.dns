@@ -61,6 +61,7 @@ options:
         description:
             - A list of DNS server IP addresses to use for resolving nameserver information.
             - When specified, these servers are used instead of the system's default DNS settings.
+            - This must be a list of IP addresses.
         type: list
         elements: str
         version_added: 2.7.0
