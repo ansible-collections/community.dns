@@ -1,0 +1,30 @@
+---
+# Copyright (c) Ansible Project
+# GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: Retrieve name servers of two DNS names
+  community.dns.nameserver_info:
+    name:
+      - www.example.com
+      - example.org
+  register: result
+
+- name: Show TXT values for www.example.com for all nameservers
+  ansible.builtin.debug:
+    msg: '{{ result }}'
+
+- name: Show nameservers for www.example.com
+  ansible.builtin.debug:
+    msg: '{{ result.results[0].nameservers }}'
+
+- name: Show TXT values for www.example.com for all nameservers
+  ansible.builtin.debug:
+    msg: '{{ result.results[0].nameservers[0] }}'
+
+- name: Validate results
+  assert:
+    that:
+      - result.results[0].nameservers[0] == 'a.iana-servers.net.'
+      - result.results[0].nameservers[1] == 'b.iana-servers.net.'
+      - result.results[0].nameservers[0] != 'b.iana-servers.net.'
