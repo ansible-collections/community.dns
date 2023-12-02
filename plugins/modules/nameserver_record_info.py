@@ -548,7 +548,7 @@ def main():
                 if records is not None:
                     for data in records:
                         values.append(convert_rdata_to_dict(data))
-                ns_result['values'] = sorted(values)
+                ns_result['values'] = values
             result.sort(key=lambda v: v['nameserver'])
 
     guarded_run(f, module, generate_additional_results=lambda: dict(results=results))

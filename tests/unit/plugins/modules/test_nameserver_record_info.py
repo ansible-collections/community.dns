@@ -97,6 +97,7 @@ class TestNameserverRecordInfo(ModuleTestCase):
                         'example.org',
                         300,
                         dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'asdf'),
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.TXT, 'fdsa'),
                     )),
                 },
             ],
@@ -200,7 +201,11 @@ class TestNameserverRecordInfo(ModuleTestCase):
             {
                 'strings': ['asdf'],
                 'value': 'asdf',
-            }
+            },
+            {
+                'strings': ['fdsa'],
+                'value': 'fdsa',
+            },
         ]
 
     def test_timeout(self):
