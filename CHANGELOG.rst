@@ -5,6 +5,20 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v2.6.4
+======
+
+Release Summary
+---------------
+
+Bugfix and maintenance version.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- nameserver_record_info - fix crash when more than one record is retrieved (https://github.com/ansible-collections/community.dns/pull/172).
+
 v2.6.3
 ======
 

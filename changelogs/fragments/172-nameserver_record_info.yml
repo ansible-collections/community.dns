@@ -1,2 +1,0 @@
-bugfixes:
-  - "nameserver_record_info - fix crash when more than one record is retrieved (https://github.com/ansible-collections/community.dns/pull/172)."
