@@ -12,7 +12,7 @@
         - example.org
     register: result
 
-  - name: Show TXT values for www.example.com for all nameservers
+  - name: Show TXT values for all nameservers
     ansible.builtin.debug:
       msg: '{{ result }}'
 
@@ -64,7 +64,7 @@
 
 - name: Recursively retrieve name servers of subdomains that don't exist
   block:
-  - name: Retrieve name servers of two DNS names
+  - name: Recursively retrieve name servers of two DNS names
     community.dns.nameserver_info:
       name:
         - does.not.exist.www.example.com
@@ -72,7 +72,7 @@
       recursive_lookup: true
     register: result
 
-  - name: Show TXT values for www.example.com for all nameservers
+  - name: Show TXT values for all nameservers
     ansible.builtin.debug:
       msg: '{{ result }}'
 
