@@ -7,7 +7,7 @@
 
 namespace: community
 name: dns
-version: 2.6.3
+version: 2.6.4
 readme: README.md
 authors:
   - Felix Fontein (github.com/felixfontein)

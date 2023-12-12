@@ -719,3 +719,15 @@ releases:
     - 2.6.3.yml
     - update-psl.yml
     release_date: '2023-11-06'
+  2.6.4:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      - nameserver_record_info - fix crash when more than one record is retrieved
+        (https://github.com/ansible-collections/community.dns/pull/172).
+      release_summary: Bugfix and maintenance version.
+    fragments:
+    - 172-nameserver_record_info.yml
+    - 2.6.4.yml
+    - update-psl.yml
+    release_date: '2023-12-03'
