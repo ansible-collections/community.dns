@@ -143,14 +143,13 @@ def main():
 
     names = module.params['name']
     resolve_addresses = module.params['resolve_addresses']
-    servers = module.params['servers']
 
     resolver = ResolveDirectlyFromNameServers(
         timeout=module.params['query_timeout'],
         timeout_retries=module.params['query_retry'],
         servfail_retries=module.params['servfail_retries'],
         always_ask_default_resolver=module.params['always_ask_default_resolver'],
-        server_addresses=servers,
+        server_addresses=module.params['servers'],
     )
     results = [None] * len(names)
     for index, name in enumerate(names):
