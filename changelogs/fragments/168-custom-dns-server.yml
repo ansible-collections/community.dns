@@ -1,2 +1,2 @@
 minor_changes:
-  - nameserver_info and nameserver_record_info - add servers parameter to specify custom DNS servers (https://github.com/ansible-collections/community.dns/pull/168)
+  - nameserver_info and nameserver_record_info - add ``servers`` parameter to specify custom DNS servers (https://github.com/ansible-collections/community.dns/pull/168).
