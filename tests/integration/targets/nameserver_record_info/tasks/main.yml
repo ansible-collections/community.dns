@@ -3,51 +3,55 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- name: Retrieve TXT values from all nameservers for two DNS names
-  community.dns.nameserver_record_info:
-    name:
-      - www.example.com
-      - example.org
-    type: TXT
-  register: result
+- name: Retrieve TXT records from nameservers
+  block:
+    - name: Query TXT records for www.example.com and example.org
+      community.dns.nameserver_record_info:
+        name:
+          - www.example.com
+          - example.org
+        type: TXT
+      register: result
 
-- name: Show TXT values for www.example.com for all nameservers
-  ansible.builtin.debug:
-    msg: '{{ result }}'
+    - name: Display TXT records for all nameservers
+      ansible.builtin.debug:
+        msg: '{{ result }}'
 
-- name: Show TXT values for www.example.com for first nameserver
-  ansible.builtin.debug:
-    msg: '{{ result.results[0].result[0].nameserver  }}'
+    - name: Display first nameserver TXT record for www.example.com
+      ansible.builtin.debug:
+        msg: '{{ result.results[0].result[0].nameserver  }}'
 
-- name: Validate results
-  assert:
-    that:
-      - result.results[0].result[0].nameserver == 'a.iana-servers.net.'
-      - result.results[0].result[1].nameserver == 'b.iana-servers.net.'
-      - result.results[0].result[0].nameserver != 'b.iana-servers.net.'
+    - name: Validate TXT record results
+      assert:
+        that:
+          - result.results[0].result[0].nameserver == 'a.iana-servers.net.'
+          - result.results[0].result[1].nameserver == 'b.iana-servers.net.'
+          - result.results[0].result[0].nameserver != 'b.iana-servers.net.'
 
-- name: Retrieve TXT values from all nameservers for two DNS names using custom DNS servers
-  community.dns.nameserver_record_info:
-    name:
-      - www.example.com
-      - example.org
-    type: TXT
-    servers:
-      - 208.67.222.222
-      - 208.67.220.220
-  register: result
+- name: Retrieve TXT records using custom DNS servers
+  block:
+    - name: Query TXT records with custom DNS servers
+      community.dns.nameserver_record_info:
+        name:
+          - www.example.com
+          - example.org
+        type: TXT
+        servers:
+          - 208.67.222.222
+          - 208.67.220.220
+      register: result
 
-- name: Show TXT values for www.example.com for all nameservers
-  ansible.builtin.debug:
-    msg: '{{ result  }}'
+    - name: Display TXT records for custom DNS servers
+      ansible.builtin.debug:
+        msg: '{{ result  }}'
 
-- name: Show TXT values for www.example.com for all nameservers
-  ansible.builtin.debug:
-    msg: '{{ result.results[0].result[0].nameserver  }}'
+    - name: Display first nameserver TXT record for custom DNS servers
+      ansible.builtin.debug:
+        msg: '{{ result.results[0].result[0].nameserver  }}'
 
-- name: Validate results
-  assert:
-    that:
-      - result.results[0].result[0].nameserver == 'a.iana-servers.net.'
-      - result.results[0].result[1].nameserver == 'b.iana-servers.net.'
-      - result.results[0].result[0].nameserver != 'b.iana-servers.net.'
+    - name: Validate TXT records for custom DNS servers
+      assert:
+        that:
+          - result.results[0].result[0].nameserver == 'a.iana-servers.net.'
+          - result.results[0].result[1].nameserver == 'b.iana-servers.net.'
+          - result.results[0].result[0].nameserver != 'b.iana-servers.net.'
