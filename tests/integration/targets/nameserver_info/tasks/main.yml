@@ -3,37 +3,37 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- name: Retrieve name servers of a DNS name
+- name: Retrieve nameservers for specific domains
   block:
-  - name: Retrieve name servers of two DNS names
+  - name: Query nameservers for www.example.com and example.org
     community.dns.nameserver_info:
       name:
         - www.example.com
         - example.org
     register: result
 
-  - name: Show TXT values for all nameservers
+  - name: Display retrieved data
     ansible.builtin.debug:
       msg: '{{ result }}'
 
-  - name: Show nameservers for www.example.com
+  - name: Display nameservers of www.example.com
     ansible.builtin.debug:
       msg: '{{ result.results[0].nameservers }}'
 
-  - name: Show TXT values for www.example.com for all nameservers
+  - name: Display first nameserver of www.example.com
     ansible.builtin.debug:
       msg: '{{ result.results[0].nameservers[0] }}'
 
-  - name: Validate results
+  - name: Validate nameserver results
     assert:
       that:
         - result.results[0].nameservers[0] == 'a.iana-servers.net.'
         - result.results[0].nameservers[1] == 'b.iana-servers.net.'
         - result.results[0].nameservers[0] != 'b.iana-servers.net.'
 
-- name: Retrieve name servers of two DNS names using custom DNS servers
+- name: Retrieve nameservers using custom DNS servers
   block:
-  - name: Retrieve name servers of two DNS names using custom DNS servers
+  - name: Query nameservers with specific DNS servers
     community.dns.nameserver_info:
       name:
         - www.example.com
@@ -43,28 +43,28 @@
         - 208.67.220.220
     register: result
 
-  - name: Show TXT values for www.example.com for all nameservers
+  - name: Display queried nameserver data
     ansible.builtin.debug:
       msg: '{{ result }}'
 
-  - name: Show nameservers for www.example.com
+  - name: Display nameservers of www.example.com
     ansible.builtin.debug:
       msg: '{{ result.results[0].nameservers }}'
 
-  - name: Show TXT values for www.example.com for first nameserver
+  - name: Display first nameserver of www.example.com
     ansible.builtin.debug:
       msg: '{{ result.results[0].nameservers[0] }}'
 
-  - name: Validate results
+  - name: Validate nameserver results
     assert:
       that:
         - result.results[0].nameservers[0] == 'a.iana-servers.net.'
         - result.results[0].nameservers[1] == 'b.iana-servers.net.'
         - result.results[0].nameservers[0] != 'b.iana-servers.net.'
 
-- name: Recursively retrieve name servers of subdomains that don't exist
+- name: Recursively retrieve nameservers for non-existent subdomains
   block:
-  - name: Recursively retrieve name servers of two DNS names
+  - name: Recursively query nameservers for non-existent domains
     community.dns.nameserver_info:
       name:
         - does.not.exist.www.example.com
@@ -72,28 +72,28 @@
       recursive_lookup: true
     register: result
 
-  - name: Show TXT values for all nameservers
+  - name: Display queried nameserver data
     ansible.builtin.debug:
       msg: '{{ result }}'
 
-  - name: Show nameservers for www.example.com
+  - name: Display nameservers of non-existent subdomain
     ansible.builtin.debug:
       msg: '{{ result.results[0].nameservers }}'
 
-  - name: Show TXT values for www.example.com for all nameservers
+  - name: Display first nameserver of non-existent subdomain
     ansible.builtin.debug:
       msg: '{{ result.results[0].nameservers[0] }}'
 
-  - name: Validate results
+  - name: Validate recursive nameserver results
     assert:
       that:
         - result.results[0].nameservers[0] == 'a.iana-servers.net.'
         - result.results[0].nameservers[1] == 'b.iana-servers.net.'
         - result.results[0].nameservers[0] != 'b.iana-servers.net.'
 
-- name: Verify failure for non-existent subdomains without recursive lookup
+- name: Test failure on non-existent subdomains without recursive lookup
   block:
-  - name: Attempt to retrieve nameservers of non-existent subdomains without recursion
+  - name: Attempt nameserver retrieval for non-existent domains
     community.dns.nameserver_info:
       name:
         - does.not.exist.www.example.com
@@ -102,7 +102,7 @@
     register: result
     ignore_errors: true
 
-  - name: Validate failure result
+  - name: Validate non-recursive retrieval failure
     assert:
       that: 
         - result is failed
