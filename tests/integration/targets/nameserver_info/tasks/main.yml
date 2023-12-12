@@ -3,57 +3,107 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- name: Retrieve name servers of two DNS names
-  community.dns.nameserver_info:
-    name:
-      - www.example.com
-      - example.org
-  register: result
+- name: Retrieve name servers of a DNS name
+  block:
+  - name: Retrieve name servers of two DNS names
+    community.dns.nameserver_info:
+      name:
+        - www.example.com
+        - example.org
+    register: result
 
-- name: Show TXT values for www.example.com for all nameservers
-  ansible.builtin.debug:
-    msg: '{{ result }}'
+  - name: Show TXT values for www.example.com for all nameservers
+    ansible.builtin.debug:
+      msg: '{{ result }}'
 
-- name: Show nameservers for www.example.com
-  ansible.builtin.debug:
-    msg: '{{ result.results[0].nameservers }}'
+  - name: Show nameservers for www.example.com
+    ansible.builtin.debug:
+      msg: '{{ result.results[0].nameservers }}'
 
-- name: Show TXT values for www.example.com for all nameservers
-  ansible.builtin.debug:
-    msg: '{{ result.results[0].nameservers[0] }}'
+  - name: Show TXT values for www.example.com for all nameservers
+    ansible.builtin.debug:
+      msg: '{{ result.results[0].nameservers[0] }}'
 
-- name: Validate results
-  assert:
-    that:
-      - result.results[0].nameservers[0] == 'a.iana-servers.net.'
-      - result.results[0].nameservers[1] == 'b.iana-servers.net.'
-      - result.results[0].nameservers[0] != 'b.iana-servers.net.'
+  - name: Validate results
+    assert:
+      that:
+        - result.results[0].nameservers[0] == 'a.iana-servers.net.'
+        - result.results[0].nameservers[1] == 'b.iana-servers.net.'
+        - result.results[0].nameservers[0] != 'b.iana-servers.net.'
 
 - name: Retrieve name servers of two DNS names using custom DNS servers
-  community.dns.nameserver_info:
-    name:
-      - www.example.com
-      - example.org
-    servers:
-      - 208.67.222.222
-      - 208.67.220.220
-  register: result
+  block:
+  - name: Retrieve name servers of two DNS names using custom DNS servers
+    community.dns.nameserver_info:
+      name:
+        - www.example.com
+        - example.org
+      servers:
+        - 208.67.222.222
+        - 208.67.220.220
+    register: result
 
-- name: Show TXT values for www.example.com for all nameservers
-  ansible.builtin.debug:
-    msg: '{{ result }}'
+  - name: Show TXT values for www.example.com for all nameservers
+    ansible.builtin.debug:
+      msg: '{{ result }}'
 
-- name: Show nameservers for www.example.com
-  ansible.builtin.debug:
-    msg: '{{ result.results[0].nameservers }}'
+  - name: Show nameservers for www.example.com
+    ansible.builtin.debug:
+      msg: '{{ result.results[0].nameservers }}'
 
-- name: Show TXT values for www.example.com for first nameserver
-  ansible.builtin.debug:
-    msg: '{{ result.results[0].nameservers[0] }}'
+  - name: Show TXT values for www.example.com for first nameserver
+    ansible.builtin.debug:
+      msg: '{{ result.results[0].nameservers[0] }}'
 
-- name: Validate results
-  assert:
-    that:
-      - result.results[0].nameservers[0] == 'a.iana-servers.net.'
-      - result.results[0].nameservers[1] == 'b.iana-servers.net.'
-      - result.results[0].nameservers[0] != 'b.iana-servers.net.'
+  - name: Validate results
+    assert:
+      that:
+        - result.results[0].nameservers[0] == 'a.iana-servers.net.'
+        - result.results[0].nameservers[1] == 'b.iana-servers.net.'
+        - result.results[0].nameservers[0] != 'b.iana-servers.net.'
+
+- name: Recursively retrieve name servers of subdomains that don't exist
+  block:
+  - name: Retrieve name servers of two DNS names
+    community.dns.nameserver_info:
+      name:
+        - does.not.exist.www.example.com
+        - does.not.exist.example.org
+      recursive_lookup: true
+    register: result
+
+  - name: Show TXT values for www.example.com for all nameservers
+    ansible.builtin.debug:
+      msg: '{{ result }}'
+
+  - name: Show nameservers for www.example.com
+    ansible.builtin.debug:
+      msg: '{{ result.results[0].nameservers }}'
+
+  - name: Show TXT values for www.example.com for all nameservers
+    ansible.builtin.debug:
+      msg: '{{ result.results[0].nameservers[0] }}'
+
+  - name: Validate results
+    assert:
+      that:
+        - result.results[0].nameservers[0] == 'a.iana-servers.net.'
+        - result.results[0].nameservers[1] == 'b.iana-servers.net.'
+        - result.results[0].nameservers[0] != 'b.iana-servers.net.'
+
+- name: Verify failure for non-existent subdomains without recursive lookup
+  block:
+  - name: Attempt to retrieve nameservers of non-existent subdomains without recursion
+    community.dns.nameserver_info:
+      name:
+        - does.not.exist.www.example.com
+        - does.not.exist.example.org
+      recursive_lookup: false
+    register: result
+    ignore_errors: true
+
+  - name: Validate failure result
+    assert:
+      that: 
+        - result is failed
+        - "'The DNS query name does not exist' in result.msg"
