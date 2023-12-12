@@ -234,8 +234,23 @@ class ResolveDirectlyFromNameServers(_Resolve):
             self.cache[cache_index] = resolver
         return resolver
 
-    def resolve_nameservers(self, target, resolve_addresses=False):
-        nameservers = self._lookup_ns(dns.name.from_unicode(to_text(target)))
+    def resolve_nameservers(self, target, resolve_addresses=False, recursive_lookup=False):
+        dnsname = dns.name.from_unicode(to_text(target))
+        original_dnsname = dnsname
+        nameservers = None
+        while not nameservers and dnsname.labels:
+            try:
+                nameservers = self._lookup_ns(dnsname)
+                if not recursive_lookup:
+                    break
+            except dns.resolver.NXDOMAIN:
+                if not recursive_lookup:
+                    raise
+                # Remove the left-most label (subdomain) to check the next higher-level domain
+                dnsname = dns.name.Name(dnsname.labels[1:])
+
+        if not nameservers:
+            raise dns.resolver.NXDOMAIN(qnames=[original_dnsname])
         if resolve_addresses:
             nameserver_ips = set()
             for nameserver in nameservers:
