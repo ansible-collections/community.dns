@@ -13,6 +13,32 @@
 
 - name: Show TXT values for www.example.com for all nameservers
   ansible.builtin.debug:
+    msg: '{{ result }}'
+
+- name: Show TXT values for www.example.com for first nameserver
+  ansible.builtin.debug:
+    msg: '{{ result.results[0].result[0].nameserver  }}'
+
+- name: Validate results
+  assert:
+    that:
+      - result.results[0].result[0].nameserver == 'a.iana-servers.net.'
+      - result.results[0].result[1].nameserver == 'b.iana-servers.net.'
+      - result.results[0].result[0].nameserver != 'b.iana-servers.net.'
+
+- name: Retrieve TXT values from all nameservers for two DNS names using custom DNS servers
+  community.dns.nameserver_record_info:
+    name:
+      - www.example.com
+      - example.org
+    type: TXT
+    servers:
+      - 208.67.222.222
+      - 208.67.220.220
+  register: result
+
+- name: Show TXT values for www.example.com for all nameservers
+  ansible.builtin.debug:
     msg: '{{ result  }}'
 
 - name: Show TXT values for www.example.com for all nameservers

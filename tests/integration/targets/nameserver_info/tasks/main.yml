@@ -28,3 +28,32 @@
       - result.results[0].nameservers[0] == 'a.iana-servers.net.'
       - result.results[0].nameservers[1] == 'b.iana-servers.net.'
       - result.results[0].nameservers[0] != 'b.iana-servers.net.'
+
+- name: Retrieve name servers of two DNS names using custom DNS servers
+  community.dns.nameserver_info:
+    name:
+      - www.example.com
+      - example.org
+    servers:
+      - 208.67.222.222
+      - 208.67.220.220
+  register: result
+
+- name: Show TXT values for www.example.com for all nameservers
+  ansible.builtin.debug:
+    msg: '{{ result }}'
+
+- name: Show nameservers for www.example.com
+  ansible.builtin.debug:
+    msg: '{{ result.results[0].nameservers }}'
+
+- name: Show TXT values for www.example.com for first nameserver
+  ansible.builtin.debug:
+    msg: '{{ result.results[0].nameservers[0] }}'
+
+- name: Validate results
+  assert:
+    that:
+      - result.results[0].nameservers[0] == 'a.iana-servers.net.'
+      - result.results[0].nameservers[1] == 'b.iana-servers.net.'
+      - result.results[0].nameservers[0] != 'b.iana-servers.net.'
