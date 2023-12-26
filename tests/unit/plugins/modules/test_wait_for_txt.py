@@ -1195,7 +1195,44 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][1]['check_count'] == 1
 
     def test_nxdomain(self):
-        resolver = mock_resolver(['1.1.1.1'], {})
+        resolver = mock_resolver(['1.1.1.1'], {
+            ('1.1.1.1', ): [
+                {
+                    'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.A,
+                    'lifetime': 10,
+                    'result': create_mock_answer(dns.rrset.from_rdata(
+                        'ns.example.com',
+                        300,
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '3.3.3.3'),
+                    )),
+                },
+                {
+                    'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.AAAA,
+                    'lifetime': 10,
+                    'result': create_mock_answer(dns.rrset.from_rdata(
+                        'ns.example.com',
+                        300,
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.AAAA, '1:2::3'),
+                    )),
+                },
+            ],
+            ('1:2::3', '3.3.3.3'): [
+                {
+                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'rdtype': dns.rdatatype.TXT,
+                    'lifetime': 10,
+                    'result': create_mock_answer(rcode=dns.rcode.NXDOMAIN),
+                },
+                {
+                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'rdtype': dns.rdatatype.TXT,
+                    'lifetime': 10,
+                    'result': create_mock_answer(rcode=dns.rcode.NXDOMAIN),
+                },
+            ],
+        })
         udp_sequence = [
             {
                 'query_target': dns.name.from_unicode(u'com'),
@@ -1207,7 +1244,20 @@ class TestWaitForTXT(ModuleTestCase):
                 'result': create_mock_response(dns.rcode.NXDOMAIN),
             },
             {
-                'query_target': dns.name.from_unicode(u'com'),
+                'query_target': dns.name.from_unicode(u'example.com'),
+                'query_type': dns.rdatatype.NS,
+                'nameserver': '1.1.1.1',
+                'kwargs': {
+                    'timeout': 10,
+                },
+                'result': create_mock_response(dns.rcode.NOERROR, answer=[dns.rrset.from_rdata(
+                    'example.com',
+                    3600,
+                    dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.NS, 'ns.example.com'),
+                )]),
+            },
+            {
+                'query_target': dns.name.from_unicode(u'www.example.com'),
                 'query_type': dns.rdatatype.NS,
                 'nameserver': '1.1.1.1',
                 'kwargs': {
@@ -1237,12 +1287,14 @@ class TestWaitForTXT(ModuleTestCase):
                                 wait_for_txt.main()
 
         print(exc.value.args[0])
+        assert exc.value.args[0]['failed'] is True
         assert exc.value.args[0]['msg'] == 'Timeout (0 out of 1 check(s) passed).'
         assert exc.value.args[0]['completed'] == 0
         assert len(exc.value.args[0]['records']) == 1
         assert exc.value.args[0]['records'][0]['name'] == 'www.example.com'
         assert exc.value.args[0]['records'][0]['done'] is False
-        assert exc.value.args[0]['records'][0]['values'] == {}
+        assert len(exc.value.args[0]['records'][0]['values']) == 1
+        assert exc.value.args[0]['records'][0]['values']['ns.example.com'] == []
         assert exc.value.args[0]['records'][0]['check_count'] == 2
 
     def test_servfail(self):

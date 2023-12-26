@@ -57,3 +57,19 @@
       - result.results[0].nameservers[0] == 'a.iana-servers.net.'
       - result.results[0].nameservers[1] == 'b.iana-servers.net.'
       - result.results[0].nameservers[0] != 'b.iana-servers.net.'
+
+- name: Retrieve name servers of a DNS name that do not exist
+  community.dns.nameserver_info:
+    name:
+      - foo.bar.example.com
+  register: result
+
+- name: Show TXT values for www.example.com for all nameservers
+  ansible.builtin.debug:
+    msg: '{{ result }}'
+
+- name: Validate results
+  assert:
+    that:
+      - result.results[0].nameservers[0] == 'a.iana-servers.net.'
+      - result.results[0].nameservers[1] == 'b.iana-servers.net.'

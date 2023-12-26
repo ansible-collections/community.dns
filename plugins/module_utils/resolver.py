@@ -41,9 +41,11 @@ class _Resolve(object):
         self.servfail_retries = servfail_retries
         self.default_resolver = dns.resolver.get_default_resolver()
 
-    def _handle_reponse_errors(self, target, response, nameserver=None, query=None):
+    def _handle_reponse_errors(self, target, response, nameserver=None, query=None, accept_errors=None):
         rcode = response.rcode()
         if rcode == dns.rcode.NOERROR:
+            return True
+        if accept_errors and rcode in accept_errors:
             return True
         if rcode == dns.rcode.NXDOMAIN:
             raise dns.resolver.NXDOMAIN(qnames=[target], responses={target: response})
@@ -87,7 +89,12 @@ class _Resolve(object):
 
 
 class SimpleResolver(_Resolve):
-    def __init__(self, timeout=10, timeout_retries=3, servfail_retries=0):
+    def __init__(
+        self,
+        timeout=10,
+        timeout_retries=3,
+        servfail_retries=0,
+    ):
         super(SimpleResolver, self).__init__(
             timeout=timeout,
             timeout_retries=timeout_retries,
@@ -132,7 +139,14 @@ class SimpleResolver(_Resolve):
 
 
 class ResolveDirectlyFromNameServers(_Resolve):
-    def __init__(self, timeout=10, timeout_retries=3, servfail_retries=0, always_ask_default_resolver=True, server_addresses=None):
+    def __init__(
+        self,
+        timeout=10,
+        timeout_retries=3,
+        servfail_retries=0,
+        always_ask_default_resolver=True,
+        server_addresses=None,
+    ):
         super(ResolveDirectlyFromNameServers, self).__init__(
             timeout=timeout,
             timeout_retries=timeout_retries,
@@ -161,7 +175,9 @@ class ResolveDirectlyFromNameServers(_Resolve):
                 retry += 1
                 continue
             break
-        self._handle_reponse_errors(target, response, nameserver=nameserver_ips[0], query='get NS for "%s"' % target)
+        self._handle_reponse_errors(
+            target, response, nameserver=nameserver_ips[0], query='get NS for "%s"' % target, accept_errors=[dns.rcode.NXDOMAIN],
+        )
 
         cname = None
         for rrset in response.answer:
@@ -238,10 +254,10 @@ class ResolveDirectlyFromNameServers(_Resolve):
         nameservers = self._lookup_ns(dns.name.from_unicode(to_text(target)))
         if resolve_addresses:
             nameserver_ips = set()
-            for nameserver in nameservers:
+            for nameserver in nameservers or []:
                 nameserver_ips.update(self._lookup_address(nameserver))
             nameservers = list(nameserver_ips)
-        return sorted(nameservers)
+        return sorted(nameservers or [])
 
     def resolve(self, target, nxdomain_is_empty=True, **kwargs):
         dnsname = dns.name.from_unicode(to_text(target))
@@ -262,13 +278,18 @@ class ResolveDirectlyFromNameServers(_Resolve):
             loop_catcher.add(dnsname)
 
         results = {}
-        for nameserver in nameservers:
+        for nameserver in nameservers or []:
             results[nameserver] = None
             resolver = self._get_resolver(dnsname, [nameserver])
             try:
                 results[nameserver] = self._resolve(resolver, dnsname, handle_response_errors=True, **kwargs)
             except dns.resolver.NoAnswer:
                 pass
+            except dns.resolver.NXDOMAIN:
+                if nxdomain_is_empty:
+                    results[nameserver] = []
+                else:
+                    raise
         return results
 
 

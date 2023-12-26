@@ -463,14 +463,21 @@ def test_error_nxdomain():
             },
             'result': create_mock_response(dns.rcode.NXDOMAIN),
         },
+        {
+            'query_target': dns.name.from_unicode(u'example.com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NXDOMAIN),
+        },
     ]
     with patch('dns.resolver.get_default_resolver', resolver):
         with patch('dns.resolver.Resolver', resolver):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                with pytest.raises(dns.resolver.NXDOMAIN) as exc:
-                    resolver = ResolveDirectlyFromNameServers()
-                    resolver.resolve_nameservers('example.com')
-                assert exc.value.kwargs['qnames'] == [dns.name.from_unicode(u'com')]
+                resolver = ResolveDirectlyFromNameServers()
+                assert resolver.resolve_nameservers('example.com') == []
 
 
 def test_error_servfail():

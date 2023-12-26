@@ -286,7 +286,38 @@ class TestNameserverInfo(ModuleTestCase):
         assert 'nameservers' not in exc.value.args[0]['results'][1]
 
     def test_nxdomain(self):
-        resolver = mock_resolver(['1.1.1.1'], {})
+        resolver = mock_resolver(['1.1.1.1'], {
+            ('1.1.1.1', ): [
+                {
+                    'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.A,
+                    'lifetime': 10,
+                    'result': create_mock_answer(dns.rrset.from_rdata(
+                        'ns.example.com',
+                        300,
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '3.3.3.3'),
+                    )),
+                },
+                {
+                    'target': 'ns.example.com',
+                    'rdtype': dns.rdatatype.AAAA,
+                    'lifetime': 10,
+                    'result': create_mock_answer(dns.rrset.from_rdata(
+                        'ns.example.com',
+                        300,
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.AAAA, '1:2::3'),
+                    )),
+                },
+            ],
+            ('1:2::3', '3.3.3.3'): [
+                {
+                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'rdtype': dns.rdatatype.TXT,
+                    'lifetime': 10,
+                    'result': create_mock_answer(rcode=dns.rcode.NXDOMAIN),
+                },
+            ],
+        })
         udp_sequence = [
             {
                 'query_target': dns.name.from_unicode(u'com'),
@@ -298,7 +329,20 @@ class TestNameserverInfo(ModuleTestCase):
                 'result': create_mock_response(dns.rcode.NXDOMAIN),
             },
             {
-                'query_target': dns.name.from_unicode(u'com'),
+                'query_target': dns.name.from_unicode(u'example.com'),
+                'query_type': dns.rdatatype.NS,
+                'nameserver': '1.1.1.1',
+                'kwargs': {
+                    'timeout': 10,
+                },
+                'result': create_mock_response(dns.rcode.NOERROR, answer=[dns.rrset.from_rdata(
+                    'example.com',
+                    3600,
+                    dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.NS, 'ns.example.com'),
+                )]),
+            },
+            {
+                'query_target': dns.name.from_unicode(u'www.example.com'),
                 'query_type': dns.rdatatype.NS,
                 'nameserver': '1.1.1.1',
                 'kwargs': {
@@ -310,17 +354,17 @@ class TestNameserverInfo(ModuleTestCase):
         with patch('dns.resolver.get_default_resolver', resolver):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                    with pytest.raises(AnsibleFailJson) as exc:
+                    with pytest.raises(AnsibleExitJson) as exc:
                         set_module_args({
                             'name': ['www.example.com'],
                         })
                         nameserver_info.main()
 
         print(exc.value.args[0])
-        assert exc.value.args[0]['msg'] == 'Unexpected DNS error: The DNS query name does not exist: com.'
+        assert exc.value.args[0]['changed'] is False
         assert len(exc.value.args[0]['results']) == 1
         assert exc.value.args[0]['results'][0]['name'] == 'www.example.com'
-        assert 'nameservers' not in exc.value.args[0]['results'][0]
+        assert exc.value.args[0]['results'][0]['nameservers'] == ['ns.example.com']
 
     def test_servfail(self):
         resolver = mock_resolver(['1.1.1.1'], {})
