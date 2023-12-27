@@ -451,7 +451,7 @@ def test_timeout_failure():
                 assert exc.value.kwargs['timeout'] == 4
 
 
-def test_error_nxdomain():
+def test_error_nameserver_nxdomain_none():
     resolver = mock_resolver(['1.1.1.1'], {})
     udp_sequence = [
         {
@@ -463,14 +463,221 @@ def test_error_nxdomain():
             },
             'result': create_mock_response(dns.rcode.NXDOMAIN),
         },
+        {
+            'query_target': dns.name.from_unicode(u'example.com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NXDOMAIN),
+        },
     ]
     with patch('dns.resolver.get_default_resolver', resolver):
         with patch('dns.resolver.Resolver', resolver):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
+                resolver = ResolveDirectlyFromNameServers()
+                assert resolver.resolve_nameservers('example.com') == []
+
+
+def test_error_nameserver_nxdomain_partial_first():
+    resolver = mock_resolver(['1.1.1.1'], {})
+    udp_sequence = [
+        {
+            'query_target': dns.name.from_unicode(u'com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NOERROR, answer=[dns.rrset.from_rdata(
+                'com',
+                3600,
+                dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.NS, 'ns.com'),
+            )]),
+        },
+        {
+            'query_target': dns.name.from_unicode(u'example.com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NXDOMAIN),
+        },
+    ]
+    with patch('dns.resolver.get_default_resolver', resolver):
+        with patch('dns.resolver.Resolver', resolver):
+            with patch('dns.query.udp', mock_query_udp(udp_sequence)):
+                resolver = ResolveDirectlyFromNameServers()
+                assert resolver.resolve_nameservers('example.com') == ['ns.com']
+
+
+def test_error_nameserver_nxdomain_partial_second():
+    resolver = mock_resolver(['1.1.1.1'], {})
+    udp_sequence = [
+        {
+            'query_target': dns.name.from_unicode(u'com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NXDOMAIN),
+        },
+        {
+            'query_target': dns.name.from_unicode(u'example.com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NOERROR, answer=[dns.rrset.from_rdata(
+                'com',
+                3600,
+                dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.NS, 'ns.com'),
+            )]),
+        },
+    ]
+    with patch('dns.resolver.get_default_resolver', resolver):
+        with patch('dns.resolver.Resolver', resolver):
+            with patch('dns.query.udp', mock_query_udp(udp_sequence)):
+                resolver = ResolveDirectlyFromNameServers()
+                assert resolver.resolve_nameservers('example.com') == ['ns.com']
+
+
+def test_error_nxdomain_ok():
+    resolver = mock_resolver(['1.1.1.1'], {
+        ('1.1.1.1', ): [
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.A,
+                'lifetime': 10,
+                'result': create_mock_answer(dns.rrset.from_rdata(
+                    'ns.com',
+                    300,
+                    dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '3.3.3.3'),
+                )),
+            },
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'result': create_mock_answer(dns.rrset.from_rdata(
+                    'ns.com',
+                    300,
+                    dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.AAAA, '1:2::3'),
+                    dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.AAAA, '2:3::4'),
+                )),
+            },
+        ],
+        ('1:2::3', '2:3::4', '3.3.3.3'): [
+            {
+                'target': dns.name.from_unicode(u'example.com'),
+                'lifetime': 10,
+                'result': create_mock_answer(rcode=dns.rcode.NXDOMAIN),
+            },
+        ],
+    })
+    udp_sequence = [
+        {
+            'query_target': dns.name.from_unicode(u'com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NOERROR, answer=[dns.rrset.from_rdata(
+                'com',
+                3600,
+                dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.NS, 'ns.com'),
+            )]),
+        },
+        {
+            'query_target': dns.name.from_unicode(u'example.com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NXDOMAIN),
+        },
+    ]
+    with patch('dns.resolver.get_default_resolver', resolver):
+        with patch('dns.resolver.Resolver', resolver):
+            with patch('dns.query.udp', mock_query_udp(udp_sequence)):
+                resolver = ResolveDirectlyFromNameServers()
+                rrset_dict = resolver.resolve('example.com', nxdomain_is_empty=True)
+                print(rrset_dict)
+                assert sorted(rrset_dict.keys()) == ['ns.com']
+                assert rrset_dict['ns.com'] == []
+
+
+def test_error_nxdomain_fail():
+    resolver = mock_resolver(['1.1.1.1'], {
+        ('1.1.1.1', ): [
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.A,
+                'lifetime': 10,
+                'result': create_mock_answer(dns.rrset.from_rdata(
+                    'ns.com',
+                    300,
+                    dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '3.3.3.3'),
+                )),
+            },
+            {
+                'target': 'ns.com',
+                'rdtype': dns.rdatatype.AAAA,
+                'lifetime': 10,
+                'result': create_mock_answer(dns.rrset.from_rdata(
+                    'ns.com',
+                    300,
+                    dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.AAAA, '1:2::3'),
+                    dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.AAAA, '2:3::4'),
+                )),
+            },
+        ],
+        ('1:2::3', '2:3::4', '3.3.3.3'): [
+            {
+                'target': dns.name.from_unicode(u'example.com'),
+                'lifetime': 10,
+                'result': create_mock_answer(rcode=dns.rcode.NXDOMAIN),
+            },
+        ],
+    })
+    udp_sequence = [
+        {
+            'query_target': dns.name.from_unicode(u'com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NOERROR, answer=[dns.rrset.from_rdata(
+                'com',
+                3600,
+                dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.NS, 'ns.com'),
+            )]),
+        },
+        {
+            'query_target': dns.name.from_unicode(u'example.com'),
+            'query_type': dns.rdatatype.NS,
+            'nameserver': '1.1.1.1',
+            'kwargs': {
+                'timeout': 10,
+            },
+            'result': create_mock_response(dns.rcode.NXDOMAIN),
+        },
+    ]
+    with patch('dns.resolver.get_default_resolver', resolver):
+        with patch('dns.resolver.Resolver', resolver):
+            with patch('dns.query.udp', mock_query_udp(udp_sequence)):
+                resolver = ResolveDirectlyFromNameServers()
                 with pytest.raises(dns.resolver.NXDOMAIN) as exc:
-                    resolver = ResolveDirectlyFromNameServers()
-                    resolver.resolve_nameservers('example.com')
-                assert exc.value.kwargs['qnames'] == [dns.name.from_unicode(u'com')]
+                    resolver.resolve('example.com', nxdomain_is_empty=False)
+                print(exc.value.args[0])
+                assert exc.value.args[0] == 'The DNS query name does not exist: example.com.'
 
 
 def test_error_servfail():
