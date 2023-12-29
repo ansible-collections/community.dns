@@ -46,7 +46,7 @@ options:
     always_ask_default_resolver:
         description:
             - When set to V(true) (default), will use the default resolver to find the authoritative nameservers
-              of a subzone.
+              of a subzone. See O(server) for how to configure the default resolver.
             - When set to V(false), will use the authoritative nameservers of the parent zone to find the
               authoritative nameservers of a subzone. This only makes sense when the nameservers were recently
               changed and have not yet propagated.
@@ -57,11 +57,10 @@ options:
             - How often to retry on SERVFAIL errors.
         type: int
         default: 0
-    servers:
+    server:
         description:
-            - A list of DNS server IP addresses to use for resolving nameserver information.
-            - When specified, these servers are used instead of the system's default DNS settings.
-            - This must be a list of IP addresses.
+            - The DNS server(s) to use to look up the result. Must be a list of one or more IP addresses.
+            - By default, the system's standard resolver is used.
         type: list
         elements: str
         version_added: 2.7.0
@@ -135,7 +134,7 @@ def main():
             query_timeout=dict(type='float', default=10),
             always_ask_default_resolver=dict(type='bool', default=True),
             servfail_retries=dict(type='int', default=0),
-            servers=dict(type='list', elements='str'),
+            server=dict(type='list', elements='str'),
         ),
         supports_check_mode=True,
     )
@@ -149,7 +148,7 @@ def main():
         timeout_retries=module.params['query_retry'],
         servfail_retries=module.params['servfail_retries'],
         always_ask_default_resolver=module.params['always_ask_default_resolver'],
-        server_addresses=module.params['servers'],
+        server_addresses=module.params['server'],
     )
     results = [None] * len(names)
     for index, name in enumerate(names):

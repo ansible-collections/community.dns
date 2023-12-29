@@ -94,7 +94,7 @@ options:
     always_ask_default_resolver:
         description:
             - When set to V(true) (default), will use the default resolver to find the authoritative nameservers
-              of a subzone.
+              of a subzone. See O(server) for how to configure the default resolver.
             - When set to V(false), will use the authoritative nameservers of the parent zone to find the
               authoritative nameservers of a subzone. This only makes sense when the nameservers were recently
               changed and have not yet propagated.
@@ -106,6 +106,13 @@ options:
         type: int
         default: 0
         version_added: 2.6.0
+    server:
+        description:
+            - The DNS server(s) to use to look up the result. Must be a list of one or more IP addresses.
+            - By default, the system's standard resolver is used.
+        type: list
+        elements: str
+        version_added: 2.7.0
 requirements:
     - dnspython >= 1.15.0 (maybe older versions also work)
 '''
@@ -251,6 +258,7 @@ class Waiter(object):
             timeout_retries=self.module.params['query_retry'],
             servfail_retries=self.module.params['servfail_retries'],
             always_ask_default_resolver=self.module.params['always_ask_default_resolver'],
+            server_addresses=self.module.params['server'],
         )
         self.records = self.module.params['records']
         self.timeout = self.module.params['timeout']
@@ -334,6 +342,7 @@ def main():
             max_sleep=dict(type='float', default=10),
             always_ask_default_resolver=dict(type='bool', default=True),
             servfail_retries=dict(type='int', default=0),
+            server=dict(type='list', elements='str'),
         ),
         supports_check_mode=True,
     )
