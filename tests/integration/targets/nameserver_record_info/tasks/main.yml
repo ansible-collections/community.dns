@@ -32,7 +32,7 @@
       - www.example.com
       - example.org
     type: TXT
-    servers:
+    server:
       # Quad9 servers (https://en.wikipedia.org/wiki/Quad9#Service)
       - 9.9.9.9
       - 149.112.112.112

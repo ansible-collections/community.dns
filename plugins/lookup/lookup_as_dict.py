@@ -67,7 +67,7 @@ options:
         default: 10
     server:
         description:
-            - The DNS server(s) to use to look up the result.
+            - The DNS server(s) to use to look up the result. Must be a list of one or more IP addresses.
             - By default, the system's standard resolver is used.
         type: list
         elements: str
