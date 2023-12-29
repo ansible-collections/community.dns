@@ -201,7 +201,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-wait-
 <div class="ansibleOptionAnchor" id="parameter-always_ask_default_resolver"></div><p class="ansible-option-title" id="ansible-collections-community-dns-wait-for-txt-module-parameter-always-ask-default-resolver"><strong>always_ask_default_resolver</strong></p>
 <a class="ansibleOptionLink" href="#parameter-always_ask_default_resolver" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>When set to <code class="ansible-value docutils literal notranslate"><span class="pre">true</span></code> (default), will use the default resolver to find the authoritative nameservers of a subzone.</p>
+<td><div class="ansible-option-cell"><p>When set to <code class="ansible-value docutils literal notranslate"><span class="pre">true</span></code> (default), will use the default resolver to find the authoritative nameservers of a subzone. See <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-wait-for-txt-module-parameter-server"><span class="std std-ref"><span class="pre">server</span></span></a></strong></code> for how to configure the default resolver.</p>
 <p>When set to <code class="ansible-value docutils literal notranslate"><span class="pre">false</span></code>, will use the authoritative nameservers of the parent zone to find the authoritative nameservers of a subzone. This only makes sense when the nameservers were recently changed and have not yet propagated.</p>
 <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
 <ul class="simple">
@@ -276,6 +276,15 @@ see <a class="reference internal" href="#ansible-collections-community-dns-wait-
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-server"></div><p class="ansible-option-title" id="ansible-collections-community-dns-wait-for-txt-module-parameter-server"><strong>server</strong></p>
+<a class="ansibleOptionLink" href="#parameter-server" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+<p><em class="ansible-option-versionadded">added in community.dns 2.7.0</em></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The DNS server(s) to use to look up the result. Must be a list of one or more IP addresses.</p>
+<p>By default, the system’s standard resolver is used.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-servfail_retries"></div><p class="ansible-option-title" id="ansible-collections-community-dns-wait-for-txt-module-parameter-servfail-retries"><strong>servfail_retries</strong></p>
 <a class="ansibleOptionLink" href="#parameter-servfail_retries" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 <p><em class="ansible-option-versionadded">added in community.dns 2.6.0</em></p>
@@ -284,7 +293,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-wait-
 <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">0</span></code></p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-timeout"></div><p class="ansible-option-title" id="ansible-collections-community-dns-wait-for-txt-module-parameter-timeout"><strong>timeout</strong></p>
 <a class="ansibleOptionLink" href="#parameter-timeout" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">float</span></p>
 </div></td>
