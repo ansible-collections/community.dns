@@ -47,6 +47,8 @@ If you use the Ansible package and do not update collections independently, use 
   - `hosttech_dns_record_set`: create/update/delete DNS record sets with HostTech DNS.
   - `hosttech_dns_record_set`: bulk synchronize DNS record sets in Hosttech DNS service.
   - `hosttech_dns_zone_info`: retrieve zone information from HostTech DNS.
+  - `nameserver_info`: Look up nameservers for a DNS name.
+  - `nameserver_record_info`: Look up all records of a type from all nameservers for a DNS name.
   - `wait_for_txt`: wait for TXT records to propagate to all name servers.
 - Lookup plugins:
   - `lookup`: look up DNS records and return them as a list of strings.
