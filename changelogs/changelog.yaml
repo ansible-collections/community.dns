@@ -731,3 +731,22 @@ releases:
     - 2.6.4.yml
     - update-psl.yml
     release_date: '2023-12-03'
+  2.7.0:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      - wait_for_txt, nameserver_info, nameserver_record_info - when looking up nameservers
+        for a domain, do not treat ``NXDOMAIN`` as a fatal error (https://github.com/ansible-collections/community.dns/pull/177).
+      minor_changes:
+      - nameserver_info and nameserver_record_info - add ``server`` parameter to specify
+        custom DNS servers (https://github.com/ansible-collections/community.dns/pull/168,
+        https://github.com/ansible-collections/community.dns/pull/178).
+      - wait_for_txt - add ``server`` parameter to specify custom DNS servers (https://github.com/ansible-collections/community.dns/pull/178).
+      release_summary: Bugfix and feature release with updated PSL.
+    fragments:
+    - 168-custom-dns-server.yml
+    - 177-ns-lookup-nxdomain.yml
+    - 178-wait_for_txt-server.yml
+    - 2.7.0.yml
+    - update-psl.yml
+    release_date: '2024-01-01'

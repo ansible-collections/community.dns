@@ -1,2 +1,0 @@
-minor_changes:
-  - wait_for_txt - add ``server`` parameter to specify custom DNS servers (https://github.com/ansible-collections/community.dns/pull/178).
