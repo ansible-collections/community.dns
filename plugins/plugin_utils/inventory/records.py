@@ -109,7 +109,7 @@ class RecordsInventoryModule(BaseInventoryPlugin):
         except DNSAPIError as e:
             raise AnsibleError('Error: %s' % e)
 
-        filters = self.get_option('filters')
+        filters = self.get_option('simple_filters')
 
         filter_types = filters.get('type') or ['A', 'AAAA', 'CNAME']
         if not isinstance(filter_types, Sequence) or isinstance(filter_types, six.string_types):

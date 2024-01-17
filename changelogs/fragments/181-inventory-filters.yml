@@ -1,0 +1,5 @@
+minor_changes:
+  - hetzner_dns_records and hosttech_dns_records inventory plugins - the ``filters`` option has been renamed to ``simple_filters``.
+    The old name still works until community.hrobot 2.0.0.
+    Then it will change to allow more complex filtering with the ``community.library_inventory_filtering_v1`` collection's functionality
+    (https://github.com/ansible-collections/community.dns/pull/181).
