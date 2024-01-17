@@ -63,7 +63,7 @@ EXAMPLES = '''
 
 plugin: community.dns.hosttech_dns_records
 zone_name: domain.ch
-filters:
+simple_filters:
   type:
     - AAAA
 

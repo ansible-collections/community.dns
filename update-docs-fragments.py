@@ -42,7 +42,7 @@ DEPENDENT_FRAGMENTS = [
         ]),
     ]),
     ('RECORD_TYPE_CHOICES_RECORDS_INVENTORY', [
-        ('record_type', 'options.filters.suboptions.type', [
+        ('record_type', 'options.simple_filters.suboptions.type', [
             'inventory_records',
         ]),
     ]),

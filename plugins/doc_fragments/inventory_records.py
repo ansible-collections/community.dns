@@ -31,10 +31,14 @@ options:
         description:
           - The ID of the DNS zone to modify.
           - Exactly one of O(zone_name) and O(zone_id) must be specified.
-    filters:
+    simple_filters:
         description:
           - A dictionary of filter value pairs.
+          - This option has been renamed from O(filters) to O(simple_filters) in community.dns 2.8.0.
+            The old name can still be used until community.dns 3.0.0.
         type: dict
+        aliases:
+          - filters
         default: {}
         suboptions:
             # (The following must be kept in sync with the equivalent lines in <provider_name>.py!)

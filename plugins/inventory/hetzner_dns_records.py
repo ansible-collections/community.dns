@@ -55,7 +55,7 @@ EXAMPLES = '''
 
 plugin: community.dns.hetzner_dns_records
 zone_name: domain.de
-filters:
+simple_filters:
   type:
     - TXT
 txt_transformation: unquoted
