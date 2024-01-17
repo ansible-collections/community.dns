@@ -160,7 +160,7 @@ options:
     #          DO NOT EDIT MANUALLY!
     RECORD_TYPE_CHOICES_RECORDS_INVENTORY = r'''
 options:
-    filters:
+    simple_filters:
         suboptions:
             type:
                 description:
