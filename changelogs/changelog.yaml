@@ -750,3 +750,23 @@ releases:
     - 2.7.0.yml
     - update-psl.yml
     release_date: '2024-01-01'
+  2.8.0:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      deprecated_features:
+      - hetzner_dns_records and hosttech_dns_records inventory plugins - the ``filters``
+        option has been renamed to ``simple_filters``. The old name will stop working
+        in community.hrobot 2.0.0 (https://github.com/ansible-collections/community.dns/pull/181).
+      minor_changes:
+      - hetzner_dns_records and hosttech_dns_records inventory plugins - the ``filters``
+        option has been renamed to ``simple_filters``. The old name still works until
+        community.hrobot 2.0.0. Then it will change to allow more complex filtering
+        with the ``community.library_inventory_filtering_v1`` collection's functionality
+        (https://github.com/ansible-collections/community.dns/pull/181).
+      release_summary: Feature and maintenance release with updated PSL.
+    fragments:
+    - 181-inventory-filters.yml
+    - 2.8.0.yml
+    - update-psl.yml
+    release_date: '2024-01-29'

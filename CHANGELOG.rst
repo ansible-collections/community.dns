@@ -5,6 +5,29 @@ Community DNS Collection Release Notes
 .. contents:: Topics
 
 
+v2.8.0
+======
+
+Release Summary
+---------------
+
+Feature and maintenance release with updated PSL.
+
+Minor Changes
+-------------
+
+- hetzner_dns_records and hosttech_dns_records inventory plugins - the ``filters`` option has been renamed to ``simple_filters``. The old name still works until community.hrobot 2.0.0. Then it will change to allow more complex filtering with the ``community.library_inventory_filtering_v1`` collection's functionality (https://github.com/ansible-collections/community.dns/pull/181).
+
+Deprecated Features
+-------------------
+
+- hetzner_dns_records and hosttech_dns_records inventory plugins - the ``filters`` option has been renamed to ``simple_filters``. The old name will stop working in community.hrobot 2.0.0 (https://github.com/ansible-collections/community.dns/pull/181).
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+
 v2.7.0
 ======
 
