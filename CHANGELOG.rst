@@ -4,7 +4,6 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
-
 v2.8.0
 ======
 
@@ -166,7 +165,6 @@ correctly. You should be still able to read it in most cases, but you need
 ansible-core 2.15 or later to see it as it is intended. Alternatively you can
 look at `the devel docsite <https://docs.ansible.com/ansible/devel/collections/community/dns/>`__
 for the rendered HTML version of the documentation of the latest release.
-
 
 Known Issues
 ------------
@@ -651,7 +649,6 @@ Release Summary
 ---------------
 
 Last minor 1.x.0 version. The 2.0.0 version will have some backwards incompatible changes to the ``hosttech_dns_record`` and ``hosttech_dns_records`` modules which will require user intervention. These changes should result in a better UX.
-
 
 Minor Changes
 -------------

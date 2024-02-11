@@ -87,7 +87,7 @@ You can find more information in the [developer guide for collections](https://d
 
 ## Release notes
 
-See the [changelog](https://github.com/ansible-collections/community.dns/tree/main/CHANGELOG.rst).
+See the [changelog](https://github.com/ansible-collections/community.dns/tree/main/CHANGELOG.md).
 
 ## Releasing, Versioning and Deprecation
 
