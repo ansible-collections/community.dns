@@ -4,4 +4,4 @@
 
 ipaddress ; python_version < '3.3'
 
-dnspython
+https://github.com/rthalley/dnspython/archive/main.tar.gz
