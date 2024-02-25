@@ -1,173 +1,189 @@
 # Community DNS Collection Release Notes
 
 **Topics**
-- <a href="#v2-8-0">v2\.8\.0</a>
+- <a href="#v2-8-1">v2\.8\.1</a>
   - <a href="#release-summary">Release Summary</a>
+  - <a href="#bugfixes">Bugfixes</a>
+- <a href="#v2-8-0">v2\.8\.0</a>
+  - <a href="#release-summary-1">Release Summary</a>
   - <a href="#minor-changes">Minor Changes</a>
   - <a href="#deprecated-features">Deprecated Features</a>
-  - <a href="#bugfixes">Bugfixes</a>
-- <a href="#v2-7-0">v2\.7\.0</a>
-  - <a href="#release-summary-1">Release Summary</a>
-  - <a href="#minor-changes-1">Minor Changes</a>
   - <a href="#bugfixes-1">Bugfixes</a>
-- <a href="#v2-6-4">v2\.6\.4</a>
+- <a href="#v2-7-0">v2\.7\.0</a>
   - <a href="#release-summary-2">Release Summary</a>
+  - <a href="#minor-changes-1">Minor Changes</a>
   - <a href="#bugfixes-2">Bugfixes</a>
-- <a href="#v2-6-3">v2\.6\.3</a>
+- <a href="#v2-6-4">v2\.6\.4</a>
   - <a href="#release-summary-3">Release Summary</a>
   - <a href="#bugfixes-3">Bugfixes</a>
-- <a href="#v2-6-2">v2\.6\.2</a>
+- <a href="#v2-6-3">v2\.6\.3</a>
   - <a href="#release-summary-4">Release Summary</a>
   - <a href="#bugfixes-4">Bugfixes</a>
-- <a href="#v2-6-1">v2\.6\.1</a>
+- <a href="#v2-6-2">v2\.6\.2</a>
   - <a href="#release-summary-5">Release Summary</a>
   - <a href="#bugfixes-5">Bugfixes</a>
-- <a href="#v2-6-0">v2\.6\.0</a>
+- <a href="#v2-6-1">v2\.6\.1</a>
   - <a href="#release-summary-6">Release Summary</a>
-  - <a href="#minor-changes-2">Minor Changes</a>
   - <a href="#bugfixes-6">Bugfixes</a>
+- <a href="#v2-6-0">v2\.6\.0</a>
+  - <a href="#release-summary-7">Release Summary</a>
+  - <a href="#minor-changes-2">Minor Changes</a>
+  - <a href="#bugfixes-7">Bugfixes</a>
   - <a href="#new-plugins">New Plugins</a>
     - <a href="#lookup">Lookup</a>
   - <a href="#new-modules">New Modules</a>
 - <a href="#v2-5-7">v2\.5\.7</a>
-  - <a href="#release-summary-7">Release Summary</a>
-  - <a href="#bugfixes-7">Bugfixes</a>
-- <a href="#v2-5-6">v2\.5\.6</a>
   - <a href="#release-summary-8">Release Summary</a>
+  - <a href="#bugfixes-8">Bugfixes</a>
+- <a href="#v2-5-6">v2\.5\.6</a>
+  - <a href="#release-summary-9">Release Summary</a>
   - <a href="#known-issues">Known Issues</a>
 - <a href="#v2-5-5">v2\.5\.5</a>
-  - <a href="#release-summary-9">Release Summary</a>
-  - <a href="#bugfixes-8">Bugfixes</a>
-- <a href="#v2-5-4">v2\.5\.4</a>
   - <a href="#release-summary-10">Release Summary</a>
   - <a href="#bugfixes-9">Bugfixes</a>
-- <a href="#v2-5-3">v2\.5\.3</a>
+- <a href="#v2-5-4">v2\.5\.4</a>
   - <a href="#release-summary-11">Release Summary</a>
   - <a href="#bugfixes-10">Bugfixes</a>
-- <a href="#v2-5-2">v2\.5\.2</a>
+- <a href="#v2-5-3">v2\.5\.3</a>
   - <a href="#release-summary-12">Release Summary</a>
   - <a href="#bugfixes-11">Bugfixes</a>
-- <a href="#v2-5-1">v2\.5\.1</a>
+- <a href="#v2-5-2">v2\.5\.2</a>
   - <a href="#release-summary-13">Release Summary</a>
   - <a href="#bugfixes-12">Bugfixes</a>
-- <a href="#v2-5-0">v2\.5\.0</a>
+- <a href="#v2-5-1">v2\.5\.1</a>
   - <a href="#release-summary-14">Release Summary</a>
+  - <a href="#bugfixes-13">Bugfixes</a>
+- <a href="#v2-5-0">v2\.5\.0</a>
+  - <a href="#release-summary-15">Release Summary</a>
   - <a href="#minor-changes-3">Minor Changes</a>
   - <a href="#deprecated-features-1">Deprecated Features</a>
-  - <a href="#bugfixes-13">Bugfixes</a>
-- <a href="#v2-4-2">v2\.4\.2</a>
-  - <a href="#release-summary-15">Release Summary</a>
   - <a href="#bugfixes-14">Bugfixes</a>
-- <a href="#v2-4-1">v2\.4\.1</a>
+- <a href="#v2-4-2">v2\.4\.2</a>
   - <a href="#release-summary-16">Release Summary</a>
   - <a href="#bugfixes-15">Bugfixes</a>
-- <a href="#v2-4-0">v2\.4\.0</a>
+- <a href="#v2-4-1">v2\.4\.1</a>
   - <a href="#release-summary-17">Release Summary</a>
-  - <a href="#minor-changes-4">Minor Changes</a>
   - <a href="#bugfixes-16">Bugfixes</a>
-- <a href="#v2-3-4">v2\.3\.4</a>
+- <a href="#v2-4-0">v2\.4\.0</a>
   - <a href="#release-summary-18">Release Summary</a>
+  - <a href="#minor-changes-4">Minor Changes</a>
   - <a href="#bugfixes-17">Bugfixes</a>
-- <a href="#v2-3-3">v2\.3\.3</a>
+- <a href="#v2-3-4">v2\.3\.4</a>
   - <a href="#release-summary-19">Release Summary</a>
   - <a href="#bugfixes-18">Bugfixes</a>
-- <a href="#v2-3-2">v2\.3\.2</a>
+- <a href="#v2-3-3">v2\.3\.3</a>
   - <a href="#release-summary-20">Release Summary</a>
   - <a href="#bugfixes-19">Bugfixes</a>
-- <a href="#v2-3-1">v2\.3\.1</a>
+- <a href="#v2-3-2">v2\.3\.2</a>
   - <a href="#release-summary-21">Release Summary</a>
-  - <a href="#minor-changes-5">Minor Changes</a>
   - <a href="#bugfixes-20">Bugfixes</a>
-- <a href="#v2-3-0">v2\.3\.0</a>
+- <a href="#v2-3-1">v2\.3\.1</a>
   - <a href="#release-summary-22">Release Summary</a>
-  - <a href="#minor-changes-6">Minor Changes</a>
+  - <a href="#minor-changes-5">Minor Changes</a>
   - <a href="#bugfixes-21">Bugfixes</a>
-- <a href="#v2-2-1">v2\.2\.1</a>
+- <a href="#v2-3-0">v2\.3\.0</a>
   - <a href="#release-summary-23">Release Summary</a>
+  - <a href="#minor-changes-6">Minor Changes</a>
   - <a href="#bugfixes-22">Bugfixes</a>
-- <a href="#v2-2-0">v2\.2\.0</a>
+- <a href="#v2-2-1">v2\.2\.1</a>
   - <a href="#release-summary-24">Release Summary</a>
-  - <a href="#minor-changes-7">Minor Changes</a>
   - <a href="#bugfixes-23">Bugfixes</a>
-- <a href="#v2-1-1">v2\.1\.1</a>
+- <a href="#v2-2-0">v2\.2\.0</a>
   - <a href="#release-summary-25">Release Summary</a>
+  - <a href="#minor-changes-7">Minor Changes</a>
   - <a href="#bugfixes-24">Bugfixes</a>
-- <a href="#v2-1-0">v2\.1\.0</a>
+- <a href="#v2-1-1">v2\.1\.1</a>
   - <a href="#release-summary-26">Release Summary</a>
-  - <a href="#minor-changes-8">Minor Changes</a>
   - <a href="#bugfixes-25">Bugfixes</a>
-- <a href="#v2-0-9">v2\.0\.9</a>
+- <a href="#v2-1-0">v2\.1\.0</a>
   - <a href="#release-summary-27">Release Summary</a>
+  - <a href="#minor-changes-8">Minor Changes</a>
   - <a href="#bugfixes-26">Bugfixes</a>
-- <a href="#v2-0-8">v2\.0\.8</a>
+- <a href="#v2-0-9">v2\.0\.9</a>
   - <a href="#release-summary-28">Release Summary</a>
   - <a href="#bugfixes-27">Bugfixes</a>
-- <a href="#v2-0-7">v2\.0\.7</a>
+- <a href="#v2-0-8">v2\.0\.8</a>
   - <a href="#release-summary-29">Release Summary</a>
   - <a href="#bugfixes-28">Bugfixes</a>
-- <a href="#v2-0-6">v2\.0\.6</a>
+- <a href="#v2-0-7">v2\.0\.7</a>
   - <a href="#release-summary-30">Release Summary</a>
   - <a href="#bugfixes-29">Bugfixes</a>
-- <a href="#v2-0-5">v2\.0\.5</a>
+- <a href="#v2-0-6">v2\.0\.6</a>
   - <a href="#release-summary-31">Release Summary</a>
   - <a href="#bugfixes-30">Bugfixes</a>
-- <a href="#v2-0-4">v2\.0\.4</a>
+- <a href="#v2-0-5">v2\.0\.5</a>
   - <a href="#release-summary-32">Release Summary</a>
   - <a href="#bugfixes-31">Bugfixes</a>
-- <a href="#v2-0-3">v2\.0\.3</a>
+- <a href="#v2-0-4">v2\.0\.4</a>
   - <a href="#release-summary-33">Release Summary</a>
+  - <a href="#bugfixes-32">Bugfixes</a>
+- <a href="#v2-0-3">v2\.0\.3</a>
+  - <a href="#release-summary-34">Release Summary</a>
   - <a href="#minor-changes-9">Minor Changes</a>
 - <a href="#v2-0-2">v2\.0\.2</a>
-  - <a href="#release-summary-34">Release Summary</a>
-  - <a href="#bugfixes-32">Bugfixes</a>
-- <a href="#v2-0-1">v2\.0\.1</a>
   - <a href="#release-summary-35">Release Summary</a>
   - <a href="#bugfixes-33">Bugfixes</a>
-- <a href="#v2-0-0">v2\.0\.0</a>
+- <a href="#v2-0-1">v2\.0\.1</a>
   - <a href="#release-summary-36">Release Summary</a>
+  - <a href="#bugfixes-34">Bugfixes</a>
+- <a href="#v2-0-0">v2\.0\.0</a>
+  - <a href="#release-summary-37">Release Summary</a>
   - <a href="#minor-changes-10">Minor Changes</a>
   - <a href="#breaking-changes--porting-guide">Breaking Changes / Porting Guide</a>
   - <a href="#deprecated-features-2">Deprecated Features</a>
-  - <a href="#bugfixes-34">Bugfixes</a>
+  - <a href="#bugfixes-35">Bugfixes</a>
   - <a href="#new-plugins-1">New Plugins</a>
     - <a href="#inventory">Inventory</a>
   - <a href="#new-modules-1">New Modules</a>
 - <a href="#v1-2-0">v1\.2\.0</a>
-  - <a href="#release-summary-37">Release Summary</a>
-  - <a href="#minor-changes-11">Minor Changes</a>
-  - <a href="#bugfixes-35">Bugfixes</a>
-- <a href="#v1-1-0">v1\.1\.0</a>
   - <a href="#release-summary-38">Release Summary</a>
-  - <a href="#minor-changes-12">Minor Changes</a>
+  - <a href="#minor-changes-11">Minor Changes</a>
   - <a href="#bugfixes-36">Bugfixes</a>
-- <a href="#v1-0-1">v1\.0\.1</a>
+- <a href="#v1-1-0">v1\.1\.0</a>
   - <a href="#release-summary-39">Release Summary</a>
+  - <a href="#minor-changes-12">Minor Changes</a>
   - <a href="#bugfixes-37">Bugfixes</a>
-- <a href="#v1-0-0">v1\.0\.0</a>
+- <a href="#v1-0-1">v1\.0\.1</a>
   - <a href="#release-summary-40">Release Summary</a>
   - <a href="#bugfixes-38">Bugfixes</a>
-- <a href="#v0-3-0">v0\.3\.0</a>
+- <a href="#v1-0-0">v1\.0\.0</a>
   - <a href="#release-summary-41">Release Summary</a>
-  - <a href="#minor-changes-13">Minor Changes</a>
   - <a href="#bugfixes-39">Bugfixes</a>
+- <a href="#v0-3-0">v0\.3\.0</a>
+  - <a href="#release-summary-42">Release Summary</a>
+  - <a href="#minor-changes-13">Minor Changes</a>
+  - <a href="#bugfixes-40">Bugfixes</a>
   - <a href="#new-modules-2">New Modules</a>
 - <a href="#v0-2-0">v0\.2\.0</a>
-  - <a href="#release-summary-42">Release Summary</a>
+  - <a href="#release-summary-43">Release Summary</a>
   - <a href="#major-changes">Major Changes</a>
   - <a href="#minor-changes-14">Minor Changes</a>
   - <a href="#breaking-changes--porting-guide-1">Breaking Changes / Porting Guide</a>
-  - <a href="#bugfixes-40">Bugfixes</a>
+  - <a href="#bugfixes-41">Bugfixes</a>
   - <a href="#new-modules-3">New Modules</a>
 - <a href="#v0-1-0">v0\.1\.0</a>
-  - <a href="#release-summary-43">Release Summary</a>
+  - <a href="#release-summary-44">Release Summary</a>
   - <a href="#new-plugins-2">New Plugins</a>
     - <a href="#filter">Filter</a>
   - <a href="#new-modules-4">New Modules</a>
 
+<a id="v2-8-1"></a>
+## v2\.8\.1
+
+<a id="release-summary"></a>
+### Release Summary
+
+Maintenance release with updated PSL\.
+
+<a id="bugfixes"></a>
+### Bugfixes
+
+* Update Public Suffix List\.
+
 <a id="v2-8-0"></a>
 ## v2\.8\.0
 
-<a id="release-summary"></a>
+<a id="release-summary-1"></a>
 ### Release Summary
 
 Feature and maintenance release with updated PSL\.
@@ -182,7 +198,7 @@ Feature and maintenance release with updated PSL\.
 
 * hetzner\_dns\_records and hosttech\_dns\_records inventory plugins \- the <code>filters</code> option has been renamed to <code>simple\_filters</code>\. The old name will stop working in community\.hrobot 2\.0\.0 \([https\://github\.com/ansible\-collections/community\.dns/pull/181](https\://github\.com/ansible\-collections/community\.dns/pull/181)\)\.
 
-<a id="bugfixes"></a>
+<a id="bugfixes-1"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -190,7 +206,7 @@ Feature and maintenance release with updated PSL\.
 <a id="v2-7-0"></a>
 ## v2\.7\.0
 
-<a id="release-summary-1"></a>
+<a id="release-summary-2"></a>
 ### Release Summary
 
 Bugfix and feature release with updated PSL\.
@@ -201,7 +217,7 @@ Bugfix and feature release with updated PSL\.
 * nameserver\_info and nameserver\_record\_info \- add <code>server</code> parameter to specify custom DNS servers \([https\://github\.com/ansible\-collections/community\.dns/pull/168](https\://github\.com/ansible\-collections/community\.dns/pull/168)\, [https\://github\.com/ansible\-collections/community\.dns/pull/178](https\://github\.com/ansible\-collections/community\.dns/pull/178)\)\.
 * wait\_for\_txt \- add <code>server</code> parameter to specify custom DNS servers \([https\://github\.com/ansible\-collections/community\.dns/pull/178](https\://github\.com/ansible\-collections/community\.dns/pull/178)\)\.
 
-<a id="bugfixes-1"></a>
+<a id="bugfixes-2"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -210,12 +226,12 @@ Bugfix and feature release with updated PSL\.
 <a id="v2-6-4"></a>
 ## v2\.6\.4
 
-<a id="release-summary-2"></a>
+<a id="release-summary-3"></a>
 ### Release Summary
 
 Bugfix and maintenance version\.
 
-<a id="bugfixes-2"></a>
+<a id="bugfixes-3"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -223,20 +239,6 @@ Bugfix and maintenance version\.
 
 <a id="v2-6-3"></a>
 ## v2\.6\.3
-
-<a id="release-summary-3"></a>
-### Release Summary
-
-Maintenance release with updated PSL\.
-
-<a id="bugfixes-3"></a>
-### Bugfixes
-
-* HTTP module utils \- make compatible with ansible\-core 2\.17 \([https\://github\.com/ansible\-collections/community\.dns/pull/165](https\://github\.com/ansible\-collections/community\.dns/pull/165)\)\.
-* Update Public Suffix List\.
-
-<a id="v2-6-2"></a>
-## v2\.6\.2
 
 <a id="release-summary-4"></a>
 ### Release Summary
@@ -246,10 +248,11 @@ Maintenance release with updated PSL\.
 <a id="bugfixes-4"></a>
 ### Bugfixes
 
+* HTTP module utils \- make compatible with ansible\-core 2\.17 \([https\://github\.com/ansible\-collections/community\.dns/pull/165](https\://github\.com/ansible\-collections/community\.dns/pull/165)\)\.
 * Update Public Suffix List\.
 
-<a id="v2-6-1"></a>
-## v2\.6\.1
+<a id="v2-6-2"></a>
+## v2\.6\.2
 
 <a id="release-summary-5"></a>
 ### Release Summary
@@ -261,10 +264,23 @@ Maintenance release with updated PSL\.
 
 * Update Public Suffix List\.
 
+<a id="v2-6-1"></a>
+## v2\.6\.1
+
+<a id="release-summary-6"></a>
+### Release Summary
+
+Maintenance release with updated PSL\.
+
+<a id="bugfixes-6"></a>
+### Bugfixes
+
+* Update Public Suffix List\.
+
 <a id="v2-6-0"></a>
 ## v2\.6\.0
 
-<a id="release-summary-6"></a>
+<a id="release-summary-7"></a>
 ### Release Summary
 
 Feature release with an updated Public Suffix List\.
@@ -275,7 +291,7 @@ Feature release with an updated Public Suffix List\.
 * wait\_for\_txt \- add <code>servfail\_retries</code> parameter that allows retrying after SERVFAIL errors \([https\://github\.com/ansible\-collections/community\.dns/pull/159](https\://github\.com/ansible\-collections/community\.dns/pull/159)\)\.
 * wait\_for\_txt\, resolver module utils \- use [EDNS](https\://en\.wikipedia\.org/wiki/Extension\_Mechanisms\_for\_DNS) \([https\://github\.com/ansible\-collections/community\.dns/pull/158](https\://github\.com/ansible\-collections/community\.dns/pull/158)\)\.
 
-<a id="bugfixes-6"></a>
+<a id="bugfixes-7"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -299,12 +315,12 @@ Feature release with an updated Public Suffix List\.
 <a id="v2-5-7"></a>
 ## v2\.5\.7
 
-<a id="release-summary-7"></a>
+<a id="release-summary-8"></a>
 ### Release Summary
 
 Regular maintenance release with updated Public Suffix List\.
 
-<a id="bugfixes-7"></a>
+<a id="bugfixes-8"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -312,7 +328,7 @@ Regular maintenance release with updated Public Suffix List\.
 <a id="v2-5-6"></a>
 ## v2\.5\.6
 
-<a id="release-summary-8"></a>
+<a id="release-summary-9"></a>
 ### Release Summary
 
 Maintenance release\.
@@ -333,19 +349,6 @@ for the rendered HTML version of the documentation of the latest release\.
 <a id="v2-5-5"></a>
 ## v2\.5\.5
 
-<a id="release-summary-9"></a>
-### Release Summary
-
-Maintenance release with updated PSL\.
-
-<a id="bugfixes-8"></a>
-### Bugfixes
-
-* Update Public Suffix List\.
-
-<a id="v2-5-4"></a>
-## v2\.5\.4
-
 <a id="release-summary-10"></a>
 ### Release Summary
 
@@ -356,8 +359,8 @@ Maintenance release with updated PSL\.
 
 * Update Public Suffix List\.
 
-<a id="v2-5-3"></a>
-## v2\.5\.3
+<a id="v2-5-4"></a>
+## v2\.5\.4
 
 <a id="release-summary-11"></a>
 ### Release Summary
@@ -369,15 +372,28 @@ Maintenance release with updated PSL\.
 
 * Update Public Suffix List\.
 
-<a id="v2-5-2"></a>
-## v2\.5\.2
+<a id="v2-5-3"></a>
+## v2\.5\.3
 
 <a id="release-summary-12"></a>
 ### Release Summary
 
-Maintenance release with improved documentation and updated PSL\.
+Maintenance release with updated PSL\.
 
 <a id="bugfixes-11"></a>
+### Bugfixes
+
+* Update Public Suffix List\.
+
+<a id="v2-5-2"></a>
+## v2\.5\.2
+
+<a id="release-summary-13"></a>
+### Release Summary
+
+Maintenance release with improved documentation and updated PSL\.
+
+<a id="bugfixes-12"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -385,12 +401,12 @@ Maintenance release with improved documentation and updated PSL\.
 <a id="v2-5-1"></a>
 ## v2\.5\.1
 
-<a id="release-summary-13"></a>
+<a id="release-summary-14"></a>
 ### Release Summary
 
 Maintenance release \(updated PSL\)\.
 
-<a id="bugfixes-12"></a>
+<a id="bugfixes-13"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -398,7 +414,7 @@ Maintenance release \(updated PSL\)\.
 <a id="v2-5-0"></a>
 ## v2\.5\.0
 
-<a id="release-summary-14"></a>
+<a id="release-summary-15"></a>
 ### Release Summary
 
 Feature and bugfix release with updated PSL\.
@@ -414,7 +430,7 @@ Feature and bugfix release with updated PSL\.
 
 * The default of the newly added option <code>txt\_character\_encoding</code> will change from <code>octal</code> to <code>decimal</code> in community\.dns 3\.0\.0\. The new default will be compatible with [RFC 1035](https\://www\.ietf\.org/rfc/rfc1035\.txt) \([https\://github\.com/ansible\-collections/community\.dns/pull/134](https\://github\.com/ansible\-collections/community\.dns/pull/134)\)\.
 
-<a id="bugfixes-13"></a>
+<a id="bugfixes-14"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -423,12 +439,12 @@ Feature and bugfix release with updated PSL\.
 <a id="v2-4-2"></a>
 ## v2\.4\.2
 
-<a id="release-summary-15"></a>
+<a id="release-summary-16"></a>
 ### Release Summary
 
 Maintenance release with updated Public Suffix List\.
 
-<a id="bugfixes-14"></a>
+<a id="bugfixes-15"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -436,12 +452,12 @@ Maintenance release with updated Public Suffix List\.
 <a id="v2-4-1"></a>
 ## v2\.4\.1
 
-<a id="release-summary-16"></a>
+<a id="release-summary-17"></a>
 ### Release Summary
 
 Regular maintenance release\.
 
-<a id="bugfixes-15"></a>
+<a id="bugfixes-16"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -450,7 +466,7 @@ Regular maintenance release\.
 <a id="v2-4-0"></a>
 ## v2\.4\.0
 
-<a id="release-summary-17"></a>
+<a id="release-summary-18"></a>
 ### Release Summary
 
 Feature and maintenance release\.
@@ -462,7 +478,7 @@ Feature and maintenance release\.
 * Added a <code>community\.dns\.hosttech</code> module defaults group / action group\. Use with <code>group/community\.dns\.hosttech</code> to provide options for all Hosttech DNS modules \([https\://github\.com/ansible\-collections/community\.dns/pull/119](https\://github\.com/ansible\-collections/community\.dns/pull/119)\)\.
 * wait\_for\_txt \- the module now supports check mode\. The only practical change in behavior is that in check mode\, the module is now executed instead of skipped\. Since the module does not change anything\, it should have been marked as supporting check mode since it was originally added \([https\://github\.com/ansible\-collections/community\.dns/pull/119](https\://github\.com/ansible\-collections/community\.dns/pull/119)\)\.
 
-<a id="bugfixes-16"></a>
+<a id="bugfixes-17"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -470,12 +486,12 @@ Feature and maintenance release\.
 <a id="v2-3-4"></a>
 ## v2\.3\.4
 
-<a id="release-summary-18"></a>
+<a id="release-summary-19"></a>
 ### Release Summary
 
 Maintenance release with updated Public Suffix List\.
 
-<a id="bugfixes-17"></a>
+<a id="bugfixes-18"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -483,12 +499,12 @@ Maintenance release with updated Public Suffix List\.
 <a id="v2-3-3"></a>
 ## v2\.3\.3
 
-<a id="release-summary-19"></a>
+<a id="release-summary-20"></a>
 ### Release Summary
 
 Maintenance release including an updated Public Suffix List\.
 
-<a id="bugfixes-18"></a>
+<a id="bugfixes-19"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -496,12 +512,12 @@ Maintenance release including an updated Public Suffix List\.
 <a id="v2-3-2"></a>
 ## v2\.3\.2
 
-<a id="release-summary-20"></a>
+<a id="release-summary-21"></a>
 ### Release Summary
 
 Maintenance release with updated Public Suffix List\.
 
-<a id="bugfixes-19"></a>
+<a id="bugfixes-20"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -509,7 +525,7 @@ Maintenance release with updated Public Suffix List\.
 <a id="v2-3-1"></a>
 ## v2\.3\.1
 
-<a id="release-summary-21"></a>
+<a id="release-summary-22"></a>
 ### Release Summary
 
 Maintenance release including an updated Public Suffix List\.
@@ -519,7 +535,7 @@ Maintenance release including an updated Public Suffix List\.
 
 * The collection repository conforms to the [REUSE specification](https\://reuse\.software/spec/) except for the changelog fragments \([https\://github\.com/ansible\-collections/community\.dns/pull/112](https\://github\.com/ansible\-collections/community\.dns/pull/112)\)\.
 
-<a id="bugfixes-20"></a>
+<a id="bugfixes-21"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -527,7 +543,7 @@ Maintenance release including an updated Public Suffix List\.
 <a id="v2-3-0"></a>
 ## v2\.3\.0
 
-<a id="release-summary-22"></a>
+<a id="release-summary-23"></a>
 ### Release Summary
 
 Maintenance release including an updated Public Suffix List\.
@@ -537,7 +553,7 @@ Maintenance release including an updated Public Suffix List\.
 
 * All software licenses are now in the <code>LICENSES/</code> directory of the collection root\. Moreover\, <code>SPDX\-License\-Identifier\:</code> is used to declare the applicable license for every file that is not automatically generated \([https\://github\.com/ansible\-collections/community\.dns/pull/109](https\://github\.com/ansible\-collections/community\.dns/pull/109)\)\.
 
-<a id="bugfixes-21"></a>
+<a id="bugfixes-22"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -545,12 +561,12 @@ Maintenance release including an updated Public Suffix List\.
 <a id="v2-2-1"></a>
 ## v2\.2\.1
 
-<a id="release-summary-23"></a>
+<a id="release-summary-24"></a>
 ### Release Summary
 
 Maintenance release with updated Public Suffix List\.
 
-<a id="bugfixes-22"></a>
+<a id="bugfixes-23"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -558,7 +574,7 @@ Maintenance release with updated Public Suffix List\.
 <a id="v2-2-0"></a>
 ## v2\.2\.0
 
-<a id="release-summary-24"></a>
+<a id="release-summary-25"></a>
 ### Release Summary
 
 Feature release\.
@@ -569,7 +585,7 @@ Feature release\.
 * hetzner\_dns\_records and hosttech\_dns\_records inventory plugins \- allow to template provider\-specific credentials and the <code>zone\_name</code>\, <code>zone\_id</code> options \([https\://github\.com/ansible\-collections/community\.dns/pull/106](https\://github\.com/ansible\-collections/community\.dns/pull/106)\)\.
 * wait\_for\_txt \- improve error messages so that in case of SERVFAILs or other DNS errors it is clear which record was queried from which DNS server \([https\://github\.com/ansible\-collections/community\.dns/pull/105](https\://github\.com/ansible\-collections/community\.dns/pull/105)\)\.
 
-<a id="bugfixes-23"></a>
+<a id="bugfixes-24"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -577,12 +593,12 @@ Feature release\.
 <a id="v2-1-1"></a>
 ## v2\.1\.1
 
-<a id="release-summary-25"></a>
+<a id="release-summary-26"></a>
 ### Release Summary
 
 Maintenance release with updated Public Suffix List\.
 
-<a id="bugfixes-24"></a>
+<a id="bugfixes-25"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -590,7 +606,7 @@ Maintenance release with updated Public Suffix List\.
 <a id="v2-1-0"></a>
 ## v2\.1\.0
 
-<a id="release-summary-26"></a>
+<a id="release-summary-27"></a>
 ### Release Summary
 
 Feature and maintenance release with updated PSL\.
@@ -600,7 +616,7 @@ Feature and maintenance release with updated PSL\.
 
 * Prepare collection for inclusion in an Execution Environment by declaring its dependencies \([https\://github\.com/ansible\-collections/community\.dns/pull/93](https\://github\.com/ansible\-collections/community\.dns/pull/93)\)\.
 
-<a id="bugfixes-25"></a>
+<a id="bugfixes-26"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -608,31 +624,18 @@ Feature and maintenance release with updated PSL\.
 <a id="v2-0-9"></a>
 ## v2\.0\.9
 
-<a id="release-summary-27"></a>
-### Release Summary
-
-Maintenance release with updated Public Suffix List and added collection links file\.
-
-<a id="bugfixes-26"></a>
-### Bugfixes
-
-* Update Public Suffix List\.
-
-<a id="v2-0-8"></a>
-## v2\.0\.8
-
 <a id="release-summary-28"></a>
 ### Release Summary
 
-Maintenance release with updated Public Suffix List\.
+Maintenance release with updated Public Suffix List and added collection links file\.
 
 <a id="bugfixes-27"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
 
-<a id="v2-0-7"></a>
-## v2\.0\.7
+<a id="v2-0-8"></a>
+## v2\.0\.8
 
 <a id="release-summary-29"></a>
 ### Release Summary
@@ -644,15 +647,28 @@ Maintenance release with updated Public Suffix List\.
 
 * Update Public Suffix List\.
 
-<a id="v2-0-6"></a>
-## v2\.0\.6
+<a id="v2-0-7"></a>
+## v2\.0\.7
 
 <a id="release-summary-30"></a>
 ### Release Summary
 
-Bugfix release\.
+Maintenance release with updated Public Suffix List\.
 
 <a id="bugfixes-29"></a>
+### Bugfixes
+
+* Update Public Suffix List\.
+
+<a id="v2-0-6"></a>
+## v2\.0\.6
+
+<a id="release-summary-31"></a>
+### Release Summary
+
+Bugfix release\.
+
+<a id="bugfixes-30"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -660,19 +676,6 @@ Bugfix release\.
 
 <a id="v2-0-5"></a>
 ## v2\.0\.5
-
-<a id="release-summary-31"></a>
-### Release Summary
-
-Maintenance release with updated Public Suffix List\.
-
-<a id="bugfixes-30"></a>
-### Bugfixes
-
-* Update Public Suffix List\.
-
-<a id="v2-0-4"></a>
-## v2\.0\.4
 
 <a id="release-summary-32"></a>
 ### Release Summary
@@ -684,10 +687,23 @@ Maintenance release with updated Public Suffix List\.
 
 * Update Public Suffix List\.
 
+<a id="v2-0-4"></a>
+## v2\.0\.4
+
+<a id="release-summary-33"></a>
+### Release Summary
+
+Maintenance release with updated Public Suffix List\.
+
+<a id="bugfixes-32"></a>
+### Bugfixes
+
+* Update Public Suffix List\.
+
 <a id="v2-0-3"></a>
 ## v2\.0\.3
 
-<a id="release-summary-33"></a>
+<a id="release-summary-34"></a>
 ### Release Summary
 
 Bugfix release\.
@@ -700,12 +716,12 @@ Bugfix release\.
 <a id="v2-0-2"></a>
 ## v2\.0\.2
 
-<a id="release-summary-34"></a>
+<a id="release-summary-35"></a>
 ### Release Summary
 
 Regular maintenance release\.
 
-<a id="bugfixes-32"></a>
+<a id="bugfixes-33"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -713,12 +729,12 @@ Regular maintenance release\.
 <a id="v2-0-1"></a>
 ## v2\.0\.1
 
-<a id="release-summary-35"></a>
+<a id="release-summary-36"></a>
 ### Release Summary
 
 Maintenance release with Public Suffix List updates\.
 
-<a id="bugfixes-33"></a>
+<a id="bugfixes-34"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -726,7 +742,7 @@ Maintenance release with Public Suffix List updates\.
 <a id="v2-0-0"></a>
 ## v2\.0\.0
 
-<a id="release-summary-36"></a>
+<a id="release-summary-37"></a>
 ### Release Summary
 
 This release contains many new features\, modules and plugins\, but also has several breaking changes to the 1\.x\.y versions\. Please read the changelog carefully to determine what to change if you used an earlier version of this collection\.
@@ -766,7 +782,7 @@ This release contains many new features\, modules and plugins\, but also has sev
 
 * The hosttech\_dns\_records module has been renamed to hosttech\_dns\_record\_sets\. The old name will stop working in community\.dns 3\.0\.0 \([https\://github\.com/ansible\-collections/community\.dns/pull/31](https\://github\.com/ansible\-collections/community\.dns/pull/31)\)\.
 
-<a id="bugfixes-34"></a>
+<a id="bugfixes-35"></a>
 ### Bugfixes
 
 * Hetzner API \- interpret missing TTL as 300\, which is what the web console also does \([https\://github\.com/ansible\-collections/community\.dns/pull/42](https\://github\.com/ansible\-collections/community\.dns/pull/42)\)\.
@@ -804,7 +820,7 @@ This release contains many new features\, modules and plugins\, but also has sev
 <a id="v1-2-0"></a>
 ## v1\.2\.0
 
-<a id="release-summary-37"></a>
+<a id="release-summary-38"></a>
 ### Release Summary
 
 Last minor 1\.x\.0 version\. The 2\.0\.0 version will have some backwards incompatible changes to the <code>hosttech\_dns\_record</code> and <code>hosttech\_dns\_records</code> modules which will require user intervention\. These changes should result in a better UX\.
@@ -816,7 +832,7 @@ Last minor 1\.x\.0 version\. The 2\.0\.0 version will have some backwards incomp
 * hosttech\_dns\_record \- in <code>diff</code> mode\, also return <code>diff</code> data structure when <code>changed</code> is <code>false</code> \([https\://github\.com/ansible\-collections/community\.dns/pull/28](https\://github\.com/ansible\-collections/community\.dns/pull/28)\)\.
 * module utils \- add default implementation for some zone/record API functions\, and move common JSON API code to helper class \([https\://github\.com/ansible\-collections/community\.dns/pull/26](https\://github\.com/ansible\-collections/community\.dns/pull/26)\)\.
 
-<a id="bugfixes-35"></a>
+<a id="bugfixes-36"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -825,7 +841,7 @@ Last minor 1\.x\.0 version\. The 2\.0\.0 version will have some backwards incomp
 <a id="v1-1-0"></a>
 ## v1\.1\.0
 
-<a id="release-summary-38"></a>
+<a id="release-summary-39"></a>
 ### Release Summary
 
 Regular maintenance release\.
@@ -835,7 +851,7 @@ Regular maintenance release\.
 
 * Avoid internal ansible\-core module\_utils in favor of equivalent public API available since at least Ansible 2\.9 \([https\://github\.com/ansible\-collections/community\.dns/pull/24](https\://github\.com/ansible\-collections/community\.dns/pull/24)\)\.
 
-<a id="bugfixes-36"></a>
+<a id="bugfixes-37"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -843,12 +859,12 @@ Regular maintenance release\.
 <a id="v1-0-1"></a>
 ## v1\.0\.1
 
-<a id="release-summary-39"></a>
+<a id="release-summary-40"></a>
 ### Release Summary
 
 Regular maintenance release\.
 
-<a id="bugfixes-37"></a>
+<a id="bugfixes-38"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -856,12 +872,12 @@ Regular maintenance release\.
 <a id="v1-0-0"></a>
 ## v1\.0\.0
 
-<a id="release-summary-40"></a>
+<a id="release-summary-41"></a>
 ### Release Summary
 
 First stable release\.
 
-<a id="bugfixes-38"></a>
+<a id="bugfixes-39"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -869,7 +885,7 @@ First stable release\.
 <a id="v0-3-0"></a>
 ## v0\.3\.0
 
-<a id="release-summary-41"></a>
+<a id="release-summary-42"></a>
 ### Release Summary
 
 Fixes bugs\, adds rate limiting for Hosttech JSON API\, and adds a new bulk synchronization module\.
@@ -879,7 +895,7 @@ Fixes bugs\, adds rate limiting for Hosttech JSON API\, and adds a new bulk sync
 
 * hosttech\_dns\_\* \- handle <code>419 Too Many Requests</code> with proper rate limiting for JSON API \([https\://github\.com/ansible\-collections/community\.dns/pull/14](https\://github\.com/ansible\-collections/community\.dns/pull/14)\)\.
 
-<a id="bugfixes-39"></a>
+<a id="bugfixes-40"></a>
 ### Bugfixes
 
 * Avoid converting ASCII labels which contain underscores or other printable ASCII characters outside <code>\[a\-zA\-Z0\-9\-\]</code> to alabels during normalization \([https\://github\.com/ansible\-collections/community\.dns/pull/13](https\://github\.com/ansible\-collections/community\.dns/pull/13)\)\.
@@ -893,7 +909,7 @@ Fixes bugs\, adds rate limiting for Hosttech JSON API\, and adds a new bulk sync
 <a id="v0-2-0"></a>
 ## v0\.2\.0
 
-<a id="release-summary-42"></a>
+<a id="release-summary-43"></a>
 ### Release Summary
 
 Major refactoring release\, which adds a zone information module and supports HostTech\'s new REST API\.
@@ -918,7 +934,7 @@ Major refactoring release\, which adds a zone information module and supports Ho
 
 * hosttech\_\* module\_utils \- completely rewrite and refactor to support new JSON API and allow to reuse provider\-independent module logic \([https\://github\.com/ansible\-collections/community\.dns/pull/4](https\://github\.com/ansible\-collections/community\.dns/pull/4)\)\.
 
-<a id="bugfixes-40"></a>
+<a id="bugfixes-41"></a>
 ### Bugfixes
 
 * Update Public Suffix List\.
@@ -933,7 +949,7 @@ Major refactoring release\, which adds a zone information module and supports Ho
 <a id="v0-1-0"></a>
 ## v0\.1\.0
 
-<a id="release-summary-43"></a>
+<a id="release-summary-44"></a>
 ### Release Summary
 
 Initial public release\.
