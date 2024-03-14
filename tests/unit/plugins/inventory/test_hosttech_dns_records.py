@@ -12,6 +12,7 @@ import textwrap
 from ansible import constants as C
 from ansible.inventory.manager import InventoryManager
 from ansible.module_utils.common.text.converters import to_native
+from ansible.utils.unsafe_proxy import AnsibleUnsafe
 
 from ansible_collections.community.internal_test_tools.tests.unit.mock.path import mock_unfrackpath_noop
 from ansible_collections.community.internal_test_tools.tests.unit.mock.loader import DictDataLoader
@@ -185,6 +186,8 @@ def test_inventory_file_simple(mocker):
     assert im._inventory.get_host('*.example.com') in im._inventory.groups['ungrouped'].hosts
     assert im._inventory.get_host('example.com').get_vars()['ansible_host'] == '1.2.3.4'
     assert im._inventory.get_host('*.example.com').get_vars()['ansible_host'] == '1.2.3.5'
+    assert isinstance(im._inventory.get_host('example.com').get_vars()['ansible_host'], AnsibleUnsafe)
+    assert isinstance(im._inventory.get_host('*.example.com').get_vars()['ansible_host'], AnsibleUnsafe)
     assert len(im._inventory.groups['ungrouped'].hosts) == 2
     assert len(im._inventory.groups['all'].hosts) == 0
 

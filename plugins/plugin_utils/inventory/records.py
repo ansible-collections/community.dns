@@ -15,6 +15,7 @@ from ansible.module_utils import six
 from ansible.module_utils.common._collections_compat import Sequence
 from ansible.plugins.inventory import BaseInventoryPlugin
 from ansible.utils.display import Display
+from ansible.utils.unsafe_proxy import wrap_var as make_unsafe
 from ansible.template import Templar
 
 from ansible_collections.community.dns.plugins.module_utils.provider import (
@@ -129,4 +130,4 @@ class RecordsInventoryModule(BaseInventoryPlugin):
                 if record.prefix:
                     name = '%s.%s' % (record.prefix, name)
                 self.inventory.add_host(name)
-                self.inventory.set_variable(name, 'ansible_host', record.target)
+                self.inventory.set_variable(name, 'ansible_host', make_unsafe(record.target))
