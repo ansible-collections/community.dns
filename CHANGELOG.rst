@@ -4,6 +4,17 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v1.2.3
+======
+
+Release Summary
+---------------
+
+End of Life release.
+
+The 1.x.y release train of the community.dns collection is now End of Life.
+There will be no more 1.x.y releases. Please upgrade to community.dns 2.x.y.
+Thanks to all contributors to the 1.x.y releases!
 
 v1.2.2
 ======
@@ -41,7 +52,6 @@ Release Summary
 ---------------
 
 Last minor 1.x.0 version. The 2.0.0 version will have some backwards incompatible changes to the ``hosttech_dns_record`` and ``hosttech_dns_records`` modules which will require user intervention. These changes should result in a better UX.
-
 
 Minor Changes
 -------------
