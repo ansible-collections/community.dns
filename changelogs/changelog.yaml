@@ -779,3 +779,19 @@ releases:
     - 2.8.1.yml
     - update-psl.yml
     release_date: '2024-02-25'
+  2.8.2:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      release_summary: Bugfix release.
+      security_fixes:
+      - hosttech_dns_records and hetzner_dns_records inventory plugins - make sure
+        all data received from the remote servers is marked as unsafe, so remote code
+        execution by obtaining texts that can be evaluated as templates is not possible
+        (https://www.die-welt.net/2024/03/remote-code-execution-in-ansible-dynamic-inventory-plugins/,
+        https://github.com/ansible-collections/community.dns/pull/189).
+    fragments:
+    - 2.8.2.yml
+    - inventory-rce.yml
+    - update-psl.yml
+    release_date: '2024-03-16'

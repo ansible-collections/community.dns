@@ -4,6 +4,24 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v2.8.2
+======
+
+Release Summary
+---------------
+
+Bugfix release.
+
+Security Fixes
+--------------
+
+- hosttech_dns_records and hetzner_dns_records inventory plugins - make sure all data received from the remote servers is marked as unsafe, so remote code execution by obtaining texts that can be evaluated as templates is not possible (https://www.die-welt.net/2024/03/remote-code-execution-in-ansible-dynamic-inventory-plugins/, https://github.com/ansible-collections/community.dns/pull/189).
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+
 v2.8.1
 ======
 
