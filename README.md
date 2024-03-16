@@ -8,6 +8,8 @@ This repository contains the `community.dns` Ansible Collection. The collection 
 
 Please note that this collection does **not** support Windows targets.
 
+**COMMUNITY.DNS 1.x.y IS END OF LIFE. UPGRADE TO COMMUNITY.DNS 2.x.y!**
+
 ## Tested with Ansible
 
 Tested with the current Ansible 2.9, ansible-base 2.10, ansible-core 2.11 and ansible-core 2.12 releases. Ansible versions before 2.9.10 are not supported.
