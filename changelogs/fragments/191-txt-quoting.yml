@@ -1,0 +1,2 @@
+bugfixes:
+  - "DNS record modules, inventory plugins - fix the TXT entry encoder to avoid splitting up escape sequences for quotes and backslashes over multiple TXT strings (https://github.com/ansible-collections/community.dns/issues/190, https://github.com/ansible-collections/community.dns/pull/191)."
