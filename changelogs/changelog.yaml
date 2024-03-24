@@ -795,3 +795,17 @@ releases:
     - inventory-rce.yml
     - update-psl.yml
     release_date: '2024-03-16'
+  2.8.3:
+    changes:
+      bugfixes:
+      - DNS record modules, inventory plugins - fix the TXT entry encoder to avoid
+        splitting up escape sequences for quotes and backslashes over multiple TXT
+        strings (https://github.com/ansible-collections/community.dns/issues/190,
+        https://github.com/ansible-collections/community.dns/pull/191).
+      - Update Public Suffix List.
+      release_summary: Bugfix release.
+    fragments:
+    - 191-txt-quoting.yml
+    - 2.8.3.yml
+    - update-psl.yml
+    release_date: '2024-03-24'

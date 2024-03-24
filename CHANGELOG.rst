@@ -4,6 +4,20 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v2.8.3
+======
+
+Release Summary
+---------------
+
+Bugfix release.
+
+Bugfixes
+--------
+
+- DNS record modules, inventory plugins - fix the TXT entry encoder to avoid splitting up escape sequences for quotes and backslashes over multiple TXT strings (https://github.com/ansible-collections/community.dns/issues/190, https://github.com/ansible-collections/community.dns/pull/191).
+- Update Public Suffix List.
+
 v2.8.2
 ======
 
