@@ -37,6 +37,8 @@ jobs:
       init-html-short-title: Community.Dns Collection Docs
       init-extra-html-theme-options: |
         documentation_home_url=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/branch/main/
+      init-antsibull-docs-version: changelog
+      init-antsibull-docs-repository: felixfontein/antsibull-docs
 
   publish-docs-gh-pages:
     # for now we won't run this on forks
