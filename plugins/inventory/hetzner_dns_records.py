@@ -29,6 +29,9 @@ options:
             - community.dns.hetzner_dns_records
         type: str
 
+    filters:
+        version_added: 3.0.0
+
 extends_documentation_fragment:
     - community.dns.hetzner
     - community.dns.hetzner.plugin
@@ -36,6 +39,7 @@ extends_documentation_fragment:
     - community.dns.hetzner.zone_id_type
     - community.dns.inventory_records
     - community.dns.options.record_transformation
+    - community.library_inventory_filtering_v1.inventory_filter
 
 notes:
     - The provider-specific O(hetzner_token) option can be templated.
@@ -57,6 +61,10 @@ zone_name: domain.de
 simple_filters:
   type:
     - TXT
+filters:
+  - include: >-
+      not ansible_host.startswith('v=')
+  - exclude: true
 txt_transformation: unquoted
 
 # You can also configure the token by putting secret value into this file,
@@ -65,6 +73,7 @@ txt_transformation: unquoted
 hetzner_token: >-
     {{ (lookup('community.sops.sops', 'keys/hetzner.sops.yml') | from_yaml).hetzner_dns_token }}
 '''
+
 
 from ansible_collections.community.dns.plugins.module_utils.http import (
     OpenURLHelper,

@@ -20,3 +20,6 @@ breaking_changes:
 removed_features:
   - "hetzner_dns_record_set, hetzner_dns_record - the deprecated alias ``name`` of the prefix option was removed
      (https://github.com/ansible-collections/community.dns/pull/196)."
+minor_changes:
+  - "inventory plugins - add ``filter`` option which allows to include and exclude
+     hosts based on Jinja2 conditions (https://github.com/ansible-collections/community.dns/pull/196)."
