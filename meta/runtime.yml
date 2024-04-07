@@ -18,12 +18,10 @@ action_groups:
     - hosttech_dns_record_set_info
     - hosttech_dns_record_set
     - hosttech_dns_record_sets
-    - hosttech_dns_records   # deprecated redirect
     - hosttech_dns_zone_info
 plugin_routing:
   modules:
     hosttech_dns_records:
-      redirect: community.dns.hosttech_dns_record_sets
-      deprecation:
+      tombstone:
         removal_version: 3.0.0
         warning_text: The hosttech_dns_records module has been renamed to hosttech_dns_record_sets.
