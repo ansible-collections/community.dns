@@ -11,3 +11,6 @@ major_changes:
     repository, you need to make sure that you also have to install the dependency
     if you are using the inventory plugins
     (https://github.com/ansible-collections/community.dns/pull/196).
+breaking_changes:
+  - "The default for the ``txt_character_encoding`` options in various modules and plugins changed from ``octal`` to ``decimal``
+     (https://github.com/ansible-collections/community.dns/pull/196)."

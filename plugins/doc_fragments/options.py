@@ -55,11 +55,12 @@ options:
         description:
             - Whether to treat numeric escape sequences (V(\\xyz)) as octal or decimal numbers.
               This is only used when O(txt_transformation=quoted).
-            - The current default is V(octal) which is deprecated. It will change to V(decimal) in
-              community.dns 3.0.0. The value V(decimal) is compatible to L(RFC 1035, https://www.ietf.org/rfc/rfc1035.txt).
+            - The default changed to V(decimal) in community.dns 3.0.0. Before, the default used to be V(octal).
+              The value V(decimal) is compatible to L(RFC 1035, https://www.ietf.org/rfc/rfc1035.txt).
         type: str
         choices:
             - decimal
             - octal
+        default: decimal
         version_added: 2.5.0
 '''
