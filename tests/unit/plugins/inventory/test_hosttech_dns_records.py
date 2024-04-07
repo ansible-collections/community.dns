@@ -220,7 +220,7 @@ def test_inventory_file_simple(mocker):
     plugin: community.dns.hosttech_dns_records
     hosttech_token: foo
     zone_name: example.com
-    filters:
+    simple_filters:
       type: A
     """)}
 
@@ -270,7 +270,7 @@ def test_inventory_file_collision(mocker):
     plugin: community.dns.hosttech_dns_records
     hosttech_token: "{{ 'foo' }}"
     zone_name: "{{ 'example' ~ '.com' }}"
-    filters:
+    simple_filters:
       type:
         - A
         - AAAA
