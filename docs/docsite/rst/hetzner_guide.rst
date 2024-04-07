@@ -463,7 +463,7 @@ When :ansopt:`value` is not specified, the ``markuman.hetzner_dns.record`` modul
         # 'type' does not change:
         type: A
 
-A last step is replacing the deprecated alias :ansopt:`community.dns.hetzner_dns_record_set#module:name` of :ansopt:`community.dns.hetzner_dns_record_set#module:prefix` by :ansopt:`community.dns.hetzner_dns_record_set#module:prefix`. This can be done later though, if you do not mind the deprecation warnings.
+A last step is replacing the removed alias ``name`` of :ansopt:`community.dns.hetzner_dns_record_set#module:prefix` by :ansopt:`community.dns.hetzner_dns_record_set#module:prefix`.
 
 The markuman.hetzner_dns.record_info module
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

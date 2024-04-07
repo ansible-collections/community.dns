@@ -14,3 +14,6 @@ major_changes:
 breaking_changes:
   - "The default for the ``txt_character_encoding`` options in various modules and plugins changed from ``octal`` to ``decimal``
      (https://github.com/ansible-collections/community.dns/pull/196)."
+removed_features:
+  - "hetzner_dns_record_set, hetzner_dns_record - the deprecated alias ``name`` of the prefix option was removed
+     (https://github.com/ansible-collections/community.dns/pull/196)."

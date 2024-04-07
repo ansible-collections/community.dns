@@ -43,11 +43,6 @@ attributes:
     diff_mode:
         support: full
 
-options:
-    prefix:
-        aliases:
-          - name
-
 author:
     - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
     - Felix Fontein (@felixfontein)
@@ -109,8 +104,6 @@ def main():
     provider_information = create_hetzner_provider_information()
     argument_spec = create_hetzner_argument_spec()
     argument_spec.merge(create_module_argument_spec(provider_information=provider_information))
-    argument_spec.argument_spec['prefix']['aliases'] = ['name']
-    argument_spec.argument_spec['prefix']['deprecated_aliases'] = [dict(name='name', version='3.0.0', collection_name='community.dns')]
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
     run_module(module, lambda: create_hetzner_api(ModuleOptionProvider(module), ModuleHTTPHelper(module)), provider_information=provider_information)
 
