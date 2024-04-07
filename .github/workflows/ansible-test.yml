@@ -29,25 +29,12 @@ jobs:
         ansible:
           # It's important that Sanity is tested against all stable-X.Y branches
           # Testing against `devel` may fail as new tests are added.
-          - stable-2.9
-          - stable-2.10
-          - stable-2.11
-          - stable-2.12
-          - stable-2.13
           - stable-2.14
           - stable-2.15
           - stable-2.16
           - stable-2.17
           - devel
-    # Ansible-test on various stable branches does not yet work well with cgroups v2.
-    # Since ubuntu-latest now uses Ubuntu 22.04, we need to fall back to the ubuntu-20.04
-    # image for these stable branches. The list of branches where this is necessary will
-    # shrink over time, check out https://github.com/ansible-collections/news-for-maintainers/issues/28
-    # for the latest list.
-    runs-on: >-
-      ${{ contains(fromJson(
-          '["stable-2.9", "stable-2.10", "stable-2.11"]'
-      ), matrix.ansible) && 'ubuntu-20.04' || 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
     steps:
       - name: Perform sanity testing
         uses: felixfontein/ansible-test-gh-action@main
@@ -58,26 +45,13 @@ jobs:
             git clone --depth=1 --single-branch --branch stable-1 https://github.com/ansible-collections/community.library_inventory_filtering.git ../../community/library_inventory_filtering_v1
 
   units:
-    # Ansible-test on various stable branches does not yet work well with cgroups v2.
-    # Since ubuntu-latest now uses Ubuntu 22.04, we need to fall back to the ubuntu-20.04
-    # image for these stable branches. The list of branches where this is necessary will
-    # shrink over time, check out https://github.com/ansible-collections/news-for-maintainers/issues/28
-    # for the latest list.
-    runs-on: >-
-      ${{ contains(fromJson(
-          '["stable-2.9", "stable-2.10", "stable-2.11"]'
-      ), matrix.ansible) && 'ubuntu-20.04' || 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
     name: Units (Ⓐ${{ matrix.ansible }})
     strategy:
       # As soon as the first unit test fails, cancel the others to free up the CI queue
       fail-fast: true
       matrix:
         ansible:
-          - stable-2.9
-          - stable-2.10
-          - stable-2.11
-          - stable-2.12
-          - stable-2.13
           - stable-2.14
           - stable-2.15
           - stable-2.16
@@ -123,26 +97,11 @@ jobs:
           - "3.11"
           - "3.12"
         include:
-          # 2.9
-          - ansible: stable-2.9
-            python: "2.7"
-          - ansible: stable-2.9
-            python: "3.6"
-          # 2.10
-          - ansible: stable-2.10
-            python: "3.5"
-          # 2.11
-          - ansible: stable-2.11
-            python: "2.7"
-          # 2.12
-          - ansible: stable-2.12
-            python: "2.6"
-          - ansible: stable-2.12
-            python: "3.5"
-          # 2.13
-          - ansible: stable-2.13
-            python: "3.6"
           # 2.14
+          - ansible: stable-2.14
+            python: "2.7"
+          - ansible: stable-2.14
+            python: "3.5"
           - ansible: stable-2.14
             python: "3.9"
           # 2.15
