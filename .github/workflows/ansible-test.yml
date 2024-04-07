@@ -54,6 +54,8 @@ jobs:
         with:
           ansible-core-version: ${{ matrix.ansible }}
           testing-type: sanity
+          pre-test-cmd: >-
+            git clone --depth=1 --single-branch --branch stable-1 https://github.com/ansible-collections/community.library_inventory_filtering.git ../../community/library_inventory_filtering_v1
 
   units:
     # Ansible-test on various stable branches does not yet work well with cgroups v2.
@@ -92,6 +94,8 @@ jobs:
           testing-type: units
           # NOTE: we're installing with git to work around Galaxy being a huge PITA (https://github.com/ansible/galaxy/issues/2429)
           pre-test-cmd: >-
+            git clone --depth=1 --single-branch --branch stable-1 https://github.com/ansible-collections/community.library_inventory_filtering.git ../../community/library_inventory_filtering_v1
+            ;
             git clone --depth=1 --single-branch https://github.com/ansible-collections/community.internal_test_tools.git ../../community/internal_test_tools
             ;
             tests/unit/replace-requirements.sh requirements-${{ matrix.ansible }}.txt
@@ -170,6 +174,8 @@ jobs:
           integration-retry-on-error: 'true'
           # NOTE: we're installing with git to work around Galaxy being a huge PITA (https://github.com/ansible/galaxy/issues/2429)
           pre-test-cmd: >-
+            git clone --depth=1 --single-branch --branch stable-1 https://github.com/ansible-collections/community.library_inventory_filtering.git ../../community/library_inventory_filtering_v1
+            ;
             tests/integration/replace-requirements.sh requirements-${{ matrix.ansible }}.txt
           target-python-version: ${{ matrix.python }}
           testing-type: integration

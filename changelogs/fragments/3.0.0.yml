@@ -1,0 +1,13 @@
+release_summary: |
+  ...
+major_changes:
+  - The ``community.dns`` collection now depends on the ``community.library_inventory_filtering_v1``
+    collection. This utility collection provides host filtering functionality
+    for inventory plugins. If you use the Ansible community package, both collections
+    are included and you do not have to do anything special. If you install the
+    collection with ``ansible-galaxy collection install``, it will be installed
+    automatically. If you install the collection by copying the files of the collection
+    to a place where ansible-core can find it, for example by cloning the git
+    repository, you need to make sure that you also have to install the dependency
+    if you are using the inventory plugins
+    (https://github.com/ansible-collections/community.dns/pull/196).

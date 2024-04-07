@@ -31,3 +31,5 @@ build_ignore:
   - .gitignore
   - changelogs/.plugin-cache.yaml
   - tests/integration/integration_config.yml
+dependencies:
+  community.library_inventory_filtering_v1: '>=1.0.0'
