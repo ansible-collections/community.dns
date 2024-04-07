@@ -67,15 +67,7 @@ class RecordsInventoryModule(BaseInventoryPlugin):
     def parse(self, inventory, loader, path, cache=False):
         super(RecordsInventoryModule, self).parse(inventory, loader, path, cache)
 
-        orig_config = self._read_config_data(path)
-
-        if 'filters' in orig_config:
-            display.deprecated(
-                'The `filters` option of the %s inventory plugin has been renamed to `simple_filters`. '
-                'The old name will stop working in community.dns 3.0.0.' % self.NAME,
-                collection_name='community.dns',
-                version='3.0.0',
-            )
+        self._read_config_data(path)
 
         self.templar = Templar(loader=loader)
 
