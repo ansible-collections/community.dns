@@ -108,6 +108,68 @@ HETZNER_JSON_DEFAULT_ENTRIES = [
     },
 ]
 
+HETZNER_JSON_DEFAULT_ENTRIES_UNSAFE = [
+    {
+        'id': '125',
+        'type': 'A',
+        'name': '@',
+        'value': '1.2.{3.4',
+        'ttl': 3600,
+        'zone_id': '42',
+        'created': '2021-07-09T11:18:37Z',
+        'modified': '2021-07-09T11:18:37Z',
+    },
+    {
+        'id': '126',
+        'type': 'A',
+        'name': '*',
+        'value': '1.2.{3.5',
+        'ttl': 3600,
+        'zone_id': '42',
+        'created': '2021-07-09T11:18:37Z',
+        'modified': '2021-07-09T11:18:37Z',
+    },
+    {
+        'id': '127',
+        'type': 'AAAA',
+        'name': '@',
+        'value': '2001:1:2::{3',
+        'ttl': 3600,
+        'zone_id': '42',
+        'created': '2021-07-09T11:18:37Z',
+        'modified': '2021-07-09T11:18:37Z',
+    },
+    {
+        'id': '128',
+        'type': 'AAAA',
+        'name': 'foo',
+        'value': '2001:1:2::{4',
+        'ttl': 3600,
+        'zone_id': '42',
+        'created': '2021-07-09T11:18:37Z',
+        'modified': '2021-07-09T11:18:37Z',
+    },
+    {
+        'id': '129',
+        'type': 'MX',
+        'name': '@',
+        'value': '10 example.com',
+        'ttl': 3600,
+        'zone_id': '42',
+        'created': '2021-07-09T11:18:37Z',
+        'modified': '2021-07-09T11:18:37Z',
+    },
+    {
+        'id': '130',
+        'type': 'CNAME',
+        'name': 'bar',
+        'value': 'example.org.',
+        'zone_id': '42',
+        'created': '2021-07-09T11:18:37Z',
+        'modified': '2021-07-09T11:18:37Z',
+    },
+]
+
 HETZNER_JSON_BAD_ENTRIES = [
     {
         'id': '125',
@@ -133,6 +195,10 @@ HETZNER_JSON_ZONE_GET_RESULT = {
 
 HETZNER_JSON_ZONE_RECORDS_GET_RESULT = {
     'records': HETZNER_JSON_DEFAULT_ENTRIES,
+}
+
+HETZNER_JSON_ZONE_RECORDS_GET_RESULT_UNSAFE = {
+    'records': HETZNER_JSON_DEFAULT_ENTRIES_UNSAFE,
 }
 
 HETZNER_JSON_ZONE_RECORDS_GET_RESULT_2 = {
@@ -190,7 +256,7 @@ def test_inventory_file_simple(mocker):
         .expect_query_values('page', '1')
         .expect_query_values('per_page', '100')
         .return_header('Content-Type', 'application/json')
-        .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+        .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT_UNSAFE),
     ])
     mocker.patch('ansible_collections.community.dns.plugins.module_utils.http.open_url', open_url)
     mocker.patch('ansible.inventory.manager.unfrackpath', mock_unfrackpath_noop)
@@ -207,8 +273,8 @@ def test_inventory_file_simple(mocker):
     assert 'bar.example.com' not in im._inventory.hosts
     assert im._inventory.get_host('example.com') in im._inventory.groups['ungrouped'].hosts
     assert im._inventory.get_host('*.example.com') in im._inventory.groups['ungrouped'].hosts
-    assert im._inventory.get_host('example.com').get_vars()['ansible_host'] == '1.2.3.4'
-    assert im._inventory.get_host('*.example.com').get_vars()['ansible_host'] == '1.2.3.5'
+    assert im._inventory.get_host('example.com').get_vars()['ansible_host'] == '1.2.{3.4'
+    assert im._inventory.get_host('*.example.com').get_vars()['ansible_host'] == '1.2.{3.5'
     assert isinstance(im._inventory.get_host('example.com').get_vars()['ansible_host'], AnsibleUnsafe)
     assert isinstance(im._inventory.get_host('*.example.com').get_vars()['ansible_host'], AnsibleUnsafe)
     assert len(im._inventory.groups['ungrouped'].hosts) == 2

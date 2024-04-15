@@ -89,6 +89,64 @@ HOSTTECH_JSON_DEFAULT_ENTRIES = [
     },
 ]
 
+HOSTTECH_JSON_DEFAULT_ENTRIES_UNSAFE = [
+    # (125, 42, 'A', '', '1.2.{3.4', 3600, None, None),
+    {
+        'id': 125,
+        'type': 'A',
+        'name': '',
+        'ipv4': '1.2.{3.4',
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (126, 42, 'A', '*', '1.2.{3.5', 3600, None, None),
+    {
+        'id': 126,
+        'type': 'A',
+        'name': '*',
+        'ipv4': '1.2.{3.5',
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (127, 42, 'AAAA', '', '2001:1:2::{3', 3600, None, None),
+    {
+        'id': 127,
+        'type': 'AAAA',
+        'name': '',
+        'ipv6': '2001:1:2::{3',
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (128, 42, 'AAAA', '*', '2001:1:2::{4', 3600, None, None),
+    {
+        'id': 128,
+        'type': 'AAAA',
+        'name': 'foo',
+        'ipv6': '2001:1:2::{4',
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (129, 42, 'MX', '', 'example.com', 3600, None, '10'),
+    {
+        'id': 129,
+        'type': 'MX',
+        'ownername': '',
+        'name': 'example.com',
+        'pref': 10,
+        'ttl': 3600,
+        'comment': '',
+    },
+    # (130, 42, 'CNAME', 'bar', 'example.org.', 10800, None, None),
+    {
+        'id': 130,
+        'type': 'CNAME',
+        'name': 'bar',
+        'cname': 'example.org.',
+        'ttl': 10800,
+        'comment': '',
+    },
+]
+
 
 HOSTTECH_JSON_ZONE_LIST_RESULT = {
     "data": [
@@ -117,6 +175,18 @@ HOSTTECH_JSON_ZONE_GET_RESULT = {
 
 HOSTTECH_JSON_ZONE_RECORDS_GET_RESULT = {
     "data": HOSTTECH_JSON_DEFAULT_ENTRIES,
+}
+
+HOSTTECH_JSON_ZONE_GET_RESULT_UNSAFE = {
+    "data": {
+        "id": 42,
+        "name": "example.com",
+        "email": "test@example.com",
+        "ttl": 10800,
+        "nameserver": "ns1.hosttech.ch",
+        "dnssec": False,
+        "records": HOSTTECH_JSON_DEFAULT_ENTRIES_UNSAFE,
+    }
 }
 
 
@@ -167,7 +237,7 @@ def test_inventory_file_simple(mocker):
         .expect_header('authorization', 'Bearer foo')
         .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
         .return_header('Content-Type', 'application/json')
-        .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
+        .result_json(HOSTTECH_JSON_ZONE_GET_RESULT_UNSAFE),
     ])
     mocker.patch('ansible_collections.community.dns.plugins.module_utils.http.open_url', open_url)
     mocker.patch('ansible.inventory.manager.unfrackpath', mock_unfrackpath_noop)
@@ -184,8 +254,8 @@ def test_inventory_file_simple(mocker):
     assert 'bar.example.com' not in im._inventory.hosts
     assert im._inventory.get_host('example.com') in im._inventory.groups['ungrouped'].hosts
     assert im._inventory.get_host('*.example.com') in im._inventory.groups['ungrouped'].hosts
-    assert im._inventory.get_host('example.com').get_vars()['ansible_host'] == '1.2.3.4'
-    assert im._inventory.get_host('*.example.com').get_vars()['ansible_host'] == '1.2.3.5'
+    assert im._inventory.get_host('example.com').get_vars()['ansible_host'] == '1.2.{3.4'
+    assert im._inventory.get_host('*.example.com').get_vars()['ansible_host'] == '1.2.{3.5'
     assert isinstance(im._inventory.get_host('example.com').get_vars()['ansible_host'], AnsibleUnsafe)
     assert isinstance(im._inventory.get_host('*.example.com').get_vars()['ansible_host'], AnsibleUnsafe)
     assert len(im._inventory.groups['ungrouped'].hosts) == 2
