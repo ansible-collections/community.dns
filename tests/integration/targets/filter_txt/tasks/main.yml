@@ -1,0 +1,22 @@
+---
+# Copyright (c) Ansible Project
+# GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: "Test quote_txt filter"
+  assert:
+    that:
+      - >-
+        '' | community.dns.quote_txt == '""'
+      - >-
+        "this is a test" | community.dns.quote_txt == '"this is a test"'
+
+- name: "Test unquote_txt filter"
+  assert:
+    that:
+      - >-
+        '' | community.dns.unquote_txt == ''
+      - >-
+        '""' | community.dns.unquote_txt == ''
+      - >
+        '"foo" "bar"' | community.dns.unquote_txt == "foobar"
