@@ -10,6 +10,31 @@
         '' | community.dns.quote_txt == '""'
       - >-
         "this is a test" | community.dns.quote_txt == '"this is a test"'
+      - >-
+        "test" | community.dns.quote_txt == 'test'
+      - >-
+        "test" | community.dns.quote_txt(always_quote=true) == '"test"'
+      - >-
+        '"' | community.dns.quote_txt == '\\"'
+      - >-
+        ' ' | community.dns.quote_txt == '" "'
+      - >-
+        "ä" | community.dns.quote_txt() == '\\195\\164'
+      - >-
+        "ä" | community.dns.quote_txt(character_encoding='octal') == '\\303\\244'
+      - >-
+        "ä" | community.dns.quote_txt(character_encoding='octal', always_quote=true) == '"\\303\\244"'
+      - >-
+        very_long_input | community.dns.quote_txt == very_long_output
+  vars:
+    very_long_input: >-
+      this is a very1, very2, very3, very4, very5, very6, very7, very8, very9, very10, very11, very12, very13, very14, very15,
+      very16, very17, very18, very19, very20, very21, very22, very23, very24, very25, very26, very27, very28, very29, very30,
+      very31, very32, very33, very34, very35, very36, very37, very38, very39 long text
+    very_long_output: >-
+      "this is a very1, very2, very3, very4, very5, very6, very7, very8, very9, very10, very11, very12, very13, very14, very15,
+      very16, very17, very18, very19, very20, very21, very22, very23, very24, very25, very26, very27, very28, very29, very30,
+      very31, very32" ", very33, very34, very35, very36, very37, very38, very39 long text"
 
 - name: "Test unquote_txt filter"
   assert:
@@ -20,3 +45,5 @@
         '""' | community.dns.unquote_txt == ''
       - >
         '"foo" "bar"' | community.dns.unquote_txt == "foobar"
+      - >
+        'foo "bar baz" bam' | community.dns.unquote_txt == "foobar bazbam"
