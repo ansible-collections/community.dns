@@ -5,7 +5,7 @@
 <meta content="2.10.0" name="antsibull-docs" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name &mdash; Community.Dns Collection  documentation</title>
+  <title>community.dns.quote_txt filter – Quotes a string to use as a TXT record entry &mdash; Community.Dns Collection  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5707b69d" />
       <link rel="stylesheet" type="text/css" href="_static/css/ansible.css?v=c5b67dd2" />
       <link rel="stylesheet" type="text/css" href="_static/antsibull-minimal.css" />
@@ -24,8 +24,8 @@
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="community.dns.remove_registrable_domain filter – Removes the registrable domain name from a DNS name" href="remove_registrable_domain_filter.html" />
-    <link rel="prev" title="community.dns.quote_txt filter – Quotes a string to use as a TXT record entry" href="quote_txt_filter.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
+    <link rel="next" title="community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name" href="remove_public_suffix_filter.html" />
+    <link rel="prev" title="community.dns.get_registrable_domain filter – Returns the registrable domain name of a DNS name" href="get_registrable_domain_filter.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
 
 
 
@@ -103,8 +103,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="get_public_suffix_filter.html">community.dns.get_public_suffix filter – Returns the public suffix of a DNS name</a></li>
 <li class="toctree-l1"><a class="reference internal" href="get_registrable_domain_filter.html">community.dns.get_registrable_domain filter – Returns the registrable domain name of a DNS name</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quote_txt_filter.html">community.dns.quote_txt filter – Quotes a string to use as a TXT record entry</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">community.dns.quote_txt filter – Quotes a string to use as a TXT record entry</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#synopsis">Synopsis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#input">Input</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#keyword-parameters">Keyword parameters</a></li>
@@ -116,6 +115,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="remove_public_suffix_filter.html">community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name</a></li>
 <li class="toctree-l1"><a class="reference internal" href="remove_registrable_domain_filter.html">community.dns.remove_registrable_domain filter – Removes the registrable domain name from a DNS name</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unquote_txt_filter.html">community.dns.unquote_txt filter – Unquotes a TXT record entry to a string</a></li>
 </ul>
@@ -143,10 +143,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name</li>
+      <li class="breadcrumb-item active">community.dns.quote_txt filter – Quotes a string to use as a TXT record entry</li>
       <li class="wy-breadcrumbs-aside">
               <!-- User defined GitHub URL -->
-              <a href="https://github.com/ansible-collections/community.dns/edit/main/plugins/filter/remove_public_suffix.yml?description=%23%23%23%23%23%20SUMMARY%0A%3C!—%20Your%20description%20here%20–%3E%0A%0A%0A%23%23%23%23%23%20ISSUE%20TYPE%0A-%20Docs%20Pull%20Request%0A%0A%2Blabel:%20docsite_pr" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/ansible-collections/community.dns/edit/main/plugins/filter/quote_txt.yml?description=%23%23%23%23%23%20SUMMARY%0A%3C!—%20Your%20description%20here%20–%3E%0A%0A%0A%23%23%23%23%23%20ISSUE%20TYPE%0A-%20Docs%20Pull%20Request%0A%0A%2Blabel:%20docsite_pr" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -156,17 +156,17 @@
   
            <div itemprop="articleBody">
              
-  <span class="target" id="ansible-collections-community-dns-remove-public-suffix-filter"></span><section id="community-dns-remove-public-suffix-filter-removes-the-public-suffix-from-a-dns-name">
-<h1>community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name<a class="headerlink" href="#community-dns-remove-public-suffix-filter-removes-the-public-suffix-from-a-dns-name" title="Link to this heading"></a></h1>
+  <span class="target" id="ansible-collections-community-dns-quote-txt-filter"></span><section id="community-dns-quote-txt-filter-quotes-a-string-to-use-as-a-txt-record-entry">
+<h1>community.dns.quote_txt filter – Quotes a string to use as a TXT record entry<a class="headerlink" href="#community-dns-quote-txt-filter-quotes-a-string-to-use-as-a-txt-record-entry" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This filter plugin is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/community/dns/">community.dns collection</a> (version 3.0.0).</p>
 <p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
 To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">community.dns</span></code>.</p>
-<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">community.dns.remove_public_suffix</span></code>.</p>
+<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">community.dns.quote_txt</span></code>.</p>
 </div>
-<p class="ansible-version-added">New in community.dns 0.1.0</p>
+<p class="ansible-version-added">New in community.dns 2.9.0</p>
 <nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
@@ -179,12 +179,12 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <section id="synopsis">
 <h2><a class="toc-backref" href="#id1" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Removes the public suffix from a DNS name.</p></li>
+<li><p>Given a string, quotes it so it can be used in a TXT record entry.</p></li>
 </ul>
 </section>
 <section id="input">
 <h2><a class="toc-backref" href="#id2" role="doc-backlink">Input</a><a class="headerlink" href="#input" title="Link to this heading"></a></h2>
-<p>This describes the input of the filter, the value before <code class="docutils literal notranslate"><span class="pre">|</span> <span class="pre">community.dns.remove_public_suffix</span></code>.</p>
+<p>This describes the input of the filter, the value before <code class="docutils literal notranslate"><span class="pre">|</span> <span class="pre">community.dns.quote_txt</span></code>.</p>
 <table class="longtable ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameter</p></th>
@@ -193,10 +193,10 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-_input"></div><p class="ansible-option-title" id="ansible-collections-community-dns-remove-public-suffix-filter-parameter-input"><strong>Input</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-_input"></div><p class="ansible-option-title" id="ansible-collections-community-dns-quote-txt-filter-parameter-input"><strong>Input</strong></p>
 <a class="ansibleOptionLink" href="#parameter-_input" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>A DNS name.</p>
+<td><div class="ansible-option-cell"><p>The string to quote.</p>
 </div></td>
 </tr>
 </tbody>
@@ -205,7 +205,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <section id="keyword-parameters">
 <h2><a class="toc-backref" href="#id3" role="doc-backlink">Keyword parameters</a><a class="headerlink" href="#keyword-parameters" title="Link to this heading"></a></h2>
 <p>This describes keyword parameters of the filter. These are the values <code class="docutils literal notranslate"><span class="pre">key1=value1</span></code>, <code class="docutils literal notranslate"><span class="pre">key2=value2</span></code> and so on in the following
-example: <code class="docutils literal notranslate"><span class="pre">input</span> <span class="pre">|</span> <span class="pre">community.dns.remove_public_suffix(key1=value1,</span> <span class="pre">key2=value2,</span> <span class="pre">...)</span></code></p>
+example: <code class="docutils literal notranslate"><span class="pre">input</span> <span class="pre">|</span> <span class="pre">community.dns.quote_txt(key1=value1,</span> <span class="pre">key2=value2,</span> <span class="pre">...)</span></code></p>
 <table class="longtable ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameter</p></th>
@@ -214,10 +214,10 @@ example: <code class="docutils literal notranslate"><span class="pre">input</spa
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-icann_only"></div><p class="ansible-option-title" id="ansible-collections-community-dns-remove-public-suffix-filter-parameter-icann-only"><strong>icann_only</strong></p>
-<a class="ansibleOptionLink" href="#parameter-icann_only" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
+<div class="ansibleOptionAnchor" id="parameter-always_quote"></div><p class="ansible-option-title" id="ansible-collections-community-dns-quote-txt-filter-parameter-always-quote"><strong>always_quote</strong></p>
+<a class="ansibleOptionLink" href="#parameter-always_quote" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>This controls whether only entries from the ICANN section of the Public Suffix List are used, or also entries from the Private section. For example, <code class="docutils literal notranslate"><span class="pre">.co.uk</span></code> is in the ICANN section, but <code class="docutils literal notranslate"><span class="pre">github.io</span></code> is in the Private section.</p>
+<td><div class="ansible-option-cell"><p>Whether to always quote the resulting string in double quotes.</p>
 <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
 <ul class="simple">
 <li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">false</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
@@ -226,27 +226,15 @@ example: <code class="docutils literal notranslate"><span class="pre">input</spa
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-keep_trailing_period"></div><p class="ansible-option-title" id="ansible-collections-community-dns-remove-public-suffix-filter-parameter-keep-trailing-period"><strong>keep_trailing_period</strong></p>
-<a class="ansibleOptionLink" href="#parameter-keep_trailing_period" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
+<div class="ansibleOptionAnchor" id="parameter-character_encoding"></div><p class="ansible-option-title" id="ansible-collections-community-dns-quote-txt-filter-parameter-character-encoding"><strong>character_encoding</strong></p>
+<a class="ansibleOptionLink" href="#parameter-character_encoding" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>This controls whether the trailing period of the prefix (that is, the part before the public suffix) is preserved or not.</p>
+<td><div class="ansible-option-cell"><p>Whether to treat numeric escape sequences (<code class="ansible-value docutils literal notranslate"><span class="pre">\xyz</span></code>) as octal or decimal numbers.</p>
+<p>The default value <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> is compatible to <a class="reference external" href="https://www.ietf.org/rfc/rfc1035.txt">RFC 1035</a>.</p>
 <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
 <ul class="simple">
-<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">false</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
-</ul>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-keep_unknown_suffix"></div><p class="ansible-option-title" id="ansible-collections-community-dns-remove-public-suffix-filter-parameter-keep-unknown-suffix"><strong>keep_unknown_suffix</strong></p>
-<a class="ansibleOptionLink" href="#parameter-keep_unknown_suffix" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>This treats unknown TLDs as valid public suffixes. So for example the public suffix of <code class="docutils literal notranslate"><span class="pre">example.tlddoesnotexist</span></code> is <code class="docutils literal notranslate"><span class="pre">.tlddoesnotexist</span></code> if this is <code class="ansible-value docutils literal notranslate"><span class="pre">true</span></code>. If set to <code class="ansible-value docutils literal notranslate"><span class="pre">false</span></code>, it will return an empty string in this case.</p>
-<p>This option corresponds to whether the global wildcard rule <code class="docutils literal notranslate"><span class="pre">*</span></code> in the Public Suffix List is used or not.</p>
-<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
-<ul class="simple">
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">false</span></code></p></li>
-<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">true</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">&quot;decimal&quot;</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;octal&quot;</span></code></p></li>
 </ul>
 </div></td>
 </tr>
@@ -255,10 +243,12 @@ example: <code class="docutils literal notranslate"><span class="pre">input</spa
 </section>
 <section id="examples">
 <h2><a class="toc-backref" href="#id4" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Remove the public suffix from a DNS name</span>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Quote a TXT entry</span>
 <span class="w">  </span><span class="nt">ansible.builtin.set_fact</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">public_suffix</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="s1">&#39;www.ansible.co.uk&#39;</span> <span class="o">|</span> <span class="nf">community</span><span class="nv">.dns.remove_public_suffix</span> <span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="c1"># Should result in &#39;www.ansible&#39;</span>
+<span class="w">    </span><span class="nt">public_suffix</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">value</span> <span class="o">|</span> <span class="nf">community</span><span class="nv">.dns.quote_txt</span> <span class="cp">}}</span><span class="s">&quot;</span>
+<span class="w">    </span><span class="c1"># Should result in &#39;&quot;this is a test&quot;&#39;</span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">this is a test</span>
 </pre></div>
 </div>
 </section>
@@ -272,10 +262,10 @@ example: <code class="docutils literal notranslate"><span class="pre">input</spa
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-_value"></div><p class="ansible-option-title" id="ansible-collections-community-dns-remove-public-suffix-filter-return-value"><strong>Return value</strong></p>
+<div class="ansibleOptionAnchor" id="return-_value"></div><p class="ansible-option-title" id="ansible-collections-community-dns-quote-txt-filter-return-value"><strong>Return value</strong></p>
 <a class="ansibleOptionLink" href="#return-_value" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>The part of the DNS name before the public suffix.</p>
+<td><div class="ansible-option-cell"><p>The quoted string that can be used for a TXT entry.</p>
 <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
 </div></td>
 </tr>
@@ -310,8 +300,8 @@ example: <code class="docutils literal notranslate"><span class="pre">input</spa
           
 
 <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="quote_txt_filter.html" class="btn btn-neutral float-left" title="community.dns.quote_txt filter – Quotes a string to use as a TXT record entry" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="remove_registrable_domain_filter.html" class="btn btn-neutral float-right" title="community.dns.remove_registrable_domain filter – Removes the registrable domain name from a DNS name" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="get_registrable_domain_filter.html" class="btn btn-neutral float-left" title="community.dns.get_registrable_domain filter – Returns the registrable domain name of a DNS name" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="remove_public_suffix_filter.html" class="btn btn-neutral float-right" title="community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
