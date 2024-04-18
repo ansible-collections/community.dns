@@ -15,7 +15,6 @@ from ansible.module_utils import six
 from ansible.module_utils.common._collections_compat import Sequence
 from ansible.plugins.inventory import BaseInventoryPlugin
 from ansible.utils.display import Display
-from ansible.utils.unsafe_proxy import wrap_var as make_unsafe
 from ansible.template import Templar
 
 from ansible_collections.community.dns.plugins.module_utils.provider import (
@@ -34,6 +33,8 @@ from ansible_collections.community.dns.plugins.module_utils.conversion.base impo
 from ansible_collections.community.dns.plugins.module_utils.conversion.converter import (
     RecordConverter,
 )
+
+from ansible_collections.community.dns.plugins.plugin_utils.unsafe import make_unsafe
 
 display = Display()
 
