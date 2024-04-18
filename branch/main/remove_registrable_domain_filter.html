@@ -24,7 +24,7 @@
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="community.dns.hetzner_dns_records inventory – Create inventory from Hetzner DNS records" href="hetzner_dns_records_inventory.html" />
+    <link rel="next" title="community.dns.unquote_txt filter – Unquotes a TXT record entry to a string" href="unquote_txt_filter.html" />
     <link rel="prev" title="community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name" href="remove_public_suffix_filter.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
 
 
@@ -103,6 +103,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="get_public_suffix_filter.html">community.dns.get_public_suffix filter – Returns the public suffix of a DNS name</a></li>
 <li class="toctree-l1"><a class="reference internal" href="get_registrable_domain_filter.html">community.dns.get_registrable_domain filter – Returns the registrable domain name of a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quote_txt_filter.html">community.dns.quote_txt filter – Quotes a string to use as a TXT record entry</a></li>
 <li class="toctree-l1"><a class="reference internal" href="remove_public_suffix_filter.html">community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">community.dns.remove_registrable_domain filter – Removes the registrable domain name from a DNS name</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#synopsis">Synopsis</a></li>
@@ -116,6 +117,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="unquote_txt_filter.html">community.dns.unquote_txt filter – Unquotes a TXT record entry to a string</a></li>
 </ul>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="hetzner_dns_records_inventory.html">community.dns.hetzner_dns_records inventory – Create inventory from Hetzner DNS records</a></li>
@@ -158,7 +160,7 @@
 <h1>community.dns.remove_registrable_domain filter – Removes the registrable domain name from a DNS name<a class="headerlink" href="#community-dns-remove-registrable-domain-filter-removes-the-registrable-domain-name-from-a-dns-name" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This filter plugin is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/community/dns/">community.dns collection</a> (version 2.8.3).</p>
+<p>This filter plugin is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/community/dns/">community.dns collection</a> (version 2.9.0).</p>
 <p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
 To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">community.dns</span></code>.</p>
@@ -323,7 +325,7 @@ example: <code class="docutils literal notranslate"><span class="pre">input</spa
 
 <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="remove_public_suffix_filter.html" class="btn btn-neutral float-left" title="community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="hetzner_dns_records_inventory.html" class="btn btn-neutral float-right" title="community.dns.hetzner_dns_records inventory – Create inventory from Hetzner DNS records" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="unquote_txt_filter.html" class="btn btn-neutral float-right" title="community.dns.unquote_txt filter – Unquotes a TXT record entry to a string" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
