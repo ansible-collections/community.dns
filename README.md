@@ -61,6 +61,8 @@ If you use the Ansible package and do not update collections independently, use 
   - `get_registrable_domain`: given a domain name, returns the *registrable domain name* (also called *registered domain name*). For example, `"www.ansible.com" | community.dns.get_registrable_domain == "ansible.com"` and `"some.random.prefixes.ansible.co.uk" | community.dns.get_registrable_domain == "ansible.co.uk"`.
   - `remove_public_suffix`: given a domain name, returns the part before the public suffix. For example, `"www.ansible.com" | community.dns.remove_public_suffix == "www.ansible"` and `"some.random.prefixes.ansible.co.uk" | community.dns.remove_public_suffix == "some.random.prefixes.ansible"`.
   - `remove_registrable_domain`: given a domain name, returns the part before the DNS zone. For example, `"www.ansible.com" | community.dns.remove_registrable_domain == "www"` and `"some.random.prefixes.ansible.co.uk" | community.dns.remove_registrable_domain == "some.random.prefixes"`.
+  - `quote_txt`: quotes a string for use as a TXT record entry. For example, `"this is a test" | community.dns.quote_txt == '"this is a test"'`.
+  - `unquote_txt`: unquotes a TXT record entry. For example, `'"foo" "bar"' | community.dns.unquote_txt == "foobar"`.
 
 ## Using this collection
 

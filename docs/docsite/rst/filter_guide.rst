@@ -23,6 +23,11 @@ These filters allow to work with `public suffixes <https://en.wikipedia.org/wiki
 
 The label directly before the public suffix together with the suffix is called the *registrable domain name* or *registered domain name*, since these are usually the names that people can register. Examples for registrable domain names are ``example.com`` and ``example.co.uk``, while ``www.example.com`` is not a registrable domain name. A public suffix itself is also not a registrable domain name, as for example ``github.io``.
 
+The collection also contains filters for working with TXT records:
+
+- :ansplugin:`community.dns.quote_txt#filter`: quote a string for use as a TXT record;
+- :ansplugin:`community.dns.unquote_txt#filter`: extract the value from a (quoted) TXT record.
+
 Working with public suffixes
 ----------------------------
 
