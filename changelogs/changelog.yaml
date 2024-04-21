@@ -809,3 +809,23 @@ releases:
     - 2.8.3.yml
     - update-psl.yml
     release_date: '2024-03-24'
+  2.9.0:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      - inventory plugins - add unsafe wrapper to avoid marking strings that do not
+        contain ``{`` or ``}`` as unsafe, to work around a bug in AWX (https://github.com/ansible-collections/community.dns/pull/197).
+      release_summary: Feature and bugfix release.
+    fragments:
+    - 197-unsafe.yml
+    - 3.9.0.yml
+    - update-psl.yml
+    plugins:
+      filter:
+      - description: Quotes a string to use as a TXT record entry
+        name: quote_txt
+        namespace: null
+      - description: Unquotes a TXT record entry to a string
+        name: unquote_txt
+        namespace: null
+    release_date: '2024-04-21'

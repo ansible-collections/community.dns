@@ -4,6 +4,29 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v2.9.0
+======
+
+Release Summary
+---------------
+
+Feature and bugfix release.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- inventory plugins - add unsafe wrapper to avoid marking strings that do not contain ``{`` or ``}`` as unsafe, to work around a bug in AWX (https://github.com/ansible-collections/community.dns/pull/197).
+
+New Plugins
+-----------
+
+Filter
+~~~~~~
+
+- community.dns.quote_txt - Quotes a string to use as a TXT record entry
+- community.dns.unquote_txt - Unquotes a TXT record entry to a string
+
 v2.8.3
 ======
 
