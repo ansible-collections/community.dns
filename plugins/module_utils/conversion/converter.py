@@ -44,23 +44,9 @@ class RecordConverter(object):
         self._txt_transformation = self._option_provider.get_option('txt_transformation')
         # Valid values: 'decimal', 'octal'
         self._txt_character_encoding = self._option_provider.get_option('txt_character_encoding')
-        self._txt_character_encoding_deprecation = False
-        if self._txt_character_encoding is None:
-            # TODO: remove implicit default in community.dns 3.0.0
-            self._txt_character_encoding = 'octal'
-            if self._txt_transformation == 'quoted':
-                self._txt_character_encoding_deprecation = True
 
     def emit_deprecations(self, deprecator):
-        if self._txt_character_encoding_deprecation:
-            deprecator(
-                'The default of the txt_character_encoding option will change from "octal" to "decimal" in community.dns 3.0.0.'
-                ' This potentially affects you since you use txt_transformation=quoted. You can explicitly set txt_character_encoding'
-                ' to "octal" to keep the current behavior, or "decimal" to already now switch to the new behavior. We recommend'
-                ' switching to the new behavior, and using check/diff mode to figure out potential changes',
-                version='3.0.0',
-                collection_name='community.dns',
-            )
+        pass
 
     def _handle_txt_api(self, to_api, record):
         """

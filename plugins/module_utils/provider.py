@@ -104,6 +104,6 @@ class ProviderInformation(object):
 
         This return value is only used if txt_record_handling returns 'encoded'.
 
-        WARNING: the default return value will change to 'decimal' for community.dns 3.0.0!
+        Note: the default return value changed from 'octal' to 'decimal' in community.dns 3.0.0.
         """
-        return 'octal'
+        return 'decimal'

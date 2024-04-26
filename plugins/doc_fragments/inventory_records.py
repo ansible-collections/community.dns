@@ -34,11 +34,10 @@ options:
     simple_filters:
         description:
           - A dictionary of filter value pairs.
-          - This option has been renamed from O(filters) to O(simple_filters) in community.dns 2.8.0.
-            The old name can still be used until community.dns 3.0.0.
+          - This option used to be called O(filters) before community.dns 3.0.0. It has been renamed from
+            O(filters) to O(simple_filters) in community.dns 2.8.0, and the old name was still available
+            as an alias until community.dns 3.0.0. O(filters) is now used for something else.
         type: dict
-        aliases:
-          - filters
         default: {}
         suboptions:
             # (The following must be kept in sync with the equivalent lines in <provider_name>.py!)

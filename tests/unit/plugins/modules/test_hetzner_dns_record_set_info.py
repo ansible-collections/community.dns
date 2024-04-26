@@ -627,7 +627,7 @@ class TestHetznerDNSRecordSetInfoJSON(BaseTestModule):
         assert result['set']['value'] == [u'"b\\195\\164r \\"with quotes\\" (use \\\\ to escape)"']
         assert 'sets' not in result
 
-    def test_get_single_txt_quoted_deprecation(self, mocker):
+    def test_get_single_txt_quoted_octal(self, mocker):
         with patch('time.sleep', mock_sleep):
             result = self.run_module_success(mocker, hetzner_dns_record_set_info, {
                 'hetzner_token': 'foo',
@@ -635,6 +635,7 @@ class TestHetznerDNSRecordSetInfoJSON(BaseTestModule):
                 'prefix': 'foo',
                 'type': 'TXT',
                 'txt_transformation': 'quoted',
+                'txt_character_encoding': 'octal',
                 '_ansible_remote_tmp': '/tmp/tmp',
                 '_ansible_keep_remote_files': True,
             }, [
@@ -678,19 +679,3 @@ class TestHetznerDNSRecordSetInfoJSON(BaseTestModule):
         assert result['set']['type'] == 'TXT'
         assert result['set']['value'] == [u'"b\\303\\244r \\"with quotes\\" (use \\\\ to escape)"']
         assert 'sets' not in result
-        assert 'deprecations' in result
-        found = False
-        for deprecation in result['deprecations']:
-            if 'collection_name' in deprecation and deprecation['collection_name'] != 'community.dns':
-                continue
-            found = True
-            assert deprecation['msg'] == (
-                'The default of the txt_character_encoding option will change from "octal" to "decimal" in community.dns 3.0.0.'
-                ' This potentially affects you since you use txt_transformation=quoted.'
-                ' You can explicitly set txt_character_encoding to "octal" to keep the current behavior,'
-                ' or "decimal" to already now switch to the new behavior.'
-                ' We recommend switching to the new behavior, and using check/diff mode to figure out potential changes'
-            )
-            assert deprecation['version'] == '3.0.0'
-            assert deprecation.get('date') is None
-        assert found

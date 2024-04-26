@@ -24,8 +24,7 @@ description:
 options:
     plugin:
         description: The name of this plugin. Should always be set to V(community.dns.hosttech_dns_records) for this plugin to recognize it as its own.
-        # TODO: add `required: true` in 3.0.0
-        # required: true
+        required: true
         choices:
             - community.dns.hosttech_dns_records
         type: str
@@ -38,6 +37,9 @@ options:
         # compatibility with previous type=int...
         #   type: string
 
+    filters:
+        version_added: 3.0.0
+
 extends_documentation_fragment:
     - community.dns.hosttech
     - community.dns.hosttech.plugin
@@ -45,6 +47,7 @@ extends_documentation_fragment:
     - community.dns.hosttech.zone_id_type
     - community.dns.inventory_records
     - community.dns.options.record_transformation
+    - community.library_inventory_filtering_v1.inventory_filter
 
 notes:
     - The provider-specific O(hosttech_username), O(hosttech_password), and O(hosttech_token) options can be templated.
@@ -66,6 +69,10 @@ zone_name: domain.ch
 simple_filters:
   type:
     - AAAA
+filters:
+  - include: >-
+      '*.' not in inventory_hostname
+  - exclude: true
 
 # You can also configure the token by putting secret value into this file,
 # but this is discouraged. Use a lookup like below, or leave it away and

@@ -17,6 +17,8 @@ from ansible.plugins.inventory import BaseInventoryPlugin
 from ansible.utils.display import Display
 from ansible.template import Templar
 
+from ansible_collections.community.library_inventory_filtering_v1.plugins.plugin_utils.inventory_filter import parse_filters, filter_host
+
 from ansible_collections.community.dns.plugins.module_utils.provider import (
     ensure_type,
 )
@@ -67,15 +69,7 @@ class RecordsInventoryModule(BaseInventoryPlugin):
     def parse(self, inventory, loader, path, cache=False):
         super(RecordsInventoryModule, self).parse(inventory, loader, path, cache)
 
-        orig_config = self._read_config_data(path)
-
-        if 'filters' in orig_config:
-            display.deprecated(
-                'The `filters` option of the %s inventory plugin has been renamed to `simple_filters`. '
-                'The old name will stop working in community.dns 3.0.0.' % self.NAME,
-                collection_name='community.dns',
-                version='3.0.0',
-            )
+        self._read_config_data(path)
 
         self.templar = Templar(loader=loader)
 
@@ -119,9 +113,10 @@ class RecordsInventoryModule(BaseInventoryPlugin):
         except DNSAPIError as e:
             raise AnsibleError('Error: %s' % e)
 
-        filters = self.get_option('simple_filters')
+        simple_filters = self.get_option('simple_filters')
+        filters = parse_filters(self.get_option('filters'))
 
-        filter_types = filters.get('type') or ['A', 'AAAA', 'CNAME']
+        filter_types = simple_filters.get('type') or ['A', 'AAAA', 'CNAME']
         if not isinstance(filter_types, Sequence) or isinstance(filter_types, six.string_types):
             filter_types = [filter_types]
 
@@ -130,5 +125,12 @@ class RecordsInventoryModule(BaseInventoryPlugin):
                 name = zone_with_records.zone.name
                 if record.prefix:
                     name = '%s.%s' % (record.prefix, name)
+                facts = {
+                    'ansible_host': make_unsafe(record.target),
+                }
+                if not filter_host(self, name, facts, filters):
+                    continue
+
                 self.inventory.add_host(name)
-                self.inventory.set_variable(name, 'ansible_host', make_unsafe(record.target))
+                for key, value in facts.items():
+                    self.inventory.set_variable(name, key, value)
