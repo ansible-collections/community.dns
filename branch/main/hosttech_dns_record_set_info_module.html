@@ -162,7 +162,7 @@
 <h1>community.dns.hosttech_dns_record_set_info module – Retrieve record sets in Hosttech DNS service<a class="headerlink" href="#community-dns-hosttech-dns-record-set-info-module-retrieve-record-sets-in-hosttech-dns-service" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/community/dns/">community.dns collection</a> (version 2.9.0).</p>
+<p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/community/dns/">community.dns collection</a> (version 3.0.0).</p>
 <p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
 To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">community.dns</span></code>.
@@ -259,10 +259,10 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <p><em class="ansible-option-versionadded">added in community.dns 2.5.0</em></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Whether to treat numeric escape sequences (<code class="ansible-value docutils literal notranslate"><span class="pre">\xyz</span></code>) as octal or decimal numbers. This is only used when <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-info-module-parameter-txt-transformation"><span class="std std-ref"><span class="pre">txt_transformation=quoted</span></span></a></code>.</p>
-<p>The current default is <code class="ansible-value docutils literal notranslate"><span class="pre">octal</span></code> which is deprecated. It will change to <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> in community.dns 3.0.0. The value <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> is compatible to <a class="reference external" href="https://www.ietf.org/rfc/rfc1035.txt">RFC 1035</a>.</p>
+<p>The default changed to <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> in community.dns 3.0.0. Before, the default used to be <code class="ansible-value docutils literal notranslate"><span class="pre">octal</span></code>. The value <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> is compatible to <a class="reference external" href="https://www.ietf.org/rfc/rfc1035.txt">RFC 1035</a>.</p>
 <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
 <ul class="simple">
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;decimal&quot;</span></code></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">&quot;decimal&quot;</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;octal&quot;</span></code></p></li>
 </ul>
 </div></td>

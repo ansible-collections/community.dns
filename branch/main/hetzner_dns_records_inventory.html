@@ -160,7 +160,7 @@
 <h1>community.dns.hetzner_dns_records inventory – Create inventory from Hetzner DNS records<a class="headerlink" href="#community-dns-hetzner-dns-records-inventory-create-inventory-from-hetzner-dns-records" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This inventory plugin is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/community/dns/">community.dns collection</a> (version 2.9.0).</p>
+<p>This inventory plugin is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/community/dns/">community.dns collection</a> (version 3.0.0).</p>
 <p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
 To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">community.dns</span></code>.</p>
@@ -194,6 +194,31 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-filters"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters"><strong>filters</strong></p>
+<a class="ansibleOptionLink" href="#parameter-filters" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
+<p><em class="ansible-option-versionadded">added in community.dns 3.0.0</em></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>A list of include/exclude filters that allows to select/deselect hosts for this inventory.</p>
+<p>Filters are processed sequentially until the first filter where <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters-exclude"><span class="std std-ref"><span class="pre">filters[].exclude</span></span></a></strong></code> or <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters-include"><span class="std std-ref"><span class="pre">filters[].include</span></span></a></strong></code> matches is found. In case <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters-exclude"><span class="std std-ref"><span class="pre">filters[].exclude</span></span></a></strong></code> matches, the host is excluded, and in case <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters-include"><span class="std std-ref"><span class="pre">filters[].include</span></span></a></strong></code> matches, the host is included. In case no filter matches, the host is included.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-filters/exclude"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters-exclude"><strong>exclude</strong></p>
+<a class="ansibleOptionLink" href="#parameter-filters/exclude" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>A Jinja2 condition. If it matches for a host, that host is <strong>excluded</strong>.</p>
+<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters-exclude"><span class="std std-ref"><span class="pre">filters[].exclude</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters-include"><span class="std std-ref"><span class="pre">filters[].include</span></span></a></strong></code> can be specified.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-filters/include"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters-include"><strong>include</strong></p>
+<a class="ansibleOptionLink" href="#parameter-filters/include" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>A Jinja2 condition. If it matches for a host, that host is <strong>included</strong>.</p>
+<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters-exclude"><span class="std std-ref"><span class="pre">filters[].exclude</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters-include"><span class="std std-ref"><span class="pre">filters[].include</span></span></a></strong></code> can be specified.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-hetzner_token"></div>
 <div class="ansibleOptionAnchor" id="parameter-api_token"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-hetzner-token"><span id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-api-token"></span><strong>hetzner_token</strong></p>
 <a class="ansibleOptionLink" href="#parameter-hetzner_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: api_token</span></p>
@@ -207,9 +232,9 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </ul>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-plugin"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-plugin"><strong>plugin</strong></p>
-<a class="ansibleOptionLink" href="#parameter-plugin" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+<a class="ansibleOptionLink" href="#parameter-plugin" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The name of this plugin. Should always be set to <code class="ansible-value docutils literal notranslate"><span class="pre">community.dns.hetzner_dns_records</span></code> for this plugin to recognize it as its own.</p>
 <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
@@ -218,20 +243,17 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </ul>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-simple_filters"></div>
-<div class="ansibleOptionAnchor" id="parameter-filters"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-simple-filters"><span id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters"></span><strong>simple_filters</strong></p>
-<a class="ansibleOptionLink" href="#parameter-simple_filters" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: filters</span></p>
-<p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-simple_filters"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-simple-filters"><strong>simple_filters</strong></p>
+<a class="ansibleOptionLink" href="#parameter-simple_filters" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>A dictionary of filter value pairs.</p>
-<p>This option has been renamed from <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters"><span class="std std-ref"><span class="pre">filters</span></span></a></strong></code> to <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-simple-filters"><span class="std std-ref"><span class="pre">simple_filters</span></span></a></strong></code> in community.dns 2.8.0. The old name can still be used until community.dns 3.0.0.</p>
+<p>This option used to be called <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters"><span class="std std-ref"><span class="pre">filters</span></span></a></strong></code> before community.dns 3.0.0. It has been renamed from <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters"><span class="std std-ref"><span class="pre">filters</span></span></a></strong></code> to <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-simple-filters"><span class="std std-ref"><span class="pre">simple_filters</span></span></a></strong></code> in community.dns 2.8.0, and the old name was still available as an alias until community.dns 3.0.0. <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters"><span class="std std-ref"><span class="pre">filters</span></span></a></strong></code> is now used for something else.</p>
 <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">{}</span></code></p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-simple_filters/type"></div>
-<div class="ansibleOptionAnchor" id="parameter-filters/type"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-simple-filters-type"><span id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-filters-type"></span><strong>type</strong></p>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-simple_filters/type"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-simple-filters-type"><strong>type</strong></p>
 <a class="ansibleOptionLink" href="#parameter-simple_filters/type" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>Record types whose values to use.</p>
@@ -255,21 +277,21 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">[&quot;A&quot;,</span> <span class="pre">&quot;AAAA&quot;,</span> <span class="pre">&quot;CNAME&quot;]</span></code></p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-txt_character_encoding"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-txt-character-encoding"><strong>txt_character_encoding</strong></p>
 <a class="ansibleOptionLink" href="#parameter-txt_character_encoding" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 <p><em class="ansible-option-versionadded">added in community.dns 2.5.0</em></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Whether to treat numeric escape sequences (<code class="ansible-value docutils literal notranslate"><span class="pre">\xyz</span></code>) as octal or decimal numbers. This is only used when <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-txt-transformation"><span class="std std-ref"><span class="pre">txt_transformation=quoted</span></span></a></code>.</p>
-<p>The current default is <code class="ansible-value docutils literal notranslate"><span class="pre">octal</span></code> which is deprecated. It will change to <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> in community.dns 3.0.0. The value <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> is compatible to <a class="reference external" href="https://www.ietf.org/rfc/rfc1035.txt">RFC 1035</a>.</p>
+<p>The default changed to <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> in community.dns 3.0.0. Before, the default used to be <code class="ansible-value docutils literal notranslate"><span class="pre">octal</span></code>. The value <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> is compatible to <a class="reference external" href="https://www.ietf.org/rfc/rfc1035.txt">RFC 1035</a>.</p>
 <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
 <ul class="simple">
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;decimal&quot;</span></code></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">&quot;decimal&quot;</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;octal&quot;</span></code></p></li>
 </ul>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-txt_transformation"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-txt-transformation"><strong>txt_transformation</strong></p>
 <a class="ansibleOptionLink" href="#parameter-txt_transformation" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -287,7 +309,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </ul>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone-id"><strong>zone_id</strong></p>
 <a class="ansibleOptionLink" href="#parameter-zone_id" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -295,7 +317,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-zone_name"></div>
 <div class="ansibleOptionAnchor" id="parameter-zone"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone-name"><span id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone"></span><strong>zone_name</strong></p>
 <a class="ansibleOptionLink" href="#parameter-zone_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: zone</span></p>
@@ -339,6 +361,10 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <span class="nt">simple_filters</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TXT</span>
+<span class="nt">filters</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
+<span class="w">      </span><span class="no">not ansible_host.startswith(&#39;v=&#39;)</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">exclude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="nt">txt_transformation</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unquoted</span>
 
 <span class="c1"># You can also configure the token by putting secret value into this file,</span>
