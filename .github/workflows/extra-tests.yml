@@ -33,17 +33,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install ansible-core
         run: pip install https://github.com/ansible/ansible/archive/devel.tar.gz --disable-pip-version-check
 
       - name: Install collection dependencies
-        run: |
-          git clone --depth=1 --single-branch --branch stable-1 https://github.com/ansible-collections/community.library_inventory_filtering.git ./ansible_collections/community/library_inventory_filtering_v1
-          git clone --depth=1 --single-branch https://github.com/ansible-collections/community.internal_test_tools.git ./ansible_collections/community/internal_test_tools
-        # NOTE: we're installing with git to work around Galaxy being a huge PITA (https://github.com/ansible/galaxy/issues/2429)
-        # run: ansible-galaxy collection install community.internal_test_tools community.library_inventory_filtering_v1 -p .
+        run: >-
+          ansible-galaxy collection install -p .
+          git+https://github.com/ansible-collections/community.internal_test_tools.git,main
+          git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1
 
       - name: Run sanity tests
         run: ../../community/internal_test_tools/tools/run.py --color
