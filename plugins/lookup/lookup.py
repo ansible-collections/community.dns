@@ -89,6 +89,17 @@ options:
             - fail
             - message
         default: empty
+    search:
+        description:
+            - If V(false), the input is assumed to be an absolute domain name.
+            - If V(true), the input is assumed to be a relative domain name if it does not end with C(.),
+              the search list configured in the system's resolver configuration will be used for relative
+              names, and the resolver's domain may be added to relative names.
+            - Note that this behavior changed in community.dns 3.0.0. In community.dns 2.x.y, O(search=false)
+              was the only available choice.
+        type: bool
+        default: true
+        version_added: 3.0.0
 notes:
     - Note that when using this lookup plugin with V(lookup(\)), and the result is a one-element list,
       Ansible simply returns the one element not as a list. Since this behavior is surprising and
@@ -151,7 +162,7 @@ except ImportError:
 
 class LookupModule(LookupBase):
     @staticmethod
-    def _resolve(resolver, name, rdtype, server_addresses, nxdomain_handling):
+    def _resolve(resolver, name, rdtype, server_addresses, nxdomain_handling, target_can_be_relative=True, search=True):
         def callback():
             try:
                 rrset = resolver.resolve(
@@ -159,6 +170,8 @@ class LookupModule(LookupBase):
                     rdtype=rdtype,
                     server_addresses=server_addresses,
                     nxdomain_is_empty=nxdomain_handling == 'empty',
+                    target_can_be_relative=target_can_be_relative,
+                    search=search,
                 )
                 if not rrset:
                     return []
@@ -189,6 +202,8 @@ class LookupModule(LookupBase):
 
         nxdomain_handling = self.get_option('nxdomain_handling')
 
+        search = self.get_option('search')
+
         server_addresses = None
         if self.get_option('server'):
             server_addresses = []
@@ -206,5 +221,5 @@ class LookupModule(LookupBase):
 
         result = []
         for name in terms:
-            result.extend(self._resolve(resolver, name, rdtype, server_addresses, nxdomain_handling))
+            result.extend(self._resolve(resolver, name, rdtype, server_addresses, nxdomain_handling, target_can_be_relative=search, search=search))
         return result
