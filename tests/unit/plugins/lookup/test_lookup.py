@@ -35,7 +35,8 @@ class TestLookup(TestCase):
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
@@ -57,29 +58,60 @@ class TestLookup(TestCase):
         assert result[0] == '127.0.0.1'
         assert result[1] == '127.0.0.2'
 
-    def test_retry_success(self):
+    def test_no_search(self):
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
                     'target': dns.name.from_unicode(u'www.example.com'),
+                    'search': False,
+                    'rdtype': dns.rdatatype.A,
+                    'lifetime': 10,
+                    'result': create_mock_answer(dns.rrset.from_rdata(
+                        'www.example.com',
+                        300,
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '127.0.0.1'),
+                        dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, '127.0.0.2'),
+                    )),
+                },
+            ],
+        })
+        with patch('dns.resolver.get_default_resolver', resolver):
+            with patch('dns.resolver.Resolver', resolver):
+                with patch('dns.query.udp', mock_query_udp([])):
+                    result = self.lookup.run(['www.example.com'], search=False)
+
+        print(result)
+        assert len(result) == 2
+        assert result[0] == '127.0.0.1'
+        assert result[1] == '127.0.0.2'
+
+    def test_retry_success(self):
+        resolver = mock_resolver(['1.1.1.1'], {
+            ('1.1.1.1', ): [
+                {
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'raise': dns.exception.Timeout(timeout=10),
                 },
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'raise': dns.exception.Timeout(timeout=10),
                 },
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'raise': dns.exception.Timeout(timeout=10),
                 },
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
@@ -105,25 +137,29 @@ class TestLookup(TestCase):
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'raise': dns.exception.Timeout(timeout=10),
                 },
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'raise': dns.exception.Timeout(timeout=10),
                 },
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'raise': dns.exception.Timeout(timeout=10),
                 },
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'raise': dns.exception.Timeout(timeout=10),
@@ -143,7 +179,8 @@ class TestLookup(TestCase):
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(rcode=dns.rcode.NXDOMAIN),
@@ -162,7 +199,8 @@ class TestLookup(TestCase):
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(rcode=dns.rcode.NXDOMAIN),
@@ -181,7 +219,8 @@ class TestLookup(TestCase):
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(rcode=dns.rcode.NXDOMAIN),
@@ -200,7 +239,8 @@ class TestLookup(TestCase):
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(rcode=dns.rcode.NXDOMAIN),
@@ -220,7 +260,8 @@ class TestLookup(TestCase):
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(rcode=dns.rcode.NXDOMAIN),
@@ -240,7 +281,8 @@ class TestLookup(TestCase):
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
@@ -260,19 +302,22 @@ class TestLookup(TestCase):
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
                 },
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
                 },
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(rcode=dns.rcode.NXDOMAIN),
@@ -291,19 +336,22 @@ class TestLookup(TestCase):
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
                 },
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
                 },
                 {
-                    'target': dns.name.from_unicode(u'www.example.com'),
+                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.A,
                     'lifetime': 10,
                     'result': create_mock_answer(rcode=dns.rcode.SERVFAIL),
@@ -323,7 +371,8 @@ class TestLookup(TestCase):
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [
                 {
-                    'target': dns.name.from_unicode(u'example.com'),
+                    'target': dns.name.from_unicode(u'example.com', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.TXT,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
@@ -351,7 +400,8 @@ class TestLookup(TestCase):
         resolver = mock_resolver(['1.1.1.1'], {
             ('2.2.2.2', '3.3.3.3'): [
                 {
-                    'target': dns.name.from_unicode(u'example.org'),
+                    'target': dns.name.from_unicode(u'example.org', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.AAAA,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
@@ -397,7 +447,8 @@ class TestLookup(TestCase):
             ],
             ('1.2.3.4', '1::2', '2.2.2.2', '3.3.3.3'): [
                 {
-                    'target': dns.name.from_unicode(u'example.org'),
+                    'target': dns.name.from_unicode(u'example.org', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.AAAA,
                     'lifetime': 10,
                     'result': create_mock_answer(dns.rrset.from_rdata(
@@ -477,7 +528,8 @@ class TestLookup(TestCase):
             ],
             ('3.3.3.3', ): [
                 {
-                    'target': dns.name.from_unicode(u'example.org'),
+                    'target': dns.name.from_unicode(u'example.org', origin=None),
+                    'search': True,
                     'rdtype': dns.rdatatype.AAAA,
                     'lifetime': 5,
                     'raise': dns.resolver.NoAnswer(response=fake_query),

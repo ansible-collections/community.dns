@@ -22,7 +22,7 @@ def mock_resolver(default_nameservers, nameserver_resolve_sequence):
         resolver = MagicMock()
         resolver.nameservers = default_nameservers if configure else []
 
-        def mock_resolver_resolve(target, rdtype=None, lifetime=None):
+        def mock_resolver_resolve(target, rdtype=None, lifetime=None, search=None):
             resolver_index = tuple(sorted(resolver.nameservers))
             assert resolver_index in nameserver_resolve_sequence, 'No resolver sequence for {0}'.format(resolver_index)
             resolve_sequence = nameserver_resolve_sequence[resolver_index]
@@ -33,6 +33,7 @@ def mock_resolver(default_nameservers, nameserver_resolve_sequence):
             assert target == resolve_data['target'], 'target: {0!r} vs {1!r}'.format(target, resolve_data['target'])
             assert rdtype == resolve_data.get('rdtype'), 'rdtype: {0!r} vs {1!r}'.format(rdtype, resolve_data.get('rdtype'))
             assert lifetime == resolve_data['lifetime'], 'lifetime: {0!r} vs {1!r}'.format(lifetime, resolve_data['lifetime'])
+            assert search == resolve_data.get('search'), 'search: {0!r} vs {1!r}'.format(search, resolve_data.get('search'))
 
             if 'raise' in resolve_data:
                 raise resolve_data['raise']
