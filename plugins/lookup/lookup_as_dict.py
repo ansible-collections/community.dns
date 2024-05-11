@@ -92,6 +92,7 @@ notes:
       Ansible simply returns the one element not as a list. Since this behavior is surprising and
       can cause problems, it is better to use V(query(\)) instead of V(lookup(\)). See the examples
       and also R(Forcing lookups to return lists, query) in the Ansible documentation.
+    - All domain names are assumed to be absolute. The resolver's configured search list is not used.
 '''
 
 EXAMPLES = """
