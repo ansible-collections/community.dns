@@ -40,6 +40,7 @@ jobs:
         uses: felixfontein/ansible-test-gh-action@main
         with:
           ansible-core-version: ${{ matrix.ansible }}
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
           testing-type: sanity
           test-deps: >-
             git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1
@@ -65,6 +66,7 @@ jobs:
         uses: felixfontein/ansible-test-gh-action@main
         with:
           ansible-core-version: ${{ matrix.ansible }}
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
           testing-type: units
           pre-test-cmd: >-
             tests/unit/replace-requirements.sh requirements-${{ matrix.ansible }}.txt
@@ -126,6 +128,7 @@ jobs:
         uses: felixfontein/ansible-test-gh-action@main
         with:
           ansible-core-version: ${{ matrix.ansible }}
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
           integration-continue-on-error: 'false'
           integration-diff: 'false'
           integration-retry-on-error: 'true'
