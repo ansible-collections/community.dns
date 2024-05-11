@@ -73,7 +73,7 @@ class _Resolve(object):
                 response = self._handle_timeout(resolver.resolve, dnsname, lifetime=self.timeout, **kwargs)
             except AttributeError:
                 # For dnspython < 2.0.0
-                resolver.search = False
+                resolver.search = kwargs.pop('search', False)
                 try:
                     response = self._handle_timeout(resolver.query, dnsname, lifetime=self.timeout, **kwargs)
                 except TypeError:
@@ -101,8 +101,11 @@ class SimpleResolver(_Resolve):
             servfail_retries=servfail_retries,
         )
 
-    def resolve(self, target, nxdomain_is_empty=True, server_addresses=None, **kwargs):
-        dnsname = dns.name.from_unicode(to_text(target))
+    def resolve(self, target, nxdomain_is_empty=True, server_addresses=None, target_can_be_relative=False, **kwargs):
+        if target_can_be_relative:
+            dnsname = dns.name.from_unicode(to_text(target), origin=None)
+        else:
+            dnsname = dns.name.from_unicode(to_text(target))
 
         resolver = self.default_resolver
         if server_addresses:
