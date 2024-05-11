@@ -47,3 +47,47 @@
         '"foo" "bar"' | community.dns.unquote_txt == "foobar"
       - >
         'foo "bar baz" bam' | community.dns.unquote_txt == "foobar bazbam"
+
+- name: quote_txt failure - input not string
+  set_fact:
+    output: "{{ 1 | community.dns.quote_txt }}"
+  register: quote_failure_1
+  ignore_errors: true
+
+- name: quote_txt failure - always_quote not a boolean
+  set_fact:
+    output: "{{ '' | community.dns.quote_txt(always_quote=1) }}"
+  register: quote_failure_2
+  ignore_errors: true
+
+- name: quote_txt failure - character_encoding has invalid value
+  set_fact:
+    output: "{{ '' | community.dns.quote_txt(character_encoding='foo') }}"
+  register: quote_failure_3
+  ignore_errors: true
+
+- name: unquote_txt failure - input not string
+  set_fact:
+    output: "{{ 1 | community.dns.unquote_txt }}"
+  register: unquote_failure_1
+  ignore_errors: true
+
+- name: unquote_txt failure - character_encoding has invalid value
+  set_fact:
+    output: "{{ '' | community.dns.unquote_txt(character_encoding='foo') }}"
+  register: unquote_failure_2
+  ignore_errors: true
+
+- name: Validate errors
+  assert:
+    that:
+      - quote_failure_1 is failed
+      - quote_failure_1.msg == 'Input for community.dns.quote_txt must be a string'
+      - quote_failure_2 is failed
+      - quote_failure_2.msg == 'always_quote must be a boolean, not 1'
+      - quote_failure_3 is failed
+      - quote_failure_3.msg == "character_encoding must be \"decimal\" or \"octal\", not 'foo'"
+      - unquote_failure_1 is failed
+      - unquote_failure_1.msg == 'Input for community.dns.unquote_txt must be a string'
+      - unquote_failure_2 is failed
+      - unquote_failure_2.msg == "character_encoding must be \"decimal\" or \"octal\", not 'foo'"
