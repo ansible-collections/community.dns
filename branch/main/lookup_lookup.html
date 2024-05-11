@@ -259,6 +259,21 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-search"></div><p class="ansible-option-title" id="ansible-collections-community-dns-lookup-lookup-parameter-search"><strong>search</strong></p>
+<a class="ansibleOptionLink" href="#parameter-search" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
+<p><em class="ansible-option-versionadded">added in community.dns 3.0.0</em></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>If <code class="ansible-value docutils literal notranslate"><span class="pre">false</span></code>, the input is assumed to be an absolute domain name.</p>
+<p>If <code class="ansible-value docutils literal notranslate"><span class="pre">true</span></code>, the input is assumed to be a relative domain name if it does not end with <code class="docutils literal notranslate"><span class="pre">.</span></code>, the search list configured in the system’s resolver configuration will be used for relative names, and the resolver’s domain may be added to relative names.</p>
+<p>Note that this behavior changed in community.dns 3.0.0. In community.dns 2.x.y, <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-lookup-parameter-search"><span class="std std-ref"><span class="pre">search=false</span></span></a></code> was the only available choice.</p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+<ul class="simple">
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">false</span></code></p></li>
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">true</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+</ul>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-server"></div><p class="ansible-option-title" id="ansible-collections-community-dns-lookup-lookup-parameter-server"><strong>server</strong></p>
 <a class="ansibleOptionLink" href="#parameter-server" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
 </div></td>
@@ -266,7 +281,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <p>By default, the system’s standard resolver is used.</p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-servfail_retries"></div><p class="ansible-option-title" id="ansible-collections-community-dns-lookup-lookup-parameter-servfail-retries"><strong>servfail_retries</strong></p>
 <a class="ansibleOptionLink" href="#parameter-servfail_retries" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
@@ -274,7 +289,7 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">0</span></code></p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-type"></div><p class="ansible-option-title" id="ansible-collections-community-dns-lookup-lookup-parameter-type"><strong>type</strong></p>
 <a class="ansibleOptionLink" href="#parameter-type" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
