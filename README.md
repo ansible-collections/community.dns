@@ -9,6 +9,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 [![CI](https://github.com/ansible-collections/community.dns/workflows/CI/badge.svg?event=push)](https://github.com/ansible-collections/community.dns/actions)
 [![Public Suffix List up-to-date](https://github.com/ansible-collections/community.dns/workflows/Check%20for%20Public%20Suffix%20List%20updates/badge.svg?branch=main)](https://github.com/ansible-collections/community.dns/actions?query=workflow%3A%22Check+for+Public+Suffix+List+updates%22+branch%3Amain)
 [![Codecov](https://img.shields.io/codecov/c/github/ansible-collections/community.dns)](https://codecov.io/gh/ansible-collections/community.dns)
+[![REUSE status](https://api.reuse.software/badge/github.com/ansible-collections/community.dns)](https://api.reuse.software/info/github.com/ansible-collections/community.dns)
 
 This repository contains the `community.dns` Ansible Collection. The collection includes plugins and modules to work with DNS.
 
