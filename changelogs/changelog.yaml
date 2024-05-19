@@ -859,9 +859,7 @@ releases:
         should be treated as an absolute domain name (``search=false``), or potentially
         as a relative domain name (``search=true``)  (https://github.com/ansible-collections/community.dns/issues/200,
         https://github.com/ansible-collections/community.dns/pull/201).
-      release_summary: '...
-
-        '
+      release_summary: New major release.
       removed_features:
       - The collection no longer supports Ansible, ansible-base, and ansible-core
         releases that are currently End of Life at the time of the 3.0.0 release.

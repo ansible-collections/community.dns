@@ -193,7 +193,7 @@
 <a id="release-summary"></a>
 ### Release Summary
 
-\.\.\.
+New major release\.
 
 <a id="major-changes"></a>
 ### Major Changes

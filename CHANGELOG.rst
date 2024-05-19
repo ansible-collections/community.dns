@@ -10,7 +10,7 @@ v3.0.0
 Release Summary
 ---------------
 
-...
+New major release.
 
 Major Changes
 -------------
