@@ -8,7 +8,7 @@
     ansible_a: >-
       {{ query('community.dns.lookup', 'ansible.com', type='A') }}
     ansible_aaaa: >-
-      {{ query('community.dns.lookup', 'ansible.com', type='AAAA', server='9.9.9.9') }}
+      {{ query('community.dns.lookup', 'www.ansible.com', type='AAAA', server='9.9.9.9') }}
     ansible_txt: >-
       {{ query('community.dns.lookup', 'ansible.com', type='TXT', server=['1.1.1.1', '8.8.8.8', 'dns9.quad9.net.']) }}
     ansible_empty: >-
