@@ -838,3 +838,12 @@ releases:
     - 2.9.1.yml
     - update-psl.yml
     release_date: '2024-05-19'
+  2.9.2:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      release_summary: Maintenance release with updated PSL.
+    fragments:
+    - 2.9.2.yml
+    - update-psl.yml
+    release_date: '2024-06-16'
