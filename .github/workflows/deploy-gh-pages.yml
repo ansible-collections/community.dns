@@ -23,7 +23,7 @@ jobs:
   deploy:
     environment:
       name: github-pages
-      url: $
+      url: https://ansible-collections.github.io/community.dns/
     runs-on: ubuntu-latest
     steps:
 
