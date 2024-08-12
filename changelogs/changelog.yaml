@@ -897,3 +897,12 @@ releases:
       - 3.0.2.yml
       - update-psl.yml
     release_date: '2024-07-14'
+  3.0.3:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+      release_summary: Maintenance release with updated PSL.
+    fragments:
+      - 3.0.3.yml
+      - update-psl.yml
+    release_date: '2024-08-12'
