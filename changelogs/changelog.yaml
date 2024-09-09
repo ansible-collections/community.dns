@@ -865,3 +865,13 @@ releases:
     - 2.9.4.yml
     - update-psl.yml
     release_date: '2024-08-12'
+  2.9.5:
+    changes:
+      bugfixes:
+      - Update Public Suffix List.
+      release_summary: Regular maintenance release with updated PSL.
+    fragments:
+    - 0-readme.yml
+    - 2.9.5.yml
+    - update-psl.yml
+    release_date: '2024-09-09'
