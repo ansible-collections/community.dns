@@ -863,10 +863,12 @@ sa.cr
 cu
 com.cu
 edu.cu
-org.cu
-net.cu
+gob.cu
 gov.cu
 inf.cu
+nat.cu
+net.cu
+org.cu
 
 // cv : https://www.iana.org/domains/root/db/cv.html
 // cv : http://www.dns.cv/tldcv_portal/do?com=DS;5446457100;111;+PAGE(4000018)+K-CAT-CODIGO(RDOM)+RCNT(100); <- registration rules
@@ -12471,6 +12473,10 @@ co.no
 webhosting.be
 hosting-cluster.nl
 
+// Contentful GmbH : https://www.contentful.com
+// Submitted by Contentful Developer Experience Team <prd-ecosystem-dx@contentful.com>
+ctfcloud.net
+
 // Convex : https://convex.dev/
 // Submitted by James Cowling <security@convex.dev>
 convex.site
@@ -12547,11 +12553,6 @@ localhost.daplie.me
 // dappnode.io : https://dappnode.io/
 // Submitted by Abel Boldu / DAppNode Team <community@dappnode.io>
 dyndns.dappnode.io
-
-// dapps.earth : https://dapps.earth/
-// Submitted by Daniil Burdakov <icqkill@gmail.com>
-*.dapps.earth
-*.bzz.dapps.earth
 
 // Dark, Inc. : https://darklang.com
 // Submitted by Paul Biggar <ops@darklang.com>
@@ -13091,7 +13092,6 @@ kr.eu.org
 lt.eu.org
 lu.eu.org
 lv.eu.org
-mc.eu.org
 me.eu.org
 mk.eu.org
 mt.eu.org
@@ -13917,7 +13917,6 @@ iserv.dev
 // Submitted by Ihor Kolodyuk <ik@jelastic.com>
 mel.cloudlets.com.au
 cloud.interhostsolutions.be
-mycloud.by
 alp1.ae.flow.ch
 appengine.flow.ch
 es-1.axarnet.cloud
@@ -13939,7 +13938,6 @@ us.reclaim.cloud
 ch.trendhosting.cloud
 de.trendhosting.cloud
 jele.club
-amscompute.com
 dopaas.com
 paas.hosted-by-previder.com
 rag-cloud.hosteur.com
@@ -13947,10 +13945,8 @@ rag-cloud-ch.hosteur.com
 jcloud.ik-server.com
 jcloud-ver-jpc.ik-server.com
 demo.jelastic.com
-kilatiron.com
 paas.massivegrid.com
 jed.wafaicloud.com
-lon.wafaicloud.com
 ryd.wafaicloud.com
 j.scaleforce.com.cy
 jelastic.dogado.eu
@@ -13962,18 +13958,14 @@ mircloud.host
 paas.beebyte.io
 sekd1.beebyteapp.io
 jele.io
-cloud-fr1.unispace.io
 jc.neen.it
-cloud.jelastic.open.tim.it
 jcloud.kz
-upaas.kazteleport.kz
 cloudjiffy.net
 fra1-de.cloudjiffy.net
 west1-us.cloudjiffy.net
 jls-sto1.elastx.net
 jls-sto2.elastx.net
 jls-sto3.elastx.net
-faststacks.net
 fr-1.paas.massivegrid.net
 lon-1.paas.massivegrid.net
 lon-2.paas.massivegrid.net
@@ -13983,11 +13975,9 @@ sg-1.paas.massivegrid.net
 jelastic.saveincloud.net
 nordeste-idc.saveincloud.net
 j.scaleforce.net
-jelastic.tsukaeru.net
 sdscloud.pl
 unicloud.pl
 mircloud.ru
-jelastic.regruhosting.ru
 enscaled.sg
 jele.site
 jelastic.team
