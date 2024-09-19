@@ -13689,6 +13689,14 @@ häkkinen.fi
 hs.run
 hs.zone
 
+// Harrison Network : https://hrsn.net
+// Submitted by William Harrison <psl@hrsn.net>
+wdh.app
+preview.wdh.app
+hrsn.dev
+t.hrsn.dev
+t.hrsn.net
+
 // Hashbang : https://hashbang.sh
 hashbang.sh
 
@@ -14019,10 +14027,6 @@ js.org
 // Submitted by Wouter Bakker <hostmaster@kaashosting.nl>
 kaas.gg
 khplay.nl
-
-// Kakao : https://www.kakaocorp.com/
-// Submitted by JaeYoong Lee <cec@kakaocorp.com>
-ktistory.com
 
 // Kapsi : https://kapsi.fi
 // Submitted by Tomi Juntunen <erani@kapsi.fi>
@@ -15640,14 +15644,6 @@ pages.wiardweb.com
 toolforge.org
 wmcloud.org
 wmflabs.org
-
-// William Harrison : https://wdharrison.com
-// Submitted by William Harrison <publicsuffix@wdharrison.com>
-wdh.app
-preview.wdh.app
-hrsn.dev
-t.hrsn.dev
-t.hrsn.net
 
 // WISP : https://wisp.gg
 // Submitted by Stepan Fedotov <stepan@wisp.gg>
