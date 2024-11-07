@@ -9,7 +9,7 @@ set +eux
 # so for now let's directly fetch it from GitHub.
 
 # curl https://publicsuffix.org/list/public_suffix_list.dat --output plugins/public_suffix_list.dat
-curl https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat --output plugins/public_suffix_list.dat
+curl https://raw.githubusercontent.com/publicsuffix/list/main/public_suffix_list.dat --output plugins/public_suffix_list.dat
 
 git status plugins/public_suffix_list.dat
 
