@@ -1,0 +1,41 @@
+---
+# Copyright (c) Ansible Project
+# GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: Compute reverse pointer
+  ansible.builtin.set_fact:
+    reverse_ipv4: >-
+      {{ '192.168.1.2' | community.dns.reverse_pointer }}
+    reverse_ipv6: >-
+      {{ 'a::B' | community.dns.reverse_pointer }}
+
+- name: Check results
+  assert:
+    that:
+      - reverse_ipv4 == '2.1.168.192.in-addr.arpa.'
+      - reverse_ipv6 == 'b.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.a.0.0.0.ip6.arpa.'
+
+- name: Process invalid IP address
+  ansible.builtin.set_fact:
+    reverse_nope: >-
+      {{ 'foo.com' | community.dns.reverse_pointer }}
+  ignore_errors: true
+  register: invalid_ip
+
+- name: Process non-string
+  ansible.builtin.set_fact:
+    reverse_nope: >-
+      {{ 42 | community.dns.reverse_pointer }}
+  ignore_errors: true
+  register: non_string
+
+- name: Check results
+  assert:
+    that:
+      - invalid_ip is failed
+      - >-
+        "Cannot parse IP address: 'foo.com' does not appear to be an IPv4 or IPv6 address" in invalid_ip.msg
+      - non_string is failed
+      - >-
+        "Input for community.dns.reverse_pointer must be a string" in non_string.msg
