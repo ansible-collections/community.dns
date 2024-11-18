@@ -1,0 +1,20 @@
+---
+# Copyright (c) Ansible Project
+# GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: Look up some records
+  ansible.builtin.set_fact:
+    ansible_a: >-
+      {{ query('community.dns.reverse_lookup', '9.9.9.9') }}
+    ansible_aaaa: >-
+      {{ query('community.dns.reverse_lookup', '2620:fe::fe') }}
+    ansible_both: >-
+      {{ query('community.dns.reverse_lookup', '9.9.9.9', '2620:fe::fe') }}
+
+- name: Check results
+  assert:
+    that:
+      - ansible_a == ['dns9.quad9.net.']
+      - ansible_aaaa == ['dns.quad9.net.']
+      - ansible_both == ['dns9.quad9.net.', 'dns.quad9.net.']
