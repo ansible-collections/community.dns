@@ -4,8 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import absolute_import, division, print_function
-__metaclass__ = type
+from __future__ import annotations
 
 DOCUMENTATION = r'''
 name: reverse_lookup
@@ -124,7 +123,7 @@ class LookupModule(LookupBase):
                     return []
                 return [to_text(data) for data in rrset]
             except dns.resolver.NXDOMAIN:
-                raise AnsibleLookupError('Got NXDOMAIN when querying {name}'.format(name=name))
+                raise AnsibleLookupError(f'Got NXDOMAIN when querying {name}')
 
         return guarded_run(
             callback,
@@ -167,7 +166,7 @@ class LookupModule(LookupBase):
                     name += u'.'
                 ip_adresses.append(name)
             except Exception as e:
-                raise AnsibleLookupError('Cannot parse IP address {ip!r}: {error}'.format(ip=ip_address, error=e))
+                raise AnsibleLookupError(f'Cannot parse IP address {ip_address!r}: {e}')
 
         result = []
         for name in ip_adresses:

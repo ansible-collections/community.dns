@@ -7,10 +7,7 @@
 # https://raw.githubusercontent.com/publicsuffix/list/master/tests/test_psl.txt
 # The data is marked and documented as public domain appropriately.
 
-# Make coding more python3-ish
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
+from __future__ import annotations
 
 
 import pytest

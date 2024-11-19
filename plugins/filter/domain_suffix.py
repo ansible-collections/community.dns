@@ -4,8 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import absolute_import, division, print_function
-__metaclass__ = type
+from __future__ import annotations
 
 from ansible_collections.community.dns.plugins.plugin_utils.public_suffix import PUBLIC_SUFFIX_LIST
 
@@ -79,7 +78,7 @@ def remove_public_suffix(dns_name,
     return _remove_suffix(dns_name, suffix, keep_trailing_period)
 
 
-class FilterModule(object):
+class FilterModule:
     '''Ansible jinja2 filters'''
 
     def filters(self):

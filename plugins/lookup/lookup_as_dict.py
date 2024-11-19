@@ -4,8 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import absolute_import, division, print_function
-__metaclass__ = type
+from __future__ import annotations
 
 DOCUMENTATION = r'''
 name: lookup_as_dict
@@ -466,7 +465,7 @@ class LookupModule(LookupBase):
                     return []
                 return [convert_rdata_to_dict(data) for data in rrset]
             except dns.resolver.NXDOMAIN:
-                raise AnsibleLookupError('Got NXDOMAIN when querying {name}'.format(name=name))
+                raise AnsibleLookupError(f'Got NXDOMAIN when querying {name}')
 
         return guarded_run(
             callback,

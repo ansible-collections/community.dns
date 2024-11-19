@@ -4,8 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import absolute_import, division, print_function
-__metaclass__ = type
+from __future__ import annotations
 
 
 DOCUMENTATION = r"""
@@ -50,7 +49,6 @@ _value:
 
 from ansible.errors import AnsibleFilterError
 from ansible.module_utils.common.text.converters import to_text
-from ansible.module_utils.six import string_types
 
 from ansible_collections.community.dns.plugins.plugin_utils.ips import assert_requirements_present
 
@@ -63,19 +61,19 @@ except ImportError:
 
 def reverse_pointer(ip):
     assert_requirements_present('community.dns.reverse_pointer', 'filter')
-    if not isinstance(ip, string_types):
+    if not isinstance(ip, (str, bytes)):
         raise AnsibleFilterError('Input for community.dns.reverse_pointer must be a string')
     try:
         ipaddr = ipaddress.ip_address(to_text(ip))
     except Exception as e:
-        raise AnsibleFilterError('Cannot parse IP address: {error}'.format(error=e))
+        raise AnsibleFilterError(f'Cannot parse IP address: {e}')
     res = ipaddr.reverse_pointer
     if not res.endswith(u'.'):
         res += u'.'
     return res
 
 
-class FilterModule(object):
+class FilterModule:
     '''Ansible jinja2 filters'''
 
     def filters(self):

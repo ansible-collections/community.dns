@@ -4,8 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import absolute_import, division, print_function
-__metaclass__ = type
+from __future__ import annotations
 
 import os.path
 import re
@@ -17,7 +16,7 @@ _BEGIN_SUBSET_MATCHER = re.compile(r'===BEGIN ([^=]*) DOMAINS===')
 _END_SUBSET_MATCHER = re.compile(r'===END ([^=]*) DOMAINS===')
 
 
-class PublicSuffixEntry(object):
+class PublicSuffixEntry:
     '''
     Contains a Public Suffix List entry with metadata.
     '''
@@ -57,7 +56,7 @@ def select_prevailing_rule(rules):
     return max_length_rule
 
 
-class PublicSuffixList(object):
+class PublicSuffixList:
     '''
     Contains the Public Suffix List.
     '''
