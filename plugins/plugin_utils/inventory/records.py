@@ -5,13 +5,11 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import absolute_import, division, print_function
-__metaclass__ = type
+from __future__ import annotations
 
 import abc
 
 from ansible.errors import AnsibleError
-from ansible.module_utils import six
 from ansible.module_utils.common._collections_compat import Sequence
 from ansible.plugins.inventory import BaseInventoryPlugin
 from ansible.utils.display import Display
@@ -41,12 +39,11 @@ from ansible_collections.community.dns.plugins.plugin_utils.unsafe import make_u
 display = Display()
 
 
-@six.add_metaclass(abc.ABCMeta)
-class RecordsInventoryModule(BaseInventoryPlugin):
+class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
     VALID_ENDINGS = ('dns.yaml', 'dns.yml')
 
     def __init__(self):
-        super(RecordsInventoryModule, self).__init__()
+        super().__init__()
 
     @abc.abstractmethod
     def setup_api(self):
@@ -56,18 +53,16 @@ class RecordsInventoryModule(BaseInventoryPlugin):
         """
 
     def verify_file(self, path):
-        if super(RecordsInventoryModule, self).verify_file(path):
+        if super().verify_file(path):
             if path.endswith(self.VALID_ENDINGS):
                 return True
             else:
-                display.debug("{name} inventory filename must end with {endings}".format(
-                    name=self.NAME,
-                    endings=' or '.join(["'{0}'".format(ending) for ending in self.VALID_ENDINGS])
-                ))
+                endings = ' or '.join(["'{0}'".format(ending) for ending in self.VALID_ENDINGS])
+                display.debug(f"{self.NAME} inventory filename must end with {endings}")
         return False
 
     def parse(self, inventory, loader, path, cache=False):
-        super(RecordsInventoryModule, self).parse(inventory, loader, path, cache)
+        super().parse(inventory, loader, path, cache)
 
         self._read_config_data(path)
 
@@ -91,7 +86,7 @@ class RecordsInventoryModule(BaseInventoryPlugin):
                 try:
                     zone_id = ensure_type(zone_id, zone_id_type)
                 except TypeError as exc:
-                    raise AnsibleError(u'Error while ensuring that zone_id is of type {0}: {1}'.format(zone_id_type, exc))
+                    raise AnsibleError(f'Error while ensuring that zone_id is of type {zone_id_type}: {exc}')
 
             if zone_name is not None:
                 zone_with_records = self.api.get_zone_with_records_by_name(zone_name)
@@ -107,24 +102,24 @@ class RecordsInventoryModule(BaseInventoryPlugin):
             self.record_converter.process_multiple_to_user(zone_with_records.records)
 
         except DNSConversionError as e:
-            raise AnsibleError(u'Error while converting DNS values: {0}'.format(e.error_message))
+            raise AnsibleError(f'Error while converting DNS values: {e.error_message}')
         except DNSAPIAuthenticationError as e:
-            raise AnsibleError('Cannot authenticate: %s' % e)
+            raise AnsibleError(f'Cannot authenticate: {e}')
         except DNSAPIError as e:
-            raise AnsibleError('Error: %s' % e)
+            raise AnsibleError(f'Error: {e}')
 
         simple_filters = self.get_option('simple_filters')
         filters = parse_filters(self.get_option('filters'))
 
         filter_types = simple_filters.get('type') or ['A', 'AAAA', 'CNAME']
-        if not isinstance(filter_types, Sequence) or isinstance(filter_types, six.string_types):
+        if not isinstance(filter_types, Sequence) or isinstance(filter_types, (str, bytes)):
             filter_types = [filter_types]
 
         for record in zone_with_records.records:
             if record.type in filter_types:
                 name = zone_with_records.zone.name
                 if record.prefix:
-                    name = '%s.%s' % (record.prefix, name)
+                    name = f'{record.prefix}.{name}'
                 facts = {
                     'ansible_host': make_unsafe(record.target),
                 }
