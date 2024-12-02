@@ -1,2 +1,0 @@
-minor_changes:
-  - "all controller code - modernize Python code (https://github.com/ansible-collections/community.dns/pull/231)."

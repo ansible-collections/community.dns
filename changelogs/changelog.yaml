@@ -943,3 +943,24 @@ releases:
       - 3.0.7.yml
       - update-psl.yml
     release_date: '2024-11-11'
+  3.1.0:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+      minor_changes:
+        - all controller code - modernize Python code (https://github.com/ansible-collections/community.dns/pull/231).
+      release_summary: Feature release with updated PSL.
+    fragments:
+      - 230-modernize-python.yml
+      - 3.1.0.yml
+      - update-psl.yml
+    plugins:
+      filter:
+        - description: Convert an IP address into a DNS name for reverse lookup.
+          name: reverse_pointer
+          namespace: null
+      lookup:
+        - description: Reverse-look up IP addresses.
+          name: reverse_lookup
+          namespace: null
+    release_date: '2024-12-02'

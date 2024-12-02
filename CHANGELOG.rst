@@ -4,6 +4,37 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.1.0
+======
+
+Release Summary
+---------------
+
+Feature release with updated PSL.
+
+Minor Changes
+-------------
+
+- all controller code - modernize Python code (https://github.com/ansible-collections/community.dns/pull/231).
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+
+New Plugins
+-----------
+
+Filter
+~~~~~~
+
+- community.dns.reverse_pointer - Convert an IP address into a DNS name for reverse lookup.
+
+Lookup
+~~~~~~
+
+- community.dns.reverse_lookup - Reverse-look up IP addresses.
+
 v3.0.7
 ======
 
