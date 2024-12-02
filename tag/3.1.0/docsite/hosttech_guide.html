@@ -1,0 +1,501 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HostTech DNS Guide &mdash; Community.Dns Collection  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5707b69d" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/ansible.css?v=c5b67dd2" />
+      <link rel="stylesheet" type="text/css" href="../_static/antsibull-minimal.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/rtd-ethical-ads.css?v=289b023e" />
+
+  
+    <link rel="shortcut icon" href="../_static/images/Ansible-Mark-RGB_Black.png"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=7f41d439"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="community.dns.hetzner_dns_record module – Add or delete a single record in Hetzner DNS service" href="../hetzner_dns_record_module.html" />
+    <link rel="prev" title="Hetzner DNS Guide" href="hetzner_guide.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
+
+
+
+
+</head>
+
+<body class="wy-body-for-nav"><!-- extra body elements for Ansible beyond RTD Sphinx Theme -->
+
+<div class="DocSite-globalNav ansibleNav">
+  <ul>
+    <li><a href="https://www.ansible.com/blog" target="_blank">Blog</a></li>
+    <li><a href="https://forum.ansible.com/" target="_blank">Ansible community forum</a></li>
+    <li><a href="https://docs.ansible.com/" target="_blank">Documentation</a></li>
+  </ul>
+</div>
+
+<a class="DocSite-nav" href="https://ansible-collections.github.io/community.dns/branch/main/" style="padding-bottom: 30px;">
+
+  <img class="DocSiteNav-logo"
+    src="../_static/images/Ansible-Mark-RGB_White.png"
+    alt="Ansible Logo">
+  <div class="DocSiteNav-title">Community.Dns Collection Docs</div>
+</a>
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Community.Dns Collection
+          </a><!--- Based on https://github.com/rtfd/sphinx_rtd_theme/pull/438/files -->
+
+<div class="version">
+  
+    
+  
+</div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <label class="sr-only" for="q">Search docs:</label>
+    <input type="text" class="st-default-search-input" id="q" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../changelog.html">Community.Dns Release Notes</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="filter_guide.html">Community.Dns Filter Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_guide.html">Hetzner DNS Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">HostTech DNS Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#authentication-requirements-and-apis">Authentication, Requirements and APIs</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#json-rest-api">JSON REST API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#wsdl-api">WSDL API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#using-the-community-dns-hosttech-module-defaults-group">Using the <code class="docutils literal notranslate"><span class="pre">community.dns.hosttech</span></code> module defaults group</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#working-with-dns-zones">Working with DNS zones</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#working-with-dns-records">Working with DNS records</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#querying-dns-records-and-record-sets">Querying DNS records and record sets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-and-updating-dns-single-records">Creating and updating DNS single records</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-and-updating-dns-record-sets">Creating and updating DNS record sets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bulk-synchronization-of-dns-record-sets">Bulk synchronization of DNS record sets</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hetzner_dns_record_module.html">community.dns.hetzner_dns_record module – Add or delete a single record in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hetzner_dns_record_info_module.html">community.dns.hetzner_dns_record_info module – Retrieve records in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hetzner_dns_record_set_module.html">community.dns.hetzner_dns_record_set module – Add or delete record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hetzner_dns_record_set_info_module.html">community.dns.hetzner_dns_record_set_info module – Retrieve record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hetzner_dns_record_sets_module.html">community.dns.hetzner_dns_record_sets module – Bulk synchronize DNS record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hetzner_dns_zone_info_module.html">community.dns.hetzner_dns_zone_info module – Retrieve zone information in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hosttech_dns_record_module.html">community.dns.hosttech_dns_record module – Add or delete a single record in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hosttech_dns_record_info_module.html">community.dns.hosttech_dns_record_info module – Retrieve records in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hosttech_dns_record_set_module.html">community.dns.hosttech_dns_record_set module – Add or delete record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hosttech_dns_record_set_info_module.html">community.dns.hosttech_dns_record_set_info module – Retrieve record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hosttech_dns_record_sets_module.html">community.dns.hosttech_dns_record_sets module – Bulk synchronize DNS record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hosttech_dns_zone_info_module.html">community.dns.hosttech_dns_zone_info module – Retrieve zone information in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nameserver_info_module.html">community.dns.nameserver_info module – Look up nameservers for a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nameserver_record_info_module.html">community.dns.nameserver_record_info module – Look up all records of a type from all nameservers for a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../wait_for_txt_module.html">community.dns.wait_for_txt module – Wait for TXT entries to be available on all authoritative nameservers</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../get_public_suffix_filter.html">community.dns.get_public_suffix filter – Returns the public suffix of a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_registrable_domain_filter.html">community.dns.get_registrable_domain filter – Returns the registrable domain name of a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quote_txt_filter.html">community.dns.quote_txt filter – Quotes a string to use as a TXT record entry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../remove_public_suffix_filter.html">community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../remove_registrable_domain_filter.html">community.dns.remove_registrable_domain filter – Removes the registrable domain name from a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reverse_pointer_filter.html">community.dns.reverse_pointer filter – Convert an IP address into a DNS name for reverse lookup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unquote_txt_filter.html">community.dns.unquote_txt filter – Unquotes a TXT record entry to a string</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../hetzner_dns_records_inventory.html">community.dns.hetzner_dns_records inventory – Create inventory from Hetzner DNS records</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hosttech_dns_records_inventory.html">community.dns.hosttech_dns_records inventory – Create inventory from Hosttech DNS records</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../lookup_lookup.html">community.dns.lookup lookup – Look up DNS records</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lookup_as_dict_lookup.html">community.dns.lookup_as_dict lookup – Look up DNS records as dictionaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reverse_lookup_lookup.html">community.dns.reverse_lookup lookup – Reverse-look up IP addresses</a></li>
+</ul>
+<!-- extra nav elements for Ansible beyond RTD Sphinx Theme -->
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Community.Dns Collection</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">HostTech DNS Guide</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+  
+           <div itemprop="articleBody">
+             
+  <section id="hosttech-dns-guide">
+<span id="ansible-collections-community-dns-docsite-hosttech-guide"></span><h1>HostTech DNS Guide<a class="headerlink" href="#hosttech-dns-guide" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#authentication-requirements-and-apis" id="id1">Authentication, Requirements and APIs</a></p>
+<ul>
+<li><p><a class="reference internal" href="#json-rest-api" id="id2">JSON REST API</a></p></li>
+<li><p><a class="reference internal" href="#wsdl-api" id="id3">WSDL API</a></p></li>
+<li><p><a class="reference internal" href="#using-the-community-dns-hosttech-module-defaults-group" id="id4">Using the <code class="docutils literal notranslate"><span class="pre">community.dns.hosttech</span></code> module defaults group</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#working-with-dns-zones" id="id5">Working with DNS zones</a></p></li>
+<li><p><a class="reference internal" href="#working-with-dns-records" id="id6">Working with DNS records</a></p>
+<ul>
+<li><p><a class="reference internal" href="#querying-dns-records-and-record-sets" id="id7">Querying DNS records and record sets</a></p></li>
+<li><p><a class="reference internal" href="#creating-and-updating-dns-single-records" id="id8">Creating and updating DNS single records</a></p></li>
+<li><p><a class="reference internal" href="#creating-and-updating-dns-record-sets" id="id9">Creating and updating DNS record sets</a></p></li>
+<li><p><a class="reference internal" href="#bulk-synchronization-of-dns-record-sets" id="id10">Bulk synchronization of DNS record sets</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<p>The <a class="reference internal" href="../index.html#plugins-in-community-dns"><span class="std std-ref">community.dns collection</span></a> offers several modules for working with the <a class="reference external" href="https://www.hosttech.ch/">HostTech DNS service</a>.
+The modules support both the old <a class="reference external" href="https://ns1.hosttech.eu/public/api?wsdl">WSDL-based API</a> and the new <a class="reference external" href="https://api.ns1.hosttech.eu/api/documentation/">JSON REST based API</a>.</p>
+<p>The collection provides six modules for working with HostTech DNS:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../hosttech_dns_record_module.html#ansible-collections-community-dns-hosttech-dns-record-module"><span class="std std-ref">community.dns.hosttech_dns_record</span></a>: create/update/delete single DNS records</p></li>
+<li><p><a class="reference internal" href="../hosttech_dns_record_info_module.html#ansible-collections-community-dns-hosttech-dns-record-info-module"><span class="std std-ref">community.dns.hosttech_dns_record_info</span></a>: retrieve information on DNS records</p></li>
+<li><p><a class="reference internal" href="../hosttech_dns_record_set_module.html#ansible-collections-community-dns-hosttech-dns-record-set-module"><span class="std std-ref">community.dns.hosttech_dns_record_set</span></a>: create/update/delete DNS record sets</p></li>
+<li><p><a class="reference internal" href="../hosttech_dns_record_set_info_module.html#ansible-collections-community-dns-hosttech-dns-record-set-info-module"><span class="std std-ref">community.dns.hosttech_dns_record_set_info</span></a>: retrieve information on DNS record sets</p></li>
+<li><p><a class="reference internal" href="../hosttech_dns_record_sets_module.html#ansible-collections-community-dns-hosttech-dns-record-sets-module"><span class="std std-ref">community.dns.hosttech_dns_record_sets</span></a>: bulk synchronize DNS record sets</p></li>
+<li><p><a class="reference internal" href="../hosttech_dns_zone_info_module.html#ansible-collections-community-dns-hosttech-dns-zone-info-module"><span class="std std-ref">community.dns.hosttech_dns_zone_info</span></a>: retrieve zone information</p></li>
+</ul>
+<p>It also provides an inventory plugin:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../hosttech_dns_records_inventory.html#ansible-collections-community-dns-hosttech-dns-records-inventory"><span class="std std-ref">community.dns.hosttech_dns_records</span></a>: create inventory from DNS records</p></li>
+</ul>
+<section id="authentication-requirements-and-apis">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Authentication, Requirements and APIs</a><a class="headerlink" href="#authentication-requirements-and-apis" title="Link to this heading"></a></h2>
+<p>HostTech currently has two APIs for working with DNS records: the old WSDL-based API, and the new JSON-based REST API. We recommend using the new JSON REST API if possible.</p>
+<section id="json-rest-api">
+<h3><a class="toc-backref" href="#id2" role="doc-backlink">JSON REST API</a><a class="headerlink" href="#json-rest-api" title="Link to this heading"></a></h3>
+<p>To use the JSON REST API, you need to create a API token. You can manage API tokens in the “DNS Editor” in the “API” section. You must provide the token to the <code class="ansible-option docutils literal notranslate"><strong><span><span class="pre">hosttech_token</span></span></strong></code> option of the modules:</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">community.dns.hosttech_dns_record</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hosttech_token</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;</span><span class="cp">{{</span> <span class="nv">token</span> <span class="cp">}}</span><span class="s">&#39;</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+<p>In the examples in this guide, we will leave the authentication options away. Please note that you can set them globally with <code class="docutils literal notranslate"><span class="pre">module_defaults</span></code> (see <a class="reference external" href="https://docs.ansible.com/ansible/devel/playbook_guide/playbooks_module_defaults.html#module-defaults" title="(in Ansible vdevel)"><span>Module defaults</span></a>).</p>
+</section>
+<section id="wsdl-api">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">WSDL API</a><a class="headerlink" href="#wsdl-api" title="Link to this heading"></a></h3>
+<p>To use the WSDL API, you need to set API credentials. These can be found and changed in the “Servercenter” and there in the “Solutions” section under settings for the “DNS Tool”. The username is fixed, but the password can be changed. The credentials must be provided to the <code class="ansible-option docutils literal notranslate"><strong><span><span class="pre">hosttech_username</span></span></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><span><span class="pre">hosttech_password</span></span></strong></code> options of the modules.</p>
+<p>You also need to install the <a class="reference external" href="https://pypi.org/project/lxml/">lxml Python module</a> to work with the WSDL API. This can be done before using the modules:</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Make sure lxml is installed</span>
+<span class="w">  </span><span class="nt">pip</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">lxml</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">community.dns.hosttech_dns_record</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hosttech_username</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;</span><span class="cp">{{</span> <span class="nv">username</span> <span class="cp">}}</span><span class="s">&#39;</span>
+<span class="w">    </span><span class="nt">hosttech_password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;</span><span class="cp">{{</span> <span class="nv">password</span> <span class="cp">}}</span><span class="s">&#39;</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+<p>In the examples in this guide, we will leave the authentication options away. Please note that you can set them globally with <code class="docutils literal notranslate"><span class="pre">module_defaults</span></code> (see <a class="reference external" href="https://docs.ansible.com/ansible/devel/playbook_guide/playbooks_module_defaults.html#module-defaults" title="(in Ansible vdevel)"><span>Module defaults</span></a>).</p>
+</section>
+<section id="using-the-community-dns-hosttech-module-defaults-group">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Using the <code class="docutils literal notranslate"><span class="pre">community.dns.hosttech</span></code> module defaults group</a><a class="headerlink" href="#using-the-community-dns-hosttech-module-defaults-group" title="Link to this heading"></a></h3>
+<p>To avoid having to specify common parameters for all Hosttech DNS modules in every task, you can use the <code class="docutils literal notranslate"><span class="pre">community.dns.hosttech</span></code> module defaults group:</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hosttech DNS</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+<span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">module_defaults</span><span class="p">:</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">group/community.dns.hosttech</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">hosttech_username</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;</span><span class="cp">{{</span> <span class="nv">username</span> <span class="cp">}}</span><span class="s">&#39;</span>
+<span class="w">      </span><span class="nt">hosttech_password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;</span><span class="cp">{{</span> <span class="nv">password</span> <span class="cp">}}</span><span class="s">&#39;</span>
+<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Query zone information</span>
+<span class="w">      </span><span class="nt">community.dns.hosttech_dns_zone_info</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set A records for www.example.com</span>
+<span class="w">      </span><span class="nt">community.dns.hosttech_dns_record_set</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">        </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A</span>
+<span class="w">        </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">192.168.0.1</span>
+</pre></div>
+</div>
+<p>Here all two tasks will use the options set for the module defaults group.</p>
+</section>
+</section>
+<section id="working-with-dns-zones">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Working with DNS zones</a><a class="headerlink" href="#working-with-dns-zones" title="Link to this heading"></a></h2>
+<p>The <a class="reference internal" href="../hosttech_dns_zone_info_module.html#ansible-collections-community-dns-hosttech-dns-zone-info-module"><span class="std std-ref">community.dns.hosttech_dns_zone_info module</span></a> allows to query information on a zone. The zone can be identified both by its name and by its ID (which is an integer):</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Query zone information by name</span>
+<span class="w">  </span><span class="nt">community.dns.hosttech_dns_zone_info</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Query zone information by ID</span>
+<span class="w">  </span><span class="nt">community.dns.hosttech_dns_zone_info</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">zone_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">42</span>
+<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
+</pre></div>
+</div>
+<p>The module returns both the zone name and zone ID, so this module can be used to convert from zone ID to zone name and vice versa:</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">        </span><span class="no">The zone ID: </span><span class="cp">{{</span> <span class="nv">result.zone_id</span> <span class="cp">}}</span>
+<span class="w">        </span><span class="no">The zone name: </span><span class="cp">{{</span> <span class="nv">result.zone_name</span> <span class="cp">}}</span>
+</pre></div>
+</div>
+</section>
+<section id="working-with-dns-records">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Working with DNS records</a><a class="headerlink" href="#working-with-dns-records" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, TXT record values returned and accepted by the modules and plugins in this collection are unquoted. This means that  you do not have to add double quotes (<code class="docutils literal notranslate"><span class="pre">&quot;</span></code>), and escape double quotes (as <code class="docutils literal notranslate"><span class="pre">\&quot;</span></code>) and backslashes (as <code class="docutils literal notranslate"><span class="pre">\\</span></code>). All modules and plugins which work with DNS records support the <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="../hosttech_dns_record_set_module.html#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-txt-transformation"><span class="std std-ref"><span class="pre">txt_transformation</span></span></a></strong></code> option which allows to configure this behavior.</p>
+</div>
+<section id="querying-dns-records-and-record-sets">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Querying DNS records and record sets</a><a class="headerlink" href="#querying-dns-records-and-record-sets" title="Link to this heading"></a></h3>
+<p>The <a class="reference internal" href="../hosttech_dns_record_set_info_module.html#ansible-collections-community-dns-hosttech-dns-record-set-info-module"><span class="std std-ref">community.dns.hosttech_dns_record_set_info module</span></a> allows to query DNS record sets from the API. It can be used to query a single record set:</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Query single record</span>
+<span class="w">  </span><span class="nt">community.dns.hosttech_dns_record_set_info</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A</span><span class="w">  </span><span class="c1"># IPv4 addresses</span>
+<span class="w">    </span><span class="nt">what</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">single_record</span><span class="w">  </span><span class="c1"># default value</span>
+<span class="w">    </span><span class="c1"># Either specify a record name:</span>
+<span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www.example.com</span>
+<span class="w">    </span><span class="c1"># Or a record prefix (&#39;&#39; is the zone itself):</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www</span>
+<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Show IPv4 addresses if record exists</span>
+<span class="w">  </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">      </span><span class="no">IPv4s are </span><span class="cp">{{</span> <span class="nv">result.set.value</span> <span class="o">|</span> <span class="nf">join</span><span class="o">(</span><span class="s1">&#39;, &#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="no">,</span>
+<span class="w">      </span><span class="no">TTL is </span><span class="cp">{{</span> <span class="nv">result.set.ttl</span> <span class="cp">}}</span>
+<span class="w">  </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result.set</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Show that record is not set</span>
+<span class="w">  </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">There is no A record for www.example.com</span>
+<span class="w">  </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not result.set</span>
+</pre></div>
+</div>
+<p>In all examples in this section, you can replace <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="../hosttech_dns_record_set_info_module.html#ansible-collections-community-dns-hosttech-dns-record-set-info-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name=example.com</span></span></a></code> by <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="../hosttech_dns_record_set_info_module.html#ansible-collections-community-dns-hosttech-dns-record-set-info-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id=42</span></span></a></code> with the zone’s integer ID.</p>
+<p>You can also query a list of all record sets for a record name or prefix:</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Query all records for www.example.com</span>
+<span class="w">  </span><span class="nt">community.dns.hosttech_dns_record_set_info</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">    </span><span class="nt">what</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all_types_for_record</span>
+<span class="w">    </span><span class="c1"># Either specify a record name:</span>
+<span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www.example.com</span>
+<span class="w">    </span><span class="c1"># Or a record prefix (&#39;&#39; is the zone itself):</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www</span>
+<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Show all records for www.example.com</span>
+<span class="w">  </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">      </span><span class="cp">{{</span> <span class="nv">item.type</span> <span class="cp">}}</span><span class="w"> </span><span class="no">record with TTL </span><span class="cp">{{</span> <span class="nv">item.ttl</span> <span class="cp">}}</span><span class="no"> has</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">values</span><span class="w"> </span><span class="cp">{{</span> <span class="nv">item.value</span> <span class="o">|</span> <span class="nf">join</span><span class="o">(</span><span class="s1">&#39;, &#39;</span><span class="o">)</span> <span class="cp">}}</span>
+<span class="w">  </span><span class="nt">loop</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result.sets</span>
+</pre></div>
+</div>
+<p>Finally you can query all record sets for a zone:</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Query all records for a zone</span>
+<span class="w">  </span><span class="nt">community.dns.hosttech_dns_record_set_info</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">    </span><span class="nt">what</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all_records</span>
+<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Show all records for the example.com zone</span>
+<span class="w">  </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">      </span><span class="cp">{{</span> <span class="nv">item.type</span> <span class="cp">}}</span><span class="w"> </span><span class="no">record for </span><span class="cp">{{</span> <span class="nv">item.record</span> <span class="cp">}}</span><span class="no"> with</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">TTL </span><span class="cp">{{</span> <span class="nv">item.ttl</span> <span class="cp">}}</span><span class="l l-Scalar l-Scalar-Plain"> has values</span><span class="w"> </span><span class="cp">{{</span> <span class="nv">item.value</span> <span class="o">|</span> <span class="nf">join</span><span class="o">(</span><span class="s1">&#39;, &#39;</span><span class="o">)</span> <span class="cp">}}</span>
+<span class="w">  </span><span class="nt">loop</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result.sets</span>
+</pre></div>
+</div>
+<p>If you are interested in individual DNS records, and not record sets, you should use the <a class="reference internal" href="../hosttech_dns_record_info_module.html#ansible-collections-community-dns-hosttech-dns-record-info-module"><span class="std std-ref">community.dns.hosttech_dns_record_info module</span></a>. It supports the same limiting options as the <a class="reference internal" href="../hosttech_dns_record_set_info_module.html#ansible-collections-community-dns-hosttech-dns-record-set-info-module"><span class="std std-ref">community.dns.hosttech_dns_record_set_info module</span></a>.</p>
+</section>
+<section id="creating-and-updating-dns-single-records">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">Creating and updating DNS single records</a><a class="headerlink" href="#creating-and-updating-dns-single-records" title="Link to this heading"></a></h3>
+<p>If you do not want to add/remove values, but replace values, you will be interested in modifying a <strong>record set</strong> and not a single record. This is in particular important when working with <code class="docutils literal notranslate"><span class="pre">CNAME</span></code> and <code class="docutils literal notranslate"><span class="pre">SOA</span></code> records.</p>
+<p>The <a class="reference internal" href="../hosttech_dns_record_module.html#ansible-collections-community-dns-hosttech-dns-record-module"><span class="std std-ref">community.dns.hosttech_dns_record module</span></a> allows to set, update and remove single DNS records. Setting and updating can be done as follows. Records will be matched by record name and type, and the TTL value will be updated if necessary:</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add an A record with value 1.1.1.1 for www.example.com, resp. make sure the TTL is 300</span>
+<span class="w">  </span><span class="nt">community.dns.hosttech_dns_record</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">    </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A</span><span class="w">  </span><span class="c1"># IPv4 addresses</span>
+<span class="w">    </span><span class="c1"># Either specify a record name:</span>
+<span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www.example.com</span>
+<span class="w">    </span><span class="c1"># Or a record prefix (&#39;&#39; is the zone itself):</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>
+<span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+</pre></div>
+</div>
+<p>To delete records, simply use <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="../hosttech_dns_record_module.html#ansible-collections-community-dns-hosttech-dns-record-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code>. Records will be matched by record name and type, and the TTL will be ignored:</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Remove A values for www.example.com</span>
+<span class="w">  </span><span class="nt">community.dns.hosttech_dns_record</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
+<span class="w">    </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A</span><span class="w">  </span><span class="c1"># IPv4 addresses</span>
+<span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www.example.com</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>
+</pre></div>
+</div>
+<p>Records of the same type for the same record name with other values are ignored.</p>
+</section>
+<section id="creating-and-updating-dns-record-sets">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Creating and updating DNS record sets</a><a class="headerlink" href="#creating-and-updating-dns-record-sets" title="Link to this heading"></a></h3>
+<p>The <a class="reference internal" href="../hosttech_dns_record_set_module.html#ansible-collections-community-dns-hosttech-dns-record-set-module"><span class="std std-ref">community.dns.hosttech_dns_record_set module</span></a> allows to set, update and remove DNS record sets. Setting and updating can be done as follows:</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Make sure record is set to the given value</span>
+<span class="w">  </span><span class="nt">community.dns.hosttech_dns_record_set</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">    </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A</span><span class="w">  </span><span class="c1"># IPv4 addresses</span>
+<span class="w">    </span><span class="c1"># Either specify a record name:</span>
+<span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www.example.com</span>
+<span class="w">    </span><span class="c1"># Or a record prefix (&#39;&#39; is the zone itself):</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8.8.8.8</span>
+</pre></div>
+</div>
+<p>If you want to assert that a record has a certain value, set <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="../hosttech_dns_record_set_module.html#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-on-existing"><span class="std std-ref"><span class="pre">on_existing=keep</span></span></a></code>. Using <code class="ansible-value docutils literal notranslate"><span class="pre">keep_and_warn</span></code> instead will emit a warning if this happens, and <code class="ansible-value docutils literal notranslate"><span class="pre">keep_and_fail</span></code> will make the module fail.</p>
+<p>To delete values, you can either overwrite the values with value <code class="ansible-value docutils literal notranslate"><span class="pre">[]</span></code>, or use <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="../hosttech_dns_record_set_module.html#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code>:</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Remove A values for www.example.com</span>
+<span class="w">  </span><span class="nt">community.dns.hosttech_dns_record_set</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
+<span class="w">    </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A</span><span class="w">  </span><span class="c1"># IPv4 addresses</span>
+<span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www.example.com</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Remove TXT values for www.example.com</span>
+<span class="w">  </span><span class="nt">community.dns.hosttech_dns_record_set</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TXT</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Remove specific AAAA values for www.example.com</span>
+<span class="w">  </span><span class="nt">community.dns.hosttech_dns_record_set</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AAAA</span><span class="w">  </span><span class="c1"># IPv6 addresses</span>
+<span class="w">    </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
+<span class="w">    </span><span class="nt">on_existing</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keep_and_fail</span>
+<span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;::1&#39;</span>
+</pre></div>
+</div>
+<p>In the third example, <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="../hosttech_dns_record_set_module.html#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-on-existing"><span class="std std-ref"><span class="pre">on_existing=keep_and_fail</span></span></a></code> is present and an explicit value and TTL are given. This makes the module remove the current value only if there’s a AAAA record for <code class="docutils literal notranslate"><span class="pre">www.example.com</span></code> whose current value is <code class="docutils literal notranslate"><span class="pre">::1</span></code> and whose TTL is 300. If another value is set, the module will not make any change, but fail. This can be useful to not accidentally remove values you do not want to change. To issue a warning instead of failing, use <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="../hosttech_dns_record_set_module.html#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-on-existing"><span class="std std-ref"><span class="pre">on_existing=keep_and_warn</span></span></a></code>, and to simply not do a change without any indication of this situation, use <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="../hosttech_dns_record_set_module.html#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-on-existing"><span class="std std-ref"><span class="pre">on_existing=keep</span></span></a></code>.</p>
+</section>
+<section id="bulk-synchronization-of-dns-record-sets">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">Bulk synchronization of DNS record sets</a><a class="headerlink" href="#bulk-synchronization-of-dns-record-sets" title="Link to this heading"></a></h3>
+<p>If you want to set/update multiple records at once, or even make sure that the precise set of records you are providing are present and nothing else, you can use the <a class="reference internal" href="../hosttech_dns_record_sets_module.html#ansible-collections-community-dns-hosttech-dns-record-sets-module"><span class="std std-ref">community.dns.hosttech_dns_record_sets module</span></a>.</p>
+<p>The following example shows up to set/update multiple records at once:</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Make sure that multiple records are present</span>
+<span class="w">  </span><span class="nt">community.dns.hosttech_dns_record_sets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">    </span><span class="nt">record_sets</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8.8.8.8</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AAAA</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;::1&#39;</span>
+</pre></div>
+</div>
+<p>The next example shows how to make sure that only the given records are available and all other records are deleted. Note that for the <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="../hosttech_dns_record_sets_module.html#ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-record-sets-type"><span class="std std-ref"><span class="pre">record_sets[].type=NS</span></span></a></code> record we used <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="../hosttech_dns_record_sets_module.html#ansible-collections-community-dns-hosttech-dns-record-sets-module-parameter-record-sets-ignore"><span class="std std-ref"><span class="pre">record_sets[].ignore=true</span></span></a></code>, which allows us to skip the value. It tells the module that it should not touch the <code class="docutils literal notranslate"><span class="pre">NS</span></code> record for <code class="docutils literal notranslate"><span class="pre">example.com</span></code>.</p>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Make sure that multiple records are present</span>
+<span class="w">  </span><span class="nt">community.dns.hosttech_dns_record_sets</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.com</span>
+<span class="w">    </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">record_sets</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8.8.8.8</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AAAA</span>
+<span class="w">        </span><span class="nt">value</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;::1&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">prefix</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;&#39;</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NS</span>
+<span class="w">        </span><span class="nt">ignore</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+<footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="hetzner_guide.html" class="btn btn-neutral float-left" title="Hetzner DNS Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../hetzner_dns_record_module.html" class="btn btn-neutral float-right" title="community.dns.hetzner_dns_record module – Add or delete a single record in Hetzner DNS service" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Community.Dns Contributors.</p>
+  </div>
+
+  
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script><!-- extra footer elements for Ansible beyond RTD Sphinx Theme -->
+
+</body>
+</html>
