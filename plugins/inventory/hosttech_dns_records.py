@@ -43,6 +43,7 @@ extends_documentation_fragment:
     - community.dns.hosttech
     - community.dns.hosttech.plugin
     - community.dns.hosttech.record_type_choices_records_inventory
+    - community.dns.hosttech.record_type_seealso
     - community.dns.hosttech.zone_id_type
     - community.dns.inventory_records
     - community.dns.options.record_transformation
