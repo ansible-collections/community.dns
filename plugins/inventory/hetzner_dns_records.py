@@ -35,6 +35,7 @@ extends_documentation_fragment:
     - community.dns.hetzner
     - community.dns.hetzner.plugin
     - community.dns.hetzner.record_type_choices_records_inventory
+    - community.dns.hetzner.record_type_seealso
     - community.dns.hetzner.zone_id_type
     - community.dns.inventory_records
     - community.dns.options.record_transformation
