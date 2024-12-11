@@ -30,6 +30,8 @@ It also provides an inventory plugin:
 
 - :ansplugin:`community.dns.hetzner_dns_records#inventory`: create inventory from DNS records
 
+To find out which record types are supported and how to use them, look at :ref:`ansible_collections.community.dns.docsite.hetzner_guide.records`.
+
 Authentication
 --------------
 
@@ -482,3 +484,48 @@ The markuman.hetzner_dns.inventory inventory plugin
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The ``markuman.hetzner_dns.inventory`` inventory plugin can be replaced by the :ansplugin:`community.dns.hetzner_dns_records inventory plugin <community.dns.hetzner_dns_records#inventory>`. Besides the plugin name, no change should be necessary.
+
+
+.. _ansible_collections.community.dns.docsite.hetzner_guide.records:
+
+Supported DNS records
+---------------------
+
+Here you can find a list of supported DNS records together with their syntax for the :ansopt:`value` field:
+
+- **A** records: IPv4 address.
+
+  Simply provide the IPv4 address as :ansopt:`value`, such as ``127.0.0.1``.
+- **AAAA** records: IPv6 address.
+
+  Simply provide the IPv6 address as :ansopt:`value`, such as ``3fff::1:2``.
+- **CAA** records: Certification Authority Authorization
+
+  The record's :ansopt:`value` is of the form ``<flags> <tag> <value>``,
+  where ``<flags>`` is an unsigned integer between 0 and 255;
+  ``<tag>`` is a ASCII string such as ``issue``, ``issuewild``, or ``iodef``;
+  and ``<value>`` is the value enclosed in double quotes.
+  An example entry is ``0 issue "letsencrypt.org"``.
+  The exact syntax is explained in L(Section 4.1.1 of RFC 8659, https://datatracker.ietf.org/doc/html/rfc8659#name-syntax).
+- **CNAME** records: Canonical Name.
+- **DANE** records: DNS-based Authentication of Named Entities.
+- **DS** records: Delegation Signer.
+- **HINFO** records: Host Information.
+- **MX** records: Mail Exchange.
+
+  The record's :ansopt:`value` is of the form ``<priority> <hostname>``,
+  where ``<priority>`` is an unsigned integer and ``<hostname>`` a DNS hostname.
+- **NS** records: Name Server record.
+
+  The record's :ansopt:`value` is the list of DNS names of the authoritative nameservers for this zone.
+- **RP** records: Responsible Person.
+- **SOA** records: Start Of Authority record.
+- **SRV** records: Service locator.
+
+  The record's :ansopt:`value` is of the form ``<priority> <weight> <port> <target>``.
+- **TLSA** records: TLSA certificate association.
+
+  This record is for DANE.
+- **TXT** records: Text record.
+
+  The value is simply a free form text. Its use depends on its context.

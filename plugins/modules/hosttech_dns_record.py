@@ -30,6 +30,7 @@ extends_documentation_fragment:
     - community.dns.hosttech.record_default_ttl
     - community.dns.hosttech.record_notes
     - community.dns.hosttech.record_type_choices
+    - community.dns.hosttech.record_type_seealso
     - community.dns.hosttech.zone_id_type
     - community.dns.module_record
     - community.dns.options.record_transformation
