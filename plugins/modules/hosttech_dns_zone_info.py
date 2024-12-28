@@ -88,8 +88,8 @@ zone_info:
     ds_records:
       description:
         - The DS records.
-        - See L(Section 5 of RFC 4034,https://datatracker.ietf.org/doc/html/rfc4034#section-5) and L(Section 2.1 of RFC 4034,https://datatracker.ietf.org/doc/html/rfc4034#section-2.1)
-          for details.
+        - See L(Section 5 of RFC 4034,https://datatracker.ietf.org/doc/html/rfc4034#section-5) and
+          L(Section 2.1 of RFC 4034,https://datatracker.ietf.org/doc/html/rfc4034#section-2.1) for details.
         - Is V(none) if DNSSEC is not enabled.
       type: list
       elements: dict
