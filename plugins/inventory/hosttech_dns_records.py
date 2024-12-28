@@ -31,7 +31,7 @@ options:
     # We need to overwrite zone_id to be of type string, otherwise templating cannot be passed in
     zone_id:
         type: raw
-        # If there wouldn't be ansible-base 2.10, this should be string instead. ansible-base will
+        # If there would not be ansible-base 2.10, this should be string instead. ansible-base will
         # not accept an integer for type=string options, whence type=string breaks backwards
         # compatibility with previous type=int...
         #   type: string
