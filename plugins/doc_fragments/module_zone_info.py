@@ -11,18 +11,18 @@ __metaclass__ = type
 class ModuleDocFragment(object):
 
     # Standard files documentation fragment
-    DOCUMENTATION = r'''
+    DOCUMENTATION = r"""
 options:
-    zone_name:
-        description:
-          - The DNS zone to query.
-          - Exactly one of O(zone_name) and O(zone_id) must be specified.
-        type: str
-        aliases:
-          - zone
-    zone_id:
-        description:
-          - The ID of the DNS zone to query.
-          - Exactly one of O(zone_name) and O(zone_id) must be specified.
-        version_added: 0.2.0
-'''
+  zone_name:
+    description:
+      - The DNS zone to query.
+      - Exactly one of O(zone_name) and O(zone_id) must be specified.
+    type: str
+    aliases:
+      - zone
+  zone_id:
+    description:
+      - The ID of the DNS zone to query.
+      - Exactly one of O(zone_name) and O(zone_id) must be specified.
+    version_added: 0.2.0
+"""

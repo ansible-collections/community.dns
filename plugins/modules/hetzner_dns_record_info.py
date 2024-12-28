@@ -9,8 +9,7 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
----
+DOCUMENTATION = r"""
 module: hetzner_dns_record_info
 
 short_description: Retrieve records in Hetzner DNS service
@@ -18,34 +17,33 @@ short_description: Retrieve records in Hetzner DNS service
 version_added: 2.0.0
 
 description:
-    - "Retrieves DNS records in Hetzner DNS service."
-
+  - Retrieves DNS records in Hetzner DNS service.
 extends_documentation_fragment:
-    - community.dns.hetzner
-    - community.dns.hetzner.record_type_choices
-    - community.dns.hetzner.record_type_seealso
-    - community.dns.hetzner.zone_id_type
-    - community.dns.module_record_info
-    - community.dns.options.record_transformation
-    - community.dns.attributes
-    - community.dns.attributes.actiongroup_hetzner
-    - community.dns.attributes.info_module
+  - community.dns.hetzner
+  - community.dns.hetzner.record_type_choices
+  - community.dns.hetzner.record_type_seealso
+  - community.dns.hetzner.zone_id_type
+  - community.dns.module_record_info
+  - community.dns.options.record_transformation
+  - community.dns.attributes
+  - community.dns.attributes.actiongroup_hetzner
+  - community.dns.attributes.info_module
 
 attributes:
-    action_group:
-        version_added: 2.4.0
+  action_group:
+    version_added: 2.4.0
 
 author:
-    - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
-    - Felix Fontein (@felixfontein)
+  - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
+  - Felix Fontein (@felixfontein)
 
 seealso:
-    - module: community.dns.hetzner_dns_record_set_info
-    - plugin: community.dns.hetzner_dns_records
-      plugin_type: inventory
-'''
+  - module: community.dns.hetzner_dns_record_set_info
+  - plugin: community.dns.hetzner_dns_records
+    plugin_type: inventory
+"""
 
-EXAMPLES = '''
+EXAMPLES = r"""
 - name: Retrieve the details for the A records of new.foo.com
   community.dns.hetzner_dns_record_info:
     zone: foo.com
@@ -57,56 +55,56 @@ EXAMPLES = '''
 - name: Print the A records
   ansible.builtin.debug:
     msg: "{{ rec.records }}"
-'''
+"""
 
-RETURN = '''
+RETURN = r"""
 records:
-    description: The list of fetched records.
-    type: list
-    elements: dict
-    returned: success and O(what) is not V(single_record)
-    contains:
-        record:
-            description: The record name.
-            type: str
-            sample: sample.example.com
-        prefix:
-            description: The record prefix.
-            type: str
-            sample: sample
-        type:
-            description: The DNS record type.
-            type: str
-            sample: A
-        ttl:
-            description:
-              - The TTL.
-              - Will return V(none) if the zone's default TTL is used.
-            type: int
-            sample: 3600
-        value:
-            description: The DNS record's value.
-            type: str
-            sample: 1.2.3.4
-        extra:
-            description: Extra information on records.
-            type: dict
-            sample:
-                created: '2021-07-09T11:18:37Z'
-                modified: '2021-07-09T11:18:37Z'
-    sample:
-        - record: sample.example.com
-          type: A
-          ttl: 3600
-          value: 1.2.3.4
-          extra: {}
+  description: The list of fetched records.
+  type: list
+  elements: dict
+  returned: success and O(what) is not V(single_record)
+  contains:
+    record:
+      description: The record name.
+      type: str
+      sample: sample.example.com
+    prefix:
+      description: The record prefix.
+      type: str
+      sample: sample
+    type:
+      description: The DNS record type.
+      type: str
+      sample: A
+    ttl:
+      description:
+        - The TTL.
+        - Will return V(none) if the zone's default TTL is used.
+      type: int
+      sample: 3600
+    value:
+      description: The DNS record's value.
+      type: str
+      sample: 1.2.3.4
+    extra:
+      description: Extra information on records.
+      type: dict
+      sample:
+        created: '2021-07-09T11:18:37Z'
+        modified: '2021-07-09T11:18:37Z'
+  sample:
+    - record: sample.example.com
+      type: A
+      ttl: 3600
+      value: 1.2.3.4
+      extra: {}
 
 zone_id:
-    description: The ID of the zone.
-    type: str
-    returned: success
-    sample: 23
-'''
+  description: The ID of the zone.
+  type: str
+  returned: success
+  sample: 23
+"""
 
 from ansible.module_utils.basic import AnsibleModule
 

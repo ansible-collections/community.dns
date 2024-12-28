@@ -12,8 +12,7 @@ name: reverse_pointer
 short_description: Convert an IP address into a DNS name for reverse lookup
 version_added: 3.1.0
 description:
-  - Given an IPv4 or IPv6 address, such as V(192.168.1.2), converts it to a DNS name to use for
-    reverse lookups, such as V(2.1.168.192.in-addr.arpa).
+  - Given an IPv4 or IPv6 address, such as V(192.168.1.2), converts it to a DNS name to use for reverse lookups, such as V(2.1.168.192.in-addr.arpa).
 options:
   _input:
     description:
@@ -35,7 +34,7 @@ EXAMPLES = r"""
 - name: Convert IP address to DNS name for reverse lookup
   ansible.builtin.set_fact:
     dns_name: "{{ ip_address | community.dns.reverse_pointer }}"
-    # Should result in '2.1.168.192.in-addr.arpa.'
+  # Should result in '2.1.168.192.in-addr.arpa.'
   vars:
     ip_address: 192.168.1.2
 """

@@ -7,7 +7,7 @@
 
 from __future__ import annotations
 
-DOCUMENTATION = '''
+DOCUMENTATION = r"""
 name: hetzner_dns_records
 
 short_description: Create inventory from Hetzner DNS records
@@ -15,45 +15,43 @@ short_description: Create inventory from Hetzner DNS records
 version_added: 2.0.0
 
 description:
-    - This plugin allows to create an inventory from Hetzner DNS records.
-    - >-
-      For Ansible to be able to identify a YAML file as an inventory for this plugin, the inventory file must contain
-      C(plugin: community.dns.hetzner_dns_records) and its filename must end with C(hetzner_dns.yaml) or C(hetzner_dns.yml)
-
+  - This plugin allows to create an inventory from Hetzner DNS records.
+  - 'For Ansible to be able to identify a YAML file as an inventory for this plugin, the inventory file must contain C(plugin:
+    community.dns.hetzner_dns_records) and its filename must end with C(hetzner_dns.yaml) or C(hetzner_dns.yml).'
 options:
-    plugin:
-        description: The name of this plugin. Should always be set to V(community.dns.hetzner_dns_records) for this plugin to recognize it as its own.
-        required: true
-        choices:
-            - community.dns.hetzner_dns_records
-        type: str
+  plugin:
+    description: The name of this plugin. Should always be set to V(community.dns.hetzner_dns_records) for this plugin to
+      recognize it as its own.
+    required: true
+    choices:
+      - community.dns.hetzner_dns_records
+    type: str
 
-    filters:
-        version_added: 3.0.0
+  filters:
+    version_added: 3.0.0
 
 extends_documentation_fragment:
-    - community.dns.hetzner
-    - community.dns.hetzner.plugin
-    - community.dns.hetzner.record_type_choices_records_inventory
-    - community.dns.hetzner.record_type_seealso
-    - community.dns.hetzner.zone_id_type
-    - community.dns.inventory_records
-    - community.dns.options.record_transformation
-    - community.library_inventory_filtering_v1.inventory_filter
+  - community.dns.hetzner
+  - community.dns.hetzner.plugin
+  - community.dns.hetzner.record_type_choices_records_inventory
+  - community.dns.hetzner.record_type_seealso
+  - community.dns.hetzner.zone_id_type
+  - community.dns.inventory_records
+  - community.dns.options.record_transformation
+  - community.library_inventory_filtering_v1.inventory_filter
 
 notes:
-    - The provider-specific O(hetzner_token) option can be templated.
-
+  - The provider-specific O(hetzner_token) option can be templated.
 author:
-    - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
-    - Felix Fontein (@felixfontein)
+  - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
+  - Felix Fontein (@felixfontein)
 
 seealso:
-    - module: community.dns.hetzner_dns_record_set_info
-    - module: community.dns.hetzner_dns_record_info
-'''
+  - module: community.dns.hetzner_dns_record_set_info
+  - module: community.dns.hetzner_dns_record_info
+"""
 
-EXAMPLES = '''
+EXAMPLES = r"""
 # filename must end with hetzner_dns.yaml or hetzner_dns.yml
 
 plugin: community.dns.hetzner_dns_records
@@ -71,8 +69,8 @@ txt_transformation: unquoted
 # but this is discouraged. Use a lookup like below, or leave it away and
 # set it with the HETZNER_DNS_TOKEN environment variable.
 hetzner_token: >-
-    {{ (lookup('community.sops.sops', 'keys/hetzner.sops.yml') | from_yaml).hetzner_dns_token }}
-'''
+  {{ (lookup('community.sops.sops', 'keys/hetzner.sops.yml') | from_yaml).hetzner_dns_token }}
+"""
 
 
 from ansible_collections.community.dns.plugins.module_utils.http import (

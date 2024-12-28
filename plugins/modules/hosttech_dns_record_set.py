@@ -9,8 +9,7 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
----
+DOCUMENTATION = r"""
 module: hosttech_dns_record_set
 
 short_description: Add or delete record sets in Hosttech DNS service
@@ -18,34 +17,33 @@ short_description: Add or delete record sets in Hosttech DNS service
 version_added: 2.0.0
 
 description:
-    - "Creates and deletes DNS record sets in Hosttech DNS service."
-    - This module replaces C(hosttech_dns_record) from community.dns before 2.0.0.
-
+  - Creates and deletes DNS record sets in Hosttech DNS service.
+  - This module replaces C(hosttech_dns_record) from community.dns before 2.0.0.
 extends_documentation_fragment:
-    - community.dns.hosttech
-    - community.dns.hosttech.record_default_ttl
-    - community.dns.hosttech.record_notes
-    - community.dns.hosttech.record_type_choices
-    - community.dns.hosttech.record_type_seealso
-    - community.dns.hosttech.zone_id_type
-    - community.dns.module_record_set
-    - community.dns.options.record_transformation
-    - community.dns.attributes
-    - community.dns.attributes.actiongroup_hosttech
+  - community.dns.hosttech
+  - community.dns.hosttech.record_default_ttl
+  - community.dns.hosttech.record_notes
+  - community.dns.hosttech.record_type_choices
+  - community.dns.hosttech.record_type_seealso
+  - community.dns.hosttech.zone_id_type
+  - community.dns.module_record_set
+  - community.dns.options.record_transformation
+  - community.dns.attributes
+  - community.dns.attributes.actiongroup_hosttech
 
 attributes:
-    action_group:
-        version_added: 2.4.0
-    check_mode:
-        support: full
-    diff_mode:
-        support: full
+  action_group:
+    version_added: 2.4.0
+  check_mode:
+    support: full
+  diff_mode:
+    support: full
 
 author:
-    - Felix Fontein (@felixfontein)
-'''
+  - Felix Fontein (@felixfontein)
+"""
 
-EXAMPLES = '''
+EXAMPLES = r"""
 - name: Add new.foo.com as an A record with 3 IPs
   community.dns.hosttech_dns_record_set:
     state: present
@@ -90,7 +88,7 @@ EXAMPLES = '''
     hosttech_password: bar
 
 - name: Add an AAAA record
-  # Note that because there are colons in the value that the IPv6 address must be quoted!
+# Note that because there are colons in the value that the IPv6 address must be quoted!
   community.dns.hosttech_dns_record_set:
     state: present
     zone_name: foo.com
@@ -130,8 +128,8 @@ EXAMPLES = '''
     type: CAA
     ttl: 3600
     value:
-    - '128 issue "letsencrypt.org"'
-    - '128 iodef "mailto:webmaster@foo.com"'
+      - '128 issue "letsencrypt.org"'
+      - '128 iodef "mailto:webmaster@foo.com"'
     hosttech_token: access_token
 
 - name: Add an MX record
@@ -142,7 +140,7 @@ EXAMPLES = '''
     type: MX
     ttl: 3600
     value:
-    - "10 mail.foo.com"
+      - "10 mail.foo.com"
     hosttech_token: access_token
 
 - name: Add a CNAME record
@@ -153,7 +151,7 @@ EXAMPLES = '''
     type: CNAME
     ttl: 3600
     value:
-    - foo.foo.com
+      - foo.foo.com
     hosttech_username: foo
     hosttech_password: bar
 
@@ -165,7 +163,7 @@ EXAMPLES = '''
     type: PTR
     ttl: 3600
     value:
-    - foo.foo.com
+      - foo.foo.com
     hosttech_token: access_token
 
 - name: Add an SPF record
@@ -176,7 +174,7 @@ EXAMPLES = '''
     type: SPF
     ttl: 3600
     value:
-    - "v=spf1 a mx ~all"
+      - "v=spf1 a mx ~all"
     hosttech_username: foo
     hosttech_password: bar
 
@@ -188,18 +186,18 @@ EXAMPLES = '''
     type: PTR
     ttl: 3600
     value:
-    - "10 100 3333 service.foo.com"
+      - "10 100 3333 service.foo.com"
     hosttech_token: access_token
-'''
+"""
 
-RETURN = '''
+RETURN = r"""
 zone_id:
-    description: The ID of the zone.
-    type: int
-    returned: success
-    sample: 23
-    version_added: 0.2.0
-'''
+  description: The ID of the zone.
+  type: int
+  returned: success
+  sample: 23
+  version_added: 0.2.0
+"""
 
 from ansible.module_utils.basic import AnsibleModule
 

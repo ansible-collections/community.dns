@@ -6,51 +6,50 @@
 
 from __future__ import annotations
 
-DOCUMENTATION = r'''
+DOCUMENTATION = r"""
 name: reverse_lookup
 author: Felix Fontein (@felixfontein)
 short_description: Reverse-look up IP addresses
 version_added: 3.1.0
 requirements:
-    - dnspython >= 1.15.0 (maybe older versions also work)
+  - dnspython >= 1.15.0 (maybe older versions also work)
 description:
-    - Look up hostnames for IP addresses using DNS reverse lookup.
+  - Look up hostnames for IP addresses using DNS reverse lookup.
 options:
-    _terms:
-        description:
-            - IP address(es) to look up.
-        type: list
-        elements: str
-        required: true
-    query_retry:
-        description:
-            - Number of retries for DNS query timeouts.
-        type: int
-        default: 3
-    query_timeout:
-        description:
-            - Timeout per DNS query in seconds.
-        type: float
-        default: 10
-    server:
-        description:
-            - The DNS server(s) to use to look up the result. Must be a list of one or more IP addresses.
-            - By default, the system's standard resolver is used.
-        type: list
-        elements: str
-    servfail_retries:
-        description:
-            - How often to retry on SERVFAIL errors.
-        type: int
-        default: 0
+  _terms:
+    description:
+      - IP address(es) to look up.
+    type: list
+    elements: str
+    required: true
+  query_retry:
+    description:
+      - Number of retries for DNS query timeouts.
+    type: int
+    default: 3
+  query_timeout:
+    description:
+      - Timeout per DNS query in seconds.
+    type: float
+    default: 10
+  server:
+    description:
+      - The DNS server(s) to use to look up the result. Must be a list of one or more IP addresses.
+      - By default, the system's standard resolver is used.
+    type: list
+    elements: str
+  servfail_retries:
+    description:
+      - How often to retry on SERVFAIL errors.
+    type: int
+    default: 0
 notes:
-    - Note that when using this lookup plugin with V(lookup(\)), and the result is a one-element list,
-      Ansible simply returns the one element not as a list. Since this behavior is surprising and
-      can cause problems, it is better to use V(query(\)) instead of V(lookup(\)). See the examples
-      and also R(Forcing lookups to return lists, query) in the Ansible documentation.
-'''
+  - Note that when using this lookup plugin with V(lookup(\)), and the result is a one-element list, Ansible simply returns
+    the one element not as a list. Since this behavior is surprising and can cause problems, it is better to use V(query(\))
+    instead of V(lookup(\)). See the examples and also R(Forcing lookups to return lists, query) in the Ansible documentation.
+"""
 
-EXAMPLES = """
+EXAMPLES = r"""
 - name: Look up hostname of IPv4 address
   ansible.builtin.debug:
     msg: "{{ query('community.dns.reverse_lookup', '192.168.1.1') }}"
@@ -60,16 +59,16 @@ EXAMPLES = """
     msg: "{{ query('community.dns.reverse_lookup', '1:2:3::4') }}"
 """
 
-RETURN = """
+RETURN = r"""
 _result:
-    description:
-        - The hostname(s) returned for the queried IP addresses.
-        - If multiple IP addresses are queried in O(_terms), the resulting lists have been concatenated.
-    type: list
-    elements: str
-    sample:
-        - example.com
-        - example.org
+  description:
+    - The hostname(s) returned for the queried IP addresses.
+    - If multiple IP addresses are queried in O(_terms), the resulting lists have been concatenated.
+  type: list
+  elements: str
+  sample:
+    - example.com
+    - example.org
 """
 
 from ansible.errors import AnsibleLookupError
