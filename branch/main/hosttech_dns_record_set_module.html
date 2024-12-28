@@ -471,7 +471,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <span class="w">    </span><span class="nt">hosttech_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add an AAAA record</span>
-<span class="w">  </span><span class="c1"># Note that because there are colons in the value that the IPv6 address must be quoted!</span>
+<span class="c1"># Note that because there are colons in the value that the IPv6 address must be quoted!</span>
 <span class="w">  </span><span class="nt">community.dns.hosttech_dns_record_set</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 <span class="w">    </span><span class="nt">zone_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
@@ -511,8 +511,8 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CAA</span>
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;128</span><span class="nv"> </span><span class="s">issue</span><span class="nv"> </span><span class="s">&quot;letsencrypt.org&quot;&#39;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;128</span><span class="nv"> </span><span class="s">iodef</span><span class="nv"> </span><span class="s">&quot;mailto:webmaster@foo.com&quot;&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;128</span><span class="nv"> </span><span class="s">issue</span><span class="nv"> </span><span class="s">&quot;letsencrypt.org&quot;&#39;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;128</span><span class="nv"> </span><span class="s">iodef</span><span class="nv"> </span><span class="s">&quot;mailto:webmaster@foo.com&quot;&#39;</span>
 <span class="w">    </span><span class="nt">hosttech_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add an MX record</span>
@@ -523,7 +523,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MX</span>
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;10</span><span class="nv"> </span><span class="s">mail.foo.com&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;10</span><span class="nv"> </span><span class="s">mail.foo.com&quot;</span>
 <span class="w">    </span><span class="nt">hosttech_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add a CNAME record</span>
@@ -534,7 +534,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CNAME</span>
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.foo.com</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.foo.com</span>
 <span class="w">    </span><span class="nt">hosttech_username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
 <span class="w">    </span><span class="nt">hosttech_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span>
 
@@ -546,7 +546,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PTR</span>
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.foo.com</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.foo.com</span>
 <span class="w">    </span><span class="nt">hosttech_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add an SPF record</span>
@@ -557,7 +557,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SPF</span>
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;v=spf1</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">mx</span><span class="nv"> </span><span class="s">~all&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;v=spf1</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">mx</span><span class="nv"> </span><span class="s">~all&quot;</span>
 <span class="w">    </span><span class="nt">hosttech_username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
 <span class="w">    </span><span class="nt">hosttech_password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar</span>
 
@@ -569,7 +569,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PTR</span>
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;10</span><span class="nv"> </span><span class="s">100</span><span class="nv"> </span><span class="s">3333</span><span class="nv"> </span><span class="s">service.foo.com&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;10</span><span class="nv"> </span><span class="s">100</span><span class="nv"> </span><span class="s">3333</span><span class="nv"> </span><span class="s">service.foo.com&quot;</span>
 <span class="w">    </span><span class="nt">hosttech_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 </pre></div>
 </div>
