@@ -9,8 +9,7 @@ from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
 
-DOCUMENTATION = '''
----
+DOCUMENTATION = r"""
 module: hetzner_dns_record_sets
 
 short_description: Bulk synchronize DNS record sets in Hetzner DNS service
@@ -18,35 +17,33 @@ short_description: Bulk synchronize DNS record sets in Hetzner DNS service
 version_added: 2.0.0
 
 description:
-    - Bulk synchronize DNS record sets in Hetzner DNS service.
-
+  - Bulk synchronize DNS record sets in Hetzner DNS service.
 extends_documentation_fragment:
-    - community.dns.hetzner
-    - community.dns.hetzner.record_notes
-    - community.dns.hetzner.record_type_choices_record_sets_module
-    - community.dns.hetzner.record_type_seealso
-    - community.dns.hetzner.zone_id_type
-    - community.dns.module_record_sets
-    - community.dns.options.bulk_operations
-    - community.dns.options.record_transformation
-    - community.dns.attributes
-    - community.dns.attributes.actiongroup_hetzner
+  - community.dns.hetzner
+  - community.dns.hetzner.record_notes
+  - community.dns.hetzner.record_type_choices_record_sets_module
+  - community.dns.hetzner.record_type_seealso
+  - community.dns.hetzner.zone_id_type
+  - community.dns.module_record_sets
+  - community.dns.options.bulk_operations
+  - community.dns.options.record_transformation
+  - community.dns.attributes
+  - community.dns.attributes.actiongroup_hetzner
 
 attributes:
-    action_group:
-        version_added: 2.4.0
-    check_mode:
-        support: full
-    diff_mode:
-        support: full
+  action_group:
+    version_added: 2.4.0
+  check_mode:
+    support: full
+  diff_mode:
+    support: full
 
 author:
-    - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
-    - Felix Fontein (@felixfontein)
+  - Markus Bergholz (@markuman) <markuman+spambelongstogoogle@gmail.com>
+  - Felix Fontein (@felixfontein)
+"""
 
-'''
-
-EXAMPLES = '''
+EXAMPLES = r"""
 - name: Make sure some records exist and have the expected values
   community.dns.hetzner_dns_record_sets:
     zone: foo.com
@@ -69,7 +66,7 @@ EXAMPLES = '''
     hetzner_token: access_token
 
 - name: Synchronize DNS zone with a fixed set of records
-  # If a record exists that is not mentioned here, it will be deleted
+# If a record exists that is not mentioned here, it will be deleted
   community.dns.hetzner_dns_record_sets:
     zone_id: 23
     purge: true
@@ -87,15 +84,15 @@ EXAMPLES = '''
           - ns-2.hoster.com
           - ns-3.hoster.com
     hetzner_token: access_token
-'''
+"""
 
-RETURN = '''
+RETURN = r"""
 zone_id:
-    description: The ID of the zone.
-    type: str
-    returned: success
-    sample: 23
-'''
+  description: The ID of the zone.
+  type: str
+  returned: success
+  sample: 23
+"""
 
 from ansible.module_utils.basic import AnsibleModule
 

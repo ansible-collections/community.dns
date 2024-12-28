@@ -10,16 +10,15 @@ __metaclass__ = type
 
 class ModuleDocFragment(object):
 
-    DOCUMENTATION = r'''
+    DOCUMENTATION = r"""
 options:
-    icann_only:
-        description:
-            - This controls whether only entries from the ICANN section of the Public Suffix List are used,
-              or also entries from the Private section. For example, C(.co.uk) is in the ICANN section,
-              but C(github.io) is in the Private section.
-        type: boolean
-        default: false
-'''
+  icann_only:
+    description:
+      - This controls whether only entries from the ICANN section of the Public Suffix List are used, or also entries from
+        the Private section. For example, C(.co.uk) is in the ICANN section, but C(github.io) is in the Private section.
+    type: boolean
+    default: false
+"""
 
     PUBLIC_SUFFIX = r'''
 options:
@@ -58,14 +57,13 @@ options:
         default: true
 '''
 
-    GET = r'''
+    GET = r"""
 options:
-    normalize_result:
-        description:
-            - This controls whether the result is reconstructed from the normalized name used during lookup.
-              During normalization, ulabels are converted to alabels, and every label is converted to lowercase.
-              For example, the ulabel C(ëçãmplê) is converted to C(xn--mpl-llatwb) (puny-code), and
-              C(Example.COM) is converted to C(example.com).
-        type: boolean
-        default: false
-'''
+  normalize_result:
+    description:
+      - This controls whether the result is reconstructed from the normalized name used during lookup. During normalization,
+        ulabels are converted to alabels, and every label is converted to lowercase. For example, the ulabel C(ëçãmplê) is
+        converted to C(xn--mpl-llatwb) (puny-code), and C(Example.COM) is converted to C(example.com).
+    type: boolean
+    default: false
+"""

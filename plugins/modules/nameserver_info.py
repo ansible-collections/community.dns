@@ -9,66 +9,64 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-DOCUMENTATION = r'''
----
+DOCUMENTATION = r"""
 module: nameserver_info
 short_description: Look up nameservers for a DNS name
 version_added: 2.6.0
 description:
-    - Retrieve all nameservers that are responsible for a DNS name.
+  - Retrieve all nameservers that are responsible for a DNS name.
 extends_documentation_fragment:
-    - community.dns.attributes
-    - community.dns.attributes.info_module
+  - community.dns.attributes
+  - community.dns.attributes.info_module
 author:
-    - Felix Fontein (@felixfontein)
+  - Felix Fontein (@felixfontein)
 options:
-    name:
-        description:
-            - A list of DNS names whose nameservers to retrieve.
-        required: true
-        type: list
-        elements: str
-    resolve_addresses:
-        description:
-            - Whether to resolve the nameserver names to IP addresses.
-        type: bool
-        default: false
-    query_retry:
-        description:
-            - Number of retries for DNS query timeouts.
-        type: int
-        default: 3
-    query_timeout:
-        description:
-            - Timeout per DNS query in seconds.
-        type: float
-        default: 10
-    always_ask_default_resolver:
-        description:
-            - When set to V(true) (default), will use the default resolver to find the authoritative nameservers
-              of a subzone. See O(server) for how to configure the default resolver.
-            - When set to V(false), will use the authoritative nameservers of the parent zone to find the
-              authoritative nameservers of a subzone. This only makes sense when the nameservers were recently
-              changed and have not yet propagated.
-        type: bool
-        default: true
-    servfail_retries:
-        description:
-            - How often to retry on SERVFAIL errors.
-        type: int
-        default: 0
-    server:
-        description:
-            - The DNS server(s) to use to look up the result. Must be a list of one or more IP addresses.
-            - By default, the system's standard resolver is used.
-        type: list
-        elements: str
-        version_added: 2.7.0
+  name:
+    description:
+      - A list of DNS names whose nameservers to retrieve.
+    required: true
+    type: list
+    elements: str
+  resolve_addresses:
+    description:
+      - Whether to resolve the nameserver names to IP addresses.
+    type: bool
+    default: false
+  query_retry:
+    description:
+      - Number of retries for DNS query timeouts.
+    type: int
+    default: 3
+  query_timeout:
+    description:
+      - Timeout per DNS query in seconds.
+    type: float
+    default: 10
+  always_ask_default_resolver:
+    description:
+      - When set to V(true) (default), will use the default resolver to find the authoritative nameservers of a subzone. See
+        O(server) for how to configure the default resolver.
+      - When set to V(false), will use the authoritative nameservers of the parent zone to find the authoritative nameservers
+        of a subzone. This only makes sense when the nameservers were recently changed and have not yet propagated.
+    type: bool
+    default: true
+  servfail_retries:
+    description:
+      - How often to retry on SERVFAIL errors.
+    type: int
+    default: 0
+  server:
+    description:
+      - The DNS server(s) to use to look up the result. Must be a list of one or more IP addresses.
+      - By default, the system's standard resolver is used.
+    type: list
+    elements: str
+    version_added: 2.7.0
 requirements:
-    - dnspython >= 1.15.0 (maybe older versions also work)
-'''
+  - dnspython >= 1.15.0 (maybe older versions also work)
+"""
 
-EXAMPLES = r'''
+EXAMPLES = r"""
 - name: Retrieve name servers of two DNS names
   community.dns.nameserver_info:
     name:
@@ -79,42 +77,42 @@ EXAMPLES = r'''
 - name: Show nameservers for www.example.com
   ansible.builtin.debug:
     msg: '{{ result.results[0].nameserver }}'
-'''
+"""
 
-RETURN = r'''
+RETURN = r"""
 results:
-    description:
-        - Information on the nameservers for every DNS name provided in O(name).
-    returned: always
-    type: list
-    elements: dict
-    contains:
-        name:
-            description:
-                - The DNS name this entry is for.
-            returned: always
-            type: str
-            sample: www.example.com
-        nameservers:
-            description:
-                - A list of nameservers for this DNS name.
-            returned: success
-            type: list
-            elements: str
-            sample:
-                - ns1.example.com
-                - ns2.example.com
-    sample:
-        - name: www.example.com
-          nameservers:
-            - ns1.example.com
-            - ns2.example.com
-        - name: example.org
-          nameservers:
-            - ns1.example.org
-            - ns2.example.org
-            - ns3.example.org
-'''
+  description:
+    - Information on the nameservers for every DNS name provided in O(name).
+  returned: always
+  type: list
+  elements: dict
+  contains:
+    name:
+      description:
+        - The DNS name this entry is for.
+      returned: always
+      type: str
+      sample: www.example.com
+    nameservers:
+      description:
+        - A list of nameservers for this DNS name.
+      returned: success
+      type: list
+      elements: str
+      sample:
+        - ns1.example.com
+        - ns2.example.com
+  sample:
+    - name: www.example.com
+      nameservers:
+        - ns1.example.com
+        - ns2.example.com
+    - name: example.org
+      nameservers:
+        - ns1.example.org
+        - ns2.example.org
+        - ns3.example.org
+"""
 
 from ansible.module_utils.basic import AnsibleModule
 
