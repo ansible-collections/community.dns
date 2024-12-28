@@ -4,6 +4,22 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v2.9.9
+======
+
+Release Summary
+---------------
+
+This is the final community.dns 2.x.y release.
+Please upgrade to community.dns 3.x.y as soon as possible to receive further bugfixes and maintenance updates (PSL updates).
+
+Thanks to everyone who contributed to community.dns 2.x.y releases!
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+
 v2.9.8
 ======
 
