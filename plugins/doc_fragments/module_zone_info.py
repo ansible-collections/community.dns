@@ -12,6 +12,11 @@ class ModuleDocFragment(object):
 
     # Standard files documentation fragment
     DOCUMENTATION = r"""
+attributes:
+  idempotent:
+    support: full
+    details:
+      - This action does not modify state.
 options:
   zone_name:
     description:

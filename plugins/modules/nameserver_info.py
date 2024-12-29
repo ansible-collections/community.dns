@@ -20,6 +20,11 @@ extends_documentation_fragment:
   - community.dns.attributes.info_module
 author:
   - Felix Fontein (@felixfontein)
+attributes:
+  idempotent:
+    support: full
+    details:
+      - This action does not modify state.
 options:
   name:
     description:

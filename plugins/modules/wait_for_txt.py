@@ -27,6 +27,10 @@ attributes:
     support: N/A
     details:
       - This action does not modify state.
+  idempotent:
+    support: full
+    details:
+      - This action does not modify state.
 author:
   - Felix Fontein (@felixfontein)
 options:
