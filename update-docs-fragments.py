@@ -126,7 +126,7 @@ class Dumper(yaml.SafeDumper):
         return True
 
     def increase_indent(self, flow=False, *args, **kwargs):
-        self.best_indent = kwargs.pop('ident_override', 4)
+        self.best_indent = kwargs.pop('ident_override', 2)
         return super().increase_indent(*args, **kwargs)
 
     def expect_block_sequence(self):
@@ -146,7 +146,7 @@ class DocFragment:
             raise DocFragmentParseError(path, f'Error while parsing part {name}: {e}')
 
     def recreate_lines(self):
-        data = yaml.dump(self.data, default_flow_style=False, indent=4, Dumper=Dumper, sort_keys=False)
+        data = yaml.dump(self.data, default_flow_style=False, indent=2, Dumper=Dumper, sort_keys=False)
         self.lines = data.splitlines()
 
     def serialize_lines(self):
