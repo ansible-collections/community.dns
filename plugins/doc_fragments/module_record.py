@@ -17,6 +17,11 @@ class ModuleDocFragment(object):
     DOCUMENTATION = r"""
 description:
   - Records are matched by prefix / record name and value.
+attributes:
+  check_mode:
+    support: full
+  diff_mode:
+    support: full
 options:
   state:
     description:

@@ -17,6 +17,11 @@ description:
   - With the O(prune) option, it is also possible to delete existing record sets that are not mentioned in the module parameters.
     With this, it is possible to synchronize the expected state of a DNS zone with the expected state.
   - It is possible to ignore certain record sets by specifying O(record_sets[].ignore=true) for that record set.
+attributes:
+  check_mode:
+    support: full
+  diff_mode:
+    support: full
 options:
   zone_name:
     description:

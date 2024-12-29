@@ -15,6 +15,11 @@ class ModuleDocFragment(object):
     # NOTE: This document fragment needs to be augmented by ZONE_ID_TYPE in a provider document fragment.
     #       The ZONE_ID_TYPE fragment will provide `choices` for the options.type entry.
     DOCUMENTATION = r"""
+attributes:
+  check_mode:
+    support: full
+  diff_mode:
+    support: full
 options:
   state:
     description:

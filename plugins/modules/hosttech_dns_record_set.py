@@ -34,10 +34,6 @@ extends_documentation_fragment:
 attributes:
   action_group:
     version_added: 2.4.0
-  check_mode:
-    support: full
-  diff_mode:
-    support: full
 
 author:
   - Felix Fontein (@felixfontein)
