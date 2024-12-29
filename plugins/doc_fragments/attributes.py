@@ -25,6 +25,16 @@ attributes:
 """
 
     # Should be used together with the standard fragment
+    IDEMPOTENT_NOT_MODIFY_STATE = r"""
+options: {}
+attributes:
+  idempotent:
+    support: full
+    details:
+      - This action does not modify state.
+"""
+
+    # Should be used together with the standard fragment
     INFO_MODULE = r'''
 options: {}
 attributes:

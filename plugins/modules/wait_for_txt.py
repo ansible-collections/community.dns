@@ -17,6 +17,7 @@ description:
   - Wait for TXT entries with specific values to show up on B(all) authoritative nameservers for the DNS name.
 extends_documentation_fragment:
   - community.dns.attributes
+  - community.dns.attributes.idempotent_not_modify_state
 attributes:
   check_mode:
     support: full
@@ -25,10 +26,6 @@ attributes:
     version_added: 2.4.0
   diff_mode:
     support: N/A
-    details:
-      - This action does not modify state.
-  idempotent:
-    support: full
     details:
       - This action does not modify state.
 author:

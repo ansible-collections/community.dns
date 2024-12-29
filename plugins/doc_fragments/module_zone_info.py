@@ -15,8 +15,6 @@ class ModuleDocFragment(object):
 attributes:
   idempotent:
     support: full
-    details:
-      - This action does not modify state.
 options:
   zone_name:
     description:
