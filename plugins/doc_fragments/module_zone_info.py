@@ -12,6 +12,9 @@ class ModuleDocFragment(object):
 
     # Standard files documentation fragment
     DOCUMENTATION = r"""
+attributes:
+  idempotent:
+    support: full
 options:
   zone_name:
     description:

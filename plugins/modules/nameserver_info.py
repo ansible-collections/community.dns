@@ -18,6 +18,7 @@ description:
 extends_documentation_fragment:
   - community.dns.attributes
   - community.dns.attributes.info_module
+  - community.dns.attributes.idempotent_not_modify_state
 author:
   - Felix Fontein (@felixfontein)
 options:
