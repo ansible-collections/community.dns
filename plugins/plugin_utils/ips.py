@@ -11,8 +11,8 @@ from ansible.module_utils.basic import missing_required_lib
 
 try:
     import ipaddress  # pylint: disable=unused-import
-except ImportError as exc:
-    IPADDRESS_IMPORT_EXC = exc
+except ImportError as exc:  # pragma: no cover
+    IPADDRESS_IMPORT_EXC = exc  # pragma: no cover
 else:
     IPADDRESS_IMPORT_EXC = None
 

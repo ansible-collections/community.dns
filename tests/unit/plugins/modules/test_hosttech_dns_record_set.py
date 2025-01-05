@@ -40,8 +40,8 @@ from .hosttech import (
 try:
     import lxml.etree
     HAS_LXML_ETREE = True
-except ImportError:
-    HAS_LXML_ETREE = False
+except ImportError:  # pragma: no cover
+    HAS_LXML_ETREE = False  # pragma: no cover
 
 
 @pytest.mark.skipif(not HAS_LXML_ETREE, reason="Need lxml.etree for WSDL tests")

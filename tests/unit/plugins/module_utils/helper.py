@@ -24,13 +24,13 @@ class CustomProviderInformation(ProviderInformation):
         return ['A']
 
     def get_zone_id_type(self):
-        return 'str'
+        return 'str'  # pragma: no cover
 
     def get_record_id_type(self):
-        return 'str'
+        return 'str'  # pragma: no cover
 
     def get_record_default_ttl(self):
-        return 300
+        return 300  # pragma: no cover
 
     def txt_record_handling(self):
         return self._txt_record_handling

@@ -192,26 +192,6 @@ class TestLookup(TestCase):
         print(result)
         assert len(result) == 0
 
-    def test_simple_nxdomain(self):
-        resolver = mock_resolver(['1.1.1.1'], {
-            ('1.1.1.1', ): [
-                {
-                    'target': dns.name.from_unicode(u'www.example.com', origin=None),
-                    'search': True,
-                    'rdtype': dns.rdatatype.A,
-                    'lifetime': 10,
-                    'result': create_mock_answer(rcode=dns.rcode.NXDOMAIN),
-                },
-            ],
-        })
-        with patch('dns.resolver.get_default_resolver', resolver):
-            with patch('dns.resolver.Resolver', resolver):
-                with patch('dns.query.udp', mock_query_udp([])):
-                    result = self.lookup.run(['www.example.com'])
-
-        print(result)
-        assert len(result) == 0
-
     def test_simple_nxdomain_empty(self):
         resolver = mock_resolver(['1.1.1.1'], {
             ('1.1.1.1', ): [

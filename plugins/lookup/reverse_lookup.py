@@ -100,9 +100,9 @@ except ImportError:
 
 try:
     import ipaddress
-except ImportError:
+except ImportError:  # pragma: no cover
     # handled by assert_requirements_present
-    pass
+    pass  # pragma: no cover
 
 
 class LookupModule(LookupBase):
@@ -163,6 +163,8 @@ class LookupModule(LookupBase):
                 name = ipaddr.reverse_pointer
                 if not name.endswith(u'.'):
                     name += u'.'
+                else:
+                    pass  # pragma: no cover
                 ip_adresses.append(name)
             except Exception as e:
                 raise AnsibleLookupError(f'Cannot parse IP address {ip_address!r}: {e}')

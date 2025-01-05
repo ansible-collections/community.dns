@@ -151,7 +151,7 @@ class JSONAPIHelper(object):
     def _get(self, url, query=None, must_have_content=True, expected=None):
         full_url = self._build_url(url, query)
         if self._debug:
-            pass
+            pass  # pragma: no cover
             # q.q('Request: GET {0}'.format(full_url))
         headers = self._create_headers()
         content, info = self._request(full_url, headers=headers, method='GET')
@@ -160,7 +160,7 @@ class JSONAPIHelper(object):
     def _post(self, url, data=None, query=None, must_have_content=True, expected=None):
         full_url = self._build_url(url, query)
         if self._debug:
-            pass
+            pass  # pragma: no cover
             # q.q('Request: POST {0}'.format(full_url))
         headers = self._create_headers()
         encoded_data = None
@@ -173,7 +173,7 @@ class JSONAPIHelper(object):
     def _put(self, url, data=None, query=None, must_have_content=True, expected=None):
         full_url = self._build_url(url, query)
         if self._debug:
-            pass
+            pass  # pragma: no cover
             # q.q('Request: PUT {0}'.format(full_url))
         headers = self._create_headers()
         encoded_data = None
@@ -186,7 +186,7 @@ class JSONAPIHelper(object):
     def _delete(self, url, query=None, must_have_content=True, expected=None):
         full_url = self._build_url(url, query)
         if self._debug:
-            pass
+            pass  # pragma: no cover
             # q.q('Request: DELETE {0}'.format(full_url))
         headers = self._create_headers()
         content, info = self._request(full_url, headers=headers, method='DELETE')

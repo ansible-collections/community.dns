@@ -222,7 +222,7 @@ def access_mock(path, can_access=True):
     def access(f, m, *args, **kwargs):
         if to_native(f) == path:
             return can_access
-        return original_access(f, m, *args, **kwargs)
+        return original_access(f, m, *args, **kwargs)  # pragma: no cover
 
     return access
 
