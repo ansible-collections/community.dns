@@ -11,6 +11,8 @@
       {{ query('community.dns.reverse_lookup', '2620:fe::fe') }}
     ansible_both: >-
       {{ query('community.dns.reverse_lookup', '9.9.9.9', '2620:fe::fe') }}
+    ansible_via_other: >-
+      {{ query('community.dns.reverse_lookup', '9.9.9.9', server=['one.one.one.one.', '8.8.8.8']) }}
 
 - name: Check results
   assert:
@@ -18,3 +20,4 @@
       - ansible_a == ['dns9.quad9.net.']
       - ansible_aaaa == ['dns.quad9.net.']
       - ansible_both == ['dns9.quad9.net.', 'dns.quad9.net.']
+      - ansible_via_other == ['dns9.quad9.net.']

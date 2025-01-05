@@ -841,6 +841,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                     'ttl': 3600,
                     'zone_id': '42',
                 },
+                'error': {},
             }),
         ])
 

@@ -8,7 +8,10 @@ from __future__ import annotations
 
 import pytest
 
-from ansible.utils.unsafe_proxy import AnsibleUnsafe
+from ansible.utils.unsafe_proxy import (
+    AnsibleUnsafe,
+    wrap_var as ansible_make_unsafe,
+)
 
 from ansible_collections.community.dns.plugins.plugin_utils.unsafe import (
     make_unsafe,
@@ -94,6 +97,16 @@ def test_make_unsafe(value, check_unsafe_paths, check_safe_paths):
         for elt in check_path:
             obj = obj[elt]
         assert not isinstance(obj, AnsibleUnsafe)
+
+
+def test_make_unsafe_idempotence():
+    assert make_unsafe(None) is None
+
+    unsafe_str = ansible_make_unsafe('{{test}}')
+    assert id(make_unsafe(unsafe_str)) == id(unsafe_str)
+
+    safe_str = '{{test}}'
+    assert id(make_unsafe(safe_str)) != id(safe_str)
 
 
 def test_make_unsafe_dict_key():

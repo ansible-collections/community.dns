@@ -206,7 +206,7 @@ def access_mock(path, can_access=True):
     def access(f, m, *args, **kwargs):
         if to_native(f) == path:
             return can_access
-        return original_access(f, m, *args, **kwargs)
+        return original_access(f, m, *args, **kwargs)  # pragma: no cover
 
     return access
 
@@ -221,6 +221,58 @@ def test_inventory_file_simple(mocker):
     zone_name: example.com
     simple_filters:
       type: A
+    """)}
+
+    open_url = OpenUrlProxy([
+        OpenUrlCall('GET', 200)
+        .expect_header('accept', 'application/json')
+        .expect_header('authorization', 'Bearer foo')
+        .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones', without_query=True)
+        .expect_query_values('query', 'example.com')
+        .return_header('Content-Type', 'application/json')
+        .result_json(HOSTTECH_JSON_ZONE_LIST_RESULT),
+        OpenUrlCall('GET', 200)
+        .expect_header('accept', 'application/json')
+        .expect_header('authorization', 'Bearer foo')
+        .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/42')
+        .return_header('Content-Type', 'application/json')
+        .result_json(HOSTTECH_JSON_ZONE_GET_RESULT_UNSAFE),
+    ])
+    mocker.patch('ansible_collections.community.dns.plugins.module_utils.http.open_url', open_url)
+    mocker.patch('ansible.inventory.manager.unfrackpath', mock_unfrackpath_noop)
+    mocker.patch('os.path.exists', exists_mock(inventory_filename))
+    mocker.patch('os.access', access_mock(inventory_filename))
+    im = InventoryManager(loader=DictDataLoader(inventory_file), sources=inventory_filename)
+
+    open_url.assert_is_done()
+
+    assert im._inventory.hosts
+    assert 'example.com' in im._inventory.hosts
+    assert '*.example.com' in im._inventory.hosts
+    assert 'foo.example.com' not in im._inventory.hosts
+    assert 'bar.example.com' not in im._inventory.hosts
+    assert im._inventory.get_host('example.com') in im._inventory.groups['ungrouped'].hosts
+    assert im._inventory.get_host('*.example.com') in im._inventory.groups['ungrouped'].hosts
+    assert im._inventory.get_host('example.com').get_vars()['ansible_host'] == '1.2.{3.4'
+    assert im._inventory.get_host('*.example.com').get_vars()['ansible_host'] == '1.2.{3.5'
+    assert isinstance(im._inventory.get_host('example.com').get_vars()['ansible_host'], AnsibleUnsafe)
+    assert isinstance(im._inventory.get_host('*.example.com').get_vars()['ansible_host'], AnsibleUnsafe)
+    assert len(im._inventory.groups['ungrouped'].hosts) == 2
+    assert len(im._inventory.groups['all'].hosts) == 0
+
+
+def test_inventory_file_simple_2(mocker):
+    inventory_filename = "test.hosttech_dns.yaml"
+    C.INVENTORY_ENABLED = ['community.dns.hosttech_dns_records']
+    inventory_file = {inventory_filename: textwrap.dedent("""\
+    ---
+    plugin: community.dns.hosttech_dns_records
+    hosttech_token: foo
+    zone_name: example.com
+    filters:
+      - include: ansible_host == '1.2.{3.4'
+      - include: ansible_host == '1.2.{3.5'
+      - exclude: true
     """)}
 
     open_url = OpenUrlProxy([

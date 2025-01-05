@@ -100,29 +100,26 @@ except ImportError:
 
 try:
     import ipaddress
-except ImportError:
+except ImportError:  # pragma: no cover
     # handled by assert_requirements_present
-    pass
+    pass  # pragma: no cover
 
 
 class LookupModule(LookupBase):
     @staticmethod
     def _resolve(resolver, name, rdtype, server_addresses):
         def callback():
-            try:
-                rrset = resolver.resolve(
-                    name,
-                    rdtype=rdtype,
-                    server_addresses=server_addresses,
-                    nxdomain_is_empty=True,
-                    target_can_be_relative=False,
-                    search=False,
-                )
-                if not rrset:
-                    return []
-                return [to_text(data) for data in rrset]
-            except dns.resolver.NXDOMAIN:
-                raise AnsibleLookupError(f'Got NXDOMAIN when querying {name}')
+            rrset = resolver.resolve(
+                name,
+                rdtype=rdtype,
+                server_addresses=server_addresses,
+                nxdomain_is_empty=True,
+                target_can_be_relative=False,
+                search=False,
+            )
+            if not rrset:
+                return []
+            return [to_text(data) for data in rrset]
 
         return guarded_run(
             callback,
@@ -163,6 +160,8 @@ class LookupModule(LookupBase):
                 name = ipaddr.reverse_pointer
                 if not name.endswith(u'.'):
                     name += u'.'
+                else:
+                    pass  # pragma: no cover
                 ip_adresses.append(name)
             except Exception as e:
                 raise AnsibleLookupError(f'Cannot parse IP address {ip_address!r}: {e}')

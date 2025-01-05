@@ -8,9 +8,9 @@ __metaclass__ = type
 
 try:
     import lxml.etree
-except ImportError:
+except ImportError:  # pragma: no cover
     # should be handled in module importing this one
-    pass
+    pass  # pragma: no cover
 
 
 HOSTTECH_WSDL_DEFAULT_ENTRIES = [
@@ -116,7 +116,7 @@ def validate_wsdl_call(conditions):
 
         for condition in conditions:
             if not condition(content, header, body):
-                return False
+                return False  # pragma: no cover
         return True
 
     return predicate
@@ -125,7 +125,7 @@ def validate_wsdl_call(conditions):
 def get_wsdl_value(root, name):
     for auth in root.iter(name):
         return auth
-    raise Exception('Cannot find child "{0}" in node {1}: {2}'.format(name, root, lxml.etree.tostring(root)))
+    raise Exception('Cannot find child "{0}" in node {1}: {2}'.format(name, root, lxml.etree.tostring(root)))  # pragma: no cover
 
 
 def expect_wsdl_authentication(username, password):
@@ -141,7 +141,7 @@ def expect_wsdl_authentication(username, password):
 def check_wsdl_nil(node):
     nil_flag = node.get(lxml.etree.QName('http://www.w3.org/2001/XMLSchema-instance', 'nil'))
     if nil_flag != 'true':
-        print(nil_flag)
+        print(nil_flag)  # pragma: no cover
     assert nil_flag == 'true'
 
 
@@ -151,15 +151,17 @@ def check_wsdl_value(node, value, type=None):
         assert type_text is not None, 'Cannot find type in {0}: {1}'.format(node, lxml.etree.tostring(node))
         i = type_text.find(':')
         if i < 0:
-            ns = None
+            ns = None  # pragma: no cover
         else:
             ns = node.nsmap.get(type_text[:i])
             type_text = type_text[i + 1:]
         if ns != type[0] or type_text != type[1]:
-            print(ns, type[0], type_text, type[1])
+            print(ns, type[0], type_text, type[1])  # pragma: no cover
         assert ns == type[0] and type_text == type[1]
+    else:
+        pass  # pragma: no cover
     if node.text != value:
-        print(node.text, value)
+        print(node.text, value)  # pragma: no cover
     assert node.text == value
 
 
@@ -172,7 +174,7 @@ def find_xml_map_entry(map_root, key_name, allow_non_existing=False):
             return value
     if allow_non_existing:
         return None
-    raise Exception('Cannot find map entry with key "{0}" in node {1}: {2}'.format(key_name, map_root, lxml.etree.tostring(map_root)))
+    raise Exception('Cannot find map entry with key "{0}" in node {1}: {2}'.format(key_name, map_root, lxml.etree.tostring(map_root)))  # pragma: no cover
 
 
 def expect_wsdl_value(path, value, type=None):
@@ -225,7 +227,9 @@ def add_wsdl_dns_record_lines(lines, entry, tag_name):
     if entry[6] is None:
         lines.append('<item><key xsi:type="xsd:string">comment</key><value xsi:nil="true"/></item>')
     else:
-        lines.append('<item><key xsi:type="xsd:string">comment</key><value xsi:type="xsd:string">{value}</value></item>'.format(value=entry[6]))
+        lines.append(  # pragma: no cover
+            '<item><key xsi:type="xsd:string">comment</key><value xsi:type="xsd:string">{value}</value></item>'.format(value=entry[6])
+        )
     if entry[7] is None:
         lines.append('<item><key xsi:type="xsd:string">priority</key><value xsi:nil="true"/></item>')
     else:
@@ -298,18 +302,20 @@ def check_wsdl_record(record_data, entry):
         check_wsdl_value(prefix, entry[3], type=('http://www.w3.org/2001/XMLSchema', 'string'))
     elif prefix is not None:
         check_wsdl_nil(prefix)
+    else:
+        pass  # pragma: no cover
     check_wsdl_value(find_xml_map_entry(record_data, 'target'), entry[4], type=('http://www.w3.org/2001/XMLSchema', 'string'))
     check_wsdl_value(find_xml_map_entry(record_data, 'ttl'), str(entry[5]), type=('http://www.w3.org/2001/XMLSchema', 'int'))
     if entry[6] is None:
         comment = find_xml_map_entry(record_data, 'comment', allow_non_existing=True)
         if comment is not None:
-            check_wsdl_nil(comment)
+            check_wsdl_nil(comment)  # pragma: no cover
     else:
-        check_wsdl_value(find_xml_map_entry(record_data, 'comment'), entry[6], type=('http://www.w3.org/2001/XMLSchema', 'string'))
+        check_wsdl_value(find_xml_map_entry(record_data, 'comment'), entry[6], type=('http://www.w3.org/2001/XMLSchema', 'string'))  # pragma: no cover
     if entry[7] is None:
         check_wsdl_nil(find_xml_map_entry(record_data, 'priority'))
     else:
-        check_wsdl_value(find_xml_map_entry(record_data, 'priority'), entry[7], type=('http://www.w3.org/2001/XMLSchema', 'string'))
+        check_wsdl_value(find_xml_map_entry(record_data, 'priority'), entry[7], type=('http://www.w3.org/2001/XMLSchema', 'string'))  # pragma: no cover
 
 
 def validate_wsdl_add_request(zone, entry):

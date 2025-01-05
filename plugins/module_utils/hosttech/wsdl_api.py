@@ -129,12 +129,12 @@ class HostTechWSDLAPI(ZoneRecordAPI):
 
     def _announce(self, msg):
         if self._debug:
-            pass
+            pass  # pragma: no cover
             # q.q('{0} {1} {2}'.format('=' * 4, msg, '=' * 40))
 
     def _execute(self, command, result_name, acceptable_types):
         if self._debug:
-            pass
+            pass  # pragma: no cover
             # q.q('Request: {0}'.format(command))
         try:
             result = command.execute(debug=self._debug)
@@ -145,11 +145,11 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         res = result.get_result(result_name)
         if isinstance(res, acceptable_types):
             if self._debug:
-                pass
+                pass  # pragma: no cover
                 # q.q('Extracted result: {0} (type {1})'.format(res, type(res)))
             return res
         if self._debug:
-            pass
+            pass  # pragma: no cover
             # q.q('Result: {0}; extracted type {1}'.format(result, type(res)))
         raise DNSAPIError('Result has unexpected type {0} (expecting {1})!'.format(type(res), acceptable_types))
 

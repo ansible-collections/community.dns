@@ -243,7 +243,7 @@ def validate_check(record_values, expected_values, comparison_mode):
     if comparison_mode == 'equals_ordered':
         return record_values == expected_values
 
-    raise Exception('Internal error!')
+    raise Exception('Internal error!')  # pragma: no cover
 
 
 class Waiter(object):

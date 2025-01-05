@@ -66,8 +66,8 @@ class OpenURLHelper(HTTPHelper):
                 result = ''
             try:
                 info.update(dict((k.lower(), v) for k, v in e.info().items()))
-            except Exception:
-                pass
+            except Exception:  # pragma: no cover
+                pass  # pragma: no cover
             info['status'] = e.code
         except NoSSLError as e:
             raise NetworkError('Cannot connect via SSL: {0}'.format(to_native(e)))

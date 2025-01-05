@@ -83,11 +83,13 @@ zone_info:
                 # TODO
         - Unknown.
       type: str
+      returned: if zone was imported
     legacy_ns:
       description:
         - List of nameservers during import.
       type: list
       elements: str
+      returned: if zone was imported
     ns:
       description:
         - List of nameservers the zone should have for using Hetzner's DNS.

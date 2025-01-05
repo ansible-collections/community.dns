@@ -53,9 +53,9 @@ from ansible_collections.community.dns.plugins.plugin_utils.ips import assert_re
 
 try:
     import ipaddress
-except ImportError:
+except ImportError:  # pragma: no cover
     # handled by assert_requirements_present
-    pass
+    pass  # pragma: no cover
 
 
 def reverse_pointer(ip):
@@ -69,6 +69,8 @@ def reverse_pointer(ip):
     res = ipaddr.reverse_pointer
     if not res.endswith(u'.'):
         res += u'.'
+    else:
+        pass  # pragma: no cover
     return res
 
 

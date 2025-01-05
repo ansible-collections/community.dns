@@ -18,6 +18,7 @@ import ansible_collections.community.dns.plugins.module_utils.http  # noqa: F401
 
 from .hetzner import (
     HETZNER_JSON_ZONE_GET_RESULT,
+    HETZNER_JSON_ZONE_GET_RESULT_NO_LEGACY,
     HETZNER_JSON_ZONE_LIST_RESULT,
 )
 
@@ -174,6 +175,43 @@ class TestHetznerDNSZoneInfoJSON(BaseTestModule):
             'modified': '2021-07-09T11:18:37Z',
             'legacy_dns_host': 'string',
             'legacy_ns': ['bar', 'foo'],
+            'ns': ['string'],
+            'owner': 'Example',
+            'paused': True,
+            'permission': 'string',
+            'project': 'string',
+            'registrar': 'string',
+            'status': 'verified',
+            'ttl': 10800,
+            'verified': '2021-07-09T11:18:37Z',
+            'records_count': 0,
+            'is_secondary_dns': True,
+            'txt_verification': {
+                'name': 'string',
+                'token': 'string',
+            },
+        }
+
+    def test_get_id_no_legacy(self, mocker):
+        result = self.run_module_success(mocker, hetzner_dns_zone_info, {
+            'hetzner_token': 'foo',
+            'zone_id': '42',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones/42')
+            .return_header('Content-Type', 'application/json; charset=utf-8')
+            .result_json(HETZNER_JSON_ZONE_GET_RESULT_NO_LEGACY),
+        ])
+        assert result['changed'] is False
+        assert result['zone_id'] == '42'
+        assert result['zone_name'] == 'example.com'
+        assert result['zone_info'] == {
+            'created': '2021-07-09T11:18:37Z',
+            'modified': '2021-07-09T11:18:37Z',
             'ns': ['string'],
             'owner': 'Example',
             'paused': True,
