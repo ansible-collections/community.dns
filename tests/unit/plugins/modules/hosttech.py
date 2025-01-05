@@ -158,6 +158,8 @@ def check_wsdl_value(node, value, type=None):
         if ns != type[0] or type_text != type[1]:
             print(ns, type[0], type_text, type[1])  # pragma: no cover
         assert ns == type[0] and type_text == type[1]
+    else:
+        pass  # pragma: no cover
     if node.text != value:
         print(node.text, value)  # pragma: no cover
     assert node.text == value

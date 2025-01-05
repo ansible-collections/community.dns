@@ -31,6 +31,28 @@ HETZNER_DEFAULT_ZONE = {
     },
 }
 
+HETZNER_DEFAULT_ZONE_NO_LEGACY = {
+    'id': '42',
+    'created': '2021-07-09T11:18:37Z',
+    'modified': '2021-07-09T11:18:37Z',
+    'name': 'example.com',
+    'ns': ['string'],
+    'owner': 'Example',
+    'paused': True,
+    'permission': 'string',
+    'project': 'string',
+    'registrar': 'string',
+    'status': 'verified',
+    'ttl': 10800,
+    'verified': '2021-07-09T11:18:37Z',
+    'records_count': 0,
+    'is_secondary_dns': True,
+    'txt_verification': {
+        'name': 'string',
+        'token': 'string',
+    },
+}
+
 HETZNER_JSON_DEFAULT_ENTRIES = [
     {
         'id': '125',
@@ -137,6 +159,16 @@ HETZNER_JSON_ZONE_LIST_RESULT = {
 
 HETZNER_JSON_ZONE_GET_RESULT = {
     'zone': HETZNER_DEFAULT_ZONE,
+}
+
+HETZNER_JSON_ZONE_LIST_RESULT_NO_LEGACY = {
+    'zones': [
+        HETZNER_DEFAULT_ZONE_NO_LEGACY,
+    ],
+}
+
+HETZNER_JSON_ZONE_GET_RESULT_NO_LEGACY = {
+    'zone': HETZNER_DEFAULT_ZONE_NO_LEGACY,
 }
 
 HETZNER_JSON_ZONE_RECORDS_GET_RESULT = {

@@ -280,6 +280,61 @@ def test_inventory_file_simple(mocker):
     assert len(im._inventory.groups['all'].hosts) == 0
 
 
+def test_inventory_file_simple_2(mocker):
+    inventory_filename = "test.hetzner_dns.yaml"
+    C.INVENTORY_ENABLED = ['community.dns.hetzner_dns_records']
+    inventory_file = {inventory_filename: textwrap.dedent("""\
+    ---
+    plugin: community.dns.hetzner_dns_records
+    hetzner_token: foo
+    zone_name: example.com
+    filters:
+      - include: ansible_host == '1.2.{3.4'
+      - include: ansible_host == '1.2.{3.5'
+      - exclude: true
+    """)}
+
+    open_url = OpenUrlProxy([
+        OpenUrlCall('GET', 200)
+        .expect_header('accept', 'application/json')
+        .expect_header('auth-api-token', 'foo')
+        .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+        .expect_query_values('name', 'example.com')
+        .return_header('Content-Type', 'application/json')
+        .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+        OpenUrlCall('GET', 200)
+        .expect_header('accept', 'application/json')
+        .expect_header('auth-api-token', 'foo')
+        .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+        .expect_query_values('zone_id', '42')
+        .expect_query_values('page', '1')
+        .expect_query_values('per_page', '100')
+        .return_header('Content-Type', 'application/json')
+        .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT_UNSAFE),
+    ])
+    mocker.patch('ansible_collections.community.dns.plugins.module_utils.http.open_url', open_url)
+    mocker.patch('ansible.inventory.manager.unfrackpath', mock_unfrackpath_noop)
+    mocker.patch('os.path.exists', exists_mock(inventory_filename))
+    mocker.patch('os.access', access_mock(inventory_filename))
+    im = InventoryManager(loader=DictDataLoader(inventory_file), sources=inventory_filename)
+
+    open_url.assert_is_done()
+
+    assert im._inventory.hosts
+    assert 'example.com' in im._inventory.hosts
+    assert '*.example.com' in im._inventory.hosts
+    assert 'foo.example.com' not in im._inventory.hosts
+    assert 'bar.example.com' not in im._inventory.hosts
+    assert im._inventory.get_host('example.com') in im._inventory.groups['ungrouped'].hosts
+    assert im._inventory.get_host('*.example.com') in im._inventory.groups['ungrouped'].hosts
+    assert im._inventory.get_host('example.com').get_vars()['ansible_host'] == '1.2.{3.4'
+    assert im._inventory.get_host('*.example.com').get_vars()['ansible_host'] == '1.2.{3.5'
+    assert isinstance(im._inventory.get_host('example.com').get_vars()['ansible_host'], AnsibleUnsafe)
+    assert isinstance(im._inventory.get_host('*.example.com').get_vars()['ansible_host'], AnsibleUnsafe)
+    assert len(im._inventory.groups['ungrouped'].hosts) == 2
+    assert len(im._inventory.groups['all'].hosts) == 0
+
+
 def test_inventory_file_collision(mocker):
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ['community.dns.hetzner_dns_records']

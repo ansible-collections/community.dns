@@ -109,20 +109,17 @@ class LookupModule(LookupBase):
     @staticmethod
     def _resolve(resolver, name, rdtype, server_addresses):
         def callback():
-            try:
-                rrset = resolver.resolve(
-                    name,
-                    rdtype=rdtype,
-                    server_addresses=server_addresses,
-                    nxdomain_is_empty=True,
-                    target_can_be_relative=False,
-                    search=False,
-                )
-                if not rrset:
-                    return []
-                return [to_text(data) for data in rrset]
-            except dns.resolver.NXDOMAIN:
-                raise AnsibleLookupError(f'Got NXDOMAIN when querying {name}')
+            rrset = resolver.resolve(
+                name,
+                rdtype=rdtype,
+                server_addresses=server_addresses,
+                nxdomain_is_empty=True,
+                target_can_be_relative=False,
+                search=False,
+            )
+            if not rrset:
+                return []
+            return [to_text(data) for data in rrset]
 
         return guarded_run(
             callback,

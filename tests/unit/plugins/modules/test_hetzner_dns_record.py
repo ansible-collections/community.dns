@@ -139,7 +139,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .expect_header('auth-api-token', 'foo')
             .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
             .expect_query_values('name', 'example.org')
-            .result_str(''),
+            .result_error('Internal Server Error', body=''),
         ])
 
         assert result['msg'].startswith('Error: GET https://dns.hetzner.com/api/v1/zones?')
