@@ -194,7 +194,7 @@ import time
 try:
     from time import monotonic
 except ImportError:
-    from time import clock as monotonic
+    from time import clock as monotonic  # type: ignore
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.common.text.converters import to_text

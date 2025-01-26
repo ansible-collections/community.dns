@@ -18,7 +18,7 @@ try:
 except ImportError:
     IPADDRESS_IMPORT_EXC = traceback.format_exc()
 else:
-    IPADDRESS_IMPORT_EXC = None
+    IPADDRESS_IMPORT_EXC = None  # type: ignore  # TODO
 
 
 def is_ip_address(server):

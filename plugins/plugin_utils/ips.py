@@ -14,7 +14,7 @@ try:
 except ImportError as exc:  # pragma: no cover
     IPADDRESS_IMPORT_EXC = exc  # pragma: no cover
 else:
-    IPADDRESS_IMPORT_EXC = None
+    IPADDRESS_IMPORT_EXC = None  # type: ignore  # TODO
 
 
 def assert_requirements_present(plugin_name, plugin_type):

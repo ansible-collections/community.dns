@@ -24,7 +24,7 @@ try:
 except ImportError:
     DNSPYTHON_IMPORTERROR = traceback.format_exc()
 else:
-    DNSPYTHON_IMPORTERROR = None
+    DNSPYTHON_IMPORTERROR = None  # type: ignore  # TODO
 
 
 _EDNS_SIZE = 1232  # equals dns.message.DEFAULT_EDNS_PAYLOAD; larger values cause problems with Route53 nameservers for me

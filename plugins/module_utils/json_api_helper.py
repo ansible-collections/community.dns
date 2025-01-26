@@ -12,7 +12,7 @@ __metaclass__ = type
 import json
 import time
 
-from ansible.module_utils.six.moves.urllib.parse import urlencode
+from ansible.module_utils.six.moves.urllib.parse import urlencode  # pylint: disable=import-error
 from ansible.module_utils.common.text.converters import to_native
 
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (

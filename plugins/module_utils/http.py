@@ -14,7 +14,7 @@ from ansible.module_utils import six
 from ansible.module_utils.common.text.converters import to_native
 from ansible.module_utils.six import PY3
 from ansible.module_utils.urls import fetch_url, open_url, NoSSLError, ConnectionError
-import ansible.module_utils.six.moves.urllib.error as urllib_error
+import ansible.module_utils.six.moves.urllib.error as urllib_error  # pylint: disable=import-error
 
 
 class NetworkError(Exception):

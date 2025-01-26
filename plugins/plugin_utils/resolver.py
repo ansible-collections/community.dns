@@ -26,7 +26,7 @@ try:
 except ImportError as exc:
     DNSPYTHON_IMPORTERROR = exc
 else:
-    DNSPYTHON_IMPORTERROR = None
+    DNSPYTHON_IMPORTERROR = None  # type: ignore  # TODO
 
 
 def guarded_run(runner, error_class=AnsibleError, server=None):
