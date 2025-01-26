@@ -6,13 +6,14 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
 from ansible_collections.community.dns.plugins.module_utils.record import (
-    format_ttl,
     DNSRecord,
     format_records_for_output,
+    format_ttl,
 )
 
 

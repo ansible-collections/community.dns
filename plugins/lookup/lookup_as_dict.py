@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+
 DOCUMENTATION = r"""
 name: lookup_as_dict
 author: Felix Fontein (@felixfontein)
@@ -417,28 +418,24 @@ _result:
 
 from ansible.errors import AnsibleLookupError
 from ansible.plugins.lookup import LookupBase
-
-from ansible_collections.community.dns.plugins.module_utils.ips import (
-    is_ip_address,
-)
-
 from ansible_collections.community.dns.plugins.module_utils.dnspython_records import (
     NAME_TO_RDTYPE,
     convert_rdata_to_dict,
 )
-
+from ansible_collections.community.dns.plugins.module_utils.ips import is_ip_address
 from ansible_collections.community.dns.plugins.module_utils.resolver import (
     SimpleResolver,
 )
-
 from ansible_collections.community.dns.plugins.plugin_utils.ips import (
     assert_requirements_present as assert_requirements_present_ipaddress,
 )
-
 from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
     assert_requirements_present as assert_requirements_present_dnspython,
+)
+from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
     guarded_run,
 )
+
 
 try:
     import dns.resolver

@@ -9,16 +9,16 @@ from __future__ import annotations
 from ansible.errors import AnsibleError
 from ansible.module_utils.basic import missing_required_lib
 from ansible.module_utils.common.text.converters import to_native
-
 from ansible_collections.community.dns.plugins.module_utils.resolver import (
     ResolverError,
 )
 
+
 try:
     import dns  # pylint: disable=unused-import
     import dns.exception  # pylint: disable=unused-import
-    import dns.name  # pylint: disable=unused-import
     import dns.message  # pylint: disable=unused-import
+    import dns.name  # pylint: disable=unused-import
     import dns.query  # pylint: disable=unused-import
     import dns.rcode  # pylint: disable=unused-import
     import dns.rdatatype  # pylint: disable=unused-import

@@ -4,23 +4,24 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
+
 __metaclass__ = type
 
 
 import sys
-import pytest
 
-from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import MagicMock
+import pytest
+from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
+    MagicMock,
+)
+
 
 lxmletree = pytest.importorskip("lxml.etree")
 
 from ansible.module_utils.common.text.converters import to_native
-
-from ansible_collections.community.dns.plugins.module_utils.wsdl import (
-    Parser,
-    Composer,
-)
+from ansible_collections.community.dns.plugins.module_utils.wsdl import Composer, Parser
 
 
 def test_composer_generation():

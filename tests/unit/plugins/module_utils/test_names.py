@@ -6,17 +6,17 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
 import pytest
-
 from ansible_collections.community.dns.plugins.module_utils.names import (
-    join_labels,
+    InvalidDomainName,
     is_ascii_label,
+    join_labels,
     normalize_label,
     split_into_labels,
-    InvalidDomainName,
 )
 
 

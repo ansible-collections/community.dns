@@ -9,7 +9,11 @@ from __future__ import annotations
 import os.path
 import re
 
-from ansible_collections.community.dns.plugins.module_utils.names import InvalidDomainName, split_into_labels, normalize_label
+from ansible_collections.community.dns.plugins.module_utils.names import (
+    InvalidDomainName,
+    normalize_label,
+    split_into_labels,
+)
 
 
 _BEGIN_SUBSET_MATCHER = re.compile(r'===BEGIN ([^=]*) DOMAINS===')

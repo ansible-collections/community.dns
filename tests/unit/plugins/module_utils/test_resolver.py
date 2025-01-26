@@ -6,27 +6,29 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
 import pytest
-
-from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import MagicMock, patch
-
 from ansible_collections.community.dns.plugins.module_utils import resolver
-
 from ansible_collections.community.dns.plugins.module_utils.resolver import (
     ResolveDirectlyFromNameServers,
     ResolverError,
     assert_requirements_present,
 )
+from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
+    MagicMock,
+    patch,
+)
 
 from .resolver_helper import (
-    mock_resolver,
-    mock_query_udp,
     create_mock_answer,
     create_mock_response,
+    mock_query_udp,
+    mock_resolver,
 )
+
 
 # We need dnspython
 dns = pytest.importorskip('dns')

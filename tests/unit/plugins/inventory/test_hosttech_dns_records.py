@@ -4,7 +4,6 @@
 
 from __future__ import annotations
 
-
 import os
 import textwrap
 
@@ -12,9 +11,12 @@ from ansible import constants as C
 from ansible.inventory.manager import InventoryManager
 from ansible.module_utils.common.text.converters import to_native
 from ansible.utils.unsafe_proxy import AnsibleUnsafe
-
-from ansible_collections.community.internal_test_tools.tests.unit.mock.path import mock_unfrackpath_noop
-from ansible_collections.community.internal_test_tools.tests.unit.mock.loader import DictDataLoader
+from ansible_collections.community.internal_test_tools.tests.unit.mock.loader import (
+    DictDataLoader,
+)
+from ansible_collections.community.internal_test_tools.tests.unit.mock.path import (
+    mock_unfrackpath_noop,
+)
 from ansible_collections.community.internal_test_tools.tests.unit.utils.open_url_framework import (
     OpenUrlCall,
     OpenUrlProxy,

@@ -6,26 +6,23 @@
 
 # The API documentation can be found here: https://api.ns1.hosttech.eu/api/documentation/
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
+
 __metaclass__ = type
 
 
 from ansible_collections.community.dns.plugins.module_utils.json_api_helper import (
     JSONAPIHelper,
 )
-
-from ansible_collections.community.dns.plugins.module_utils.record import (
-    DNSRecord,
-)
-
+from ansible_collections.community.dns.plugins.module_utils.record import DNSRecord
 from ansible_collections.community.dns.plugins.module_utils.zone import (
     DNSZone,
     DNSZoneWithRecords,
 )
-
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
-    DNSAPIError,
     NOT_PROVIDED,
+    DNSAPIError,
     ZoneRecordAPI,
     filter_records,
 )

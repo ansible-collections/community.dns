@@ -6,26 +6,22 @@
 
 # This module_utils is PRIVATE and should only be used by this collection. Breaking changes can occur any time.
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
+
 __metaclass__ = type
 
 
 import traceback
 
 from ansible.module_utils.common.text.converters import to_text
-
-from ansible_collections.community.dns.plugins.module_utils.argspec import (
-    ArgumentSpec,
-)
-
+from ansible_collections.community.dns.plugins.module_utils.argspec import ArgumentSpec
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
-    DNSAPIError,
     DNSAPIAuthenticationError,
+    DNSAPIError,
 )
 
-from ._utils import (
-    normalize_dns_name,
-)
+from ._utils import normalize_dns_name
 
 
 def create_module_argument_spec(provider_information):
