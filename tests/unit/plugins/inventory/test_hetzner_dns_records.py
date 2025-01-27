@@ -526,7 +526,7 @@ def test_inventory_file_zone_not_found(mocker):
         .expect_header('auth-api-token', 'foo')
         .expect_url('https://dns.hetzner.com/api/v1/zones/23')
         .return_header('Content-Type', 'application/json')
-        .result_json(dict(message="")),
+        .result_json({'message': ''}),
     ])
     mocker.patch('ansible_collections.community.dns.plugins.module_utils.http.open_url', open_url)
     mocker.patch('ansible.inventory.manager.unfrackpath', mock_unfrackpath_noop)
@@ -558,7 +558,7 @@ def test_inventory_file_unauthorized(mocker):
         .expect_header('accept', 'application/json')
         .expect_header('auth-api-token', 'foo')
         .expect_url('https://dns.hetzner.com/api/v1/zones/23')
-        .result_json(dict(message="")),
+        .result_json({'message': ''}),
     ])
     mocker.patch('ansible_collections.community.dns.plugins.module_utils.http.open_url', open_url)
     mocker.patch('ansible.inventory.manager.unfrackpath', mock_unfrackpath_noop)

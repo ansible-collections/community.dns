@@ -109,7 +109,7 @@ def test_list_pagination():
     assert result == [1, 2]
 
     api._get = MagicMock(side_effect=get_2)
-    result = api._list_pagination('https://example.com', 'foobar', query=dict(foo='bar'), block_size=2, accept_404=True)
+    result = api._list_pagination('https://example.com', 'foobar', query={'foo': 'bar'}, block_size=2, accept_404=True)
     assert result == ['bar', 'baz', 'foo']
 
     api._get = MagicMock(side_effect=get_3)
@@ -135,14 +135,14 @@ def test_extract_error_message():
     api = HetznerAPI(MagicMock(), '123')
     assert api._extract_error_message(None) == ''
     assert api._extract_error_message('foo') == ' with data: foo'
-    assert api._extract_error_message(dict()) == ' with data: {}'
-    assert api._extract_error_message(dict(message='')) == " with data: {'message': ''}"
-    assert api._extract_error_message(dict(message='foo')) == ' with message "foo"'
-    assert api._extract_error_message(dict(message='foo', error='')) == ' with message "foo"'
-    assert api._extract_error_message(dict(message='foo', error=dict())) == ' with message "foo"'
-    assert api._extract_error_message(dict(message='foo', error=dict(code=123))) == ' (error code 123) with message "foo"'
-    assert api._extract_error_message(dict(message='foo', error=dict(message='baz'))) == ' with error message "baz" with message "foo"'
-    assert api._extract_error_message(dict(message='foo', error=dict(message='baz', code=123))) == (
+    assert api._extract_error_message({}) == ' with data: {}'
+    assert api._extract_error_message({'message': ''}) == " with data: {'message': ''}"
+    assert api._extract_error_message({'message': 'foo'}) == ' with message "foo"'
+    assert api._extract_error_message({'message': 'foo', 'error': ''}) == ' with message "foo"'
+    assert api._extract_error_message({'message': 'foo', 'error': {}}) == ' with message "foo"'
+    assert api._extract_error_message({'message': 'foo', 'error': {'code': 123}}) == ' (error code 123) with message "foo"'
+    assert api._extract_error_message({'message': 'foo', 'error': {'message': 'baz'}}) == ' with error message "baz" with message "foo"'
+    assert api._extract_error_message({'message': 'foo', 'error': {'message': 'baz', 'code': 123}}) == (
         ' with error message "baz" (error code 123) with message "foo"'
     )
-    assert api._extract_error_message(dict(error=dict(message='baz', code=123))) == ' with error message "baz" (error code 123)'
+    assert api._extract_error_message({'error': {'message': 'baz', 'code': 123}}) == ' with error message "baz" (error code 123)'

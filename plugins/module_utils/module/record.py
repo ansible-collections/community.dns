@@ -51,16 +51,16 @@ from ._utils import (
 
 def create_module_argument_spec(provider_information):
     return ArgumentSpec(
-        argument_spec=dict(
-            state=dict(type='str', choices=['present', 'absent'], required=True),
-            zone_name=dict(type='str', aliases=['zone']),
-            zone_id=dict(type=provider_information.get_zone_id_type()),
-            record=dict(type='str'),
-            prefix=dict(type='str'),
-            ttl=dict(type='int', default=provider_information.get_record_default_ttl()),
-            type=dict(choices=provider_information.get_supported_record_types(), required=True),
-            value=dict(type='str', required=True),
-        ),
+        argument_spec={
+            'state': {'type': 'str', 'choices': ['present', 'absent'], 'required': True},
+            'zone_name': {'type': 'str', 'aliases': ['zone']},
+            'zone_id': {'type': provider_information.get_zone_id_type()},
+            'record': {'type': 'str'},
+            'prefix': {'type': 'str'},
+            'ttl': {'type': 'int', 'default': provider_information.get_record_default_ttl()},
+            'type': {'choices': provider_information.get_supported_record_types(), 'required': True},
+            'value': {'type': 'str', 'required': True},
+        },
         required_one_of=[
             ('zone_name', 'zone_id'),
             ('record', 'prefix'),
@@ -176,15 +176,15 @@ def run_module(module, create_api, provider_information):
                 changed = True
 
         # Compose result
-        result = dict(
-            changed=changed,
-            zone_id=zone_id,
-        )
+        result = {
+            'changed': changed,
+            'zone_id': zone_id,
+        }
         if module._diff:
-            result['diff'] = dict(
-                before=format_record_for_output(before, record_in, prefix, record_converter=record_converter) if before else {},
-                after=format_record_for_output(after, record_in, prefix, record_converter=record_converter) if after else {},
-            )
+            result['diff'] = {
+                'before': format_record_for_output(before, record_in, prefix, record_converter=record_converter) if before else {},
+                'after': format_record_for_output(after, record_in, prefix, record_converter=record_converter) if after else {},
+            }
 
         module.exit_json(**result)
     except DNSConversionError as e:

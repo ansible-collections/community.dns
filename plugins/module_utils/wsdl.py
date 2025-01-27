@@ -140,7 +140,7 @@ def decode_wsdl(node, root_ns, ids):
                 raise WSDLCodingException('Unknown XSD type "{0}"!'.format(ntype))
         elif ns == _NAMESPACE_XML_SOAP:
             if ntype == 'Map':
-                result = dict()
+                result = {}
                 if nid is not None:
                     ids[nid] = result
                 for item in node:
@@ -173,7 +173,7 @@ def decode_wsdl(node, root_ns, ids):
                     ids[nid] = result
                 _decode_wsdl_array(result, node, root_ns, ids)
             else:
-                result = dict()
+                result = {}
                 if nid is not None:
                     ids[nid] = result
                 for item in node:
@@ -211,8 +211,8 @@ class Parser(object):
             if fault_string is not None and fault_string.text:
                 raise WSDLError(origin, fault_code_val, fault_string.text)
             raise WSDLError(origin, fault_code_val, lxml.etree.tostring(fault).decode('utf-8'))
-        self._header = dict()
-        self._body = dict()
+        self._header = {}
+        self._body = {}
         for header in self._root.iter(lxml.etree.QName(self._main_ns, 'Header').text):
             self._parse(self._header, header, 'header')
         for body in self._root.iter(lxml.etree.QName(self._main_ns, 'Body').text):

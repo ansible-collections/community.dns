@@ -144,9 +144,9 @@ class JSONAPIHelper(object):
         raise DNSAPIError('Stopping after {0} failed retries with 429 Too Many Attempts'.format(number_retries))
 
     def _create_headers(self):
-        return dict(
-            accept='application/json',
-        )
+        return {
+            'accept': 'application/json',
+        }
 
     def _get(self, url, query=None, must_have_content=True, expected=None):
         full_url = self._build_url(url, query)

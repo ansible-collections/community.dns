@@ -538,7 +538,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             .expect_header('authorization', 'Bearer foo')
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/23')
             .return_header('Content-Type', 'application/json')
-            .result_json(dict(message="")),
+            .result_json({'message': ''}),
         ])
 
         assert result['msg'] == 'Zone not found'
@@ -563,7 +563,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/23/records', without_query=True)
             .expect_query_values('type', 'MX')
             .return_header('Content-Type', 'application/json')
-            .result_json(dict(message="")),
+            .result_json({'message': ''}),
         ])
 
         assert result['msg'] == 'Zone not found'
@@ -610,7 +610,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             .expect_header('accept', 'application/json')
             .expect_header('authorization', 'Bearer foo')
             .expect_url('https://api.ns1.hosttech.eu/api/user/v1/zones/23')
-            .result_json(dict(message="")),
+            .result_json({'message': ''}),
         ])
 
         assert result['msg'] == 'Cannot authenticate: Forbidden: you do not have access to this resource (HTTP status 403)'

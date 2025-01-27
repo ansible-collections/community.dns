@@ -57,7 +57,7 @@ class TestHetznerDNSZoneInfoJSON(BaseTestModule):
             .expect_header('auth-api-token', 'foo')
             .expect_url('https://dns.hetzner.com/api/v1/zones/23')
             .return_header('Content-Type', 'application/json; charset=utf-8')
-            .result_json(dict(message="")),
+            .result_json({'message': ""}),
         ])
 
         assert result['msg'] == 'Zone not found'
@@ -90,7 +90,7 @@ class TestHetznerDNSZoneInfoJSON(BaseTestModule):
             .expect_header('accept', 'application/json')
             .expect_header('auth-api-token', 'foo')
             .expect_url('https://dns.hetzner.com/api/v1/zones/23')
-            .result_json(dict(message="")),
+            .result_json({'message': ""}),
         ])
 
         assert result['msg'] == 'Cannot authenticate: Forbidden: you do not have access to this resource (HTTP status 403)'

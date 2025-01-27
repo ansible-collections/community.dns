@@ -480,12 +480,12 @@ from ansible_collections.community.dns.plugins.module_utils.dnspython_records im
 
 def main():
     module = AnsibleModule(
-        argument_spec=dict(
-            name=dict(required=True, type='list', elements='str'),
-            type=dict(
-                required=True,
-                type='str',
-                choices=[
+        argument_spec={
+            'name': {'required': True, 'type': 'list', 'elements': 'str'},
+            'type': {
+                'required': True,
+                'type': 'str',
+                'choices': [
                     'A',
                     'ALL',
                     'AAAA',
@@ -512,13 +512,13 @@ def main():
                     'TLSA',
                     'TXT',
                 ],
-            ),
-            query_retry=dict(type='int', default=3),
-            query_timeout=dict(type='float', default=10),
-            always_ask_default_resolver=dict(type='bool', default=True),
-            servfail_retries=dict(type='int', default=0),
-            server=dict(type='list', elements='str'),
-        ),
+            },
+            'query_retry': {'type': 'int', 'default': 3},
+            'query_timeout': {'type': 'float', 'default': 10},
+            'always_ask_default_resolver': {'type': 'bool', 'default': True},
+            'servfail_retries': {'type': 'int', 'default': 0},
+            'server': {'type': 'list', 'elements': 'str'},
+        },
         supports_check_mode=True,
     )
     assert_requirements_present(module)
@@ -558,7 +558,7 @@ def main():
                 ns_result['values'] = values
             result.sort(key=lambda v: v['nameserver'])
 
-    guarded_run(f, module, generate_additional_results=lambda: dict(results=results))
+    guarded_run(f, module, generate_additional_results=lambda: {'results': results})
     module.exit_json(results=results)
 
 

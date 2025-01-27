@@ -12,7 +12,7 @@ class DNSZone(object):
     def __init__(self, name, info=None):
         self.id = None
         self.name = name
-        self.info = info or dict()
+        self.info = info or {}
 
     def __str__(self):
         data = []

@@ -89,11 +89,11 @@ def create_hosttech_provider_information():
 
 def create_hosttech_argument_spec():
     return ArgumentSpec(
-        argument_spec=dict(
-            hosttech_username=dict(type='str'),
-            hosttech_password=dict(type='str', no_log=True),
-            hosttech_token=dict(type='str', no_log=True, aliases=['api_token']),
-        ),
+        argument_spec={
+            'hosttech_username': {'type': 'str'},
+            'hosttech_password': {'type': 'str', 'no_log': True},
+            'hosttech_token': {'type': 'str', 'no_log': True, 'aliases': ['api_token']},
+        },
         required_together=[('hosttech_username', 'hosttech_password')],
         mutually_exclusive=[('hosttech_username', 'hosttech_token')],
     )

@@ -133,7 +133,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         result = []
         page = 1
         while True:
-            query_ = query.copy() if query else dict()
+            query_ = query.copy() if query else {}
             query_['per_page'] = block_size
             query_['page'] = page
             res, info = self._get(url, query_, must_have_content=[200], expected=[200, 404] if accept_404 and page == 1 else [200])
@@ -153,7 +153,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         @param name: The zone name (string)
         @return The zone information (DNSZone), or None if not found
         """
-        result, dummy = self._get('v1/zones', expected=[200, 404], query=dict(name=name))
+        result, dummy = self._get('v1/zones', expected=[200, 404], query={'name': name})
         for zone in result['zones']:
             if zone.get('name') == name:
                 return _create_zone_from_json(zone)
@@ -181,7 +181,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         @param record_type: The record type to filter for, if provided
         @return A list of DNSrecord objects, or None if zone was not found
         """
-        result = self._list_pagination('v1/records', data_key='records', query=dict(zone_id=zone_id), accept_404=True)
+        result = self._list_pagination('v1/records', data_key='records', query={'zone_id': zone_id}, accept_404=True)
         if result is None:
             return None
         return filter_records(
@@ -403,15 +403,15 @@ def create_hetzner_provider_information():
 
 def create_hetzner_argument_spec():
     return ArgumentSpec(
-        argument_spec=dict(
-            hetzner_token=dict(
-                type='str',
-                required=True,
-                no_log=True,
-                aliases=['api_token'],
-                fallback=(env_fallback, ['HETZNER_DNS_TOKEN']),
-            ),
-        ),
+        argument_spec={
+            'hetzner_token': {
+                'type': 'str',
+                'required': True,
+                'no_log': True,
+                'aliases': ['api_token'],
+                'fallback': (env_fallback, ['HETZNER_DNS_TOKEN']),
+            },
+        },
     )
 
 

@@ -316,10 +316,10 @@ class Waiter(object):
             step += 1
 
     def _generate_additional_results(self):
-        return dict(
-            records=self.results,
-            completed=self.finished_checks,
-        )
+        return {
+            'records': self.results,
+            'completed': self.finished_checks,
+        }
 
     def run(self):
         guarded_run(self._run, self.module, generate_additional_results=self._generate_additional_results)
@@ -327,20 +327,20 @@ class Waiter(object):
 
 def main():
     module = AnsibleModule(
-        argument_spec=dict(
-            records=dict(required=True, type='list', elements='dict', options=dict(
-                name=dict(required=True, type='str'),
-                values=dict(required=True, type='list', elements='str'),
-                mode=dict(type='str', default='subset', choices=['subset', 'superset', 'superset_not_empty', 'equals', 'equals_ordered']),
-            )),
-            query_retry=dict(type='int', default=3),
-            query_timeout=dict(type='float', default=10),
-            timeout=dict(type='float'),
-            max_sleep=dict(type='float', default=10),
-            always_ask_default_resolver=dict(type='bool', default=True),
-            servfail_retries=dict(type='int', default=0),
-            server=dict(type='list', elements='str'),
-        ),
+        argument_spec={
+            'records': {'required': True, 'type': 'list', 'elements': 'dict', 'options': {
+                'name': {'required': True, 'type': 'str'},
+                'values': {'required': True, 'type': 'list', 'elements': 'str'},
+                'mode': {'type': 'str', 'default': 'subset', 'choices': ['subset', 'superset', 'superset_not_empty', 'equals', 'equals_ordered']},
+            }},
+            'query_retry': {'type': 'int', 'default': 3},
+            'query_timeout': {'type': 'float', 'default': 10},
+            'timeout': {'type': 'float'},
+            'max_sleep': {'type': 'float', 'default': 10},
+            'always_ask_default_resolver': {'type': 'bool', 'default': True},
+            'servfail_retries': {'type': 'int', 'default': 0},
+            'server': {'type': 'list', 'elements': 'str'},
+        },
         supports_check_mode=True,
     )
     assert_requirements_present(module)
