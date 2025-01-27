@@ -1,0 +1,2 @@
+bugfixes:
+  - "Fix various issues and potential bugs pointed out by linters (https://github.com/ansible-collections/community.dns/pull/242)."

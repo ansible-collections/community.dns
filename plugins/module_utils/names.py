@@ -26,7 +26,6 @@ class InvalidDomainName(Exception):
     '''
     The provided domain name is not valid.
     '''
-    pass
 
 
 def split_into_labels(domain):

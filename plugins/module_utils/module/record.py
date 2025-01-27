@@ -169,7 +169,7 @@ def run_module(module, create_api, provider_information):
         else:
             if existing_record is not None:
                 # Delete record
-                api_record = record_converter.clone_to_api(record)
+                api_record = record_converter.clone_to_api(existing_record)
                 if not module.check_mode:
                     api.delete_record(zone_id, api_record)
                 after = None

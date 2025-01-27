@@ -44,6 +44,9 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
 
     def __init__(self):
         super().__init__()
+        self.provider_information = None
+        self.api = None
+        self.templar = None
 
     @abc.abstractmethod
     def setup_api(self):
@@ -56,9 +59,8 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
         if super().verify_file(path):
             if path.endswith(self.VALID_ENDINGS):
                 return True
-            else:
-                endings = ' or '.join(["'{0}'".format(ending) for ending in self.VALID_ENDINGS])
-                display.debug(f"{self.NAME} inventory filename must end with {endings}")
+            endings = ' or '.join(["'{0}'".format(ending) for ending in self.VALID_ENDINGS])
+            display.debug(f"{self.NAME} inventory filename must end with {endings}")
         return False
 
     def parse(self, inventory, loader, path, cache=False):
@@ -70,8 +72,8 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
 
         try:
             self.setup_api()
-            self.record_converter = RecordConverter(self.provider_information, self)
-            self.record_converter.emit_deprecations(display.deprecated)
+            record_converter = RecordConverter(self.provider_information, self)
+            record_converter.emit_deprecations(display.deprecated)
 
             zone_name = self.get_option('zone_name')
             if self.templar.is_template(zone_name):
@@ -98,8 +100,8 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
             if zone_with_records is None:
                 raise AnsibleError('Zone does not exist')
 
-            self.record_converter.process_multiple_from_api(zone_with_records.records)
-            self.record_converter.process_multiple_to_user(zone_with_records.records)
+            record_converter.process_multiple_from_api(zone_with_records.records)
+            record_converter.process_multiple_to_user(zone_with_records.records)
 
         except DNSConversionError as e:
             raise AnsibleError(f'Error while converting DNS values: {e.error_message}')

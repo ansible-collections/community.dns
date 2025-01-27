@@ -85,7 +85,7 @@ class PublicSuffixList:
                     part = None
                 continue
             if part is None:
-                raise Exception('Internal error: found PSL entry with no part!')
+                raise AssertionError('Internal error: found PSL entry with no part!')
             exception_rule = False
             if line.startswith('!'):
                 exception_rule = True

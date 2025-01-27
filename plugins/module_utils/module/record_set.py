@@ -233,7 +233,7 @@ def run_module(module, create_api, provider_information):
             records_to_create = record_converter.clone_multiple_to_api(to_create)
             result['changed'] = True
             if not module.check_mode:
-                dummy, errors, success = bulk_apply_changes(
+                dummy, errors, dummy2 = bulk_apply_changes(
                     api,
                     zone_id=zone_id,
                     records_to_delete=records_to_delete,

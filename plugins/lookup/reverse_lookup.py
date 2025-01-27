@@ -127,6 +127,10 @@ class LookupModule(LookupBase):
             server=name,
         )
 
+    @staticmethod
+    def _get_resolver(resolver, server):
+        return lambda: resolver.resolve_addresses(server)
+
     def run(self, terms, variables=None, **kwargs):
         assert_requirements_present_dnspython('community.dns.reverse_lookup', 'lookup')
         assert_requirements_present_ipaddress('community.dns.reverse_lookup', 'lookup')
@@ -146,12 +150,11 @@ class LookupModule(LookupBase):
                 if is_ip_address(server):
                     server_addresses.append(server)
                     continue
-                else:
-                    server_addresses.extend(guarded_run(
-                        lambda: resolver.resolve_addresses(server),
-                        error_class=AnsibleLookupError,
-                        server=server,
-                    ))
+                server_addresses.extend(guarded_run(
+                    self._get_resolver(resolver, server),
+                    error_class=AnsibleLookupError,
+                    server=server,
+                ))
 
         ip_adresses = []
         for ip_address in terms:

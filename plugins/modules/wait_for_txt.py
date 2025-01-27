@@ -219,8 +219,8 @@ def lookup(resolver, name):
         if txt is not None:
             for data in txt:
                 line = []
-                for str in data.strings:
-                    line.append(to_text(str))
+                for txtstring in data.strings:
+                    line.append(to_text(txtstring))
                 res.append(u''.join(line))
         result[key] = res
         txts[key] = []
@@ -243,7 +243,7 @@ def validate_check(record_values, expected_values, comparison_mode):
     if comparison_mode == 'equals_ordered':
         return record_values == expected_values
 
-    raise Exception('Internal error!')  # pragma: no cover
+    raise AssertionError('Internal error!')  # pragma: no cover
 
 
 class Waiter(object):
@@ -262,22 +262,22 @@ class Waiter(object):
         self.max_sleep = self.module.params['max_sleep']
 
         self.results = [None] * len(self.records)
-        for index in range(len(self.records)):
+        for index, record in enumerate(self.records):
             self.results[index] = {
-                'name': self.records[index]['name'],
+                'name': record['name'],
                 'done': False,
                 'check_count': 0,
             }
         self.finished_checks = 0
 
     def _run(self):
-        self.start_time = monotonic()
+        start_time = monotonic()
 
         step = 0
         while True:
             has_timeout = False
             if self.timeout is not None:
-                expired = monotonic() - self.start_time
+                expired = monotonic() - start_time
                 has_timeout = expired > self.timeout
 
             done = True
@@ -309,7 +309,7 @@ class Waiter(object):
             wait = min(2 + step * 0.5, self.max_sleep)
             if self.timeout is not None:
                 # Make sure we do not exceed the timeout by much by waiting
-                expired = monotonic() - self.start_time
+                expired = monotonic() - start_time
                 wait = max(min(wait, self.timeout - expired + 0.1), 0.1)
 
             time.sleep(wait)

@@ -39,5 +39,4 @@ def get_prefix(normalized_zone, provider_information, normalized_record=None, pr
         raise DNSAPIError('Record must be in zone')
     if normalized_record == normalized_zone:
         return normalized_record, None
-    else:
-        return normalized_record, normalized_record[:len(normalized_record) - len(normalized_zone) - 1]
+    return normalized_record, normalized_record[:len(normalized_record) - len(normalized_zone) - 1]
