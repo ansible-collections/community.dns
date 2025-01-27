@@ -91,7 +91,7 @@ class TestLookup(TestCase):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp([])):
                     with pytest.raises(AnsibleLookupError) as exc:
-                        result = self.lookup.run(['1.2.3.4'])
+                        self.lookup.run(['1.2.3.4'])
 
         print(exc.value.args[0])
         assert exc.value.args[0] == "Unexpected resolving error for 4.3.2.1.in-addr.arpa.: Error REFUSED while querying ['1.1.1.1']"
@@ -114,7 +114,7 @@ class TestLookup(TestCase):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp([])):
                     with pytest.raises(AnsibleLookupError) as exc:
-                        result = self.lookup.run(['1.2.3.4'])
+                        self.lookup.run(['1.2.3.4'])
 
         print(exc.value.args[0])
         assert exc.value.args[0] == "Unexpected DNS error for 4.3.2.1.in-addr.arpa.: foo"
@@ -125,7 +125,7 @@ class TestLookup(TestCase):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp([])):
                     with pytest.raises(AnsibleLookupError) as exc:
-                        result = self.lookup.run(['1.2.3.4.5'])
+                        self.lookup.run(['1.2.3.4.5'])
 
         print(exc.value.args[0])
         assert exc.value.args[0].startswith("Cannot parse IP address '1.2.3.4.5': ")

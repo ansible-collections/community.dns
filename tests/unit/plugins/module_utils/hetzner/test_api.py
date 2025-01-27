@@ -47,18 +47,17 @@ def test_list_pagination():
                     },
                 },
             }, {'status': 200}
-        else:
-            return {
-                'data': [],
-                'meta': {
-                    'pagination': {
-                        'page': query['page'],
-                        'per_page': 1,
-                        'last_page': 3,
-                        'total_entries': 2,
-                    },
+        return {
+            'data': [],
+            'meta': {
+                'pagination': {
+                    'page': query['page'],
+                    'per_page': 1,
+                    'last_page': 3,
+                    'total_entries': 2,
                 },
-            }, {'status': 200}
+            },
+        }, {'status': 200}
 
     def get_2(url, query=None, must_have_content=True, expected=None):
         assert url == 'https://example.com'
@@ -81,18 +80,17 @@ def test_list_pagination():
                     },
                 },
             }, {'status': 200}
-        else:
-            return {
-                'foobar': ['foo'],
-                'meta': {
-                    'pagination': {
-                        'page': query['page'],
-                        'per_page': 2,
-                        'last_page': 2,
-                        'total_entries': 3,
-                    },
+        return {
+            'foobar': ['foo'],
+            'meta': {
+                'pagination': {
+                    'page': query['page'],
+                    'per_page': 2,
+                    'last_page': 2,
+                    'total_entries': 3,
                 },
-            }, {'status': 200}
+            },
+        }, {'status': 200}
 
     def get_3(url, query=None, must_have_content=True, expected=None):
         assert url == 'https://example.com'

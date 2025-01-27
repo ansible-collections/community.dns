@@ -13,14 +13,14 @@ def format_ttl(ttl):
         return 'default'
     sec = ttl % 60
     ttl //= 60
-    min = ttl % 60
+    mins = ttl % 60
     ttl //= 60
     h = ttl
     result = []
     if h:
         result.append('{0}h'.format(h))
-    if min:
-        result.append('{0}m'.format(min))
+    if mins:
+        result.append('{0}m'.format(mins))
     if sec:
         result.append('{0}s'.format(sec))
     return ' '.join(result)
@@ -69,10 +69,10 @@ def sorted_ttls(ttls):
 
 
 def format_records_for_output(records, record_name, prefix=None, record_converter=None):
-    ttls = sorted_ttls(set([record.ttl for record in records]))
+    ttls = sorted_ttls({record.ttl for record in records})
     entry = {
         'prefix': prefix or '',
-        'type': min([record.type for record in records]) if records else None,
+        'type': min(record.type for record in records) if records else None,
         'ttl': ttls[0] if len(ttls) > 0 else None,
         'value': [record.target for record in records],
     }

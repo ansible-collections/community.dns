@@ -35,11 +35,11 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 )
 
 
-def _create_record_from_encoding(source, type=None):
+def _create_record_from_encoding(source, record_type=None):
     source = dict(source)
     result = DNSRecord()
     result.id = source.pop('id')
-    result.type = source.pop('type', type)
+    result.type = source.pop('type', record_type)
     result.prefix = source.pop('prefix', None)
     ttl = source.pop('ttl')
     result.ttl = int(ttl) if ttl is not None else None
@@ -175,17 +175,17 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         except WSDLNetworkError as exc:
             raise_from(DNSAPIError('Network error while getting zone: {0}'.format(to_native(exc))), exc)
 
-    def get_zone_with_records_by_id(self, id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
+    def get_zone_with_records_by_id(self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
         """
         Given a zone ID, return the zone contents with records if found.
 
-        @param id: The zone ID
+        @param zone_id: The zone ID
         @param prefix: The prefix to filter for, if provided. Since None is a valid value,
                        the special constant NOT_PROVIDED indicates that we are not filtering.
         @param record_type: The record type to filter for, if provided
         @return The zone information with records (DNSZoneWithRecords), or None if not found
         """
-        return self.get_zone_with_records_by_name(str(id), prefix=prefix, record_type=record_type)
+        return self.get_zone_with_records_by_name(str(zone_id), prefix=prefix, record_type=record_type)
 
     def get_zone_records(self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
         """
@@ -210,14 +210,14 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         zone = self.get_zone_with_records_by_name(name)
         return zone.zone if zone else None
 
-    def get_zone_by_id(self, id):
+    def get_zone_by_id(self, zone_id):
         """
         Given a zone ID, return the zone contents if found.
 
-        @param id: The zone ID
+        @param zone_id: The zone ID
         @return The zone information (DNSZone), or None if not found
         """
-        zone = self.get_zone_with_records_by_id(id)
+        zone = self.get_zone_with_records_by_id(zone_id)
         return zone.zone if zone else None
 
     def add_record(self, zone_id, record):

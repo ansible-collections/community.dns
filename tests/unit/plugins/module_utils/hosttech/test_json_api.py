@@ -326,8 +326,7 @@ def test_list_pagination():
         assert query['offset'] in [0, 1, 2]
         if query['offset'] < 2:
             return {'data': [query['offset']]}, {}
-        else:
-            return {'data': []}, {}
+        return {'data': []}, {}
 
     def get_2(url, query=None, must_have_content=True, expected=None):
         assert url == 'https://example.com'
@@ -340,8 +339,7 @@ def test_list_pagination():
         assert query['offset'] in [0, 2]
         if query['offset'] < 2:
             return {'data': ['bar', 'baz']}, {}
-        else:
-            return {'data': ['foo']}, {}
+        return {'data': ['foo']}, {}
 
     api = HostTechJSONAPI(MagicMock(), '123')
 

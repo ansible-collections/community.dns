@@ -189,7 +189,7 @@ def encode_txt_value(value, always_quote=False, use_character_encoding=_SENTINEL
                 buffer = buffer[255:]
             buffer.append(b'\\')
             buffer.append(letter)
-        elif use_character_encoding and not (0x20 <= ord(letter) < 0x7F):
+        elif use_character_encoding and not 0x20 <= ord(letter) < 0x7F:
             # Make sure that we do not split up a decimal sequence over multiple TXT strings
             if len(buffer) + 4 > 255:
                 append(buffer[:255])

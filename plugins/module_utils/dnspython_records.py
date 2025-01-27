@@ -27,7 +27,7 @@ try:
     # The following data has been borrowed from community.general's dig lookup plugin.
     #
     # Note: adding support for RRSIG is hard work. :)
-    for name, rdtype, fields in [
+    for _name, _rdtype, _fields in [
         ('A', dns.rdatatype.A, ['address']),
         ('AAAA', dns.rdatatype.AAAA, ['address']),
         ('CAA', dns.rdatatype.CAA, ['flags', 'tag', 'value']),
@@ -53,9 +53,9 @@ try:
         ('TLSA', dns.rdatatype.TLSA, ['usage', 'selector', 'mtype', 'cert']),
         ('TXT', dns.rdatatype.TXT, ['strings']),
     ]:
-        NAME_TO_RDTYPE[name] = rdtype
-        RDTYPE_TO_NAME[rdtype] = name
-        RDTYPE_TO_FIELDS[rdtype] = fields
+        NAME_TO_RDTYPE[_name] = _rdtype
+        RDTYPE_TO_NAME[_rdtype] = _name
+        RDTYPE_TO_FIELDS[_rdtype] = _fields
 
 except ImportError:
     pass  # has to be handled on application level
@@ -78,7 +78,7 @@ def convert_rdata_to_dict(rdata, to_unicode=True, add_synthetic=True):
     if fields is None:
         raise ValueError('Unsupported record type {rdtype}'.format(rdtype=rdata.rdtype))
     for f in fields:
-        val = rdata.__getattribute__(f)
+        val = getattr(rdata, f)
 
         if isinstance(val, dns.name.Name):
             val = dns.name.Name.to_text(val)

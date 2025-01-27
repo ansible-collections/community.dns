@@ -59,7 +59,7 @@ def test_assert_requirements_present():
 
 
 def test_lookup_ns_names():
-    resolver = mock_resolver(['1.1.1.1'], {})
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {})
     udp_sequence = [
         {
             'query_target': dns.name.from_unicode(u'example.com'),
@@ -93,28 +93,28 @@ def test_lookup_ns_names():
             )]),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                resolver = ResolveDirectlyFromNameServers(always_ask_default_resolver=False)
+                resolver_instance = ResolveDirectlyFromNameServers(always_ask_default_resolver=False)
                 # Use default resolver
-                ns, cname = resolver._lookup_ns_names(dns.name.from_unicode(u'example.com'))
+                ns, cname = resolver_instance._lookup_ns_names(dns.name.from_unicode(u'example.com'))
                 assert ns == ['ns.example.com.', 'ns.example.org.']
                 assert cname is None
                 # Provide nameserver IPs
-                ns, cname = resolver._lookup_ns_names(dns.name.from_unicode(u'example.com'), nameserver_ips=['3.3.3.3', '1.1.1.1'])
+                ns, cname = resolver_instance._lookup_ns_names(dns.name.from_unicode(u'example.com'), nameserver_ips=['3.3.3.3', '1.1.1.1'])
                 assert ns == ['ns.example.com.']
                 assert cname == dns.name.from_unicode(u'foo.bar.')
                 # Provide empty nameserver list
                 with pytest.raises(ResolverError) as exc:
-                    resolver._lookup_ns_names(dns.name.from_unicode(u'example.com'), nameservers=[])
+                    resolver_instance._lookup_ns_names(dns.name.from_unicode(u'example.com'), nameservers=[])
                 assert exc.value.args[0] == 'Have neither nameservers nor nameserver IPs'
 
 
 def test_resolver():
     fake_query = MagicMock()
     fake_query.question = 'Doctor Who?'
-    resolver = mock_resolver(['1.1.1.1'], {
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {
         ('1.1.1.1', ): [
             {
                 'target': 'ns.example.com',
@@ -265,13 +265,13 @@ def test_resolver():
             )]),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                resolver = ResolveDirectlyFromNameServers()
-                assert resolver.resolve_nameservers('example.com', resolve_addresses=True) == ['1:2::3', '2:3::4', '3.3.3.3']
+                resolver_instance = ResolveDirectlyFromNameServers()
+                assert resolver_instance.resolve_nameservers('example.com', resolve_addresses=True) == ['1:2::3', '2:3::4', '3.3.3.3']
                 # www.example.com is a CNAME for example.org
-                rrset_dict = resolver.resolve('www.example.com')
+                rrset_dict = resolver_instance.resolve('www.example.com')
                 assert sorted(rrset_dict.keys()) == ['ns.example.com', 'ns.example.org']
                 rrset = rrset_dict['ns.example.com']
                 assert len(rrset) == 1
@@ -284,16 +284,16 @@ def test_resolver():
                 assert rrset.rdtype == dns.rdatatype.A
                 assert rrset[0].to_text() == u'1.2.3.5'
                 # The following results should be cached:
-                assert resolver.resolve_nameservers('com', resolve_addresses=True) == ['2.2.2.2']
-                assert resolver.resolve_nameservers('org') == ['ns.org']
-                assert resolver.resolve_nameservers('example.com') == ['ns.example.com']
-                assert resolver.resolve_nameservers('example.org') == ['ns.example.com', 'ns.example.org']
+                assert resolver_instance.resolve_nameservers('com', resolve_addresses=True) == ['2.2.2.2']
+                assert resolver_instance.resolve_nameservers('org') == ['ns.org']
+                assert resolver_instance.resolve_nameservers('example.com') == ['ns.example.com']
+                assert resolver_instance.resolve_nameservers('example.org') == ['ns.example.com', 'ns.example.org']
 
 
 def test_timeout_handling():
     fake_query = MagicMock()
     fake_query.question = 'Doctor Who?'
-    resolver = mock_resolver(['1.1.1.1'], {
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {
         ('1.1.1.1', ): [
             {
                 'target': 'ns.example.com',
@@ -390,20 +390,20 @@ def test_timeout_handling():
             )]),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                resolver = ResolveDirectlyFromNameServers()
-                assert resolver.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
+                resolver_instance = ResolveDirectlyFromNameServers()
+                assert resolver_instance.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
                 # The following results should be cached:
-                assert resolver.resolve_nameservers('com') == ['ns.com']
-                assert resolver.resolve_nameservers('com', resolve_addresses=True) == ['2.2.2.2']
-                assert resolver.resolve_nameservers('example.com') == ['ns.example.com']
-                assert resolver.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
+                assert resolver_instance.resolve_nameservers('com') == ['ns.com']
+                assert resolver_instance.resolve_nameservers('com', resolve_addresses=True) == ['2.2.2.2']
+                assert resolver_instance.resolve_nameservers('example.com') == ['ns.example.com']
+                assert resolver_instance.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
 
 
 def test_timeout_failure():
-    resolver = mock_resolver(['1.1.1.1'], {})
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {})
     udp_sequence = [
         {
             'query_target': dns.name.from_unicode(u'com'),
@@ -442,17 +442,17 @@ def test_timeout_failure():
             'raise': dns.exception.Timeout(timeout=4),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                 with pytest.raises(dns.exception.Timeout) as exc:
-                    resolver = ResolveDirectlyFromNameServers()
-                    resolver.resolve_nameservers('example.com')
+                    resolver_instance = ResolveDirectlyFromNameServers()
+                    resolver_instance.resolve_nameservers('example.com')
                 assert exc.value.kwargs['timeout'] == 4
 
 
 def test_error_nameserver_nxdomain_none():
-    resolver = mock_resolver(['1.1.1.1'], {})
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {})
     udp_sequence = [
         {
             'query_target': dns.name.from_unicode(u'com'),
@@ -473,15 +473,15 @@ def test_error_nameserver_nxdomain_none():
             'result': create_mock_response(dns.rcode.NXDOMAIN),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                resolver = ResolveDirectlyFromNameServers()
-                assert resolver.resolve_nameservers('example.com') == []
+                resolver_instance = ResolveDirectlyFromNameServers()
+                assert resolver_instance.resolve_nameservers('example.com') == []
 
 
 def test_error_nameserver_nxdomain_partial_first():
-    resolver = mock_resolver(['1.1.1.1'], {})
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {})
     udp_sequence = [
         {
             'query_target': dns.name.from_unicode(u'com'),
@@ -506,15 +506,15 @@ def test_error_nameserver_nxdomain_partial_first():
             'result': create_mock_response(dns.rcode.NXDOMAIN),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                resolver = ResolveDirectlyFromNameServers()
-                assert resolver.resolve_nameservers('example.com') == ['ns.com']
+                resolver_instance = ResolveDirectlyFromNameServers()
+                assert resolver_instance.resolve_nameservers('example.com') == ['ns.com']
 
 
 def test_error_nameserver_nxdomain_partial_second():
-    resolver = mock_resolver(['1.1.1.1'], {})
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {})
     udp_sequence = [
         {
             'query_target': dns.name.from_unicode(u'com'),
@@ -539,15 +539,15 @@ def test_error_nameserver_nxdomain_partial_second():
             )]),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                resolver = ResolveDirectlyFromNameServers()
-                assert resolver.resolve_nameservers('example.com') == ['ns.com']
+                resolver_instance = ResolveDirectlyFromNameServers()
+                assert resolver_instance.resolve_nameservers('example.com') == ['ns.com']
 
 
 def test_error_nxdomain_ok():
-    resolver = mock_resolver(['1.1.1.1'], {
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {
         ('1.1.1.1', ): [
             {
                 'target': 'ns.com',
@@ -603,18 +603,18 @@ def test_error_nxdomain_ok():
             'result': create_mock_response(dns.rcode.NXDOMAIN),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                resolver = ResolveDirectlyFromNameServers()
-                rrset_dict = resolver.resolve('example.com', nxdomain_is_empty=True)
+                resolver_instance = ResolveDirectlyFromNameServers()
+                rrset_dict = resolver_instance.resolve('example.com', nxdomain_is_empty=True)
                 print(rrset_dict)
                 assert sorted(rrset_dict.keys()) == ['ns.com']
                 assert rrset_dict['ns.com'] == []
 
 
 def test_error_nxdomain_fail():
-    resolver = mock_resolver(['1.1.1.1'], {
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {
         ('1.1.1.1', ): [
             {
                 'target': 'ns.com',
@@ -670,18 +670,18 @@ def test_error_nxdomain_fail():
             'result': create_mock_response(dns.rcode.NXDOMAIN),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                resolver = ResolveDirectlyFromNameServers()
+                resolver_instance = ResolveDirectlyFromNameServers()
                 with pytest.raises(dns.resolver.NXDOMAIN) as exc:
-                    resolver.resolve('example.com', nxdomain_is_empty=False)
+                    resolver_instance.resolve('example.com', nxdomain_is_empty=False)
                 print(exc.value.args[0])
                 assert exc.value.args[0] == 'The DNS query name does not exist: example.com.'
 
 
 def test_error_servfail():
-    resolver = mock_resolver(['1.1.1.1'], {})
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {})
     udp_sequence = [
         {
             'query_target': dns.name.from_unicode(u'com'),
@@ -693,17 +693,17 @@ def test_error_servfail():
             'result': create_mock_response(dns.rcode.SERVFAIL),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                 with pytest.raises(ResolverError) as exc:
-                    resolver = ResolveDirectlyFromNameServers()
-                    resolver.resolve_nameservers('example.com')
+                    resolver_instance = ResolveDirectlyFromNameServers()
+                    resolver_instance.resolve_nameservers('example.com')
                 assert exc.value.args[0] == 'Error SERVFAIL while querying 1.1.1.1 with query get NS for "com."'
 
 
 def test_error_servfail_retry_success():
-    resolver = mock_resolver(['1.1.1.1'], {})
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {})
     udp_sequence = [
         {
             'query_target': dns.name.from_unicode(u'com'),
@@ -737,15 +737,15 @@ def test_error_servfail_retry_success():
             )]),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                resolver = ResolveDirectlyFromNameServers(servfail_retries=2)
-                assert resolver.resolve_nameservers('com') == ['ns.com']
+                resolver_instance = ResolveDirectlyFromNameServers(servfail_retries=2)
+                assert resolver_instance.resolve_nameservers('com') == ['ns.com']
 
 
 def test_error_servfail_retry_fail():
-    resolver = mock_resolver(['1.1.1.1'], {})
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {})
     udp_sequence = [
         {
             'query_target': dns.name.from_unicode(u'com'),
@@ -775,19 +775,19 @@ def test_error_servfail_retry_fail():
             'result': create_mock_response(dns.rcode.SERVFAIL),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                 with pytest.raises(ResolverError) as exc:
-                    resolver = ResolveDirectlyFromNameServers(servfail_retries=2)
-                    resolver.resolve_nameservers('example.com')
+                    resolver_instance = ResolveDirectlyFromNameServers(servfail_retries=2)
+                    resolver_instance.resolve_nameservers('example.com')
                 assert exc.value.args[0] == 'Error SERVFAIL while querying 1.1.1.1 with query get NS for "com."'
 
 
 def test_servfail_handling():
     fake_query = MagicMock()
     fake_query.question = 'Doctor Who?'
-    resolver = mock_resolver(['1.1.1.1'], {
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {
         ('1.1.1.1', ): [
             {
                 'target': 'ns.example.com',
@@ -875,22 +875,22 @@ def test_servfail_handling():
             )]),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                resolver = ResolveDirectlyFromNameServers(servfail_retries=2)
-                assert resolver.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
+                resolver_instance = ResolveDirectlyFromNameServers(servfail_retries=2)
+                assert resolver_instance.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
                 # The following results should be cached:
-                assert resolver.resolve_nameservers('com') == ['ns.com']
-                assert resolver.resolve_nameservers('com', resolve_addresses=True) == ['2.2.2.2']
-                assert resolver.resolve_nameservers('example.com') == ['ns.example.com']
-                assert resolver.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
+                assert resolver_instance.resolve_nameservers('com') == ['ns.com']
+                assert resolver_instance.resolve_nameservers('com', resolve_addresses=True) == ['2.2.2.2']
+                assert resolver_instance.resolve_nameservers('example.com') == ['ns.example.com']
+                assert resolver_instance.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
 
 
 def test_servfail_failing():
     fake_query = MagicMock()
     fake_query.question = 'Doctor Who?'
-    resolver = mock_resolver(['1.1.1.1'], {
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {
         ('1.1.1.1', ): [
             {
                 'target': 'ns.example.com',
@@ -990,22 +990,22 @@ def test_servfail_failing():
             )]),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                resolver = ResolveDirectlyFromNameServers(servfail_retries=2)
-                assert resolver.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
+                resolver_instance = ResolveDirectlyFromNameServers(servfail_retries=2)
+                assert resolver_instance.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
                 # The following results should be cached:
-                assert resolver.resolve_nameservers('com') == ['ns.com']
+                assert resolver_instance.resolve_nameservers('com') == ['ns.com']
                 with pytest.raises(ResolverError) as exc:
-                    resolver.resolve_nameservers('com', resolve_addresses=True)
+                    resolver_instance.resolve_nameservers('com', resolve_addresses=True)
                 assert exc.value.args[0] == "Error SERVFAIL while querying ['1.1.1.1']"
 
 
 def test_no_response():
     fake_query = MagicMock()
     fake_query.question = 'Doctor Who?'
-    resolver = mock_resolver(['1.1.1.1'], {
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {
         ('1.1.1.1', ): [
             {
                 'target': 'ns.example.com',
@@ -1085,21 +1085,21 @@ def test_no_response():
             )]),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                resolver = ResolveDirectlyFromNameServers()
-                rrset_dict = resolver.resolve('example.com')
+                resolver_instance = ResolveDirectlyFromNameServers()
+                rrset_dict = resolver_instance.resolve('example.com')
                 assert sorted(rrset_dict.keys()) == ['ns.example.com', 'ns2.example.com']
                 assert rrset_dict['ns.example.com'] is None
                 assert rrset_dict['ns2.example.com'] is None
                 # Verify nameserver IPs
-                assert resolver.resolve_nameservers('example.com') == ['ns.example.com', 'ns2.example.com']
-                assert resolver.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3', '4.4.4.4', '5.5.5.5']
+                assert resolver_instance.resolve_nameservers('example.com') == ['ns.example.com', 'ns2.example.com']
+                assert resolver_instance.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3', '4.4.4.4', '5.5.5.5']
 
 
 def test_cname_loop():
-    resolver = mock_resolver(['1.1.1.1'], {
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {
         ('1.1.1.1', ): [
             {
                 'target': 'ns.com',
@@ -1214,19 +1214,19 @@ def test_cname_loop():
             )]),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                resolver = ResolveDirectlyFromNameServers()
+                resolver_instance = ResolveDirectlyFromNameServers()
                 with pytest.raises(ResolverError) as exc:
-                    resolver.resolve('www.example.com')
+                    resolver_instance.resolve('www.example.com')
                 assert exc.value.args[0] == 'Found CNAME loop starting at www.example.com'
 
 
 def test_resolver_non_default():
     fake_query = MagicMock()
     fake_query.question = 'Doctor Who?'
-    resolver = mock_resolver(['1.1.1.1'], {
+    mock_resolver_instance = mock_resolver(['1.1.1.1'], {
         ('1.1.1.1', ): [
             {
                 'target': 'ns.com',
@@ -1388,13 +1388,13 @@ def test_resolver_non_default():
             )]),
         },
     ]
-    with patch('dns.resolver.get_default_resolver', resolver):
-        with patch('dns.resolver.Resolver', resolver):
+    with patch('dns.resolver.get_default_resolver', mock_resolver_instance):
+        with patch('dns.resolver.Resolver', mock_resolver_instance):
             with patch('dns.query.udp', mock_query_udp(udp_sequence)):
-                resolver = ResolveDirectlyFromNameServers(always_ask_default_resolver=False)
-                assert resolver.resolve_nameservers('example.com') == ['ns.example.com']
+                resolver_instance = ResolveDirectlyFromNameServers(always_ask_default_resolver=False)
+                assert resolver_instance.resolve_nameservers('example.com') == ['ns.example.com']
                 # www.example.com is a CNAME for example.org
-                rrset_dict = resolver.resolve('www.example.com')
+                rrset_dict = resolver_instance.resolve('www.example.com')
                 assert sorted(rrset_dict.keys()) == ['ns.example.com', 'ns.example.org']
                 rrset = rrset_dict['ns.example.com']
                 assert len(rrset) == 1
@@ -1407,8 +1407,8 @@ def test_resolver_non_default():
                 assert rrset.rdtype == dns.rdatatype.A
                 assert rrset[0].to_text() == u'1.2.3.4'
                 # The following results should be cached:
-                assert resolver.resolve_nameservers('com') == ['ns.com']
-                print(resolver.resolve_nameservers('example.com', resolve_addresses=True))
-                assert resolver.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
-                print(resolver.resolve_nameservers('example.org', resolve_addresses=True))
-                assert resolver.resolve_nameservers('example.org', resolve_addresses=True) == ['3.3.3.3', '4.4.4.4']
+                assert resolver_instance.resolve_nameservers('com') == ['ns.com']
+                print(resolver_instance.resolve_nameservers('example.com', resolve_addresses=True))
+                assert resolver_instance.resolve_nameservers('example.com', resolve_addresses=True) == ['3.3.3.3']
+                print(resolver_instance.resolve_nameservers('example.org', resolve_addresses=True))
+                assert resolver_instance.resolve_nameservers('example.org', resolve_addresses=True) == ['3.3.3.3', '4.4.4.4']
