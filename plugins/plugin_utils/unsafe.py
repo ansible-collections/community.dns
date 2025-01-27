@@ -22,9 +22,9 @@ def make_unsafe(value):
         return value
 
     if isinstance(value, Mapping):
-        return dict((make_unsafe(key), make_unsafe(val)) for key, val in value.items())
+        return {make_unsafe(key): make_unsafe(val) for key, val in value.items()}
     if isinstance(value, Set):
-        return set(make_unsafe(elt) for elt in value)
+        return {make_unsafe(elt) for elt in value}
     if is_sequence(value):
         return type(value)(make_unsafe(elt) for elt in value)
     if isinstance(value, bytes):

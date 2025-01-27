@@ -55,7 +55,7 @@ class OpenURLHelper(HTTPHelper):
         try:
             req = open_url(url, method=method, headers=headers, data=data, timeout=timeout)
             result = req.read()
-            info.update(dict((k.lower(), v) for k, v in req.info().items()))
+            info.update({k.lower(): v for k, v in req.info().items()})
             info['status'] = req.code
             info['url'] = req.geturl()
             req.close()
@@ -65,7 +65,7 @@ class OpenURLHelper(HTTPHelper):
             except AttributeError:
                 result = ''
             try:
-                info.update(dict((k.lower(), v) for k, v in e.info().items()))
+                info.update({k.lower(): v for k, v in e.info().items()})
             except Exception:  # pragma: no cover
                 pass  # pragma: no cover
             info['status'] = e.code

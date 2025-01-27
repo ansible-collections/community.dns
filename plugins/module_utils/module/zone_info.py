@@ -30,10 +30,10 @@ from ._utils import (
 
 def create_module_argument_spec(provider_information):
     return ArgumentSpec(
-        argument_spec=dict(
-            zone_name=dict(type='str', aliases=['zone']),
-            zone_id=dict(type=provider_information.get_zone_id_type()),
-        ),
+        argument_spec={
+            'zone_name': {'type': 'str', 'aliases': ['zone']},
+            'zone_id': {'type': provider_information.get_zone_id_type()},
+        },
         required_one_of=[
             ('zone_name', 'zone_id'),
         ],

@@ -78,13 +78,13 @@ def _create_record_from_json(source, record_type=None):
 def _create_zone_from_json(source):
     zone = DNSZone(source['name'])
     zone.id = source['id']
-    zone.info = dict(
-        dnssec=source['dnssec'],
-        dnssec_email=source.get('dnssec_email'),
-        ds_records=source.get('ds_records'),
-        email=source.get('email'),
-        ttl=source['ttl'],
-    )
+    zone.info = {
+        'dnssec': source['dnssec'],
+        'dnssec_email': source.get('dnssec_email'),
+        'ds_records': source.get('ds_records'),
+        'email': source.get('email'),
+        'ttl': source['ttl'],
+    }
     return zone
 
 
@@ -202,16 +202,16 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         return ' with data: {0}'.format(result)
 
     def _create_headers(self):
-        return dict(
-            accept='application/json',
-            authorization='Bearer {token}'.format(token=self._token),
-        )
+        return {
+            'accept': 'application/json',
+            'authorization': 'Bearer {token}'.format(token=self._token),
+        }
 
     def _list_pagination(self, url, query=None, block_size=100):
         result = []
         offset = 0
         while True:
-            query_ = query.copy() if query else dict()
+            query_ = query.copy() if query else {}
             query_['limit'] = block_size
             query_['offset'] = offset
             res, dummy = self._get(url, query_, must_have_content=True, expected=[200])
@@ -245,7 +245,7 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         @param record_type: The record type to filter for, if provided
         @return The zone information with records (DNSZoneWithRecords), or None if not found
         """
-        result = self._list_pagination('user/v1/zones', query=dict(query=name))
+        result = self._list_pagination('user/v1/zones', query={'query': name})
         for zone in result:
             if zone['name'] == name:
                 result, dummy = self._get('user/v1/zones/{0}'.format(zone['id']), expected=[200])
@@ -262,7 +262,7 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         @param record_type: The record type to filter for, if provided
         @return A list of DNSrecord objects, or None if zone was not found
         """
-        query = dict()
+        query = {}
         if record_type is not NOT_PROVIDED:
             query['type'] = record_type.upper()
         result, info = self._get('user/v1/zones/{0}/records'.format(zone_id), query=query, expected=[200, 404], must_have_content=[200])
@@ -281,7 +281,7 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         @param name: The zone name (string)
         @return The zone information (DNSZone), or None if not found
         """
-        result = self._list_pagination('user/v1/zones', query=dict(query=name))
+        result = self._list_pagination('user/v1/zones', query={'query': name})
         for zone in result:
             if zone['name'] == name:
                 # We cannot simply return `_create_zone_from_json(zone)`, since this contains less information!

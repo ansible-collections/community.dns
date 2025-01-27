@@ -54,28 +54,28 @@ from ._utils import (
 
 def create_module_argument_spec(provider_information):
     return ArgumentSpec(
-        argument_spec=dict(
-            zone_name=dict(type='str', aliases=['zone']),
-            zone_id=dict(type=provider_information.get_zone_id_type()),
-            prune=dict(type='bool', default=False),
-            record_sets=dict(
-                type='list',
-                elements='dict',
-                required=True,
-                aliases=['records'],
-                options=dict(
-                    record=dict(type='str'),
-                    prefix=dict(type='str'),
-                    ttl=dict(type='int', default=provider_information.get_record_default_ttl()),
-                    type=dict(choices=provider_information.get_supported_record_types(), required=True),
-                    value=dict(type='list', elements='str'),
-                    ignore=dict(type='bool', default=False),
-                ),
-                required_if=[('ignore', False, ['value'])],
-                required_one_of=[('record', 'prefix')],
-                mutually_exclusive=[('record', 'prefix')],
-            ),
-        ),
+        argument_spec={
+            'zone_name': {'type': 'str', 'aliases': ['zone']},
+            'zone_id': {'type': provider_information.get_zone_id_type()},
+            'prune': {'type': 'bool', 'default': False},
+            'record_sets': {
+                'type': 'list',
+                'elements': 'dict',
+                'required': True,
+                'aliases': ['records'],
+                'options': {
+                    'record': {'type': 'str'},
+                    'prefix': {'type': 'str'},
+                    'ttl': {'type': 'int', 'default': provider_information.get_record_default_ttl()},
+                    'type': {'choices': provider_information.get_supported_record_types(), 'required': True},
+                    'value': {'type': 'list', 'elements': 'str'},
+                    'ignore': {'type': 'bool', 'default': False},
+                },
+                'required_if': [('ignore', False, ['value'])],
+                'required_one_of': [('record', 'prefix')],
+                'mutually_exclusive': [('record', 'prefix')],
+            },
+        },
         required_one_of=[
             ('zone_name', 'zone_id'),
         ],
@@ -115,7 +115,7 @@ def run_module(module, create_api, provider_information):
         # Process parameters
         prune = module.params['prune']
         record_sets = module.params['record_sets']
-        record_sets_dict = dict()
+        record_sets_dict = {}
         for index, record_set in enumerate(record_sets):
             record_set = record_set.copy()
             record_name = record_set['record']
@@ -137,7 +137,7 @@ def run_module(module, create_api, provider_information):
             record_sets_dict[key] = (index, record_set)
 
         # Group existing record sets
-        existing_record_sets = dict()
+        existing_record_sets = {}
         for record in zone_records:
             key = (record.prefix, record.type)
             if key not in existing_record_sets:
@@ -145,8 +145,8 @@ def run_module(module, create_api, provider_information):
             existing_record_sets[key].append(record)
 
         # Data required for diff
-        old_record_sets = dict([(k, [r.clone() for r in v]) for k, v in existing_record_sets.items()])
-        new_record_sets = dict([(k, list(v)) for k, v in existing_record_sets.items()])
+        old_record_sets = {k: [r.clone() for r in v] for k, v in existing_record_sets.items()}
+        new_record_sets = {k: list(v) for k, v in existing_record_sets.items()}
 
         # Create action lists
         to_create = []
@@ -202,10 +202,10 @@ def run_module(module, create_api, provider_information):
                     new_record_sets[key].remove(record)
 
         # Compose result
-        result = dict(
-            changed=False,
-            zone_id=zone_id,
-        )
+        result = {
+            'changed': False,
+            'zone_id': zone_id,
+        }
 
         # Apply changes
         if to_create or to_delete or to_change:
@@ -240,20 +240,20 @@ def run_module(module, create_api, provider_information):
                 ]
                 return sorted(items)
 
-            result['diff'] = dict(
-                before=dict(
-                    record_sets=[
+            result['diff'] = {
+                'before': {
+                    'record_sets': [
                         format_records_for_output(record_set, record_name, prefix, record_converter=record_converter)
                         for record_name, type, prefix, record_set in sort_items(old_record_sets)
                     ],
-                ),
-                after=dict(
-                    record_sets=[
+                },
+                'after': {
+                    'record_sets': [
                         format_records_for_output(record_set, record_name, prefix, record_converter=record_converter)
                         for record_name, type, prefix, record_set in sort_items(new_record_sets)
                     ],
-                ),
-            )
+                },
+            }
 
         module.exit_json(**result)
     except DNSConversionError as e:

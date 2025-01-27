@@ -17,7 +17,7 @@ from ansible_collections.community.dns.plugins.module_utils.argspec import (
 def test_argspec():
     empty = ArgumentSpec()
     non_empty = ArgumentSpec(
-        argument_spec=dict(test=dict(type='str'), foo=dict()),
+        argument_spec={'test': {'type': 'str'}, 'foo': {}},
         required_together=[('test', 'foo')],
         required_if=[('test', 'bar', ['foo'])],
         required_one_of=[('test', 'foo')],

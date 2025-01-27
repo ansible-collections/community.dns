@@ -34,9 +34,9 @@ def test_extract_error_message():
     api = JSONAPIHelper(MagicMock(), '123', 'https://example.com')
     assert api._extract_error_message(None) == ''
     assert api._extract_error_message('foo') == ' with data: foo'
-    assert api._extract_error_message(dict()) == ' with data: {}'
-    assert api._extract_error_message(dict(message='')) == " with data: {'message': ''}"
-    assert api._extract_error_message(dict(message='foo')) == " with data: {'message': 'foo'}"
+    assert api._extract_error_message({}) == ' with data: {}'
+    assert api._extract_error_message({'message': ''}) == " with data: {'message': ''}"
+    assert api._extract_error_message({'message': 'foo'}) == " with data: {'message': 'foo'}"
 
 
 def test_validate():
@@ -51,45 +51,45 @@ def test_process_json_result():
     http_helper = MagicMock()
     api = JSONAPIHelper(http_helper, '123', 'https://example.com')
     with pytest.raises(DNSAPIError) as exc:
-        api._process_json_result(content=None, info=dict(status=401, url='https://example.com'))
+        api._process_json_result(content=None, info={'status': 401, 'url': 'https://example.com'})
     assert exc.value.args[0] == 'Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
     with pytest.raises(DNSAPIError) as exc:
-        api._process_json_result(content='{"message": ""}'.encode('utf-8'), info=dict(status=401, url='https://example.com'))
+        api._process_json_result(content='{"message": ""}'.encode('utf-8'), info={'status': 401, 'url': 'https://example.com'})
     assert exc.value.args[0] == 'Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
     with pytest.raises(DNSAPIError) as exc:
-        api._process_json_result(content='{"message": "foo"}'.encode('utf-8'), info=dict(status=401, url='https://example.com'))
+        api._process_json_result(content='{"message": "foo"}'.encode('utf-8'), info={'status': 401, 'url': 'https://example.com'})
     assert exc.value.args[0] == 'Unauthorized: the authentication parameters are incorrect (HTTP status 401): foo'
     with pytest.raises(DNSAPIError) as exc:
-        api._process_json_result(content=None, info=dict(status=403, url='https://example.com'))
+        api._process_json_result(content=None, info={'status': 403, 'url': 'https://example.com'})
     assert exc.value.args[0] == 'Forbidden: you do not have access to this resource (HTTP status 403)'
     with pytest.raises(DNSAPIError) as exc:
-        api._process_json_result(content='{"message": ""}'.encode('utf-8'), info=dict(status=403, url='https://example.com'))
+        api._process_json_result(content='{"message": ""}'.encode('utf-8'), info={'status': 403, 'url': 'https://example.com'})
     assert exc.value.args[0] == 'Forbidden: you do not have access to this resource (HTTP status 403)'
     with pytest.raises(DNSAPIError) as exc:
-        api._process_json_result(content='{"message": "foo"}'.encode('utf-8'), info=dict(status=403, url='https://example.com'))
+        api._process_json_result(content='{"message": "foo"}'.encode('utf-8'), info={'status': 403, 'url': 'https://example.com'})
     assert exc.value.args[0] == 'Forbidden: you do not have access to this resource (HTTP status 403): foo'
 
-    info = dict(status=200, url='https://example.com')
+    info = {'status': 200, 'url': 'https://example.com'}
     info['content-TYPE'] = 'application/json'
     with pytest.raises(DNSAPIError) as exc:
         api._process_json_result(content='not JSON'.encode('utf-8'), info=info)
     assert exc.value.args[0] == 'GET https://example.com did not yield JSON data, but HTTP status code 200 with data: not JSON'
 
-    info = dict(status=200, url='https://example.com')
+    info = {'status': 200, 'url': 'https://example.com'}
     info['Content-type'] = 'application/json'
     r, i = api._process_json_result(content='not JSON'.encode('utf-8'), info=info, must_have_content=False)
     assert r is None
-    info = dict(status=200, url='https://example.com')
+    info = {'status': 200, 'url': 'https://example.com'}
     info['Content-type'] = 'application/json'
     assert i == info
 
-    info = dict(status=404, url='https://example.com')
+    info = {'status': 404, 'url': 'https://example.com'}
     info['content-type'] = 'application/json'
     with pytest.raises(DNSAPIError) as exc:
         api._process_json_result(content='{}'.encode('utf-8'), info=info)
     assert exc.value.args[0] == 'Expected successful HTTP status for GET https://example.com, but got HTTP status 404 (Not found) with data: {}'
 
-    info = dict(status=404, url='https://example.com')
+    info = {'status': 404, 'url': 'https://example.com'}
     info['content-type'] = 'application/json'
     with pytest.raises(DNSAPIError) as exc:
         api._process_json_result(content='{}'.encode('utf-8'), info=info, expected=[200, 201])

@@ -22,16 +22,16 @@ def create_bulk_operations_argspec(provider_information):
         return ArgumentSpec()
 
     return ArgumentSpec(
-        argument_spec=dict(
-            bulk_operation_threshold=dict(type='int', default=2),
-        ),
+        argument_spec={
+            'bulk_operation_threshold': {'type': 'int', 'default': 2},
+        },
     )
 
 
 def create_record_transformation_argspec():
     return ArgumentSpec(
-        argument_spec=dict(
-            txt_transformation=dict(type='str', default='unquoted', choices=['api', 'quoted', 'unquoted']),
-            txt_character_encoding=dict(type='str', default='decimal', choices=['decimal', 'octal']),
-        ),
+        argument_spec={
+            'txt_transformation': {'type': 'str', 'default': 'unquoted', 'choices': ['api', 'quoted', 'unquoted']},
+            'txt_character_encoding': {'type': 'str', 'default': 'decimal', 'choices': ['decimal', 'octal']},
+        },
     )
