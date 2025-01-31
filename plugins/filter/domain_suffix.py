@@ -6,7 +6,9 @@
 
 from __future__ import annotations
 
-from ansible_collections.community.dns.plugins.plugin_utils.public_suffix import PUBLIC_SUFFIX_LIST
+from ansible_collections.community.dns.plugins.plugin_utils.public_suffix import (
+    PUBLIC_SUFFIX_LIST,
+)
 
 
 def _remove_suffix(dns_name, suffix, keep_trailing_period):

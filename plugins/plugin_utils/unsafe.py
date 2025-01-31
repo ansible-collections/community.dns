@@ -8,10 +8,9 @@ import re
 
 from ansible.module_utils.common._collections_compat import Mapping, Set
 from ansible.module_utils.common.collections import is_sequence
-from ansible.utils.unsafe_proxy import (
-    AnsibleUnsafe,
-    wrap_var as _make_unsafe,
-)
+from ansible.utils.unsafe_proxy import AnsibleUnsafe
+from ansible.utils.unsafe_proxy import wrap_var as _make_unsafe
+
 
 _RE_TEMPLATE_CHARS = re.compile(u'[{}]')
 _RE_TEMPLATE_CHARS_BYTES = re.compile(b'[{}]')

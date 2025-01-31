@@ -5,16 +5,13 @@
 
 from __future__ import annotations
 
-
 import pytest
-
 from ansible.errors import AnsibleError
-
 from ansible_collections.community.dns.plugins.plugin_utils import ips
-
 from ansible_collections.community.dns.plugins.plugin_utils.ips import (
     assert_requirements_present,
 )
+
 
 # We need ipaddress
 ipaddress = pytest.importorskip('ipaddress')

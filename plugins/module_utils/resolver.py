@@ -5,6 +5,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from __future__ import absolute_import, division, print_function
+
+
 __metaclass__ = type
 
 import traceback
@@ -12,11 +14,12 @@ import traceback
 from ansible.module_utils.basic import missing_required_lib
 from ansible.module_utils.common.text.converters import to_native, to_text
 
+
 try:
     import dns
     import dns.exception
-    import dns.name
     import dns.message
+    import dns.name
     import dns.query
     import dns.rcode
     import dns.rdatatype
@@ -24,7 +27,7 @@ try:
 except ImportError:
     DNSPYTHON_IMPORTERROR = traceback.format_exc()
 else:
-    DNSPYTHON_IMPORTERROR = None
+    DNSPYTHON_IMPORTERROR = None  # type: ignore  # TODO
 
 
 _EDNS_SIZE = 1232  # equals dns.message.DEFAULT_EDNS_PAYLOAD; larger values cause problems with Route53 nameservers for me

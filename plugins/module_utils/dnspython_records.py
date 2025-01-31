@@ -7,6 +7,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from __future__ import absolute_import, division, print_function
+
+
 __metaclass__ = type
 
 
@@ -14,6 +16,7 @@ import base64
 
 from ansible.module_utils.common.text.converters import to_bytes, to_native, to_text
 from ansible.module_utils.six import binary_type
+
 
 NAME_TO_RDTYPE = {}
 RDTYPE_TO_NAME = {}

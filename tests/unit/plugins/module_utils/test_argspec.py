@@ -6,12 +6,11 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
-from ansible_collections.community.dns.plugins.module_utils.argspec import (
-    ArgumentSpec,
-)
+from ansible_collections.community.dns.plugins.module_utils.argspec import ArgumentSpec
 
 
 def test_argspec():

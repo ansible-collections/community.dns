@@ -6,27 +6,20 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
 import pytest
-
 from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
     DNSConversionError,
 )
-
 from ansible_collections.community.dns.plugins.module_utils.conversion.converter import (
     RecordConverter,
 )
+from ansible_collections.community.dns.plugins.module_utils.record import DNSRecord
 
-from ansible_collections.community.dns.plugins.module_utils.record import (
-    DNSRecord,
-)
-
-from ..helper import (
-    CustomProviderInformation,
-    CustomProvideOptions,
-)
+from ..helper import CustomProvideOptions, CustomProviderInformation
 
 
 def test_user_api():

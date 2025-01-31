@@ -5,20 +5,23 @@
 
 from __future__ import annotations
 
-
 import pytest
-
 from ansible.errors import AnsibleLookupError
 from ansible.plugins.loader import lookup_loader
-
-from ansible_collections.community.internal_test_tools.tests.unit.compat.unittest import TestCase
-from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import patch, MagicMock
+from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
+    MagicMock,
+    patch,
+)
+from ansible_collections.community.internal_test_tools.tests.unit.compat.unittest import (
+    TestCase,
+)
 
 from ..module_utils.resolver_helper import (
-    mock_resolver,
-    mock_query_udp,
     create_mock_answer,
+    mock_query_udp,
+    mock_resolver,
 )
+
 
 # We need dnspython
 dns = pytest.importorskip('dns')

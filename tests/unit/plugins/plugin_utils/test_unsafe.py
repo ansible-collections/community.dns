@@ -5,17 +5,10 @@
 
 from __future__ import annotations
 
-
 import pytest
-
-from ansible.utils.unsafe_proxy import (
-    AnsibleUnsafe,
-    wrap_var as ansible_make_unsafe,
-)
-
-from ansible_collections.community.dns.plugins.plugin_utils.unsafe import (
-    make_unsafe,
-)
+from ansible.utils.unsafe_proxy import AnsibleUnsafe
+from ansible.utils.unsafe_proxy import wrap_var as ansible_make_unsafe
+from ansible_collections.community.dns.plugins.plugin_utils.unsafe import make_unsafe
 
 
 TEST_MAKE_UNSAFE = [

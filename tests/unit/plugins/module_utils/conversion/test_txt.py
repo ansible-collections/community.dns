@@ -6,17 +6,16 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
 import warnings
 
 import pytest
-
 from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
     DNSConversionError,
 )
-
 from ansible_collections.community.dns.plugins.module_utils.conversion.txt import (
     _get_utf8_length,
     decode_txt_value,

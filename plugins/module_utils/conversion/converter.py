@@ -4,7 +4,9 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
+
 __metaclass__ = type
 
 
@@ -12,19 +14,14 @@ import warnings
 
 from ansible.module_utils.common.text.converters import to_text
 from ansible.module_utils.six import raise_from
-
-from ansible_collections.community.dns.plugins.module_utils.record import (
-    DNSRecord,
-)
-
 from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
     DNSConversionError,
 )
-
 from ansible_collections.community.dns.plugins.module_utils.conversion.txt import (
     decode_txt_value,
     encode_txt_value,
 )
+from ansible_collections.community.dns.plugins.module_utils.record import DNSRecord
 
 
 class RecordConverter(object):

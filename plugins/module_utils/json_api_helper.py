@@ -5,20 +5,24 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
+
 __metaclass__ = type
 
 
 import json
 import time
 
-from ansible.module_utils.six.moves.urllib.parse import urlencode
 from ansible.module_utils.common.text.converters import to_native
-
-from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
-    DNSAPIError,
-    DNSAPIAuthenticationError,
+from ansible.module_utils.six.moves.urllib.parse import (  # pylint: disable=import-error
+    urlencode,
 )
+from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
+    DNSAPIAuthenticationError,
+    DNSAPIError,
+)
+
 
 ERROR_CODES = {
     200: "Successful response",

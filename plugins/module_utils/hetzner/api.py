@@ -5,37 +5,27 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
+
 __metaclass__ = type
 
 
 from ansible.module_utils.basic import env_fallback
-
-from ansible_collections.community.dns.plugins.module_utils.argspec import (
-    ArgumentSpec,
-)
-
+from ansible_collections.community.dns.plugins.module_utils.argspec import ArgumentSpec
 from ansible_collections.community.dns.plugins.module_utils.json_api_helper import (
-    JSONAPIHelper,
     ERROR_CODES,
     UNKNOWN_ERROR,
+    JSONAPIHelper,
 )
-
 from ansible_collections.community.dns.plugins.module_utils.provider import (
     ProviderInformation,
 )
-
-from ansible_collections.community.dns.plugins.module_utils.record import (
-    DNSRecord,
-)
-
-from ansible_collections.community.dns.plugins.module_utils.zone import (
-    DNSZone,
-)
-
+from ansible_collections.community.dns.plugins.module_utils.record import DNSRecord
+from ansible_collections.community.dns.plugins.module_utils.zone import DNSZone
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
-    DNSAPIError,
     NOT_PROVIDED,
+    DNSAPIError,
     ZoneRecordAPI,
     filter_records,
 )

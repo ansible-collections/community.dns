@@ -7,6 +7,7 @@
 
 from __future__ import annotations
 
+
 DOCUMENTATION = r"""
 name: hosttech_dns_records
 
@@ -79,21 +80,16 @@ hosttech_token: >-
   {{ (lookup('community.sops.sops', 'keys/hosttech.sops.yml') | from_yaml).hosttech_dns_token }}
 """
 
-from ansible_collections.community.dns.plugins.module_utils.http import (
-    OpenURLHelper,
-)
-
 from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
     create_hosttech_api,
     create_hosttech_provider_information,
 )
-
-from ansible_collections.community.dns.plugins.plugin_utils.templated_options import (
-    TemplatedOptionProvider,
-)
-
+from ansible_collections.community.dns.plugins.module_utils.http import OpenURLHelper
 from ansible_collections.community.dns.plugins.plugin_utils.inventory.records import (
     RecordsInventoryModule,
+)
+from ansible_collections.community.dns.plugins.plugin_utils.templated_options import (
+    TemplatedOptionProvider,
 )
 
 

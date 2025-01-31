@@ -6,23 +6,20 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
 import pytest
-
+from ansible_collections.community.dns.plugins.module_utils.module._utils import (
+    get_prefix,
+    normalize_dns_name,
+)
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.module._utils import (
-    normalize_dns_name,
-    get_prefix,
-)
-
-from ..helper import (
-    CustomProviderInformation,
-)
+from ..helper import CustomProviderInformation
 
 
 def test_normalize_dns_name():

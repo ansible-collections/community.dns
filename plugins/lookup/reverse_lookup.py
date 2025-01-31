@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+
 DOCUMENTATION = r"""
 name: reverse_lookup
 author: Felix Fontein (@felixfontein)
@@ -72,25 +73,22 @@ _result:
 """
 
 from ansible.errors import AnsibleLookupError
-from ansible.plugins.lookup import LookupBase
 from ansible.module_utils.common.text.converters import to_text
-
-from ansible_collections.community.dns.plugins.module_utils.ips import (
-    is_ip_address,
-)
-
+from ansible.plugins.lookup import LookupBase
+from ansible_collections.community.dns.plugins.module_utils.ips import is_ip_address
 from ansible_collections.community.dns.plugins.module_utils.resolver import (
     SimpleResolver,
 )
-
 from ansible_collections.community.dns.plugins.plugin_utils.ips import (
     assert_requirements_present as assert_requirements_present_ipaddress,
 )
-
 from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
     assert_requirements_present as assert_requirements_present_dnspython,
+)
+from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
     guarded_run,
 )
+
 
 try:
     import dns.resolver

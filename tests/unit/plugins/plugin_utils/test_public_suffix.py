@@ -9,12 +9,10 @@
 
 from __future__ import annotations
 
-
 import pytest
-
 from ansible_collections.community.dns.plugins.plugin_utils.public_suffix import (
-    PublicSuffixList,
     PUBLIC_SUFFIX_LIST,
+    PublicSuffixList,
 )
 
 

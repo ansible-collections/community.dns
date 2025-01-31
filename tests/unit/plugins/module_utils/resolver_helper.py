@@ -6,10 +6,14 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
+
 __metaclass__ = type
 
 
-from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import MagicMock
+from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
+    MagicMock,
+)
+
 
 try:
     import dns.rcode

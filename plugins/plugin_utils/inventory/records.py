@@ -12,29 +12,25 @@ import abc
 from ansible.errors import AnsibleError
 from ansible.module_utils.common._collections_compat import Sequence
 from ansible.plugins.inventory import BaseInventoryPlugin
-from ansible.utils.display import Display
 from ansible.template import Templar
-
-from ansible_collections.community.library_inventory_filtering_v1.plugins.plugin_utils.inventory_filter import parse_filters, filter_host
-
-from ansible_collections.community.dns.plugins.module_utils.provider import (
-    ensure_type,
-)
-
-from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
-    DNSAPIError,
-    DNSAPIAuthenticationError,
-)
-
+from ansible.utils.display import Display
 from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
     DNSConversionError,
 )
-
 from ansible_collections.community.dns.plugins.module_utils.conversion.converter import (
     RecordConverter,
 )
-
+from ansible_collections.community.dns.plugins.module_utils.provider import ensure_type
+from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
+    DNSAPIAuthenticationError,
+    DNSAPIError,
+)
 from ansible_collections.community.dns.plugins.plugin_utils.unsafe import make_unsafe
+from ansible_collections.community.library_inventory_filtering_v1.plugins.plugin_utils.inventory_filter import (
+    filter_host,
+    parse_filters,
+)
+
 
 display = Display()
 
