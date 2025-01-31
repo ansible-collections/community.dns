@@ -160,10 +160,9 @@ def formatters(session: nox.Session):
         *CODE_FILES,
         "noxfile.py",
     )
-    return  # TODO: remove once reformatting
     # The last version of black that supports Python 2.7, 21.12b0, does not run on Python 3.13 -.-
     # Hence we have to restrict to Python 3 files for black
-    py3_paths = filter_paths(  # pylint: disable=unreachable
+    py3_paths = filter_paths(
         CODE_FILES + ["noxfile.py"], remove=PYTHON_2_COMPATIBILITY, extensions=[".py"]
     )
     if py3_paths:
