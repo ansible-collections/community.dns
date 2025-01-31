@@ -97,7 +97,7 @@ class InventoryModule(RecordsInventoryModule):
     NAME = "community.dns.hosttech_dns_records"
     VALID_ENDINGS = ("hosttech_dns.yaml", "hosttech_dns.yml")
 
-    def setup_api(self):
+    def setup_api(self) -> None:
         self.provider_information = create_hosttech_provider_information()
         self.api = create_hosttech_api(
             TemplatedOptionProvider(self, self.templar), OpenURLHelper()

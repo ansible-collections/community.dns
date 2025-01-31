@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import abc
+import typing as t
 
 from ansible.errors import AnsibleError
 from ansible.module_utils.common._collections_compat import Sequence
@@ -20,10 +21,14 @@ from ansible_collections.community.dns.plugins.module_utils.conversion.base impo
 from ansible_collections.community.dns.plugins.module_utils.conversion.converter import (
     RecordConverter,
 )
-from ansible_collections.community.dns.plugins.module_utils.provider import ensure_type
+from ansible_collections.community.dns.plugins.module_utils.provider import (
+    ProviderInformation,
+    ensure_type,
+)
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIAuthenticationError,
     DNSAPIError,
+    ZoneRecordAPI,
 )
 from ansible_collections.community.dns.plugins.plugin_utils.unsafe import make_unsafe
 from ansible_collections.community.library_inventory_filtering_v1.plugins.plugin_utils.inventory_filter import (
@@ -38,20 +43,20 @@ display = Display()
 class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
     VALID_ENDINGS = ("dns.yaml", "dns.yml")
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
-        self.provider_information = None
-        self.api = None
-        self.templar = None
+        self.provider_information: ProviderInformation | None = None
+        self.api: ZoneRecordAPI | None = None
+        self.templar: Templar | None = None
 
     @abc.abstractmethod
-    def setup_api(self):
+    def setup_api(self) -> None:
         """
         This function needs to set up self.provider_information and self.api.
         It can indicate errors by raising DNSAPIError.
         """
 
-    def verify_file(self, path):
+    def verify_file(self, path: str) -> bool:
         if super().verify_file(path):
             if path.endswith(self.VALID_ENDINGS):
                 return True
@@ -61,7 +66,9 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
             display.debug(f"{self.NAME} inventory filename must end with {endings}")
         return False
 
-    def parse(self, inventory, loader, path, cache=False):
+    def parse(
+        self, inventory: t.Any, loader: t.Any, path: str, cache: bool = False
+    ) -> None:
         super().parse(inventory, loader, path, cache)
 
         self._read_config_data(path)
@@ -70,6 +77,9 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
 
         try:
             self.setup_api()
+            assert self.provider_information is not None
+            assert self.api is not None
+
             record_converter = RecordConverter(self.provider_information, self)
             record_converter.emit_deprecations(display.deprecated)
 

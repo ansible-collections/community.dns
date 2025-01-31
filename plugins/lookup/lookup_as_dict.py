@@ -416,7 +416,10 @@ _result:
       returned: if O(type=NSEC) or O(type=NSEC3)
 """
 
+import typing as t
+
 from ansible.errors import AnsibleLookupError
+from ansible.module_utils.common.text.converters import to_text
 from ansible.plugins.lookup import LookupBase
 from ansible_collections.community.dns.plugins.module_utils.dnspython_records import (
     NAME_TO_RDTYPE,
@@ -439,23 +442,26 @@ from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
 
 try:
     import dns.resolver
+    from dns.rdatatype import RdataType
 except ImportError:
     # handled by assert_requirements_present_dnspython
     pass
+else:
+    RdataType = int  # type: ignore  # noqa: F811
 
 
 class LookupModule(LookupBase):
     @staticmethod
     def _resolve(
-        resolver,
-        name,
-        rdtype,
-        server_addresses,
-        nxdomain_handling,
-        target_can_be_relative=True,
-        search=True,
-    ):
-        def callback():
+        resolver: SimpleResolver,
+        name: str,
+        rdtype: RdataType,
+        server_addresses: list[str] | None,
+        nxdomain_handling: t.Literal["empty", "fail", "message"],
+        target_can_be_relative: bool = True,
+        search: bool = True,
+    ) -> list[dict[str, t.Any]]:
+        def callback() -> list[dict[str, t.Any]]:
             try:
                 rrset = resolver.resolve(
                     name,
@@ -478,10 +484,14 @@ class LookupModule(LookupBase):
         )
 
     @staticmethod
-    def _get_resolver(resolver, server):
+    def _get_resolver(
+        resolver: SimpleResolver, server: str
+    ) -> t.Callable[[], list[str]]:
         return lambda: resolver.resolve_addresses(server)
 
-    def run(self, terms, variables=None, **kwargs):
+    def run(
+        self, terms: list[t.Any], variables: t.Any | None = None, **kwargs
+    ) -> list[dict[str, t.Any]]:
         assert_requirements_present_dnspython("community.dns.lookup", "lookup_as_dict")
 
         self.set_options(var_options=variables, direct=kwargs)
@@ -494,17 +504,20 @@ class LookupModule(LookupBase):
 
         rdtype = NAME_TO_RDTYPE[self.get_option("type")]
 
-        nxdomain_handling = self.get_option("nxdomain_handling")
+        nxdomain_handling: t.Literal["empty", "fail", "message"] = self.get_option(
+            "nxdomain_handling"
+        )
 
-        search = self.get_option("search")
+        search: bool = self.get_option("search")
 
-        server_addresses = None
+        server_addresses: list[str] | None = None
         if self.get_option("server"):
             server_addresses = []
             assert_requirements_present_ipaddress(
                 "community.dns.lookup", "lookup_as_dict"
             )
-            for server in self.get_option("server"):
+            servers: list[str] = self.get_option("server")
+            for server in servers:
                 if is_ip_address(server):
                     server_addresses.append(server)
                     continue
@@ -521,7 +534,7 @@ class LookupModule(LookupBase):
             result.extend(
                 self._resolve(
                     resolver,
-                    name,
+                    to_text(name),
                     rdtype,
                     server_addresses,
                     nxdomain_handling,

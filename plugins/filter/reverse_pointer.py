@@ -46,6 +46,8 @@ _value:
 """
 
 
+import typing as t
+
 from ansible.errors import AnsibleFilterError
 from ansible.module_utils.common.text.converters import to_text
 from ansible_collections.community.dns.plugins.plugin_utils.ips import (
@@ -60,7 +62,7 @@ except ImportError:  # pragma: no cover
     pass  # pragma: no cover
 
 
-def reverse_pointer(ip):
+def reverse_pointer(ip: t.Any) -> str:
     assert_requirements_present("community.dns.reverse_pointer", "filter")
     if not isinstance(ip, (str, bytes)):
         raise AnsibleFilterError(
@@ -81,7 +83,7 @@ def reverse_pointer(ip):
 class FilterModule:
     """Ansible jinja2 filters"""
 
-    def filters(self):
+    def filters(self) -> dict[str, t.Callable]:
         return {
             "reverse_pointer": reverse_pointer,
         }

@@ -18,7 +18,7 @@ else:
     IPADDRESS_IMPORT_EXC = None  # type: ignore  # TODO
 
 
-def assert_requirements_present(plugin_name, plugin_type):
+def assert_requirements_present(plugin_name: str, plugin_type: str) -> None:
     if IPADDRESS_IMPORT_EXC is not None:
         msg = f'The {plugin_name} {plugin_type} plugin is missing requirements: {missing_required_lib("ipaddress")}'
         raise AnsibleError(msg) from IPADDRESS_IMPORT_EXC

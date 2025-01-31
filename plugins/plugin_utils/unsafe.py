@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import re
+import typing as t
 
 from ansible.module_utils.common._collections_compat import Mapping, Set
 from ansible.module_utils.common.collections import is_sequence
@@ -16,7 +17,7 @@ _RE_TEMPLATE_CHARS = re.compile("[{}]")
 _RE_TEMPLATE_CHARS_BYTES = re.compile(b"[{}]")
 
 
-def make_unsafe(value):
+def make_unsafe(value: t.Any) -> t.Any:
     if value is None or isinstance(value, AnsibleUnsafe):
         return value
 
