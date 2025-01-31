@@ -30,13 +30,13 @@ else:
 
 
 def guarded_run(runner, error_class=AnsibleError, server=None):
-    suffix = f' for {server}' if server is not None else ''
+    suffix = f" for {server}" if server is not None else ""
     try:
         return runner()
     except ResolverError as e:
-        raise error_class(f'Unexpected resolving error{suffix}: {to_native(e)}') from e
+        raise error_class(f"Unexpected resolving error{suffix}: {to_native(e)}") from e
     except dns.exception.DNSException as e:
-        raise error_class(f'Unexpected DNS error{suffix}: {to_native(e)}') from e
+        raise error_class(f"Unexpected DNS error{suffix}: {to_native(e)}") from e
 
 
 def assert_requirements_present(plugin_name, plugin_type):

@@ -61,25 +61,27 @@ except ImportError:  # pragma: no cover
 
 
 def reverse_pointer(ip):
-    assert_requirements_present('community.dns.reverse_pointer', 'filter')
+    assert_requirements_present("community.dns.reverse_pointer", "filter")
     if not isinstance(ip, (str, bytes)):
-        raise AnsibleFilterError('Input for community.dns.reverse_pointer must be a string')
+        raise AnsibleFilterError(
+            "Input for community.dns.reverse_pointer must be a string"
+        )
     try:
         ipaddr = ipaddress.ip_address(to_text(ip))
     except Exception as e:
-        raise AnsibleFilterError(f'Cannot parse IP address: {e}')
+        raise AnsibleFilterError(f"Cannot parse IP address: {e}")
     res = ipaddr.reverse_pointer
-    if not res.endswith(u'.'):
-        res += u'.'
+    if not res.endswith("."):
+        res += "."
     else:
         pass  # pragma: no cover
     return res
 
 
 class FilterModule:
-    '''Ansible jinja2 filters'''
+    """Ansible jinja2 filters"""
 
     def filters(self):
         return {
-            'reverse_pointer': reverse_pointer,
+            "reverse_pointer": reverse_pointer,
         }

@@ -36,7 +36,7 @@ display = Display()
 
 
 class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
-    VALID_ENDINGS = ('dns.yaml', 'dns.yml')
+    VALID_ENDINGS = ("dns.yaml", "dns.yml")
 
     def __init__(self):
         super().__init__()
@@ -55,7 +55,9 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
         if super().verify_file(path):
             if path.endswith(self.VALID_ENDINGS):
                 return True
-            endings = ' or '.join(["'{0}'".format(ending) for ending in self.VALID_ENDINGS])
+            endings = " or ".join(
+                ["'{0}'".format(ending) for ending in self.VALID_ENDINGS]
+            )
             display.debug(f"{self.NAME} inventory filename must end with {endings}")
         return False
 
@@ -71,55 +73,63 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
             record_converter = RecordConverter(self.provider_information, self)
             record_converter.emit_deprecations(display.deprecated)
 
-            zone_name = self.get_option('zone_name')
+            zone_name = self.get_option("zone_name")
             if self.templar.is_template(zone_name):
-                zone_name = self.templar.template(variable=zone_name, disable_lookups=False)
-            zone_id = self.get_option('zone_id')
+                zone_name = self.templar.template(
+                    variable=zone_name, disable_lookups=False
+                )
+            zone_id = self.get_option("zone_id")
             if zone_id is not None:
                 if self.templar.is_template(zone_id):
-                    zone_id = self.templar.template(variable=zone_id, disable_lookups=False)
+                    zone_id = self.templar.template(
+                        variable=zone_id, disable_lookups=False
+                    )
                 # For templating, we need to make the zone_id type 'string' or 'raw'.
                 # This converts the value to its proper type expected by the API.
                 zone_id_type = self.provider_information.get_record_id_type()
                 try:
                     zone_id = ensure_type(zone_id, zone_id_type)
                 except TypeError as exc:
-                    raise AnsibleError(f'Error while ensuring that zone_id is of type {zone_id_type}: {exc}')
+                    raise AnsibleError(
+                        f"Error while ensuring that zone_id is of type {zone_id_type}: {exc}"
+                    )
 
             if zone_name is not None:
                 zone_with_records = self.api.get_zone_with_records_by_name(zone_name)
             elif zone_id is not None:
                 zone_with_records = self.api.get_zone_with_records_by_id(zone_id)
             else:
-                raise AnsibleError('One of zone_name and zone_id must be specified!')
+                raise AnsibleError("One of zone_name and zone_id must be specified!")
 
             if zone_with_records is None:
-                raise AnsibleError('Zone does not exist')
+                raise AnsibleError("Zone does not exist")
 
             record_converter.process_multiple_from_api(zone_with_records.records)
             record_converter.process_multiple_to_user(zone_with_records.records)
 
         except DNSConversionError as e:
-            raise AnsibleError(f'Error while converting DNS values: {e.error_message}')
+            raise AnsibleError(f"Error while converting DNS values: {e.error_message}")
         except DNSAPIAuthenticationError as e:
-            raise AnsibleError(f'Cannot authenticate: {e}')
+            raise AnsibleError(f"Cannot authenticate: {e}")
         except DNSAPIError as e:
-            raise AnsibleError(f'Error: {e}')
+            raise AnsibleError(f"Error: {e}")
 
-        simple_filters = self.get_option('simple_filters')
-        filters = parse_filters(self.get_option('filters'))
+        simple_filters = self.get_option("simple_filters")
+        filters = parse_filters(self.get_option("filters"))
 
-        filter_types = simple_filters.get('type') or ['A', 'AAAA', 'CNAME']
-        if not isinstance(filter_types, Sequence) or isinstance(filter_types, (str, bytes)):
+        filter_types = simple_filters.get("type") or ["A", "AAAA", "CNAME"]
+        if not isinstance(filter_types, Sequence) or isinstance(
+            filter_types, (str, bytes)
+        ):
             filter_types = [filter_types]
 
         for record in zone_with_records.records:
             if record.type in filter_types:
                 name = zone_with_records.zone.name
                 if record.prefix:
-                    name = f'{record.prefix}.{name}'
+                    name = f"{record.prefix}.{name}"
                 facts = {
-                    'ansible_host': make_unsafe(record.target),
+                    "ansible_host": make_unsafe(record.target),
                 }
                 if not filter_host(self, name, facts, filters):
                     continue

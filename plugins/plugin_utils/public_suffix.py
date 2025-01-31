@@ -16,14 +16,14 @@ from ansible_collections.community.dns.plugins.module_utils.names import (
 )
 
 
-_BEGIN_SUBSET_MATCHER = re.compile(r'===BEGIN ([^=]*) DOMAINS===')
-_END_SUBSET_MATCHER = re.compile(r'===END ([^=]*) DOMAINS===')
+_BEGIN_SUBSET_MATCHER = re.compile(r"===BEGIN ([^=]*) DOMAINS===")
+_END_SUBSET_MATCHER = re.compile(r"===END ([^=]*) DOMAINS===")
 
 
 class PublicSuffixEntry:
-    '''
+    """
     Contains a Public Suffix List entry with metadata.
-    '''
+    """
 
     def __init__(self, labels, exception_rule=False, part=None):
         self.labels = labels
@@ -31,24 +31,24 @@ class PublicSuffixEntry:
         self.part = part
 
     def matches(self, normalized_labels):
-        '''
+        """
         Match PSL entry with a given normalized list of labels.
-        '''
+        """
         if len(normalized_labels) < len(self.labels):
             return False
         for i, label in enumerate(self.labels):
             normalized_label = normalized_labels[i]
-            if label not in (normalized_label, '*'):
+            if label not in (normalized_label, "*"):
                 return False
         return True
 
 
 def select_prevailing_rule(rules):
-    '''
+    """
     Given a non-empty set of rules matching a domain name, finds the prevailing rule.
 
     It uses the algorithm specified on https://publicsuffix.org/list/.
-    '''
+    """
     max_length_rule = rules[0]
     max_length = len(max_length_rule.labels)
     for rule in rules:
@@ -61,26 +61,26 @@ def select_prevailing_rule(rules):
 
 
 class PublicSuffixList:
-    '''
+    """
     Contains the Public Suffix List.
-    '''
+    """
 
     def __init__(self, rules):
-        self._generic_rule = PublicSuffixEntry(('*', ))
+        self._generic_rule = PublicSuffixEntry(("*",))
         self._rules = sorted(rules, key=lambda entry: entry.labels)
 
     @classmethod
     def load(cls, filename):
-        '''
+        """
         Load Public Suffix List from the given filename.
-        '''
+        """
         rules = []
         part = None
-        with open(filename, 'rb') as content_file:
-            content = content_file.read().decode('utf-8')
+        with open(filename, "rb") as content_file:
+            content = content_file.read().decode("utf-8")
         for line in content.splitlines():
             line = line.strip()
-            if line.startswith('//') or not line:
+            if line.startswith("//") or not line:
                 m = _BEGIN_SUBSET_MATCHER.search(line)
                 if m:
                     part = m.group(1).lower()
@@ -89,19 +89,23 @@ class PublicSuffixList:
                     part = None
                 continue
             if part is None:
-                raise AssertionError('Internal error: found PSL entry with no part!')
+                raise AssertionError("Internal error: found PSL entry with no part!")
             exception_rule = False
-            if line.startswith('!'):
+            if line.startswith("!"):
                 exception_rule = True
                 line = line[1:]
-            if line.startswith('.'):
+            if line.startswith("."):
                 line = line[1:]
-            labels = tuple(normalize_label(label) for label in split_into_labels(line)[0])
-            rules.append(PublicSuffixEntry(labels, exception_rule=exception_rule, part=part))
+            labels = tuple(
+                normalize_label(label) for label in split_into_labels(line)[0]
+            )
+            rules.append(
+                PublicSuffixEntry(labels, exception_rule=exception_rule, part=part)
+            )
         return cls(rules)
 
     def get_suffix_length_and_rule(self, normalized_labels, icann_only=False):
-        '''
+        """
         Given a list of normalized labels, searches for a matching rule.
 
         Returns the tuple ``(suffix_length, rule)``. The ``rule`` is never ``None``
@@ -109,14 +113,14 @@ class PublicSuffixList:
 
         If ``icann_only`` is set to ``True``, only official ICANN rules are used. If
         ``icann_only`` is ``False`` (default), also private rules are used.
-        '''
+        """
         if not normalized_labels:
             return 0, None
 
         # Find matching rules
         rules = []
         for rule in self._rules:
-            if icann_only and rule.part != 'icann':
+            if icann_only and rule.part != "icann":
                 continue
             if rule.matches(normalized_labels):
                 rules.append(rule)
@@ -134,9 +138,10 @@ class PublicSuffixList:
         # Return result
         return suffix_length, rule
 
-    def get_suffix(self, domain, keep_unknown_suffix=True, normalize_result=False,
-                   icann_only=False):
-        '''
+    def get_suffix(
+        self, domain, keep_unknown_suffix=True, normalize_result=False, icann_only=False
+    ):
+        """
         Given a domain name, extracts the public suffix.
 
         If ``keep_unknown_suffix`` is set to ``False``, only suffixes matching explicit
@@ -150,27 +155,35 @@ class PublicSuffixList:
 
         If ``icann_only`` is set to ``True``, only official ICANN rules are used. If
         ``icann_only`` is ``False`` (default), also private rules are used.
-        '''
+        """
         # Split into labels and normalize
         try:
             labels, tail = split_into_labels(domain)
             normalized_labels = [normalize_label(label) for label in labels]
         except InvalidDomainName:
-            return ''
+            return ""
         if normalize_result:
             labels = normalized_labels
 
         # Get suffix length
-        suffix_length, rule = self.get_suffix_length_and_rule(normalized_labels, icann_only=icann_only)
+        suffix_length, rule = self.get_suffix_length_and_rule(
+            normalized_labels, icann_only=icann_only
+        )
         if rule is None:
-            return ''
+            return ""
         if not keep_unknown_suffix and rule is self._generic_rule:
-            return ''
-        return '.'.join(reversed(labels[:suffix_length])) + tail
+            return ""
+        return ".".join(reversed(labels[:suffix_length])) + tail
 
-    def get_registrable_domain(self, domain, keep_unknown_suffix=True, only_if_registerable=True,
-                               normalize_result=False, icann_only=False):
-        '''
+    def get_registrable_domain(
+        self,
+        domain,
+        keep_unknown_suffix=True,
+        only_if_registerable=True,
+        normalize_result=False,
+        icann_only=False,
+    ):
+        """
         Given a domain name, extracts the registrable domain. This is the public suffix
         including the last label before the suffix.
 
@@ -190,28 +203,32 @@ class PublicSuffixList:
 
         If ``icann_only`` is set to ``True``, only official ICANN rules are used. If
         ``icann_only`` is ``False`` (default), also private rules are used.
-        '''
+        """
         # Split into labels and normalize
         try:
             labels, tail = split_into_labels(domain)
             normalized_labels = [normalize_label(label) for label in labels]
         except InvalidDomainName:
-            return ''
+            return ""
         if normalize_result:
             labels = normalized_labels
 
         # Get suffix length
-        suffix_length, rule = self.get_suffix_length_and_rule(normalized_labels, icann_only=icann_only)
+        suffix_length, rule = self.get_suffix_length_and_rule(
+            normalized_labels, icann_only=icann_only
+        )
         if rule is None:
-            return ''
+            return ""
         if not keep_unknown_suffix and rule is self._generic_rule:
-            return ''
+            return ""
         if suffix_length < len(labels):
             suffix_length += 1
         elif only_if_registerable:
-            return ''
-        return '.'.join(reversed(labels[:suffix_length])) + tail
+            return ""
+        return ".".join(reversed(labels[:suffix_length])) + tail
 
 
 # The official Public Suffix List
-PUBLIC_SUFFIX_LIST = PublicSuffixList.load(os.path.join(os.path.dirname(__file__), '..', 'public_suffix_list.dat'))
+PUBLIC_SUFFIX_LIST = PublicSuffixList.load(
+    os.path.join(os.path.dirname(__file__), "..", "public_suffix_list.dat")
+)

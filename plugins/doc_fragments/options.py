@@ -12,7 +12,7 @@ __metaclass__ = type
 
 class ModuleDocFragment(object):
 
-    BULK_OPERATIONS = r'''
+    BULK_OPERATIONS = r"""
 options:
   bulk_operation_threshold:
     description:
@@ -22,9 +22,9 @@ options:
         be used.
     type: int
     default: 2
-'''
+"""
 
-    RECORD_TRANSFORMATION = r'''
+    RECORD_TRANSFORMATION = r"""
 options:
   txt_transformation:
     description:
@@ -65,4 +65,4 @@ options:
       - octal
     default: decimal
     version_added: 2.5.0
-'''
+"""

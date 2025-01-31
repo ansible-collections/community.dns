@@ -130,44 +130,48 @@ class LookupModule(LookupBase):
         return lambda: resolver.resolve_addresses(server)
 
     def run(self, terms, variables=None, **kwargs):
-        assert_requirements_present_dnspython('community.dns.reverse_lookup', 'lookup')
-        assert_requirements_present_ipaddress('community.dns.reverse_lookup', 'lookup')
+        assert_requirements_present_dnspython("community.dns.reverse_lookup", "lookup")
+        assert_requirements_present_ipaddress("community.dns.reverse_lookup", "lookup")
 
         self.set_options(var_options=variables, direct=kwargs)
 
         resolver = SimpleResolver(
-            timeout=self.get_option('query_timeout'),
-            timeout_retries=self.get_option('query_retry'),
-            servfail_retries=self.get_option('servfail_retries'),
+            timeout=self.get_option("query_timeout"),
+            timeout_retries=self.get_option("query_retry"),
+            servfail_retries=self.get_option("servfail_retries"),
         )
 
         server_addresses = None
-        if self.get_option('server'):
+        if self.get_option("server"):
             server_addresses = []
-            for server in self.get_option('server'):
+            for server in self.get_option("server"):
                 if is_ip_address(server):
                     server_addresses.append(server)
                     continue
-                server_addresses.extend(guarded_run(
-                    self._get_resolver(resolver, server),
-                    error_class=AnsibleLookupError,
-                    server=server,
-                ))
+                server_addresses.extend(
+                    guarded_run(
+                        self._get_resolver(resolver, server),
+                        error_class=AnsibleLookupError,
+                        server=server,
+                    )
+                )
 
         ip_adresses = []
         for ip_address in terms:
             try:
                 ipaddr = ipaddress.ip_address(to_text(ip_address))
                 name = ipaddr.reverse_pointer
-                if not name.endswith(u'.'):
-                    name += u'.'
+                if not name.endswith("."):
+                    name += "."
                 else:
                     pass  # pragma: no cover
                 ip_adresses.append(name)
             except Exception as e:
-                raise AnsibleLookupError(f'Cannot parse IP address {ip_address!r}: {e}')
+                raise AnsibleLookupError(f"Cannot parse IP address {ip_address!r}: {e}")
 
         result = []
         for name in ip_adresses:
-            result.extend(self._resolve(resolver, name, dns.rdatatype.PTR, server_addresses))
+            result.extend(
+                self._resolve(resolver, name, dns.rdatatype.PTR, server_addresses)
+            )
         return result

@@ -18,12 +18,14 @@ def _remove_suffix(dns_name, suffix, keep_trailing_period):
     return dns_name[:-suffix_len] if suffix_len else dns_name
 
 
-def get_registrable_domain(dns_name,
-                           keep_unknown_suffix=True,
-                           only_if_registerable=True,
-                           normalize_result=False,
-                           icann_only=False):
-    '''Given DNS name, returns the registrable domain.'''
+def get_registrable_domain(
+    dns_name,
+    keep_unknown_suffix=True,
+    only_if_registerable=True,
+    normalize_result=False,
+    icann_only=False,
+):
+    """Given DNS name, returns the registrable domain."""
     return PUBLIC_SUFFIX_LIST.get_registrable_domain(
         dns_name,
         keep_unknown_suffix=keep_unknown_suffix,
@@ -33,12 +35,14 @@ def get_registrable_domain(dns_name,
     )
 
 
-def get_public_suffix(dns_name,
-                      keep_leading_period=True,
-                      keep_unknown_suffix=True,
-                      normalize_result=False,
-                      icann_only=False):
-    '''Given DNS name, returns the public suffix.'''
+def get_public_suffix(
+    dns_name,
+    keep_leading_period=True,
+    keep_unknown_suffix=True,
+    normalize_result=False,
+    icann_only=False,
+):
+    """Given DNS name, returns the public suffix."""
     suffix = PUBLIC_SUFFIX_LIST.get_suffix(
         dns_name,
         keep_unknown_suffix=keep_unknown_suffix,
@@ -46,16 +50,18 @@ def get_public_suffix(dns_name,
         icann_only=icann_only,
     )
     if suffix and len(suffix) < len(dns_name) and keep_leading_period:
-        suffix = '.' + suffix
+        suffix = "." + suffix
     return suffix
 
 
-def remove_registrable_domain(dns_name,
-                              keep_trailing_period=False,
-                              keep_unknown_suffix=True,
-                              only_if_registerable=True,
-                              icann_only=False):
-    '''Given DNS name, returns the part before the registrable_domain.'''
+def remove_registrable_domain(
+    dns_name,
+    keep_trailing_period=False,
+    keep_unknown_suffix=True,
+    only_if_registerable=True,
+    icann_only=False,
+):
+    """Given DNS name, returns the part before the registrable_domain."""
     suffix = PUBLIC_SUFFIX_LIST.get_registrable_domain(
         dns_name,
         keep_unknown_suffix=keep_unknown_suffix,
@@ -66,11 +72,10 @@ def remove_registrable_domain(dns_name,
     return _remove_suffix(dns_name, suffix, keep_trailing_period)
 
 
-def remove_public_suffix(dns_name,
-                         keep_trailing_period=False,
-                         keep_unknown_suffix=True,
-                         icann_only=False):
-    '''Given DNS name, returns the part before the public suffix.'''
+def remove_public_suffix(
+    dns_name, keep_trailing_period=False, keep_unknown_suffix=True, icann_only=False
+):
+    """Given DNS name, returns the part before the public suffix."""
     suffix = PUBLIC_SUFFIX_LIST.get_suffix(
         dns_name,
         keep_unknown_suffix=keep_unknown_suffix,
@@ -81,12 +86,12 @@ def remove_public_suffix(dns_name,
 
 
 class FilterModule:
-    '''Ansible jinja2 filters'''
+    """Ansible jinja2 filters"""
 
     def filters(self):
         return {
-            'get_public_suffix': get_public_suffix,
-            'get_registrable_domain': get_registrable_domain,
-            'remove_public_suffix': remove_public_suffix,
-            'remove_registrable_domain': remove_registrable_domain,
+            "get_public_suffix": get_public_suffix,
+            "get_registrable_domain": get_registrable_domain,
+            "remove_public_suffix": remove_public_suffix,
+            "remove_registrable_domain": remove_registrable_domain,
         }

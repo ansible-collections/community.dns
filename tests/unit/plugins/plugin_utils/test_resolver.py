@@ -17,13 +17,13 @@ def test_assert_requirements_present():
     orig_importerror = resolver.DNSPYTHON_IMPORTERROR
     try:
         resolver.DNSPYTHON_IMPORTERROR = None
-        assert_requirements_present('community.dns.foo', 'lookup')
+        assert_requirements_present("community.dns.foo", "lookup")
 
-        resolver.DNSPYTHON_IMPORTERROR = Exception('asdf')
+        resolver.DNSPYTHON_IMPORTERROR = Exception("asdf")
         with pytest.raises(AnsibleError) as exc:
-            assert_requirements_present('community.dns.foo', 'lookup')
+            assert_requirements_present("community.dns.foo", "lookup")
 
-        assert 'dnspython' in exc.value.args[0]
+        assert "dnspython" in exc.value.args[0]
 
     finally:
         resolver.DNSPYTHON_IMPORTERROR = orig_importerror

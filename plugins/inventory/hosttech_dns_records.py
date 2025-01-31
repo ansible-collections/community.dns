@@ -94,9 +94,11 @@ from ansible_collections.community.dns.plugins.plugin_utils.templated_options im
 
 
 class InventoryModule(RecordsInventoryModule):
-    NAME = 'community.dns.hosttech_dns_records'
-    VALID_ENDINGS = ('hosttech_dns.yaml', 'hosttech_dns.yml')
+    NAME = "community.dns.hosttech_dns_records"
+    VALID_ENDINGS = ("hosttech_dns.yaml", "hosttech_dns.yml")
 
     def setup_api(self):
         self.provider_information = create_hosttech_provider_information()
-        self.api = create_hosttech_api(TemplatedOptionProvider(self, self.templar), OpenURLHelper())
+        self.api = create_hosttech_api(
+            TemplatedOptionProvider(self, self.templar), OpenURLHelper()
+        )

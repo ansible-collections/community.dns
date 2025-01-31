@@ -13,28 +13,28 @@ from ansible_collections.community.dns.plugins.plugin_utils.unsafe import make_u
 
 TEST_MAKE_UNSAFE = [
     (
-        u'text',
+        "text",
         [],
         [
             (),
         ],
     ),
     (
-        u'{{text}}',
+        "{{text}}",
         [
             (),
         ],
         [],
     ),
     (
-        b'text',
+        b"text",
         [],
         [
             (),
         ],
     ),
     (
-        b'{{text}}',
+        b"{{text}}",
         [
             (),
         ],
@@ -42,41 +42,43 @@ TEST_MAKE_UNSAFE = [
     ),
     (
         {
-            'skey': 'value',
-            'ukey': '{{value}}',
+            "skey": "value",
+            "ukey": "{{value}}",
             1: [
-                'value',
-                '{{value}}',
+                "value",
+                "{{value}}",
                 {
-                    1.0: '{{value}}',
-                    2.0: 'value',
+                    1.0: "{{value}}",
+                    2.0: "value",
                 },
             ],
         },
         [
-            ('ukey', ),
+            ("ukey",),
             (1, 1),
             (1, 2, 1.0),
         ],
         [
-            ('skey', ),
+            ("skey",),
             (1, 0),
             (1, 2, 2.0),
         ],
     ),
     (
-        ['value', '{{value}}'],
+        ["value", "{{value}}"],
         [
-            (1, ),
+            (1,),
         ],
         [
-            (0, ),
+            (0,),
         ],
     ),
 ]
 
 
-@pytest.mark.parametrize("value, check_unsafe_paths, check_safe_paths", TEST_MAKE_UNSAFE)
+@pytest.mark.parametrize(
+    "value, check_unsafe_paths, check_safe_paths", TEST_MAKE_UNSAFE
+)
 def test_make_unsafe(value, check_unsafe_paths, check_safe_paths):
     unsafe_value = make_unsafe(value)
     assert unsafe_value == value
@@ -95,17 +97,17 @@ def test_make_unsafe(value, check_unsafe_paths, check_safe_paths):
 def test_make_unsafe_idempotence():
     assert make_unsafe(None) is None
 
-    unsafe_str = ansible_make_unsafe('{{test}}')
+    unsafe_str = ansible_make_unsafe("{{test}}")
     assert id(make_unsafe(unsafe_str)) == id(unsafe_str)
 
-    safe_str = '{{test}}'
+    safe_str = "{{test}}"
     assert id(make_unsafe(safe_str)) != id(safe_str)
 
 
 def test_make_unsafe_dict_key():
     value = {
-        b'test': 1,
-        u'test': 2,
+        b"test": 1,
+        "test": 2,
     }
     unsafe_value = make_unsafe(value)
     assert unsafe_value == value
@@ -113,8 +115,8 @@ def test_make_unsafe_dict_key():
         assert not isinstance(obj, AnsibleUnsafe)
 
     value = {
-        b'{{test}}': 1,
-        u'{{test}}': 2,
+        b"{{test}}": 1,
+        "{{test}}": 2,
     }
     unsafe_value = make_unsafe(value)
     assert unsafe_value == value
@@ -123,13 +125,13 @@ def test_make_unsafe_dict_key():
 
 
 def test_make_unsafe_set():
-    value = set([b'test', u'test'])
+    value = set([b"test", "test"])
     unsafe_value = make_unsafe(value)
     assert unsafe_value == value
     for obj in unsafe_value:
         assert not isinstance(obj, AnsibleUnsafe)
 
-    value = set([b'{{test}}', u'{{test}}'])
+    value = set([b"{{test}}", "{{test}}"])
     unsafe_value = make_unsafe(value)
     assert unsafe_value == value
     for obj in unsafe_value:

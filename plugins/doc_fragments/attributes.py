@@ -37,7 +37,7 @@ attributes:
 """
 
     # Should be used together with the standard fragment
-    INFO_MODULE = r'''
+    INFO_MODULE = r"""
 options: {}
 attributes:
   check_mode:
@@ -48,9 +48,9 @@ attributes:
     support: N/A
     details:
       - This action does not modify state.
-'''
+"""
 
-    ACTIONGROUP_HETZNER = r'''
+    ACTIONGROUP_HETZNER = r"""
 options: {}
 attributes:
   action_group:
@@ -58,9 +58,9 @@ attributes:
     support: full
     membership:
       - community.dns.hetzner
-'''
+"""
 
-    ACTIONGROUP_HOSTTECH = r'''
+    ACTIONGROUP_HOSTTECH = r"""
 options: {}
 attributes:
   action_group:
@@ -68,7 +68,7 @@ attributes:
     support: full
     membership:
       - community.dns.hosttech
-'''
+"""
 
     CONN = r"""
 options: {}
@@ -89,7 +89,7 @@ attributes:
 """
 
     # Should be used together with the standard fragment and the FACTS fragment
-    FACTS_MODULE = r'''
+    FACTS_MODULE = r"""
 options: {}
 attributes:
   check_mode:
@@ -102,7 +102,7 @@ attributes:
       - This action does not modify state.
   facts:
     support: full
-'''
+"""
 
     FILES = r"""
 options: {}

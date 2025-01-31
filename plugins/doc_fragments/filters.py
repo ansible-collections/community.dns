@@ -22,7 +22,7 @@ options:
     default: false
 """
 
-    PUBLIC_SUFFIX = r'''
+    PUBLIC_SUFFIX = r"""
 options:
   keep_unknown_suffix:
     description:
@@ -33,9 +33,9 @@ options:
         Suffix List is used or not.
     type: boolean
     default: true
-'''
+"""
 
-    REGISTERABLE_DOMAIN = r'''
+    REGISTERABLE_DOMAIN = r"""
 options:
   only_if_registerable:
     description:
@@ -57,7 +57,7 @@ options:
         is used or not.
     type: boolean
     default: true
-'''
+"""
 
     GET = r"""
 options:

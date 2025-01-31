@@ -446,14 +446,22 @@ except ImportError:
 
 class LookupModule(LookupBase):
     @staticmethod
-    def _resolve(resolver, name, rdtype, server_addresses, nxdomain_handling, target_can_be_relative=True, search=True):
+    def _resolve(
+        resolver,
+        name,
+        rdtype,
+        server_addresses,
+        nxdomain_handling,
+        target_can_be_relative=True,
+        search=True,
+    ):
         def callback():
             try:
                 rrset = resolver.resolve(
                     name,
                     rdtype=rdtype,
                     server_addresses=server_addresses,
-                    nxdomain_is_empty=nxdomain_handling == 'empty',
+                    nxdomain_is_empty=nxdomain_handling == "empty",
                     target_can_be_relative=target_can_be_relative,
                     search=search,
                 )
@@ -461,7 +469,7 @@ class LookupModule(LookupBase):
                     return []
                 return [convert_rdata_to_dict(data) for data in rrset]
             except dns.resolver.NXDOMAIN:
-                raise AnsibleLookupError(f'Got NXDOMAIN when querying {name}')
+                raise AnsibleLookupError(f"Got NXDOMAIN when querying {name}")
 
         return guarded_run(
             callback,
@@ -474,37 +482,51 @@ class LookupModule(LookupBase):
         return lambda: resolver.resolve_addresses(server)
 
     def run(self, terms, variables=None, **kwargs):
-        assert_requirements_present_dnspython('community.dns.lookup', 'lookup_as_dict')
+        assert_requirements_present_dnspython("community.dns.lookup", "lookup_as_dict")
 
         self.set_options(var_options=variables, direct=kwargs)
 
         resolver = SimpleResolver(
-            timeout=self.get_option('query_timeout'),
-            timeout_retries=self.get_option('query_retry'),
-            servfail_retries=self.get_option('servfail_retries'),
+            timeout=self.get_option("query_timeout"),
+            timeout_retries=self.get_option("query_retry"),
+            servfail_retries=self.get_option("servfail_retries"),
         )
 
-        rdtype = NAME_TO_RDTYPE[self.get_option('type')]
+        rdtype = NAME_TO_RDTYPE[self.get_option("type")]
 
-        nxdomain_handling = self.get_option('nxdomain_handling')
+        nxdomain_handling = self.get_option("nxdomain_handling")
 
-        search = self.get_option('search')
+        search = self.get_option("search")
 
         server_addresses = None
-        if self.get_option('server'):
+        if self.get_option("server"):
             server_addresses = []
-            assert_requirements_present_ipaddress('community.dns.lookup', 'lookup_as_dict')
-            for server in self.get_option('server'):
+            assert_requirements_present_ipaddress(
+                "community.dns.lookup", "lookup_as_dict"
+            )
+            for server in self.get_option("server"):
                 if is_ip_address(server):
                     server_addresses.append(server)
                     continue
-                server_addresses.extend(guarded_run(
-                    self._get_resolver(resolver, server),
-                    error_class=AnsibleLookupError,
-                    server=server,
-                ))
+                server_addresses.extend(
+                    guarded_run(
+                        self._get_resolver(resolver, server),
+                        error_class=AnsibleLookupError,
+                        server=server,
+                    )
+                )
 
         result = []
         for name in terms:
-            result.extend(self._resolve(resolver, name, rdtype, server_addresses, nxdomain_handling, target_can_be_relative=search, search=search))
+            result.extend(
+                self._resolve(
+                    resolver,
+                    name,
+                    rdtype,
+                    server_addresses,
+                    nxdomain_handling,
+                    target_can_be_relative=search,
+                    search=search,
+                )
+            )
         return result
