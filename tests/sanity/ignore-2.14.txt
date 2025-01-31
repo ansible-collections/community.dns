@@ -10,4 +10,5 @@ plugins/modules/hetzner_dns_record_info.py validate-modules:invalid-documentatio
 plugins/modules/hetzner_dns_record_set_info.py validate-modules:invalid-documentation
 plugins/modules/hosttech_dns_record_info.py validate-modules:invalid-documentation
 plugins/modules/hosttech_dns_record_set_info.py validate-modules:invalid-documentation
+plugins/plugin_utils/inventory/records.py no-assert  # The asserts are mainly needed for type inference
 plugins/public_suffix_list.dat no-smart-quotes

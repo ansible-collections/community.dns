@@ -6,6 +6,8 @@
 
 from __future__ import annotations
 
+import typing as t
+
 from ansible.errors import AnsibleError
 from ansible.module_utils.basic import missing_required_lib
 from ansible.module_utils.common.text.converters import to_native
@@ -29,7 +31,14 @@ else:
     DNSPYTHON_IMPORTERROR = None  # type: ignore  # TODO
 
 
-def guarded_run(runner, error_class=AnsibleError, server=None):
+_T = t.TypeVar("_T")
+
+
+def guarded_run(
+    runner: t.Callable[[], _T],
+    error_class: t.Type[Exception] = AnsibleError,
+    server: str | None = None,
+) -> _T:
     suffix = f" for {server}" if server is not None else ""
     try:
         return runner()
@@ -39,7 +48,7 @@ def guarded_run(runner, error_class=AnsibleError, server=None):
         raise error_class(f"Unexpected DNS error{suffix}: {to_native(e)}") from e
 
 
-def assert_requirements_present(plugin_name, plugin_type):
+def assert_requirements_present(plugin_name: str, plugin_type: str) -> None:
     if DNSPYTHON_IMPORTERROR is not None:
         msg = f'The {plugin_name} {plugin_type} plugin is missing requirements: {missing_required_lib("dnspython")}'
         raise AnsibleError(msg) from DNSPYTHON_IMPORTERROR

@@ -72,6 +72,8 @@ _result:
     - example.org
 """
 
+import typing as t
+
 from ansible.errors import AnsibleLookupError
 from ansible.module_utils.common.text.converters import to_text
 from ansible.plugins.lookup import LookupBase
@@ -92,9 +94,12 @@ from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
 
 try:
     import dns.resolver
+    from dns.rdatatype import RdataType
 except ImportError:
     # handled by assert_requirements_present_dnspython
     pass
+else:
+    RdataType = int  # type: ignore  # noqa: F811
 
 try:
     import ipaddress
@@ -105,8 +110,13 @@ except ImportError:  # pragma: no cover
 
 class LookupModule(LookupBase):
     @staticmethod
-    def _resolve(resolver, name, rdtype, server_addresses):
-        def callback():
+    def _resolve(
+        resolver: SimpleResolver,
+        name: str,
+        rdtype: RdataType,
+        server_addresses: list[str] | None,
+    ):
+        def callback() -> list[str]:
             rrset = resolver.resolve(
                 name,
                 rdtype=rdtype,
@@ -126,10 +136,14 @@ class LookupModule(LookupBase):
         )
 
     @staticmethod
-    def _get_resolver(resolver, server):
+    def _get_resolver(
+        resolver: SimpleResolver, server: str
+    ) -> t.Callable[[], list[str]]:
         return lambda: resolver.resolve_addresses(server)
 
-    def run(self, terms, variables=None, **kwargs):
+    def run(
+        self, terms: list[t.Any], variables: t.Any | None = None, **kwargs
+    ) -> list[str]:
         assert_requirements_present_dnspython("community.dns.reverse_lookup", "lookup")
         assert_requirements_present_ipaddress("community.dns.reverse_lookup", "lookup")
 
@@ -141,10 +155,11 @@ class LookupModule(LookupBase):
             servfail_retries=self.get_option("servfail_retries"),
         )
 
-        server_addresses = None
+        server_addresses: list[str] | None = None
         if self.get_option("server"):
             server_addresses = []
-            for server in self.get_option("server"):
+            servers: list[str] = self.get_option("server")
+            for server in servers:
                 if is_ip_address(server):
                     server_addresses.append(server)
                     continue

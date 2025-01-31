@@ -6,13 +6,17 @@
 
 from __future__ import annotations
 
+import typing as t
+
+from ansible.template import Templar
+
 
 class TemplatedOptionProvider:
-    def __init__(self, plugin, templar):
+    def __init__(self, plugin: t.Any, templar: Templar) -> None:
         self.plugin = plugin
         self.templar = templar
 
-    def get_option(self, option_name):
+    def get_option(self, option_name: str) -> t.Any:
         value = self.plugin.get_option(option_name)
         if self.templar.is_template(value):
             value = self.templar.template(variable=value, disable_lookups=False)

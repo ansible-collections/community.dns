@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import os.path
 import re
+import typing as t
 
 from ansible_collections.community.dns.plugins.module_utils.names import (
     InvalidDomainName,
@@ -25,7 +26,12 @@ class PublicSuffixEntry:
     Contains a Public Suffix List entry with metadata.
     """
 
-    def __init__(self, labels, exception_rule=False, part=None):
+    def __init__(
+        self,
+        labels: tuple[str, ...],
+        exception_rule: bool = False,
+        part: str | None = None,
+    ) -> None:
         self.labels = labels
         self.exception_rule = exception_rule
         self.part = part
@@ -43,7 +49,7 @@ class PublicSuffixEntry:
         return True
 
 
-def select_prevailing_rule(rules):
+def select_prevailing_rule(rules: list[PublicSuffixEntry]) -> PublicSuffixEntry:
     """
     Given a non-empty set of rules matching a domain name, finds the prevailing rule.
 
@@ -65,17 +71,17 @@ class PublicSuffixList:
     Contains the Public Suffix List.
     """
 
-    def __init__(self, rules):
+    def __init__(self, rules: t.List[PublicSuffixEntry]) -> None:
         self._generic_rule = PublicSuffixEntry(("*",))
         self._rules = sorted(rules, key=lambda entry: entry.labels)
 
     @classmethod
-    def load(cls, filename):
+    def load(cls, filename: str) -> t.Self:
         """
         Load Public Suffix List from the given filename.
         """
-        rules = []
-        part = None
+        rules: list[PublicSuffixEntry] = []
+        part: str | None = None
         with open(filename, "rb") as content_file:
             content = content_file.read().decode("utf-8")
         for line in content.splitlines():
@@ -104,7 +110,9 @@ class PublicSuffixList:
             )
         return cls(rules)
 
-    def get_suffix_length_and_rule(self, normalized_labels, icann_only=False):
+    def get_suffix_length_and_rule(
+        self, normalized_labels: list[str], icann_only: bool = False
+    ) -> tuple[int, PublicSuffixEntry | None]:
         """
         Given a list of normalized labels, searches for a matching rule.
 
@@ -118,7 +126,7 @@ class PublicSuffixList:
             return 0, None
 
         # Find matching rules
-        rules = []
+        rules: list[PublicSuffixEntry] = []
         for rule in self._rules:
             if icann_only and rule.part != "icann":
                 continue
@@ -139,7 +147,11 @@ class PublicSuffixList:
         return suffix_length, rule
 
     def get_suffix(
-        self, domain, keep_unknown_suffix=True, normalize_result=False, icann_only=False
+        self,
+        domain: str,
+        keep_unknown_suffix: bool = True,
+        normalize_result: bool = False,
+        icann_only: bool = False,
     ):
         """
         Given a domain name, extracts the public suffix.
@@ -177,11 +189,11 @@ class PublicSuffixList:
 
     def get_registrable_domain(
         self,
-        domain,
-        keep_unknown_suffix=True,
-        only_if_registerable=True,
-        normalize_result=False,
-        icann_only=False,
+        domain: str,
+        keep_unknown_suffix: bool = True,
+        only_if_registerable: bool = True,
+        normalize_result: bool = False,
+        icann_only: bool = False,
     ):
         """
         Given a domain name, extracts the registrable domain. This is the public suffix

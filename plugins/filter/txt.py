@@ -6,6 +6,8 @@
 
 from __future__ import annotations
 
+import typing as t
+
 from ansible.errors import AnsibleFilterError
 from ansible.module_utils.common.text.converters import to_text
 from ansible_collections.community.dns.plugins.module_utils.conversion.txt import (
@@ -14,7 +16,9 @@ from ansible_collections.community.dns.plugins.module_utils.conversion.txt impor
 )
 
 
-def quote_txt(value, always_quote=False, character_encoding="decimal"):
+def quote_txt(
+    value: t.Any, always_quote: t.Any = False, character_encoding: t.Any = "decimal"
+) -> str:
     if not isinstance(value, (str, bytes)):
         raise AnsibleFilterError("Input for community.dns.quote_txt must be a string")
     if not isinstance(always_quote, bool):
@@ -31,7 +35,7 @@ def quote_txt(value, always_quote=False, character_encoding="decimal"):
     )
 
 
-def unquote_txt(value, character_encoding="decimal"):
+def unquote_txt(value: t.Any, character_encoding: t.Any = "decimal") -> str:
     if not isinstance(value, (str, bytes)):
         raise AnsibleFilterError("Input for community.dns.unquote_txt must be a string")
     if character_encoding not in ("decimal", "octal"):
@@ -45,7 +49,7 @@ def unquote_txt(value, character_encoding="decimal"):
 class FilterModule:
     """Ansible jinja2 filters"""
 
-    def filters(self):
+    def filters(self) -> dict[str, t.Callable]:
         return {
             "quote_txt": quote_txt,
             "unquote_txt": unquote_txt,
