@@ -31,7 +31,7 @@ PYTHON_2_COMPATIBILITY = [
 os.environ["VIRTUALENV_DOWNLOAD"] = "1"
 
 # Default session is 'lint'
-nox.options.sessions = ("lint", )
+nox.options.sessions = ("lint",)
 
 
 def install(session: nox.Session, *args, editable=False, **kwargs):
