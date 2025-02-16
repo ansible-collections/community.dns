@@ -1,6 +1,0 @@
-minor_changes:
-  - "all filter, inventory, and lookup plugins, and plugin utils - add type hints to all Python 3 only code
-     (https://github.com/ansible-collections/community.dns/pull/239)."
-  - "get_public_suffix, get_registrable_domain, remove_public_suffix, and remove_registrable_domain filter plugin -
-     validate parameters, and correctly handle byte strings when passed for input
-     (https://github.com/ansible-collections/community.dns/pull/239)."
