@@ -1001,3 +1001,12 @@ releases:
       - py3-typing.yml
       - update-psl.yml
     release_date: '2025-02-16'
+  3.2.1:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+      release_summary: Maintenance release with updated PSL.
+    fragments:
+      - 3.2.1.yml
+      - update-psl.yml
+    release_date: '2025-02-24'
