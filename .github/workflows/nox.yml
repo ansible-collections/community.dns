@@ -28,8 +28,8 @@ jobs:
       - name: Check out dependent collections
         run: >-
           ansible-galaxy collection install -p .
-          git+https://github.com/ansible-collections/community.internal_test_tools.git,main
-          git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1
+          git+https://github.com/felixfontein/community.internal_test_tools.git,ci-data-tagging
+          git+https://github.com/felixfontein/community.library_inventory_filtering.git,ci-data-tagging
       - name: Run nox
         uses: ansible-community/antsibull-nox@main
         with:
@@ -72,7 +72,7 @@ jobs:
       - name: Check out dependent collections
         run: >-
           ansible-galaxy collection install -p .
-          git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1
+          git+https://github.com/felixfontein/community.library_inventory_filtering.git,ci-data-tagging
       - name: Run nox
         uses: ansible-community/antsibull-nox@main
         with:
@@ -103,8 +103,8 @@ jobs:
       - name: Check out dependent collections
         run: >-
           ansible-galaxy collection install -p .
-          git+https://github.com/ansible-collections/community.internal_test_tools.git,main
-          git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1
+          git+https://github.com/felixfontein/community.internal_test_tools.git,ci-data-tagging
+          git+https://github.com/felixfontein/community.library_inventory_filtering.git,ci-data-tagging
       - name: Run nox
         uses: ansible-community/antsibull-nox@main
         with:
@@ -137,8 +137,8 @@ jobs:
       - name: Check out dependent collections
         run: >-
           ansible-galaxy collection install -p .
-          git+https://github.com/ansible-collections/community.general.git,main
-          git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1
+          git+https://github.com/felixfontein/community.general.git,ci-data-tagging
+          git+https://github.com/felixfontein/community.library_inventory_filtering.git,ci-data-tagging
       - name: Run nox
         uses: ansible-community/antsibull-nox@main
         with:
