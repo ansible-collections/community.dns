@@ -28,15 +28,15 @@ jobs:
       - name: Check out community.internal_test_tools
         uses: actions/checkout@v4
         with:
-          repository: ansible-collections/community.internal_test_tools
-          ref: main
+          repository: felixfontein/community.internal_test_tools
+          ref: ci-data-tagging
           path: ansible_collections/community/internal_test_tools
           persist-credentials: false
       - name: Check out community.library_inventory_filtering
         uses: actions/checkout@v4
         with:
-          repository: ansible-collections/community.library_inventory_filtering
-          ref: stable-1
+          repository: felixfontein/community.library_inventory_filtering
+          ref: ci-data-tagging
           path: ansible_collections/community/library_inventory_filtering_v1
           persist-credentials: false
       - name: Run nox
