@@ -12,6 +12,9 @@ __metaclass__ = type
 import ansible_collections.community.dns.plugins.module_utils.http  # noqa: F401, pylint: disable=unused-import
 import pytest
 from ansible_collections.community.dns.plugins.modules import hosttech_dns_record_set
+from ansible_collections.community.internal_test_tools.tests.unit.plugins.modules.utils import (
+    extract_warnings_texts,
+)
 from ansible_collections.community.internal_test_tools.tests.unit.utils.fetch_url_module_framework import (
     BaseTestModule,
     FetchUrlCall,
@@ -854,7 +857,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         assert result['changed'] is False
         assert result['zone_id'] == 42
-        assert 'warnings' not in result
+        assert extract_warnings_texts(result) == []  # pylint: disable=use-implicit-booleaness-not-comparison
 
     def test_idempotency_absent_record_warn(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record_set, {
@@ -888,7 +891,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         assert result['changed'] is False
         assert result['zone_id'] == 42
-        assert list(result['warnings']) == ["Record already exists with different value. Set on_existing=replace to remove it"]
+        assert extract_warnings_texts(result) == ["Record already exists with different value. Set on_existing=replace to remove it"]
 
     def test_idempotency_absent_record_fail(self, mocker):
         result = self.run_module_failed(mocker, hosttech_dns_record_set, {
@@ -1443,7 +1446,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'value': ['ns1.hostserv.eu', 'ns2.hostserv.eu', 'ns3.hostserv.eu'],
         }
         assert result['diff']['after'] == result['diff']['before']
-        assert list(result['warnings']) == ["Record already exists with different value. Set on_existing=replace to replace it"]
+        assert extract_warnings_texts(result) == ["Record already exists with different value. Set on_existing=replace to replace it"]
 
     def test_change_modify_list_keep(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record_set, {
@@ -1477,7 +1480,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             .result_json(HOSTTECH_JSON_ZONE_GET_RESULT),
         ])
 
-        assert 'warnings' not in result
+        assert extract_warnings_texts(result) == []  # pylint: disable=use-implicit-booleaness-not-comparison
         assert result['changed'] is False
         assert result['zone_id'] == 42
         assert 'diff' in result
