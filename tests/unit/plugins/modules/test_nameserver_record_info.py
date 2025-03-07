@@ -180,11 +180,11 @@ class TestNameserverRecordInfo(ModuleTestCase):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                     with pytest.raises(AnsibleExitJson) as exc:
-                        set_module_args({
+                        with set_module_args({
                             'name': ['www.example.com'],
                             'type': 'TXT',
-                        })
-                        nameserver_record_info.main()
+                        }):
+                            nameserver_record_info.main()
 
         print(exc.value.args[0])
         assert exc.value.args[0]['changed'] is False
@@ -321,13 +321,13 @@ class TestNameserverRecordInfo(ModuleTestCase):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                     with pytest.raises(AnsibleFailJson) as exc:
-                        set_module_args({
+                        with set_module_args({
                             'name': ['www.example.com', 'mail.example.com'],
                             'type': 'TXT',
                             'query_timeout': 9,
                             'query_retry': 1,
-                        })
-                        nameserver_record_info.main()
+                        }):
+                            nameserver_record_info.main()
 
         print(exc.value.args[0])
         assert exc.value.args[0]['msg'] in (
@@ -420,11 +420,11 @@ class TestNameserverRecordInfo(ModuleTestCase):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                     with pytest.raises(AnsibleExitJson) as exc:
-                        set_module_args({
+                        with set_module_args({
                             'name': ['www.example.com'],
                             'type': 'TXT',
-                        })
-                        nameserver_record_info.main()
+                        }):
+                            nameserver_record_info.main()
 
         print(exc.value.args[0])
         assert exc.value.args[0]['changed'] is False
@@ -506,11 +506,11 @@ class TestNameserverRecordInfo(ModuleTestCase):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                     with pytest.raises(AnsibleExitJson) as exc:
-                        set_module_args({
+                        with set_module_args({
                             'name': ['www.example.com'],
                             'type': 'TXT',
-                        })
-                        nameserver_record_info.main()
+                        }):
+                            nameserver_record_info.main()
 
         print(exc.value.args[0])
         assert exc.value.args[0]['changed'] is False
@@ -537,11 +537,11 @@ class TestNameserverRecordInfo(ModuleTestCase):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                     with pytest.raises(AnsibleFailJson) as exc:
-                        set_module_args({
+                        with set_module_args({
                             'name': ['www.example.com'],
                             'type': 'TXT',
-                        })
-                        nameserver_record_info.main()
+                        }):
+                            nameserver_record_info.main()
 
         print(exc.value.args[0])
         assert exc.value.args[0]['msg'] == 'Unexpected resolving error: Error SERVFAIL while querying 1.1.1.1 with query get NS for "com."'
@@ -667,11 +667,11 @@ class TestNameserverRecordInfo(ModuleTestCase):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                     with pytest.raises(AnsibleFailJson) as exc:
-                        set_module_args({
+                        with set_module_args({
                             'name': ['www.example.com'],
                             'type': 'TXT',
-                        })
-                        nameserver_record_info.main()
+                        }):
+                            nameserver_record_info.main()
 
         print(exc.value.args[0])
         assert exc.value.args[0]['msg'] == 'Unexpected resolving error: Found CNAME loop starting at www.example.com'

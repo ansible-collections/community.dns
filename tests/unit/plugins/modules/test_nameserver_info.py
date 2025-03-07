@@ -89,10 +89,10 @@ class TestNameserverInfo(ModuleTestCase):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                     with pytest.raises(AnsibleExitJson) as exc:
-                        set_module_args({
+                        with set_module_args({
                             'name': ['www.example.com'],
-                        })
-                        nameserver_info.main()
+                        }):
+                            nameserver_info.main()
 
         print(exc.value.args[0])
         assert exc.value.args[0]['changed'] is False
@@ -178,11 +178,11 @@ class TestNameserverInfo(ModuleTestCase):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                     with pytest.raises(AnsibleExitJson) as exc:
-                        set_module_args({
+                        with set_module_args({
                             'name': ['www.example.com'],
                             'resolve_addresses': True,
-                        })
-                        nameserver_info.main()
+                        }):
+                            nameserver_info.main()
 
         print(exc.value.args[0])
         assert exc.value.args[0]['changed'] is False
@@ -269,12 +269,12 @@ class TestNameserverInfo(ModuleTestCase):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                     with pytest.raises(AnsibleFailJson) as exc:
-                        set_module_args({
+                        with set_module_args({
                             'name': ['www.example.com', 'mail.example.com'],
                             'query_timeout': 9,
                             'query_retry': 1,
-                        })
-                        nameserver_info.main()
+                        }):
+                            nameserver_info.main()
 
         print(exc.value.args[0])
         assert exc.value.args[0]['msg'] in (
@@ -357,10 +357,10 @@ class TestNameserverInfo(ModuleTestCase):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                     with pytest.raises(AnsibleExitJson) as exc:
-                        set_module_args({
+                        with set_module_args({
                             'name': ['www.example.com'],
-                        })
-                        nameserver_info.main()
+                        }):
+                            nameserver_info.main()
 
         print(exc.value.args[0])
         assert exc.value.args[0]['changed'] is False
@@ -385,10 +385,10 @@ class TestNameserverInfo(ModuleTestCase):
             with patch('dns.resolver.Resolver', resolver):
                 with patch('dns.query.udp', mock_query_udp(udp_sequence)):
                     with pytest.raises(AnsibleFailJson) as exc:
-                        set_module_args({
+                        with set_module_args({
                             'name': ['www.example.com'],
-                        })
-                        nameserver_info.main()
+                        }):
+                            nameserver_info.main()
 
         print(exc.value.args[0])
         assert exc.value.args[0]['msg'] == 'Unexpected resolving error: Error SERVFAIL while querying 1.1.1.1 with query get NS for "com."'
