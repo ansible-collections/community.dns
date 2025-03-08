@@ -82,12 +82,17 @@
   assert:
     that:
       - quote_failure_1 is failed
-      - quote_failure_1.msg == 'Input for community.dns.quote_txt must be a string'
+      - >-
+        'Input for community.dns.quote_txt must be a string' in quote_failure_1.msg
       - quote_failure_2 is failed
-      - quote_failure_2.msg == 'always_quote must be a boolean, not 1'
+      - >-
+        'always_quote must be a boolean, not 1' in quote_failure_2.msg
       - quote_failure_3 is failed
-      - quote_failure_3.msg == "character_encoding must be \"decimal\" or \"octal\", not 'foo'"
+      - >-
+        "character_encoding must be \"decimal\" or \"octal\", not 'foo'" in quote_failure_3.msg
       - unquote_failure_1 is failed
-      - unquote_failure_1.msg == 'Input for community.dns.unquote_txt must be a string'
+      - >-
+        'Input for community.dns.unquote_txt must be a string' in unquote_failure_1.msg
       - unquote_failure_2 is failed
-      - unquote_failure_2.msg == "character_encoding must be \"decimal\" or \"octal\", not 'foo'"
+      - >-
+        "character_encoding must be \"decimal\" or \"octal\", not 'foo'" in unquote_failure_2.msg

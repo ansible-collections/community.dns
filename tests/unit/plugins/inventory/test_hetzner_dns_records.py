@@ -10,7 +10,6 @@ import textwrap
 from ansible import constants as C
 from ansible.inventory.manager import InventoryManager
 from ansible.module_utils.common.text.converters import to_native
-from ansible.utils.unsafe_proxy import AnsibleUnsafe
 from ansible_collections.community.internal_test_tools.tests.unit.mock.loader import (
     DictDataLoader,
 )
@@ -20,6 +19,9 @@ from ansible_collections.community.internal_test_tools.tests.unit.mock.path impo
 from ansible_collections.community.internal_test_tools.tests.unit.utils.open_url_framework import (
     OpenUrlCall,
     OpenUrlProxy,
+)
+from ansible_collections.community.internal_test_tools.tests.unit.utils.trust import (
+    is_trusted,
 )
 
 
@@ -295,12 +297,11 @@ def test_inventory_file_simple(mocker):
     assert (
         im._inventory.get_host("*.example.com").get_vars()["ansible_host"] == "1.2.{3.5"
     )
-    assert isinstance(
-        im._inventory.get_host("example.com").get_vars()["ansible_host"], AnsibleUnsafe
+    assert not is_trusted(
+        im._inventory.get_host("example.com").get_vars()["ansible_host"]
     )
-    assert isinstance(
-        im._inventory.get_host("*.example.com").get_vars()["ansible_host"],
-        AnsibleUnsafe,
+    assert not is_trusted(
+        im._inventory.get_host("*.example.com").get_vars()["ansible_host"]
     )
     assert len(im._inventory.groups["ungrouped"].hosts) == 2
     assert len(im._inventory.groups["all"].hosts) == 0
@@ -374,12 +375,11 @@ def test_inventory_file_simple_2(mocker):
     assert (
         im._inventory.get_host("*.example.com").get_vars()["ansible_host"] == "1.2.{3.5"
     )
-    assert isinstance(
-        im._inventory.get_host("example.com").get_vars()["ansible_host"], AnsibleUnsafe
+    assert not is_trusted(
+        im._inventory.get_host("example.com").get_vars()["ansible_host"]
     )
-    assert isinstance(
-        im._inventory.get_host("*.example.com").get_vars()["ansible_host"],
-        AnsibleUnsafe,
+    assert not is_trusted(
+        im._inventory.get_host("*.example.com").get_vars()["ansible_host"]
     )
     assert len(im._inventory.groups["ungrouped"].hosts) == 2
     assert len(im._inventory.groups["all"].hosts) == 0
