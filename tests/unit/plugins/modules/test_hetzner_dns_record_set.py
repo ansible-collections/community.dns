@@ -22,6 +22,7 @@ from .hetzner import (
     HETZNER_JSON_ZONE_LIST_RESULT,
     HETZNER_JSON_ZONE_RECORDS_GET_RESULT,
 )
+from .utils import extract_warnings_texts
 
 
 class TestHetznerDNSRecordJSON(BaseTestModule):
@@ -425,7 +426,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
 
         assert result['changed'] is False
         assert result['zone_id'] == '42'
-        assert 'warnings' not in result
+        assert extract_warnings_texts(result) == []  # pylint: disable=use-implicit-booleaness-not-comparison
 
     def test_idempotency_absent_record_warn(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
@@ -462,7 +463,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
 
         assert result['changed'] is False
         assert result['zone_id'] == '42'
-        assert list(result['warnings']) == ["Record already exists with different value. Set on_existing=replace to remove it"]
+        assert extract_warnings_texts(result) == ["Record already exists with different value. Set on_existing=replace to remove it"]
 
     def test_idempotency_absent_record_fail(self, mocker):
         result = self.run_module_failed(mocker, hetzner_dns_record_set, {
@@ -1044,7 +1045,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
         }
         assert result['diff']['after'] == result['diff']['before']
-        assert list(result['warnings']) == ["Record already exists with different value. Set on_existing=replace to replace it"]
+        assert extract_warnings_texts(result) == ["Record already exists with different value. Set on_existing=replace to replace it"]
 
     def test_change_modify_list_keep(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_set, {
@@ -1081,7 +1082,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
         ])
 
-        assert 'warnings' not in result
+        assert extract_warnings_texts(result) == []  # pylint: disable=use-implicit-booleaness-not-comparison
         assert result['changed'] is False
         assert result['zone_id'] == '42'
         assert 'diff' in result
