@@ -15,15 +15,9 @@ name: nox
     - cron: '30 4 * * *'
   workflow_dispatch:
 
-env:
-  FORCE_COLOR: "1"
-
 jobs:
   nox:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ansible_collections/community/dns
     name: "Run nox"
     steps:
       - name: Check out collection
@@ -45,13 +39,7 @@ jobs:
           ref: stable-1
           path: ansible_collections/community/library_inventory_filtering_v1
           persist-credentials: false
-      - name: Setup nox
-        uses: wntrblm/nox@2025.02.09
+      - name: Run nox
+        uses: ansible-community/antsibull-nox@main
         with:
-          python-versions: "3.13"
-      - name: Set up nox environments
-        run: |
-          nox -v -e lint --install-only
-      - name: "Run nox"
-        run: |
-          nox -v -e lint --reuse-existing-virtualenvs --no-install
+          working-directory: ansible_collections/community/dns
