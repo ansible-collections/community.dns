@@ -2,8 +2,14 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 # SPDX-FileCopyrightText: 2025 Felix Fontein <felix@fontein.de>
 
+# /// script
+# dependencies = ["nox", "antsibull-nox"]
+# ///
+
 import os
 import sys
+
+import nox
 
 
 try:
@@ -30,3 +36,8 @@ antsibull_nox.add_lint_sessions(
         "types-mock",
     ],
 )
+
+
+# Allow to run the noxfile with `python noxfile.py`, `pipx run noxfile.py`, or similar.
+if __name__ == "__main__":
+    nox.main()
