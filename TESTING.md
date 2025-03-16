@@ -22,10 +22,12 @@ To run all sanity tests: `ansible-test sanity --docker -v`
 
 ## Running nox based sanity tests and code formatting
 
+These tests require [`nox`](https://pypi.org/project/nox) and [`antsibull-nox`](https://pypi.org/project/antsibull-nox/). Note that running `nox` without `antsibull-nox` present will automatically create a venv that installs all needed requirements. You can also use `pipx run noxfile.py` or similar Python runners; they detect the script metadata in `noxfile.py` and will automatically install `nox` and `antsibull-nox`.
+
 Run `nox -e lint` to run all sanity tests, including code formatting.
 
-You can also run more specific tests:
-* `nox -e formatters` to run the code formatters;
+You can also run more specific sessions directly:
+* `nox -e formatters` to run the code formatters (black; currently restricted to Python 3+ code);
 * `nox -e codeqa` to run code QA linters (flake8 and pylint);
 * `nox -e typing` to run type checking for Python 3+ code (mypy).
 
