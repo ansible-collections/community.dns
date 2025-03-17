@@ -28,10 +28,10 @@ dns = pytest.importorskip("dns")
 
 
 class TestLookup(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.lookup = lookup_loader.get("community.dns.reverse_lookup")
 
-    def test_simple(self):
+    def test_simple(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -65,7 +65,7 @@ class TestLookup(TestCase):
         assert len(result) == 1
         assert result[0] == "example.com."
 
-    def test_nxdomain(self):
+    def test_nxdomain(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -90,7 +90,7 @@ class TestLookup(TestCase):
         print(result)
         assert len(result) == 0
 
-    def test_unexpected_resolver_error(self):
+    def test_unexpected_resolver_error(self) -> None:
         fake_query = MagicMock()
         fake_query.question = "Doctor Who?"
         resolver = mock_resolver(
@@ -121,7 +121,7 @@ class TestLookup(TestCase):
             == "Unexpected resolving error for 4.3.2.1.in-addr.arpa.: Error REFUSED while querying ['1.1.1.1']"
         )
 
-    def test_unexpected_dns_error(self):
+    def test_unexpected_dns_error(self) -> None:
         fake_query = MagicMock()
         fake_query.question = "Doctor Who?"
         resolver = mock_resolver(
@@ -151,7 +151,7 @@ class TestLookup(TestCase):
             exc.value.args[0] == "Unexpected DNS error for 4.3.2.1.in-addr.arpa.: foo"
         )
 
-    def test_not_ip(self):
+    def test_not_ip(self) -> None:
         resolver = mock_resolver([], {})
         with patch("dns.resolver.get_default_resolver", resolver):
             with patch("dns.resolver.Resolver", resolver):

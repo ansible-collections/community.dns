@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import os
 import textwrap
+import typing as t
 
 from ansible import constants as C
 from ansible.inventory.manager import InventoryManager
@@ -195,17 +196,19 @@ original_exists = os.path.exists
 original_access = os.access
 
 
-def exists_mock(path, exists=True):
-    def exists(f):
+def exists_mock(
+    path: os.PathLike | str, can_access: bool = True
+) -> t.Callable[[os.PathLike | str], bool]:
+    def exists_fn(f: os.PathLike | str) -> bool:
         if to_native(f) == path:
-            return exists
+            return can_access
         return original_exists(f)
 
-    return exists
+    return exists_fn
 
 
-def access_mock(path, can_access=True):
-    def access(f, m, *args, **kwargs):
+def access_mock(path: os.PathLike | str, can_access: bool = True):
+    def access(f: os.PathLike | str, m: t.Any, *args, **kwargs) -> bool:
         if to_native(f) == path:
             return can_access
         return original_access(f, m, *args, **kwargs)  # pragma: no cover
@@ -213,7 +216,7 @@ def access_mock(path, can_access=True):
     return access
 
 
-def test_inventory_file_simple(mocker):
+def test_inventory_file_simple(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]
     inventory_file = {
@@ -289,7 +292,7 @@ def test_inventory_file_simple(mocker):
     assert len(im._inventory.groups["all"].hosts) == 0
 
 
-def test_inventory_file_simple_2(mocker):
+def test_inventory_file_simple_2(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]
     inventory_file = {
@@ -367,7 +370,7 @@ def test_inventory_file_simple_2(mocker):
     assert len(im._inventory.groups["all"].hosts) == 0
 
 
-def test_inventory_file_collision(mocker):
+def test_inventory_file_collision(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]
     inventory_file = {
@@ -447,7 +450,7 @@ def test_inventory_file_collision(mocker):
     assert len(im._inventory.groups["all"].hosts) == 0
 
 
-def test_inventory_file_no_filter(mocker):
+def test_inventory_file_no_filter(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]
     inventory_file = {
@@ -522,7 +525,7 @@ def test_inventory_file_no_filter(mocker):
     assert len(im._inventory.groups["all"].hosts) == 0
 
 
-def test_inventory_file_invalid_zone_id(mocker):
+def test_inventory_file_invalid_zone_id(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]
     inventory_file = {
@@ -554,7 +557,7 @@ def test_inventory_file_invalid_zone_id(mocker):
     assert len(im._inventory.groups["all"].hosts) == 0
 
 
-def test_inventory_file_missing_zone(mocker):
+def test_inventory_file_missing_zone(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]
     inventory_file = {
@@ -585,7 +588,7 @@ def test_inventory_file_missing_zone(mocker):
     assert len(im._inventory.groups["all"].hosts) == 0
 
 
-def test_inventory_file_zone_not_found(mocker):
+def test_inventory_file_zone_not_found(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]
     inventory_file = {
@@ -626,7 +629,7 @@ def test_inventory_file_zone_not_found(mocker):
     assert len(im._inventory.groups["all"].hosts) == 0
 
 
-def test_inventory_file_unauthorized(mocker):
+def test_inventory_file_unauthorized(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]
     inventory_file = {
@@ -666,7 +669,7 @@ def test_inventory_file_unauthorized(mocker):
     assert len(im._inventory.groups["all"].hosts) == 0
 
 
-def test_inventory_file_error(mocker):
+def test_inventory_file_error(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]
     inventory_file = {
@@ -706,7 +709,7 @@ def test_inventory_file_error(mocker):
     assert len(im._inventory.groups["all"].hosts) == 0
 
 
-def test_inventory_wrong_file(mocker):
+def test_inventory_wrong_file(mocker) -> None:
     inventory_filename = "test.hetznerdns.yml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]
     inventory_file = {
@@ -737,7 +740,7 @@ def test_inventory_wrong_file(mocker):
     assert len(im._inventory.groups["all"].hosts) == 0
 
 
-def test_inventory_no_file(mocker):
+def test_inventory_no_file(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]
 

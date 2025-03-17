@@ -115,7 +115,7 @@ class LookupModule(LookupBase):
         name: str,
         rdtype: RdataType,
         server_addresses: list[str] | None,
-    ):
+    ) -> list[str]:
         def callback() -> list[str]:
             rrset = resolver.resolve(
                 name,
@@ -142,7 +142,7 @@ class LookupModule(LookupBase):
         return lambda: resolver.resolve_addresses(server)
 
     def run(
-        self, terms: list[t.Any], variables: t.Any | None = None, **kwargs
+        self, terms: list[t.Any], variables: t.Any | None = None, **kwargs: t.Any
     ) -> list[str]:
         assert_requirements_present_dnspython("community.dns.reverse_lookup", "lookup")
         assert_requirements_present_ipaddress("community.dns.reverse_lookup", "lookup")

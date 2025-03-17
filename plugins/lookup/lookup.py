@@ -202,7 +202,7 @@ class LookupModule(LookupBase):
         return lambda: resolver.resolve_addresses(server)
 
     def run(
-        self, terms: list[t.Any], variables: t.Any | None = None, **kwargs
+        self, terms: list[t.Any], variables: t.Any | None = None, **kwargs: t.Any
     ) -> list[str]:
         assert_requirements_present_dnspython("community.dns.lookup", "lookup")
 

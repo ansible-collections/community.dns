@@ -9,6 +9,8 @@
 
 from __future__ import annotations
 
+import typing as t
+
 import pytest
 from ansible_collections.community.dns.plugins.plugin_utils.public_suffix import (
     PUBLIC_SUFFIX_LIST,
@@ -57,7 +59,13 @@ TEST_GET_SUFFIX = [
 @pytest.mark.parametrize(
     "domain, kwargs, reg_extra_kwargs, suffix, reg_domain", TEST_GET_SUFFIX
 )
-def test_get_suffix(domain, kwargs, reg_extra_kwargs, suffix, reg_domain):
+def test_get_suffix(
+    domain: str,
+    kwargs: dict[str, t.Any],
+    reg_extra_kwargs: dict[str, t.Any],
+    suffix: str,
+    reg_domain: str,
+) -> None:
     assert PUBLIC_SUFFIX_LIST.get_suffix(domain, **kwargs) == suffix
     kwargs.update(reg_extra_kwargs)
     assert PUBLIC_SUFFIX_LIST.get_registrable_domain(domain, **kwargs) == reg_domain
@@ -173,12 +181,14 @@ TEST_SUFFIX_OFFICIAL_TESTS = [
 @pytest.mark.parametrize(
     "domain, registrable_domain, kwargs", TEST_SUFFIX_OFFICIAL_TESTS
 )
-def test_get_suffix_official(domain, registrable_domain, kwargs):
+def test_get_suffix_official(
+    domain: str, registrable_domain: str, kwargs: dict[str, t.Any]
+) -> None:
     reg_domain = PUBLIC_SUFFIX_LIST.get_registrable_domain(domain, **kwargs)
     assert reg_domain == registrable_domain
 
 
-def test_load_psl_dot(tmpdir):
+def test_load_psl_dot(tmpdir) -> None:
     fn = tmpdir / "psl.dat"
     fn.write(
         """// ===BEGIN BLA BLA DOMAINS===
@@ -195,7 +205,7 @@ def test_load_psl_dot(tmpdir):
     assert rule.part == "bla bla"
 
 
-def test_load_psl_no_part(tmpdir):
+def test_load_psl_no_part(tmpdir) -> None:
     fn = tmpdir / "psl.dat"
     fn.write(
         """// ===BEGIN BLA BLA DOMAINS===
