@@ -3,7 +3,7 @@
 # SPDX-FileCopyrightText: 2025 Felix Fontein <felix@fontein.de>
 
 # /// script
-# dependencies = ["nox", "antsibull-nox"]
+# dependencies = ["nox>=2025.02.09", "antsibull-nox"]
 # ///
 
 import os
