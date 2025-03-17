@@ -39,5 +39,6 @@ antsibull_nox.add_lint_sessions(
 
 
 # Allow to run the noxfile with `python noxfile.py`, `pipx run noxfile.py`, or similar.
+# Requires nox >= 2025.02.09
 if __name__ == "__main__":
     nox.main()
