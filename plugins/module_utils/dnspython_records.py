@@ -34,6 +34,7 @@ try:
     import dns.name
     import dns.rdata
     import dns.rdatatype
+    import dns.rdtypes.ANY.NSEC3
 
     # The following data has been borrowed from community.general's dig lookup plugin.
     #
@@ -95,7 +96,7 @@ def convert_rdata_to_dict(
     for f in fields:
         val = getattr(rdata, f)
 
-        if isinstance(val, dns.name.Name):  # pylint: disable=possibly-used-before-assignment
+        if isinstance(val, dns.name.Name):
             val = dns.name.Name.to_text(val)
 
         if rdata.rdtype == dns.rdatatype.DS and f == 'digest':
@@ -105,7 +106,6 @@ def convert_rdata_to_dict(
         if rdata.rdtype == dns.rdatatype.DNSKEY and f == 'key':
             val = dns.rdata._base64ify(rdata.key).replace(' ', '')  # type: ignore
         if rdata.rdtype == dns.rdatatype.NSEC3 and f == 'next':
-            import dns.rdtypes.ANY.NSEC3  # pylint: disable=import-outside-toplevel
             val = to_native(base64.b32encode(rdata.next).translate(dns.rdtypes.ANY.NSEC3.b32_normal_to_hex).lower())  # type: ignore
         if rdata.rdtype in (dns.rdatatype.NSEC, dns.rdatatype.NSEC3) and f == 'windows':
             try:
