@@ -34,7 +34,10 @@ try:
     import dns.name
     import dns.rdata
     import dns.rdatatype
-    import dns.rdtypes.ANY.NSEC3
+    try:
+        import dns.rdtypes.ANY.NSEC3
+    except ImportError:
+        pass
 
     # The following data has been borrowed from community.general's dig lookup plugin.
     #
