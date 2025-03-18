@@ -23,7 +23,7 @@ if sys.version_info >= (3, 6):
     import typing
 
     if typing.TYPE_CHECKING:
-        import dns.rdatatype
+        import dns.rdatatype  # pragma: no cover
 
 
 NAME_TO_RDTYPE = {}  # type: dict[str, dns.rdatatype.RdataType]

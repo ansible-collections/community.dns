@@ -29,12 +29,12 @@ if sys.version_info >= (3, 6):
     import typing
 
     if typing.TYPE_CHECKING:
-        from collections.abc import Collection
+        from collections.abc import Collection  # pragma: no cover
 
-        from .http import HTTPHelper
-        from .provider import ProviderInformation
-        from .record import DNSRecord
-        from .zone_record_api import ZoneRecordAPI
+        from .http import HTTPHelper  # pragma: no cover
+        from .provider import ProviderInformation  # pragma: no cover
+        from .record import DNSRecord  # pragma: no cover
+        from .zone_record_api import ZoneRecordAPI  # pragma: no cover
 
 
 ERROR_CODES = {

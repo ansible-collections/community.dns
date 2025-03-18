@@ -20,9 +20,9 @@ if sys.version_info >= (3, 6):
     import typing
 
     if typing.TYPE_CHECKING:
-        from .provider import ProviderInformation
-        from .record import DNSRecord
-        from .zone_record_api import ZoneRecordAPI
+        from .provider import ProviderInformation  # pragma: no cover
+        from .record import DNSRecord  # pragma: no cover
+        from .zone_record_api import ZoneRecordAPI  # pragma: no cover
 
 
 def bulk_apply_changes(

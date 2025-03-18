@@ -24,7 +24,7 @@ if sys.version_info >= (3, 6):
     import typing
 
     if typing.TYPE_CHECKING:
-        from ansible.module_utils.basic import AnsibleModule
+        from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
 
 
 class NetworkError(Exception):

@@ -16,7 +16,7 @@ if sys.version_info >= (3, 6):
     import typing
 
     if typing.TYPE_CHECKING:
-        from .record import DNSRecord
+        from .record import DNSRecord  # pragma: no cover
 
 
 class DNSZone(object):
