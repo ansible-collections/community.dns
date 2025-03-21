@@ -33,7 +33,7 @@ def test_get_header_value():
 def test_extract_error_message():
     api = JSONAPIHelper(MagicMock(), '123', 'https://example.com')
     assert api._extract_error_message(None) == ''
-    assert api._extract_error_message('foo') == ' with data: foo'
+    assert api._extract_error_message('foo') == " with data: 'foo'"
     assert api._extract_error_message({}) == ' with data: {}'
     assert api._extract_error_message({'message': ''}) == " with data: {'message': ''}"
     assert api._extract_error_message({'message': 'foo'}) == " with data: {'message': 'foo'}"

@@ -28,10 +28,10 @@ dns = pytest.importorskip("dns")
 
 
 class TestLookup(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.lookup = lookup_loader.get("community.dns.lookup")
 
-    def test_simple(self):
+    def test_simple(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -67,7 +67,7 @@ class TestLookup(TestCase):
         assert result[0] == "127.0.0.1"
         assert result[1] == "127.0.0.2"
 
-    def test_no_search(self):
+    def test_no_search(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -103,7 +103,7 @@ class TestLookup(TestCase):
         assert result[0] == "127.0.0.1"
         assert result[1] == "127.0.0.2"
 
-    def test_retry_success(self):
+    def test_retry_success(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -160,7 +160,7 @@ class TestLookup(TestCase):
         assert result[0] == "127.0.0.1"
         assert result[1] == "127.0.0.2"
 
-    def test_retry_fail(self):
+    def test_retry_fail(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -207,7 +207,7 @@ class TestLookup(TestCase):
             "Unexpected DNS error for www.example.com: The DNS operation timed out after 10"
         )
 
-    def test_simple_nxdomain(self):
+    def test_simple_nxdomain(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -230,7 +230,7 @@ class TestLookup(TestCase):
         print(result)
         assert len(result) == 0
 
-    def test_simple_nxdomain_empty(self):
+    def test_simple_nxdomain_empty(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -255,7 +255,7 @@ class TestLookup(TestCase):
         print(result)
         assert len(result) == 0
 
-    def test_simple_nxdomain_message(self):
+    def test_simple_nxdomain_message(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -281,7 +281,7 @@ class TestLookup(TestCase):
         assert len(result) == 1
         assert result[0] == "NXDOMAIN"
 
-    def test_simple_nxdomain_fail(self):
+    def test_simple_nxdomain_fail(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -305,7 +305,7 @@ class TestLookup(TestCase):
         print(exc.value.args[0])
         assert exc.value.args[0] == "Got NXDOMAIN when querying www.example.com"
 
-    def test_simple_servfail(self):
+    def test_simple_servfail(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -332,7 +332,7 @@ class TestLookup(TestCase):
             == "Unexpected resolving error for www.example.com: Error SERVFAIL while querying ['1.1.1.1']"
         )
 
-    def test_retry_servfail_success(self):
+    def test_retry_servfail_success(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -369,7 +369,7 @@ class TestLookup(TestCase):
         print(result)
         assert len(result) == 0
 
-    def test_retry_servfail_fail(self):
+    def test_retry_servfail_fail(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -410,7 +410,7 @@ class TestLookup(TestCase):
             == "Unexpected resolving error for www.example.com: Error SERVFAIL while querying ['1.1.1.1']"
         )
 
-    def test_type(self):
+    def test_type(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -450,7 +450,7 @@ class TestLookup(TestCase):
         assert result[1] == '"baz" "bam"'
         assert result[2] == '"bar"'
 
-    def test_server(self):
+    def test_server(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -484,7 +484,7 @@ class TestLookup(TestCase):
         assert len(result) == 1
         assert result[0] == "::1"
 
-    def test_server_resolve(self):
+    def test_server_resolve(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -550,7 +550,7 @@ class TestLookup(TestCase):
         assert len(result) == 1
         assert result[0] == "::1"
 
-    def test_server_resolve_nxdomain(self):
+    def test_server_resolve_nxdomain(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -578,7 +578,7 @@ class TestLookup(TestCase):
             == "Unexpected DNS error for ns.example.com: The DNS query name does not exist: ns.example.com."
         )
 
-    def test_server_resolve_servfail(self):
+    def test_server_resolve_servfail(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
             {
@@ -606,7 +606,7 @@ class TestLookup(TestCase):
             == "Unexpected resolving error for ns.example.com: Error SERVFAIL while querying ['1.1.1.1']"
         )
 
-    def test_server_resolve_empty_lifetime(self):
+    def test_server_resolve_empty_lifetime(self) -> None:
         fake_query = MagicMock()
         fake_query.question = "Doctor Who?"
         resolver = mock_resolver(

@@ -16,6 +16,7 @@ from ansible_collections.community.dns.plugins.module_utils.resolver import (
 )
 
 
+DNSPYTHON_IMPORTERROR: ImportError | None
 try:
     import dns  # pylint: disable=unused-import
     import dns.exception  # pylint: disable=unused-import

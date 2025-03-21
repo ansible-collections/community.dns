@@ -5,6 +5,8 @@
 
 from __future__ import annotations
 
+import typing as t
+
 import pytest
 from ansible.utils.unsafe_proxy import AnsibleUnsafe
 from ansible.utils.unsafe_proxy import wrap_var as ansible_make_unsafe
@@ -79,7 +81,9 @@ TEST_MAKE_UNSAFE = [
 @pytest.mark.parametrize(
     "value, check_unsafe_paths, check_safe_paths", TEST_MAKE_UNSAFE
 )
-def test_make_unsafe(value, check_unsafe_paths, check_safe_paths):
+def test_make_unsafe(
+    value: t.Any, check_unsafe_paths: list[tuple], check_safe_paths: list[tuple]
+) -> None:
     unsafe_value = make_unsafe(value)
     assert unsafe_value == value
     for check_path in check_unsafe_paths:
@@ -94,7 +98,7 @@ def test_make_unsafe(value, check_unsafe_paths, check_safe_paths):
         assert not isinstance(obj, AnsibleUnsafe)
 
 
-def test_make_unsafe_idempotence():
+def test_make_unsafe_idempotence() -> None:
     assert make_unsafe(None) is None
 
     unsafe_str = ansible_make_unsafe("{{test}}")
@@ -104,7 +108,7 @@ def test_make_unsafe_idempotence():
     assert id(make_unsafe(safe_str)) != id(safe_str)
 
 
-def test_make_unsafe_dict_key():
+def test_make_unsafe_dict_key() -> None:
     value = {
         b"test": 1,
         "test": 2,
@@ -124,7 +128,7 @@ def test_make_unsafe_dict_key():
         assert isinstance(obj, AnsibleUnsafe)
 
 
-def test_make_unsafe_set():
+def test_make_unsafe_set() -> None:
     value = set([b"test", "test"])
     unsafe_value = make_unsafe(value)
     assert unsafe_value == value

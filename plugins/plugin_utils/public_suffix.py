@@ -36,7 +36,7 @@ class PublicSuffixEntry:
         self.exception_rule = exception_rule
         self.part = part
 
-    def matches(self, normalized_labels):
+    def matches(self, normalized_labels) -> bool:
         """
         Match PSL entry with a given normalized list of labels.
         """
@@ -152,7 +152,7 @@ class PublicSuffixList:
         keep_unknown_suffix: bool = True,
         normalize_result: bool = False,
         icann_only: bool = False,
-    ):
+    ) -> str:
         """
         Given a domain name, extracts the public suffix.
 
@@ -194,7 +194,7 @@ class PublicSuffixList:
         only_if_registerable: bool = True,
         normalize_result: bool = False,
         icann_only: bool = False,
-    ):
+    ) -> str:
         """
         Given a domain name, extracts the registrable domain. This is the public suffix
         including the last label before the suffix.

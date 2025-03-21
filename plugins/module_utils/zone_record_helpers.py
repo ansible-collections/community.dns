@@ -9,21 +9,32 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
+import sys
 
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
 )
 
 
-def bulk_apply_changes(api,
-                       provider_information,
-                       options,
-                       zone_id,
-                       records_to_delete=None,
-                       records_to_change=None,
-                       records_to_create=None,
-                       stop_early_on_errors=True,
-                       ):
+if sys.version_info >= (3, 6):
+    import typing
+
+    if typing.TYPE_CHECKING:
+        from .provider import ProviderInformation  # pragma: no cover
+        from .record import DNSRecord  # pragma: no cover
+        from .zone_record_api import ZoneRecordAPI  # pragma: no cover
+
+
+def bulk_apply_changes(
+    api,  # type: ZoneRecordAPI
+    provider_information,  # type: ProviderInformation
+    options,  # TODO type
+    zone_id,  # type: str
+    records_to_delete=None,  # type: list[DNSRecord] | None
+    records_to_change=None,  # type: list[DNSRecord] | None
+    records_to_create=None,  # type: list[DNSRecord] | None
+    stop_early_on_errors=True,  # type: bool
+):  # type: (...) -> tuple[bool, list[DNSAPIError], dict[str, list[DNSRecord]]]
     """
     Update multiple records. If an operation failed, raise a DNSAPIException.
 
@@ -49,7 +60,7 @@ def bulk_apply_changes(api,
     records_to_create = records_to_create or []
 
     has_change = False
-    errors = []
+    errors = []  # type: list[DNSAPIError]
 
     bulk_threshold = 2
     if provider_information.supports_bulk_actions():
@@ -59,7 +70,7 @@ def bulk_apply_changes(api,
         'deleted': [],
         'changed': [],
         'created': [],
-    }
+    }  # type: dict[str, list[DNSRecord]]
 
     # Delete records
     if len(records_to_delete) >= bulk_threshold:

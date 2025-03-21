@@ -12,6 +12,7 @@ __metaclass__ = type
 
 
 import json
+import sys
 import time
 
 from ansible.module_utils.common.text.converters import to_native
@@ -22,6 +23,18 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
     DNSAPIAuthenticationError,
     DNSAPIError,
 )
+
+
+if sys.version_info >= (3, 6):
+    import typing
+
+    if typing.TYPE_CHECKING:
+        from collections.abc import Collection  # pragma: no cover
+
+        from .http import HTTPHelper  # pragma: no cover
+        from .provider import ProviderInformation  # pragma: no cover
+        from .record import DNSRecord  # pragma: no cover
+        from .zone_record_api import ZoneRecordAPI  # pragma: no cover
 
 
 ERROR_CODES = {
@@ -37,7 +50,10 @@ ERROR_CODES = {
 UNKNOWN_ERROR = "Unknown Error"
 
 
-def _get_header_value(info, header_name):
+def _get_header_value(
+    info,  # type: dict[str, typing.Any]
+    header_name,  # type: str
+):  # type: (...) -> str | None
     header_name = header_name.lower()
     header_value = info.get(header_name)
     for k, v in info.items():
@@ -47,24 +63,43 @@ def _get_header_value(info, header_name):
 
 
 class JSONAPIHelper(object):
-    def __init__(self, http_helper, token, api, debug=False):
+    def __init__(
+        self,
+        http_helper,  # type: HTTPHelper
+        token,  # type: str
+        api,  # type: str
+        debug=False,  # type: bool
+    ):  # type: (...) -> None
         """
         Create a new JSON API helper instance with given API key.
         """
-        self._api = api
-        self._http_helper = http_helper
-        self._token = token
-        self._debug = debug
+        self._api = api  # type: str
+        self._http_helper = http_helper  # type: HTTPHelper
+        self._token = token  # type: str
+        self._debug = debug  # type: bool
 
-    def _build_url(self, url, query=None):
+    def _build_url(
+        self,
+        url,  # type: str
+        query=None,  # type: dict[str, str] | None
+    ):  # type: (...) -> str
         return '{0}{1}{2}'.format(self._api, url, ('?' + urlencode(query)) if query else '')
 
-    def _extract_error_message(self, result):
+    def _extract_error_message(
+        self,
+        result,  # type: bytes | None
+    ):  # type: (...) -> str
         if result is None:
             return ''
-        return ' with data: {0}'.format(result)
+        return ' with data: {0!r}'.format(result)
 
-    def _validate(self, result=None, info=None, expected=None, method='GET'):
+    def _validate(
+        self,
+        result=None,  # type: bytes | None
+        info=None,  # type: dict[str, typing.Any] | None
+        expected=None,  # type: Collection[int] | None
+        method='GET',  # type: str
+    ):  # type: (...) -> None
         if info is None:
             raise DNSAPIError('Internal error: info needs to be provided')
         status = info['status']
@@ -84,14 +119,21 @@ class JSONAPIHelper(object):
                     'Expected successful HTTP status for {0} {1}, but got HTTP status {2} ({3}){4}'.format(
                         method, url, status, error_code, more))
 
-    def _process_json_result(self, content, info, must_have_content=True, method='GET', expected=None):
+    def _process_json_result(
+        self,
+        content,  # type: bytes | None
+        info,  # type: dict[str, typing.Any]
+        must_have_content=True,  # type: bool | list[int] | tuple[int, ...]
+        method='GET',  # type: str
+        expected=None,  # type: Collection[int] | None
+    ):  # type: (...) -> tuple[dict[str, typing.Any] | list[typing.Any] | None, dict[str, typing.Any]]
         if isinstance(must_have_content, (list, tuple)):
             must_have_content = info['status'] in must_have_content
         # Check for unauthenticated
         if info['status'] == 401:
             message = 'Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
             try:
-                body = json.loads(content.decode('utf8'))
+                body = json.loads(content.decode('utf8'))  # type: ignore
                 if body['message']:
                     message = '{0}: {1}'.format(message, body['message'])
             except Exception:
@@ -100,7 +142,7 @@ class JSONAPIHelper(object):
         if info['status'] == 403:
             message = 'Forbidden: you do not have access to this resource (HTTP status 403)'
             try:
-                body = json.loads(content.decode('utf8'))
+                body = json.loads(content.decode('utf8'))  # type: ignore
                 if body['message']:
                     message = '{0}: {1}'.format(message, body['message'])
             except Exception:
@@ -117,7 +159,7 @@ class JSONAPIHelper(object):
             return None, info
         # Decode content as JSON
         try:
-            result = json.loads(content.decode('utf8'))
+            result = json.loads(content.decode('utf8'))  # type: ignore
         except Exception:
             if must_have_content:
                 raise DNSAPIError(
@@ -128,7 +170,11 @@ class JSONAPIHelper(object):
         self._validate(result=result, info=info, expected=expected, method=method)
         return result, info
 
-    def _request(self, url, **kwargs):
+    def _request(
+        self,
+        url,  # type: str
+        **kwargs
+    ):  # type: (...) -> tuple[bytes | None, dict[str, typing.Any]]
         """Execute a HTTP request and handle common things like rate limiting."""
         number_retries = 10
         countdown = number_retries + 1
@@ -139,7 +185,7 @@ class JSONAPIHelper(object):
                 if countdown <= 0:
                     break
                 try:
-                    retry_after = max(min(float(_get_header_value(info, 'retry-after')), 60), 1)
+                    retry_after = max(min(float(_get_header_value(info, 'retry-after')), 60), 1)  # type: ignore
                 except (ValueError, TypeError):
                     retry_after = 10
                 time.sleep(retry_after)
@@ -147,12 +193,18 @@ class JSONAPIHelper(object):
             return content, info
         raise DNSAPIError('Stopping after {0} failed retries with 429 Too Many Attempts'.format(number_retries))
 
-    def _create_headers(self):
+    def _create_headers(self):  # type: (...) -> dict[str, str]
         return {
             'accept': 'application/json',
         }
 
-    def _get(self, url, query=None, must_have_content=True, expected=None):
+    def _get(
+        self,
+        url,  # type: str
+        query=None,  # type: dict[str, str] | None
+        must_have_content=True,  # type: bool | list[int] | tuple[int, ...]
+        expected=None,  # type: Collection[int] | None
+    ):  # type: (...) -> tuple[dict[str, typing.Any] | list[typing.Any] | None, dict[str, typing.Any]]
         full_url = self._build_url(url, query)
         if self._debug:
             pass  # pragma: no cover
@@ -161,7 +213,14 @@ class JSONAPIHelper(object):
         content, info = self._request(full_url, headers=headers, method='GET')
         return self._process_json_result(content, info, must_have_content=must_have_content, method='GET', expected=expected)
 
-    def _post(self, url, data=None, query=None, must_have_content=True, expected=None):
+    def _post(
+        self,
+        url,  # type: str
+        data=None,  # type: dict[str, typing.Any] | None
+        query=None,  # type: dict[str, str] | None
+        must_have_content=True,  # type: bool | list[int] | tuple[int, ...]
+        expected=None,  # type: Collection[int] | None
+    ):  # type: (...) -> tuple[dict[str, typing.Any] | list[typing.Any] | None, dict[str, typing.Any]]
         full_url = self._build_url(url, query)
         if self._debug:
             pass  # pragma: no cover
@@ -174,7 +233,14 @@ class JSONAPIHelper(object):
         content, info = self._request(full_url, headers=headers, method='POST', data=encoded_data)
         return self._process_json_result(content, info, must_have_content=must_have_content, method='POST', expected=expected)
 
-    def _put(self, url, data=None, query=None, must_have_content=True, expected=None):
+    def _put(
+        self,
+        url,  # type: str
+        data=None,  # type: dict[str, typing.Any] | None
+        query=None,  # type: dict[str, str] | None
+        must_have_content=True,  # type: bool | list[int] | tuple[int, ...]
+        expected=None,  # type: Collection[int] | None
+    ):  # type: (...) -> tuple[dict[str, typing.Any] | list[typing.Any] | None, dict[str, typing.Any]]
         full_url = self._build_url(url, query)
         if self._debug:
             pass  # pragma: no cover
@@ -187,7 +253,13 @@ class JSONAPIHelper(object):
         content, info = self._request(full_url, headers=headers, method='PUT', data=encoded_data)
         return self._process_json_result(content, info, must_have_content=must_have_content, method='PUT', expected=expected)
 
-    def _delete(self, url, query=None, must_have_content=True, expected=None):
+    def _delete(
+        self,
+        url,  # type: str
+        query=None,  # type: dict[str, str] | None
+        must_have_content=True,  # type: bool | list[int] | tuple[int, ...]
+        expected=None,  # type: Collection[int] | None
+    ):  # type: (...) -> tuple[dict[str, typing.Any] | list[typing.Any] | None, dict[str, typing.Any]]
         full_url = self._build_url(url, query)
         if self._debug:
             pass  # pragma: no cover

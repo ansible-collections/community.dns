@@ -32,6 +32,7 @@ antsibull_nox.add_lint_sessions(
     pylint_modules_rcfile="tests/nox-config-pylint-py2.rc",
     mypy_config="tests/nox-config-mypy.ini",
     mypy_extra_deps=[
+        "dnspython",
         "types-lxml",
         "types-mock",
     ],

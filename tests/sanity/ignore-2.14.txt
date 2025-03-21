@@ -6,6 +6,7 @@ plugins/lookup/lookup_as_dict.py validate-modules:illegal-future-imports
 plugins/lookup/lookup_as_dict.py validate-modules:import-before-documentation
 plugins/lookup/reverse_lookup.py validate-modules:illegal-future-imports
 plugins/lookup/reverse_lookup.py validate-modules:import-before-documentation
+plugins/module_utils/dnspython_records.py pylint:used-before-assignment  # apparently bug in pylint
 plugins/modules/hetzner_dns_record_info.py validate-modules:invalid-documentation
 plugins/modules/hetzner_dns_record_set_info.py validate-modules:invalid-documentation
 plugins/modules/hosttech_dns_record_info.py validate-modules:invalid-documentation

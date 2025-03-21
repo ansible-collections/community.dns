@@ -17,13 +17,13 @@ from ansible_collections.community.dns.plugins.plugin_utils.ips import (
 ipaddress = pytest.importorskip("ipaddress")
 
 
-def test_assert_requirements_present():
+def test_assert_requirements_present() -> None:
     orig_importerror = ips.IPADDRESS_IMPORT_EXC
     try:
         ips.IPADDRESS_IMPORT_EXC = None
         assert_requirements_present("community.dns.foo", "lookup")
 
-        ips.IPADDRESS_IMPORT_EXC = Exception("asdf")
+        ips.IPADDRESS_IMPORT_EXC = ImportError("ipaddress")
         with pytest.raises(AnsibleError) as exc:
             assert_requirements_present("community.dns.foo", "lookup")
 

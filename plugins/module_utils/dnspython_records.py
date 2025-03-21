@@ -13,19 +13,31 @@ __metaclass__ = type
 
 
 import base64
+import sys
 
 from ansible.module_utils.common.text.converters import to_bytes, to_native, to_text
 from ansible.module_utils.six import binary_type
 
 
-NAME_TO_RDTYPE = {}
-RDTYPE_TO_NAME = {}
-RDTYPE_TO_FIELDS = {}
+if sys.version_info >= (3, 6):
+    import typing
+
+    if typing.TYPE_CHECKING:
+        import dns.rdatatype  # pragma: no cover
+
+
+NAME_TO_RDTYPE = {}  # type: dict[str, dns.rdatatype.RdataType]
+RDTYPE_TO_NAME = {}  # type: dict[dns.rdatatype.RdataType, str]
+RDTYPE_TO_FIELDS = {}  # type: dict[dns.rdatatype.RdataType, list[str]]
 
 try:
     import dns.name
     import dns.rdata
     import dns.rdatatype
+    try:
+        import dns.rdtypes.ANY.NSEC3
+    except ImportError:
+        pass
 
     # The following data has been borrowed from community.general's dig lookup plugin.
     #
@@ -64,7 +76,11 @@ except ImportError:
     pass  # has to be handled on application level
 
 
-def convert_rdata_to_dict(rdata, to_unicode=True, add_synthetic=True):
+def convert_rdata_to_dict(
+    rdata,  # type: dns.rdata.Rdata
+    to_unicode=True,  # type: bool
+    add_synthetic=True,  # type: bool
+):  # type: (...) -> dict[str, typing.Any]
     '''
     Convert a DNSPython record data object to a Python dictionary.
 
@@ -75,7 +91,7 @@ def convert_rdata_to_dict(rdata, to_unicode=True, add_synthetic=True):
     If ``add_synthetic=True``, for some record types additional fields are added.
     For TXT and SPF records, ``value`` contains the concatenated strings, for example.
     '''
-    result = {}
+    result = {}  # type: dict[str, typing.Any]
 
     fields = RDTYPE_TO_FIELDS.get(rdata.rdtype)
     if fields is None:
@@ -87,37 +103,37 @@ def convert_rdata_to_dict(rdata, to_unicode=True, add_synthetic=True):
             val = dns.name.Name.to_text(val)
 
         if rdata.rdtype == dns.rdatatype.DS and f == 'digest':
-            val = dns.rdata._hexify(rdata.digest).replace(' ', '')
+            val = dns.rdata._hexify(rdata.digest).replace(' ', '')  # type: ignore
         if rdata.rdtype == dns.rdatatype.DNSKEY and f == 'algorithm':
             val = int(val)
         if rdata.rdtype == dns.rdatatype.DNSKEY and f == 'key':
-            val = dns.rdata._base64ify(rdata.key).replace(' ', '')
+            val = dns.rdata._base64ify(rdata.key).replace(' ', '')  # type: ignore
         if rdata.rdtype == dns.rdatatype.NSEC3 and f == 'next':
-            val = to_native(base64.b32encode(rdata.next).translate(dns.rdtypes.ANY.NSEC3.b32_normal_to_hex).lower())
+            val = to_native(base64.b32encode(rdata.next).translate(dns.rdtypes.ANY.NSEC3.b32_normal_to_hex).lower())  # type: ignore
         if rdata.rdtype in (dns.rdatatype.NSEC, dns.rdatatype.NSEC3) and f == 'windows':
             try:
-                val = dns.rdtypes.util.Bitmap(rdata.windows).to_text().lstrip(' ')
+                val = dns.rdtypes.util.Bitmap(rdata.windows).to_text().lstrip(' ')  # type: ignore
             except AttributeError:
                 # dnspython < 2.0.0
                 val = []
-                for window, bitmap in rdata.windows:
+                for window, bitmap in rdata.windows:  # type: ignore
                     for i, byte in enumerate(bitmap):
                         for j in range(8):
                             if (byte >> (7 - j)) & 1 != 0:
                                 val.append(dns.rdatatype.to_text(window * 256 + i * 8 + j))
                 val = ' '.join(val).lstrip(' ')
         if rdata.rdtype in (dns.rdatatype.NSEC3, dns.rdatatype.NSEC3PARAM) and f == 'salt':
-            val = dns.rdata._hexify(rdata.salt).replace(' ', '')
+            val = dns.rdata._hexify(rdata.salt).replace(' ', '')  # type: ignore
         if rdata.rdtype == dns.rdatatype.RRSIG and f == 'type_covered':
-            val = RDTYPE_TO_NAME.get(rdata.type_covered) or str(val)
+            val = RDTYPE_TO_NAME.get(rdata.type_covered) or str(val)  # type: ignore
         if rdata.rdtype == dns.rdatatype.RRSIG and f == 'algorithm':
             val = int(val)
         if rdata.rdtype == dns.rdatatype.RRSIG and f == 'signature':
-            val = dns.rdata._base64ify(rdata.signature).replace(' ', '')
+            val = dns.rdata._base64ify(rdata.signature).replace(' ', '')  # type: ignore
         if rdata.rdtype == dns.rdatatype.SSHFP and f == 'fingerprint':
-            val = dns.rdata._hexify(rdata.fingerprint).replace(' ', '')
+            val = dns.rdata._hexify(rdata.fingerprint).replace(' ', '')  # type: ignore
         if rdata.rdtype == dns.rdatatype.TLSA and f == 'cert':
-            val = dns.rdata._hexify(rdata.cert).replace(' ', '')
+            val = dns.rdata._hexify(rdata.cert).replace(' ', '')  # type: ignore
 
         if isinstance(val, (list, tuple)):
             if to_unicode:
@@ -132,7 +148,7 @@ def convert_rdata_to_dict(rdata, to_unicode=True, add_synthetic=True):
     if add_synthetic:
         if rdata.rdtype in (dns.rdatatype.TXT, dns.rdatatype.SPF):
             if to_unicode:
-                result['value'] = u''.join([to_text(str) for str in rdata.strings])
+                result['value'] = u''.join([to_text(str) for str in rdata.strings])  # type: ignore
             else:
-                result['value'] = b''.join([to_bytes(str) for str in rdata.strings])
+                result['value'] = b''.join([to_bytes(str) for str in rdata.strings])  # type: ignore
     return result
