@@ -12,6 +12,9 @@ __metaclass__ = type
 import ansible_collections.community.dns.plugins.module_utils.http  # noqa: F401, pylint: disable=unused-import
 import pytest
 from ansible_collections.community.dns.plugins.modules import hosttech_dns_record
+from ansible_collections.community.internal_test_tools.tests.unit.plugins.modules.utils import (
+    extract_warnings_texts,
+)
 from ansible_collections.community.internal_test_tools.tests.unit.utils.fetch_url_module_framework import (
     BaseTestModule,
     FetchUrlCall,
@@ -641,7 +644,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
 
         assert result['changed'] is False
         assert result['zone_id'] == 42
-        assert 'warnings' not in result
+        assert extract_warnings_texts(result) == []  # pylint: disable=use-implicit-booleaness-not-comparison
 
     def test_absent_check(self, mocker):
         record = HOSTTECH_JSON_DEFAULT_ENTRIES[0]
