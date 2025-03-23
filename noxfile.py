@@ -42,6 +42,8 @@ antsibull_nox.add_docs_check(
     validate_collection_refs="all",
 )
 
+antsibull_nox.add_license_check()
+
 
 # Allow to run the noxfile with `python noxfile.py`, `pipx run noxfile.py`, or similar.
 # Requires nox >= 2025.02.09
