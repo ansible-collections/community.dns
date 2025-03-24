@@ -8,6 +8,8 @@ __metaclass__ = type
 
 
 import importlib
+import importlib.machinery
+import importlib.util
 import os
 import re
 import sys
