@@ -44,6 +44,31 @@ antsibull_nox.add_docs_check(
 
 antsibull_nox.add_license_check()
 
+antsibull_nox.add_extra_checks(
+    run_no_unwanted_files=True,
+    no_unwanted_files_module_extensions=[".py"],
+    no_unwanted_files_skip_paths=[
+        "plugins/public_suffix_list.dat",
+        "plugins/public_suffix_list.dat.license",
+    ],
+    no_unwanted_files_yaml_extensions=[".yml"],
+    run_action_groups=True,
+    action_groups_config=[
+        antsibull_nox.ActionGroup(
+            name="hetzner",
+            pattern="^hetzner_.*$",
+            exclusions=[],
+            doc_fragment="community.dns.attributes.actiongroup_hetzner",
+        ),
+        antsibull_nox.ActionGroup(
+            name="hosttech",
+            pattern="^hosttech_.*$",
+            exclusions=[],
+            doc_fragment="community.dns.attributes.actiongroup_hosttech",
+        ),
+    ],
+)
+
 
 # Allow to run the noxfile with `python noxfile.py`, `pipx run noxfile.py`, or similar.
 # Requires nox >= 2025.02.09
