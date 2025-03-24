@@ -27,6 +27,7 @@ os.environ["VIRTUALENV_DOWNLOAD"] = "1"
 
 
 antsibull_nox.add_lint_sessions(
+    extra_code_files=["update-docs-fragments.py"],
     isort_config="tests/nox-config-isort.cfg",
     run_black_modules=False,  # modules still support Python 2
     black_config="tests/nox-config-black.toml",
@@ -38,6 +39,7 @@ antsibull_nox.add_lint_sessions(
         "dnspython",
         "types-lxml",
         "types-mock",
+        "types-PyYAML",
     ],
 )
 
