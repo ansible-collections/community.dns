@@ -14,10 +14,13 @@ import nox
 
 try:
     import antsibull_nox
+    import antsibull_nox.sessions
 except ImportError:
     print("You need to install antsibull-nox in the same Python environment as nox.")
     sys.exit(1)
 
+
+IN_CI = "GITHUB_ACTIONS" in os.environ
 
 # Always install latest pip version
 os.environ["VIRTUALENV_DOWNLOAD"] = "1"
@@ -68,6 +71,20 @@ antsibull_nox.add_extra_checks(
         ),
     ],
 )
+
+
+@nox.session(name="update-docs-fragments")
+def update_docs_fragments(session: nox.Session) -> None:
+    antsibull_nox.sessions.install(session, "ansible-core")
+    prepare = antsibull_nox.sessions.prepare_collections(
+        session, install_in_site_packages=True
+    )
+    if not prepare:
+        return
+    data = ["python", "update-docs-fragments.py"]
+    if IN_CI:
+        data.append("--lint")
+    session.run(*data)
 
 
 # Allow to run the noxfile with `python noxfile.py`, `pipx run noxfile.py`, or similar.
