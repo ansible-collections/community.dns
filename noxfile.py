@@ -75,6 +75,11 @@ antsibull_nox.add_extra_checks(
 )
 
 
+antsibull_nox.add_build_import_check(
+    run_galaxy_importer=True,
+)
+
+
 @nox.session(name="update-docs-fragments")
 def update_docs_fragments(session: nox.Session) -> None:
     antsibull_nox.sessions.install(session, "ansible-core")
