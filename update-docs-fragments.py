@@ -3,11 +3,11 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import (absolute_import, division, print_function)
-__metaclass__ = type
-
+from __future__ import annotations
 
 import importlib
+import importlib.machinery
+import importlib.util
 import os
 import re
 import sys
@@ -98,9 +98,9 @@ def get_provider_informations(providers):
 
             create_provider_info_fn_name = f'create_{provider}_provider_information'
             try:
-                create_provider_info_fn = provider_information = the_module.__dict__[create_provider_info_fn_name]
+                create_provider_info_fn = the_module.__dict__[create_provider_info_fn_name]
                 provider_infos[provider] = create_provider_info_fn()
-            except KeyError as e:
+            except KeyError:
                 errors.append(f'{full_pathname}: Cannot find function {create_provider_info_fn}')
             except Exception as e:
                 errors.append(f'{full_pathname}: Error while invoking function {create_provider_info_fn}: {e}')
