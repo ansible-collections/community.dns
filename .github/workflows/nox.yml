@@ -40,6 +40,6 @@ jobs:
           path: ansible_collections/community/library_inventory_filtering_v1
           persist-credentials: false
       - name: Run nox
-        uses: felixfontein/antsibull-nox@extra
+        uses: ansible-community/antsibull-nox@main
         with:
           working-directory: ansible_collections/community/dns
