@@ -22,9 +22,6 @@ except ImportError:
 
 IN_CI = "GITHUB_ACTIONS" in os.environ
 
-# Always install latest pip version
-os.environ["VIRTUALENV_DOWNLOAD"] = "1"
-
 
 antsibull_nox.add_lint_sessions(
     extra_code_files=["update-docs-fragments.py"],
