@@ -35,6 +35,7 @@ jobs:
           - stable-2.17
           - stable-2.18
           - devel
+          - refs/pull/84621/head
     runs-on: ubuntu-latest
     steps:
       - name: Perform sanity testing
@@ -44,7 +45,7 @@ jobs:
           codecov-token: ${{ secrets.CODECOV_TOKEN }}
           testing-type: sanity
           test-deps: >-
-            git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1
+            git+https://github.com/felixfontein/community.library_inventory_filtering.git,ci-data-tagging
 
   units:
     runs-on: ubuntu-latest
@@ -60,6 +61,7 @@ jobs:
           - stable-2.17
           - stable-2.18
           - devel
+          - refs/pull/84621/head
 
     steps:
       - name: >-
@@ -73,8 +75,8 @@ jobs:
           pre-test-cmd: >-
             tests/unit/replace-requirements.sh requirements-${{ matrix.ansible }}.txt
           test-deps: >-
-            git+https://github.com/ansible-collections/community.internal_test_tools.git,main
-            git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1
+            git+https://github.com/felixfontein/community.internal_test_tools.git,ci-data-tagging
+            git+https://github.com/felixfontein/community.library_inventory_filtering.git,ci-data-tagging
 
   integration:
     runs-on: ubuntu-latest
@@ -84,6 +86,7 @@ jobs:
       matrix:
         ansible:
           - devel
+          - refs/pull/84621/head
         python:
           - 3.8
           - 3.9
@@ -135,6 +138,6 @@ jobs:
           pre-test-cmd: >-
             tests/integration/replace-requirements.sh requirements-${{ matrix.ansible }}.txt
           test-deps: >-
-            git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1
+            git+https://github.com/felixfontein/community.library_inventory_filtering.git,ci-data-tagging
           target-python-version: ${{ matrix.python }}
           testing-type: integration
