@@ -25,20 +25,11 @@ jobs:
         with:
           path: ansible_collections/community/dns
           persist-credentials: false
-      - name: Check out community.internal_test_tools
-        uses: actions/checkout@v4
-        with:
-          repository: ansible-collections/community.internal_test_tools
-          ref: main
-          path: ansible_collections/community/internal_test_tools
-          persist-credentials: false
-      - name: Check out community.library_inventory_filtering
-        uses: actions/checkout@v4
-        with:
-          repository: ansible-collections/community.library_inventory_filtering
-          ref: stable-1
-          path: ansible_collections/community/library_inventory_filtering_v1
-          persist-credentials: false
+      - name: Check out dependent collections
+        run: >-
+          ansible-galaxy collection install -p .
+          git+https://github.com/ansible-collections/community.internal_test_tools.git,main
+          git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1
       - name: Run nox
         uses: ansible-community/antsibull-nox@main
         with:
