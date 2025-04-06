@@ -35,23 +35,33 @@ jobs:
         with:
           working-directory: ansible_collections/community/dns
 
+  create-matrixes:
+    runs-on: ubuntu-latest
+    name: "Create matrixes"
+    outputs:
+      sanity-matrix: ${{ fromJSON(steps.generate-matrix.outputs.run-nox).sanity }}
+      units-matrix: ${{ fromJSON(steps.generate-matrix.outputs.run-nox).units }}
+      integration-matrix: ${{ fromJSON(steps.generate-matrix.outputs.run-nox).integration }}
+    steps:
+      - name: Check out collection
+        uses: actions/checkout@v4
+        with:
+          path: ansible_collections/community/dns
+          persist-credentials: false
+      - name: Run nox
+        uses: ansible-community/antsibull-nox@main
+        id: generate-matrix
+        with:
+          working-directory: ansible_collections/community/dns
+          sessions: matrix-generator
+
   sanity:
-    name: Sanity (Ⓐ${{ matrix.ansible }})
+    name: Sanity (Ⓐ${{ matrix.ansible-core }})
+    needs:
+      - create-matrixes
     strategy:
       matrix:
-        include:
-          - ansible: "2.14"
-            python: "3.11"
-          - ansible: "2.15"
-            python: "3.11"
-          - ansible: "2.16"
-            python: "3.12"
-          - ansible: "2.17"
-            python: "3.12"
-          - ansible: "2.18"
-            python: "3.13"
-          - ansible: devel
-            python: "3.13"
+        include: ${{ fromJson(needs.create-matrixes.outputs.sanity-matrix) }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out collection
@@ -69,30 +79,20 @@ jobs:
           working-directory: ansible_collections/community/dns
           extra-python-versions: ${{ matrix.python }}
           extra-args: --coverage
-          sessions: ansible-test-sanity-${{ matrix.ansible }}
+          sessions: ${{ matrix.name }}
       - name: Upload coverage for final step
         uses: actions/upload-artifact@v4
         with:
-          name: code-coverage-sanity-${{ matrix.ansible }}
+          name: code-coverage-sanity-${{ matrix.name }}
           path: ansible_collections/community/dns/tests/output/reports/coverage=sanity=*.xml
 
   units:
-    name: Units (Ⓐ${{ matrix.ansible }})
+    name: Units (Ⓐ${{ matrix.ansible-core }})
+    needs:
+      - create-matrixes
     strategy:
       matrix:
-        include:
-          - ansible: "2.14"
-            python: "3.11"
-          - ansible: "2.15"
-            python: "3.11"
-          - ansible: "2.16"
-            python: "3.12"
-          - ansible: "2.17"
-            python: "3.12"
-          - ansible: "2.18"
-            python: "3.13"
-          - ansible: devel
-            python: "3.13"
+        include: ${{ fromJson(needs.create-matrixes.outputs.units-matrix) }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out collection
@@ -111,68 +111,21 @@ jobs:
           working-directory: ansible_collections/community/dns
           extra-python-versions: ${{ matrix.python }}
           extra-args: --coverage
-          sessions: ansible-test-units-${{ matrix.ansible }}
+          sessions: ${{ matrix.name }}
       - name: Upload coverage for final step
         uses: actions/upload-artifact@v4
         with:
-          name: code-coverage-units-${{ matrix.ansible }}
+          name: code-coverage-units-${{ matrix.name }}
           path: ansible_collections/community/dns/tests/output/reports/coverage=units=*.xml
 
   integration:
-    name: I (Ⓐ${{ matrix.ansible }}+py${{ matrix.python }})
+    name: I (Ⓐ${{ matrix.ansible-core }}+py${{ matrix.test-python }}+${{ matrix.test-container }})
+    needs:
+      - create-matrixes
     strategy:
       fail-fast: false
       matrix:
-        ansible:
-          - devel
-        python:
-          - "3.8"
-          - "3.9"
-          - "3.10"
-          - "3.11"
-          - "3.12"
-          - "3.13"
-        ansible_python:
-          - "3.13"
-        include:
-          # 2.14
-          - ansible: "2.14"
-            python: "2.7"
-            ansible_python: "3.11"
-          - ansible: "2.14"
-            python: "3.5"
-            ansible_python: "3.11"
-          - ansible: "2.14"
-            python: "3.9"
-            ansible_python: "3.11"
-          # 2.15
-          - ansible: "2.15"
-            python: "3.7"
-            ansible_python: "3.11"
-          # 2.16
-          - ansible: "2.16"
-            python: "2.7"
-            ansible_python: "3.12"
-          - ansible: "2.16"
-            python: "3.6"
-            ansible_python: "3.12"
-          - ansible: "2.16"
-            python: "3.11"
-            ansible_python: "3.12"
-          # 2.17
-          - ansible: "2.17"
-            python: "3.7"
-            ansible_python: "3.12"
-          - ansible: "2.17"
-            python: "3.12"
-            ansible_python: "3.12"
-          # 2.18
-          - ansible: "2.18"
-            python: "3.8"
-            ansible_python: "3.13"
-          - ansible: "2.18"
-            python: "3.13"
-            ansible_python: "3.13"
+        include: ${{ fromJson(needs.create-matrixes.outputs.integration-matrix) }}
 
     runs-on: ubuntu-latest
     steps:
@@ -190,13 +143,13 @@ jobs:
         uses: ansible-community/antsibull-nox@main
         with:
           working-directory: ansible_collections/community/dns
-          extra-python-versions: ${{ matrix.ansible_python }}
+          extra-python-versions: ${{ matrix.python }}
           extra-args: --coverage
-          sessions: ansible-test-integration-${{ matrix.ansible }}-${{ matrix.python }}
+          sessions: ${{ matrix.name }}
       - name: Upload coverage for final step
         uses: actions/upload-artifact@v4
         with:
-          name: code-coverage-integration-${{ matrix.ansible }}-${{ matrix.python }}
+          name: code-coverage-integration-${{ matrix.name }}
           path: ansible_collections/community/dns/tests/output/reports/coverage=integration=*.xml
 
   upload-coverage:

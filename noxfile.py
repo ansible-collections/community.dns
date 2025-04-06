@@ -108,6 +108,9 @@ antsibull_nox.add_ansible_test_integration_sessions_default_container(
 )
 
 
+antsibull_nox.add_matrix_generator()
+
+
 # Allow to run the noxfile with `python noxfile.py`, `pipx run noxfile.py`, or similar.
 # Requires nox >= 2025.02.09
 if __name__ == "__main__":
