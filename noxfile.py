@@ -94,6 +94,20 @@ def update_docs_fragments(session: nox.Session) -> None:
     session.run(*data)
 
 
+antsibull_nox.add_all_ansible_test_sanity_test_sessions(include_devel=True)
+antsibull_nox.add_all_ansible_test_unit_test_sessions(include_devel=True)
+antsibull_nox.add_ansible_test_integration_sessions_default_container(
+    core_python_versions={
+        "2.14": ["2.7", "3.5", "3.9"],
+        "2.15": ["3.7"],
+        "2.16": ["2.7", "3.6", "3.11"],
+        "2.17": ["3.7", "3.12"],
+        "2.18": ["3.8", "3.13"],
+    },
+    include_devel=True,
+)
+
+
 # Allow to run the noxfile with `python noxfile.py`, `pipx run noxfile.py`, or similar.
 # Requires nox >= 2025.02.09
 if __name__ == "__main__":
