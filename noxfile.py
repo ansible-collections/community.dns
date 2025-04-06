@@ -77,7 +77,7 @@ antsibull_nox.add_build_import_check(
 )
 
 
-@nox.session(name="update-docs-fragments")
+@nox.session(name="update-docs-fragments", default=True)
 def update_docs_fragments(session: nox.Session) -> None:
     """
     Update/check auto-generated parts of docs fragments.
