@@ -18,7 +18,7 @@ name: nox
 jobs:
   nox:
     runs-on: ubuntu-latest
-    name: "Run nox"
+    name: "Run extra sanity tests"
     steps:
       - name: Check out collection
         uses: actions/checkout@v4
@@ -68,7 +68,15 @@ jobs:
         with:
           working-directory: ansible_collections/community/dns
           extra-python-versions: ${{ matrix.python }}
+          extra-args: --coverage
           sessions: ansible-test-sanity-${{ matrix.ansible }}
+      - name: Update coverage data
+        uses: codecov/codecov-action@v5.4.0
+        with:
+          files: tests/output/reports/coverage=sanity=*.xml
+          flags: sanity
+          token: ${{ secrets.CODECOV_TOKEN }}
+          working-directory: ansible_collections/community/dns
 
   units:
     name: Units (Ⓐ${{ matrix.ansible }})
@@ -104,7 +112,15 @@ jobs:
         with:
           working-directory: ansible_collections/community/dns
           extra-python-versions: ${{ matrix.python }}
+          extra-args: --coverage
           sessions: ansible-test-units-${{ matrix.ansible }}
+      - name: Update coverage data
+        uses: codecov/codecov-action@v5.4.0
+        with:
+          files: tests/output/reports/coverage=units=*.xml
+          flags: units
+          token: ${{ secrets.CODECOV_TOKEN }}
+          working-directory: ansible_collections/community/dns
 
   integration:
     name: I (Ⓐ${{ matrix.ansible }}+py${{ matrix.python }})
@@ -179,4 +195,12 @@ jobs:
         with:
           working-directory: ansible_collections/community/dns
           extra-python-versions: ${{ matrix.ansible_python }}
+          extra-args: --coverage
           sessions: ansible-test-integration-${{ matrix.ansible }}-${{ matrix.python }}
+      - name: Update coverage data
+        uses: codecov/codecov-action@v5.4.0
+        with:
+          files: tests/output/reports/coverage=integration=*.xml
+          flags: integration
+          token: ${{ secrets.CODECOV_TOKEN }}
+          working-directory: ansible_collections/community/dns
