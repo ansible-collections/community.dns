@@ -20,6 +20,9 @@ Finally, for the **integration tests**, you also need `community.general` instal
 
 To run all sanity tests: `ansible-test sanity --docker -v`
 
+TODO: Use nox for this
+`nox -e ansible-test-sanity-devel`
+
 ## Running nox based sanity tests and code formatting
 
 These tests require [`nox` (version 2025.02.09 or greater)](https://pypi.org/project/nox) and [`antsibull-nox`](https://pypi.org/project/antsibull-nox/). Note that running `nox` without `antsibull-nox` present will automatically create a venv that installs all needed requirements. You can also use `pipx run noxfile.py` or similar Python runners; they detect the script metadata in `noxfile.py` and will automatically install `nox` and `antsibull-nox`. Details can be found [on the antsibull-nox Getting Started page](https://ansible.readthedocs.io/projects/antsibull-nox/getting-started/#running-tests).
@@ -39,22 +42,25 @@ To run all unit tests for all supported (by your ansible-core version) Python ve
 
 To run all unit tests for a specific Python version (this is usually sufficient and much faster): `ansible-test units --docker -v --python 3.13`
 
+TODO: Use nox for this
+`nox -e ansible-test-units-devel`
+
 ## HostTech DNS modules
 
 The CI (based on GitHub Actions) does not run integration tests for the HostTech modules, because they need access to HostTech API credentials. If you have some, copy [`tests/integration/integration_config.yml.hosttech-template`](https://github.com/ansible-collections/community.dns/blob/main/tests/integration/integration_config.yml.hosttech-template) to `integration_config.yml` in the same directory, and insert username, key, a test zone (`domain.ch`) and test record (`foo.domain.ch`). Then run `ansible-test integration --allow-unsupported hosttech`. Please note that the test record will be deleted, (re-)created, and finally deleted, so do not use any record you actually need!
 
-To run the tests with Python 3.8:
+To run the tests with Python 3.13:
 ```
-ansible-test integration --docker default --python 3.8 --allow-unsupported hosttech
+ansible-test integration --docker default --python 3.13 --allow-unsupported hosttech
 ```
-You can adjust the Python version, remove `--python 3.8` completely, use a different docker container, or remove `--docker default` completely.
+You can adjust the Python version, remove `--python 3.13` completely, use a different docker container, or remove `--docker default` completely.
 
 ## Hetzner DNS modules
 
 The CI (based on GitHub Actions) does not run integration tests for the Hetzner modules, because they need access to Hetzner API credentials. If you have some, copy [`tests/integration/integration_config.yml.hetzner-template`](https://github.com/ansible-collections/community.dns/blob/main/tests/integration/integration_config.yml.hetzner-template) to `integration_config.yml` in the same directory, and insert API key and a test zone (`domain.de`). Then run `ansible-test integration --allow-unsupported hetzner`. Please note that the test zone will be modified, so do not use a zone you actually need!
 
-To run the tests with Python 3.8:
+To run the tests with Python 3.13:
 ```
-ansible-test integration --docker default --python 3.8 --allow-unsupported hetzner
+ansible-test integration --docker default --python 3.13 --allow-unsupported hetzner
 ```
-You can adjust the Python version, remove `--python 3.8` completely, use a different docker container, or remove `--docker default` completely.
+You can adjust the Python version, remove `--python 3.13` completely, use a different docker container, or remove `--docker default` completely.
