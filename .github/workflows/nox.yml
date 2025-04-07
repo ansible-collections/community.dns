@@ -36,7 +36,7 @@ jobs:
           working-directory: ansible_collections/community/dns
 
   ansible-test:
-    uses: ansible-community/antsibull-nox/.github/workflows/reusable-nox-ansible-test.yml@main
+    uses: ansible-community/antsibull-nox/.github/workflows/reusable-nox-matrix.yml@main
     with:
       collection-namespace: community
       collection-name: dns
