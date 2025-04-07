@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 name: Check for Public Suffix List updates
-on:
+"on":
   push:
     branches:
       - main
