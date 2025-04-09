@@ -356,13 +356,13 @@ see <a class="reference internal" href="#ansible-collections-community-dns-wait-
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Wait for a TXT entry to appear</span>
 <span class="w">  </span><span class="nt">community.dns.wait_for_txt</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">records</span><span class="p">:</span>
-<span class="w">    </span><span class="c1"># We want that www.example.com has a single TXT record with value &#39;Hello world!&#39;.</span>
-<span class="w">    </span><span class="c1"># There should not be any other TXT record for www.example.com.</span>
+<span class="w">      </span><span class="c1"># We want that www.example.com has a single TXT record with value &#39;Hello world!&#39;.</span>
+<span class="w">      </span><span class="c1"># There should not be any other TXT record for www.example.com.</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www.example.com</span>
 <span class="w">        </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello</span><span class="nv"> </span><span class="s">world!&quot;</span>
 <span class="w">        </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">equals</span>
-<span class="w">    </span><span class="c1"># We want that example.com has a specific SPF record set.</span>
-<span class="w">    </span><span class="c1"># We do not care about other TXT records.</span>
+<span class="w">      </span><span class="c1"># We want that example.com has a specific SPF record set.</span>
+<span class="w">      </span><span class="c1"># We do not care about other TXT records.</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www.example.com</span>
 <span class="w">        </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;v=spf1</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">mx</span><span class="nv"> </span><span class="s">-all&quot;</span>
 <span class="w">        </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subset</span>
