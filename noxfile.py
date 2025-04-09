@@ -31,6 +31,10 @@ antsibull_nox.add_lint_sessions(
     flake8_config="tests/nox-config-flake8.ini",
     pylint_rcfile="tests/nox-config-pylint.rc",
     pylint_modules_rcfile="tests/nox-config-pylint-py2.rc",
+    run_yamllint=True,
+    yamllint_config="tests/nox-config-yamllint.yml",
+    yamllint_config_plugins="tests/nox-config-yamllint-plugins.yml",
+    yamllint_config_plugins_examples="tests/nox-config-yamllint-plugins-examples.yml",
     mypy_config="tests/nox-config-mypy.ini",
     mypy_extra_deps=[
         "dnspython",

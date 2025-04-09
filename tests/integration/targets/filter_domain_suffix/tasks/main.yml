@@ -30,11 +30,15 @@
       - "'www.ansible.com' | community.dns.remove_public_suffix(keep_trailing_period=true) == 'www.ansible.'"
       - "'some.random.prefixes.ansible.co.uk' | community.dns.remove_public_suffix == 'some.random.prefixes.ansible'"
       - "'no.known.suffixafdlkjsaflkjsaflkjslkjfds' | community.dns.remove_public_suffix == 'no.known'"
-      - "'no.known.suffixafdlkjsaflkjsaflkjslkjfds' | community.dns.remove_public_suffix(keep_unknown_suffix=False) == 'no.known.suffixafdlkjsaflkjsaflkjslkjfds'"
+      - >-
+        'no.known.suffixafdlkjsaflkjsaflkjslkjfds' | community.dns.remove_public_suffix(keep_unknown_suffix=False)
+        == 'no.known.suffixafdlkjsaflkjsaflkjslkjfds'
       - "'www.example.cloudfront.net' | community.dns.remove_public_suffix(icann_only=false) == 'www.example'"
       - "'www.example.cloudfront.net' | community.dns.remove_public_suffix(icann_only=true) == 'www.example.cloudfront'"
       - "'www.ck' | community.dns.remove_public_suffix == 'www'"
-      - "'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63' | community.dns.remove_public_suffix == 'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63'"
+      - >-
+        'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63' | community.dns.remove_public_suffix
+        == 'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63'
 
 - name: "Test get_registrable_domain filter"
   assert:
@@ -75,4 +79,6 @@
       - "'www.example.cloudfront.net' | community.dns.remove_registrable_domain(icann_only=false) == 'www'"
       - "'www.example.cloudfront.net' | community.dns.remove_registrable_domain(icann_only=true) == 'www.example'"
       - "'prefix.www.ck' | community.dns.remove_registrable_domain == 'prefix'"
-      - "'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63' | community.dns.remove_registrable_domain == 'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63'"
+      - >-
+        'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63' | community.dns.remove_registrable_domain
+        == 'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63'

@@ -86,7 +86,7 @@ EXAMPLES = r"""
     hosttech_password: bar
 
 - name: Add an AAAA record
-# Note that because there are colons in the value that the IPv6 address must be quoted!
+  # Note that because there are colons in the value that the IPv6 address must be quoted!
   community.dns.hosttech_dns_record_set:
     state: present
     zone_name: foo.com

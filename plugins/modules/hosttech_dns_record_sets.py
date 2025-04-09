@@ -63,7 +63,7 @@ EXAMPLES = r"""
     hosttech_token: access_token
 
 - name: Synchronize DNS zone with a fixed set of records
-# If a record exists that is not mentioned here, it will be deleted
+  # If a record exists that is not mentioned here, it will be deleted
   community.dns.hosttech_dns_record_sets:
     zone_id: 23
     purge: true
