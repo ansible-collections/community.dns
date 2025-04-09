@@ -82,7 +82,7 @@ zone_info:
       sample: "2021-07-15T19:23:58Z"
     legacy_dns_host:
       description:
-                # TODO
+        # TODO
         - Unknown.
       type: str
       returned: if zone was imported
@@ -103,7 +103,7 @@ zone_info:
       type: str
     paused:
       description:
-                # TODO
+        # TODO
         - Unknown.
       type: bool
       sample: true
@@ -113,12 +113,12 @@ zone_info:
       type: str
     project:
       description:
-                # TODO
+        # TODO
         - Unknown.
       type: str
     registrar:
       description:
-                # TODO
+        # TODO
         - Unknown.
       type: str
     status:
@@ -127,10 +127,11 @@ zone_info:
         - Can be one of V(verified), V(failed) and V(pending).
       type: str
       sample: verified
-            # choices:
-            #     - verified
-            #     - failed
-            #     - pending
+      # TODO
+      # choices:
+      #   - verified
+      #   - failed
+      #   - pending
     ttl:
       description:
         - TTL of zone.

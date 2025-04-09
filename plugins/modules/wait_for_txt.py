@@ -121,13 +121,13 @@ EXAMPLES = r"""
 - name: Wait for a TXT entry to appear
   community.dns.wait_for_txt:
     records:
-    # We want that www.example.com has a single TXT record with value 'Hello world!'.
-    # There should not be any other TXT record for www.example.com.
+      # We want that www.example.com has a single TXT record with value 'Hello world!'.
+      # There should not be any other TXT record for www.example.com.
       - name: www.example.com
         values: "Hello world!"
         mode: equals
-    # We want that example.com has a specific SPF record set.
-    # We do not care about other TXT records.
+      # We want that example.com has a specific SPF record set.
+      # We do not care about other TXT records.
       - name: www.example.com
         values: "v=spf1 a mx -all"
         mode: subset

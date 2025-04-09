@@ -85,7 +85,7 @@ EXAMPLES = r"""
     hetzner_token: access_token
 
 - name: Add an AAAA record
-# Note that because there are colons in the value that the IPv6 address must be quoted!
+  # Note that because there are colons in the value that the IPv6 address must be quoted!
   community.dns.hetzner_dns_record_set:
     state: present
     zone: foo.com
