@@ -98,8 +98,14 @@ def update_docs_fragments(session: nox.Session) -> None:
     session.run(*data)
 
 
-antsibull_nox.add_all_ansible_test_sanity_test_sessions(include_devel=True)
-antsibull_nox.add_all_ansible_test_unit_test_sessions(include_devel=True)
+antsibull_nox.add_all_ansible_test_sanity_test_sessions(
+    include_devel=True,
+    add_devel_like_branches=[(None, "refs/pull/84621/head")],
+)
+antsibull_nox.add_all_ansible_test_unit_test_sessions(
+    include_devel=True,
+    add_devel_like_branches=[(None, "refs/pull/84621/head")],
+)
 antsibull_nox.add_ansible_test_integration_sessions_default_container(
     core_python_versions={
         "2.14": ["2.7", "3.5", "3.9"],
@@ -109,6 +115,7 @@ antsibull_nox.add_ansible_test_integration_sessions_default_container(
         "2.18": ["3.8", "3.13"],
     },
     include_devel=True,
+    add_devel_like_branches=[(None, "refs/pull/84621/head")],
 )
 
 
