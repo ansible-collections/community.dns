@@ -23,6 +23,15 @@ except ImportError:
 IN_CI = os.environ.get("CI") == "true"
 
 
+antsibull_nox.setup(
+    collection_sources={
+        "community.internal_test_tools": "git+https://github.com/ansible-collections/community.internal_test_tools.git,main",
+        "community.library_inventory_filtering_v1": "git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1",
+        "community.general": "git+https://github.com/ansible-collections/community.general.git,main",
+    },
+)
+
+
 antsibull_nox.add_lint_sessions(
     extra_code_files=["update-docs-fragments.py"],
     isort_config="tests/nox-config-isort.cfg",
