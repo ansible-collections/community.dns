@@ -26,7 +26,7 @@ jobs:
           path: ansible_collections/community/dns
           persist-credentials: false
       - name: Run nox
-        uses: ansible-community/antsibull-nox@main
+        uses: felixfontein/antsibull-nox@install-source
         with:
           working-directory: ansible_collections/community/dns
 
@@ -44,7 +44,7 @@ jobs:
           path: ansible_collections/community/dns
           persist-credentials: false
       - name: Run nox
-        uses: ansible-community/antsibull-nox@main
+        uses: felixfontein/antsibull-nox@install-source
         id: generate-matrix
         with:
           working-directory: ansible_collections/community/dns
@@ -65,7 +65,7 @@ jobs:
           path: ansible_collections/community/dns
           persist-credentials: false
       - name: Run nox
-        uses: ansible-community/antsibull-nox@main
+        uses: felixfontein/antsibull-nox@install-source
         with:
           working-directory: ansible_collections/community/dns
           extra-python-versions: ${{ matrix.python }}
@@ -92,7 +92,7 @@ jobs:
           path: ansible_collections/community/dns
           persist-credentials: false
       - name: Run nox
-        uses: ansible-community/antsibull-nox@main
+        uses: felixfontein/antsibull-nox@install-source
         with:
           working-directory: ansible_collections/community/dns
           extra-python-versions: ${{ matrix.python }}
@@ -121,7 +121,7 @@ jobs:
           path: ansible_collections/community/dns
           persist-credentials: false
       - name: Run nox
-        uses: ansible-community/antsibull-nox@main
+        uses: felixfontein/antsibull-nox@install-source
         with:
           working-directory: ansible_collections/community/dns
           extra-python-versions: ${{ matrix.python }}
