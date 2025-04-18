@@ -23,71 +23,7 @@ except ImportError:
 IN_CI = os.environ.get("CI") == "true"
 
 
-antsibull_nox.setup(
-    collection_sources={
-        "community.internal_test_tools": "git+https://github.com/ansible-collections/community.internal_test_tools.git,main",
-        "community.library_inventory_filtering_v1": "git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1",
-        "community.general": "git+https://github.com/ansible-collections/community.general.git,main",
-    },
-)
-
-
-antsibull_nox.add_lint_sessions(
-    extra_code_files=["update-docs-fragments.py"],
-    isort_config="tests/nox-config-isort.cfg",
-    run_black_modules=False,  # modules still support Python 2
-    black_config="tests/nox-config-black.toml",
-    flake8_config="tests/nox-config-flake8.ini",
-    pylint_rcfile="tests/nox-config-pylint.rc",
-    pylint_modules_rcfile="tests/nox-config-pylint-py2.rc",
-    run_yamllint=True,
-    yamllint_config="tests/nox-config-yamllint.yml",
-    yamllint_config_plugins="tests/nox-config-yamllint-plugins.yml",
-    yamllint_config_plugins_examples="tests/nox-config-yamllint-plugins-examples.yml",
-    mypy_config="tests/nox-config-mypy.ini",
-    mypy_extra_deps=[
-        "dnspython",
-        "types-lxml",
-        "types-mock",
-        "types-PyYAML",
-    ],
-)
-
-antsibull_nox.add_docs_check(
-    validate_collection_refs="all",
-)
-
-antsibull_nox.add_license_check()
-
-antsibull_nox.add_extra_checks(
-    run_no_unwanted_files=True,
-    no_unwanted_files_module_extensions=[".py"],
-    no_unwanted_files_skip_paths=[
-        "plugins/public_suffix_list.dat",
-        "plugins/public_suffix_list.dat.license",
-    ],
-    no_unwanted_files_yaml_extensions=[".yml"],
-    run_action_groups=True,
-    action_groups_config=[
-        antsibull_nox.ActionGroup(
-            name="hetzner",
-            pattern="^hetzner_.*$",
-            exclusions=[],
-            doc_fragment="community.dns.attributes.actiongroup_hetzner",
-        ),
-        antsibull_nox.ActionGroup(
-            name="hosttech",
-            pattern="^hosttech_.*$",
-            exclusions=[],
-            doc_fragment="community.dns.attributes.actiongroup_hosttech",
-        ),
-    ],
-)
-
-
-antsibull_nox.add_build_import_check(
-    run_galaxy_importer=True,
-)
+antsibull_nox.load_antsibull_nox_toml()
 
 
 @nox.session(name="update-docs-fragments", default=True)
@@ -105,23 +41,6 @@ def update_docs_fragments(session: nox.Session) -> None:
     if IN_CI:
         data.append("--lint")
     session.run(*data)
-
-
-antsibull_nox.add_all_ansible_test_sanity_test_sessions(include_devel=True)
-antsibull_nox.add_all_ansible_test_unit_test_sessions(include_devel=True)
-antsibull_nox.add_ansible_test_integration_sessions_default_container(
-    core_python_versions={
-        "2.14": ["2.7", "3.5", "3.9"],
-        "2.15": ["3.7"],
-        "2.16": ["2.7", "3.6", "3.11"],
-        "2.17": ["3.7", "3.12"],
-        "2.18": ["3.8", "3.13"],
-    },
-    include_devel=True,
-)
-
-
-antsibull_nox.add_matrix_generator()
 
 
 # Allow to run the noxfile with `python noxfile.py`, `pipx run noxfile.py`, or similar.

@@ -1,0 +1,75 @@
+# GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
+# SPDX-License-Identifier: GPL-3.0-or-later
+# SPDX-FileCopyrightText: 2025 Felix Fontein <felix@fontein.de>
+
+[collection_sources]
+"community.internal_test_tools" = "git+https://github.com/ansible-collections/community.internal_test_tools.git,main"
+"community.library_inventory_filtering_v1" = "git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1"
+"community.general" = "git+https://github.com/ansible-collections/community.general.git,main"
+
+[sessions]
+
+[sessions.lint]
+extra_code_files = ["update-docs-fragments.py"]
+isort_config = "tests/nox-config-isort.cfg"
+run_black_modules = false  # modules still support Python 2
+black_config = "tests/nox-config-black.toml"
+flake8_config = "tests/nox-config-flake8.ini"
+pylint_rcfile = "tests/nox-config-pylint.rc"
+pylint_modules_rcfile = "tests/nox-config-pylint-py2.rc"
+yamllint_config = "tests/nox-config-yamllint.yml"
+yamllint_config_plugins = "tests/nox-config-yamllint-plugins.yml"
+yamllint_config_plugins_examples = "tests/nox-config-yamllint-plugins-examples.yml"
+mypy_config = "tests/nox-config-mypy.ini"
+mypy_extra_deps = [
+    "dnspython",
+    "types-lxml",
+    "types-mock",
+    "types-PyYAML",
+]
+
+[sessions.docs_check]
+validate_collection_refs="all"
+
+[sessions.license_check]
+
+[sessions.extra_checks]
+run_no_unwanted_files = true
+no_unwanted_files_module_extensions = [".py"]
+no_unwanted_files_skip_paths = [
+    "plugins/public_suffix_list.dat",
+    "plugins/public_suffix_list.dat.license",
+]
+no_unwanted_files_yaml_extensions = [".yml"]
+run_action_groups = true
+
+[[sessions.extra_checks.action_groups_config]]
+name = "hetzner"
+pattern = "^hetzner_.*$"
+exclusions = []
+doc_fragment = "community.dns.attributes.actiongroup_hetzner"
+
+[[sessions.extra_checks.action_groups_config]]
+name = "hosttech"
+pattern = "^hosttech_.*$"
+exclusions = []
+doc_fragment = "community.dns.attributes.actiongroup_hosttech"
+
+[sessions.build_import_check]
+run_galaxy_importer = true
+
+[sessions.ansible_test_sanity]
+include_devel = true
+
+[sessions.ansible_test_units]
+include_devel = true
+
+[sessions.ansible_test_integration_w_default_container]
+include_devel = true
+
+[sessions.ansible_test_integration_w_default_container.core_python_versions]
+"2.14" = ["2.7", "3.5", "3.9"]
+"2.15" = ["3.7"]
+"2.16" = ["2.7", "3.6", "3.11"]
+"2.17" = ["3.7", "3.12"]
+"2.18" = ["3.8", "3.13"]
