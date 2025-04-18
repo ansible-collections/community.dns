@@ -23,18 +23,13 @@ jobs:
       - name: Check out collection
         uses: actions/checkout@v4
         with:
-          path: ansible_collections/community/dns
           persist-credentials: false
       - name: Run nox
         uses: ansible-community/antsibull-nox@main
-        with:
-          working-directory: ansible_collections/community/dns
 
   ansible-test:
     uses: ansible-community/antsibull-nox/.github/workflows/reusable-nox-matrix.yml@main
     with:
-      collection-namespace: community
-      collection-name: dns
       upload-codecov: true
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
