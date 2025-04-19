@@ -8,6 +8,8 @@
 
 import os
 import sys
+import urllib.request
+from pathlib import Path
 
 import nox
 
@@ -31,16 +33,47 @@ def update_docs_fragments(session: nox.Session) -> None:
     """
     Update/check auto-generated parts of docs fragments.
     """
-    session.install(session, "ansible-core")
+    session.install("ansible-core")
     prepare = antsibull_nox.sessions.prepare_collections(
         session, install_in_site_packages=True
     )
     if not prepare:
         return
-    data = ["python", "update-docs-fragments.py"]
+    data = ["python", "tests/update-docs-fragments.py"]
     if IN_CI:
         data.append("--lint")
     session.run(*data)
+
+
+@nox.session(name="update-psl", default=False, python=False)
+def update_psl(session: nox.Session) -> None:
+    # Sometimes the version on publicsuffix.org differs depending on from where you request it over many hours,
+    # so for now let's directly fetch it from GitHub.
+    # url = 'https://publicsuffix.org/list/public_suffix_list.dat'
+    url = "https://raw.githubusercontent.com/publicsuffix/list/main/public_suffix_list.dat"
+    filename = "plugins/public_suffix_list.dat"
+
+    # Download file
+    urllib.request.urlretrieve(url, filename)
+
+    output = session.run("git", "status", "--porcelain=v1", filename, silent=True)
+    if output == "":
+        print("PSL is up-to-date!")
+        return
+
+    if IN_CI:
+        session.error("PSL is not up-to-date! Run 'nox -e update-psl'!")
+        return
+
+    fragment = Path("changelogs", "fragments", "update-psl.yml")
+    if not fragment.exists():
+        fragment.write_text(
+            r"""bugfixes:
+  - "Update Public Suffix List."
+"""
+        )
+
+    session.run("git", "status", filename, fragment)
 
 
 # Allow to run the noxfile with `python noxfile.py`, `pipx run noxfile.py`, or similar.

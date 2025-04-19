@@ -27,3 +27,7 @@ jobs:
 
       - name: Update PSL (returns exit code 1 if something changed)
         run: ./update-psl.sh
+      - name: Run nox
+        uses: ansible-community/antsibull-nox@main
+        with:
+          sessions: update-psl
