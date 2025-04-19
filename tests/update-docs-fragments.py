@@ -71,7 +71,7 @@ def get_provider_informations(providers):
         try:
             the_module = importlib.import_module(full_py_path)
         except Exception as e:
-            errors.append(f'{full_pathname}: Error while importing module {full_py_path}: {e}')
+            errors.append(f'Error while importing module {full_py_path}: {e}')
             continue
 
         create_provider_info_fn_name = f'create_{provider}_provider_information'
@@ -79,9 +79,9 @@ def get_provider_informations(providers):
             create_provider_info_fn = the_module.__dict__[create_provider_info_fn_name]
             provider_infos[provider] = create_provider_info_fn()
         except KeyError:
-            errors.append(f'{full_pathname}: Cannot find function {create_provider_info_fn}')
+            errors.append(f'{full_py_path}: Cannot find function {create_provider_info_fn}')
         except Exception as e:
-            errors.append(f'{full_pathname}: Error while invoking function {create_provider_info_fn}: {e}')
+            errors.append(f'{full_py_path}: Error while invoking function {create_provider_info_fn}: {e}')
 
     return provider_infos, errors
 
