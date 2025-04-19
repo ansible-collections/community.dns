@@ -3,6 +3,8 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# Run this script with `nox -Re update-docs-fragments`!
+
 from __future__ import annotations
 
 import importlib
@@ -61,54 +63,27 @@ DEPENDENT_FRAGMENTS = [
 
 
 def get_provider_informations(providers):
-    files_to_remove = []
+    provider_infos = {}
+    errors = []
 
-    def add_init_py(path):
-        path = os.path.join(path, '__init__.py')
-        if os.path.exists(path):
-            return
-        with open(path, 'wb') as f:
-            f.write(b'')
-        files_to_remove.append(path)
+    for provider in providers:
+        full_py_path = f'ansible_collections.community.dns.plugins.module_utils.{provider}.api'
+        try:
+            the_module = importlib.import_module(full_py_path)
+        except Exception as e:
+            errors.append(f'{full_pathname}: Error while importing module {full_py_path}: {e}')
+            continue
 
-    try:
-        sys.path.append(os.path.join('..', '..', '..'))
+        create_provider_info_fn_name = f'create_{provider}_provider_information'
+        try:
+            create_provider_info_fn = the_module.__dict__[create_provider_info_fn_name]
+            provider_infos[provider] = create_provider_info_fn()
+        except KeyError:
+            errors.append(f'{full_pathname}: Cannot find function {create_provider_info_fn}')
+        except Exception as e:
+            errors.append(f'{full_pathname}: Error while invoking function {create_provider_info_fn}: {e}')
 
-        add_init_py(os.path.join('..', '..'))
-        add_init_py(os.path.join('..'))
-        add_init_py(os.path.join('.'))
-        add_init_py(os.path.join('plugins'))
-        add_init_py(os.path.join('plugins', 'module_utils'))
-
-        provider_infos = {}
-        errors = []
-
-        for provider in providers:
-            add_init_py(os.path.join('plugins', 'module_utils', provider))
-            full_py_path = f'ansible_collections.community.dns.plugins.module_utils.{provider}.api'
-            full_pathname = os.path.join('plugins', 'module_utils', provider, 'api.py')
-            try:
-                loader = importlib.machinery.SourceFileLoader(full_py_path, full_pathname)
-                spec = importlib.util.spec_from_loader(full_py_path, loader)
-                the_module = importlib.util.module_from_spec(spec)
-                loader.exec_module(the_module)
-            except Exception as e:
-                errors.append(f'{full_pathname}: Error while importing module {full_py_path}: {e}')
-                continue
-
-            create_provider_info_fn_name = f'create_{provider}_provider_information'
-            try:
-                create_provider_info_fn = the_module.__dict__[create_provider_info_fn_name]
-                provider_infos[provider] = create_provider_info_fn()
-            except KeyError:
-                errors.append(f'{full_pathname}: Cannot find function {create_provider_info_fn}')
-            except Exception as e:
-                errors.append(f'{full_pathname}: Error while invoking function {create_provider_info_fn}: {e}')
-
-        return provider_infos, errors
-    finally:
-        for path in files_to_remove:
-            os.remove(path)
+    return provider_infos, errors
 
 
 class DocFragmentParseError(Exception):
@@ -297,7 +272,7 @@ def main(program, arguments):
                 if not compare_doc_fragment(provider, doc_fragment):
                     path = doc_fragment_fn(provider)
                     if lint:
-                        errors.append(f'{path}: Needs to be updated by update-docs-fragments.py')
+                        errors.append(f"{path}: Needs to be updated by running 'nox -Re update-docs-fragments'")
                     else:
                         print(f'Writing {path}...')
                         write_doc_fragment(provider, doc_fragment)
