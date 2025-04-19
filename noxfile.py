@@ -37,7 +37,7 @@ def update_docs_fragments(session: nox.Session) -> None:
     )
     if not prepare:
         return
-    data = ["python", "update-docs-fragments.py"]
+    data = ["python", "tests/update-docs-fragments.py"]
     if IN_CI:
         data.append("--lint")
     session.run(*data)
