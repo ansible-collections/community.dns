@@ -10,7 +10,7 @@
 [sessions]
 
 [sessions.lint]
-extra_code_files = ["update-docs-fragments.py"]
+extra_code_files = ["tests/update-docs-fragments.py"]
 isort_config = "tests/nox-config-isort.cfg"
 run_black_modules = false  # modules still support Python 2
 black_config = "tests/nox-config-black.toml"
