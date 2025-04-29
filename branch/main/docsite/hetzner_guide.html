@@ -296,12 +296,12 @@ The modules use the <a class="reference external" href="https://dns.hetzner.com/
 <span class="w">    </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
 <span class="w">      </span><span class="no">IPv4s are </span><span class="cp">{{</span> <span class="nv">result.set.value</span> <span class="o">|</span> <span class="nf">join</span><span class="o">(</span><span class="s1">&#39;, &#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="no">,</span>
 <span class="w">      </span><span class="no">TTL is </span><span class="cp">{{</span> <span class="nv">result.set.ttl</span> <span class="cp">}}</span>
-<span class="w">  </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result.set</span>
+<span class="w">  </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result.set is truthy</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Show that record is not set</span>
 <span class="w">  </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">There is no A record for www.example.com</span>
-<span class="w">  </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not result.set</span>
+<span class="w">  </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result.set is falsy</span>
 </pre></div>
 </div>
 <p>In all examples in this section, you can replace <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="../hetzner_dns_record_set_info_module.html#ansible-collections-community-dns-hetzner-dns-record-set-info-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name=example.com</span></span></a></code> by <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="../hetzner_dns_record_set_info_module.html#ansible-collections-community-dns-hetzner-dns-record-set-info-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id=aBcDeFgHiJlMnOpQrStUvW</span></span></a></code> with the zone’s ID string.</p>
