@@ -156,12 +156,12 @@ The :ansplugin:`community.dns.hosttech_dns_record_set_info module <community.dns
         msg: >
           IPv4s are {{ result.set.value | join(', ') }},
           TTL is {{ result.set.ttl }}
-      when: result.set
+      when: result.set is truthy
 
     - name: Show that record is not set
       ansible.builtin.debug:
         msg: There is no A record for www.example.com
-      when: not result.set
+      when: result.set is falsy
 
 In all examples in this section, you can replace :ansopt:`community.dns.hosttech_dns_record_set_info#module:zone_name=example.com` by :ansopt:`community.dns.hosttech_dns_record_set_info#module:zone_id=42` with the zone's integer ID.
 
