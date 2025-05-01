@@ -40,7 +40,7 @@ options:
     type: dict
     default: {}
     suboptions:
-            # (The following must be kept in sync with the equivalent lines in <provider_name>.py!)
+      # (The following must be kept in sync with the equivalent lines in <provider_name>.py!)
       type:
         description:
           - Record types whose values to use.

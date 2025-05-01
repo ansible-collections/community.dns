@@ -52,7 +52,7 @@ options:
     aliases:
       - records
     suboptions:
-            # (The following must be kept in sync with the equivalent lines in <provider_name>.py!)
+      # (The following must be kept in sync with the equivalent lines in <provider_name>.py!)
       record:
         description:
           - The full DNS record to create or delete.
