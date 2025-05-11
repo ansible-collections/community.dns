@@ -7,6 +7,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 # Community DNS Collection
 [![Documentation](https://img.shields.io/badge/docs-brightgreen.svg)](https://docs.ansible.com/ansible/devel/collections/community/dns/)
 [![CI](https://github.com/ansible-collections/community.dns/actions/workflows/nox.yml/badge.svg?branch=main)](https://github.com/ansible-collections/community.dns/actions)
+[![Public Suffix List up-to-date](https://github.com/ansible-collections/community.dns/actions/workflows/check-psl.yml/badge.svg?branch=main)](https://github.com/ansible-collections/community.dns/actions/workflows/check-psl.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/ansible-collections/community.dns)](https://codecov.io/gh/ansible-collections/community.dns)
 [![REUSE status](https://api.reuse.software/badge/github.com/ansible-collections/community.dns)](https://api.reuse.software/info/github.com/ansible-collections/community.dns)
 
