@@ -27,4 +27,4 @@ jobs:
       - name: Run nox
         uses: ansible-community/antsibull-nox@main
         with:
-          session: update-psl
+          sessions: update-psl
