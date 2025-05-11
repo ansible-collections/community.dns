@@ -57,6 +57,9 @@ def update_psl(session: nox.Session) -> None:
     urllib.request.urlretrieve(url, filename)
 
     output = session.run("git", "status", "--porcelain=v1", filename, silent=True)
+    if output is None:
+        # The run was skipped
+        return
     if output == "":
         print("PSL is up-to-date!")
         return
