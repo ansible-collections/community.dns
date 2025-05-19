@@ -1028,3 +1028,12 @@ releases:
       - 3.2.3.yml
       - update-psl.yml
     release_date: '2025-04-21'
+  3.2.4:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+      release_summary: Regular maintenance release with updated PSL.
+    fragments:
+      - 3.2.4.yml
+      - update-psl.yml
+    release_date: '2025-05-19'
