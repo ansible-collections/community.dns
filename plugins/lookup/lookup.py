@@ -31,7 +31,6 @@ options:
     default: A
     choices:
       - A
-      - ALL
       - AAAA
       - CAA
       - CNAME
