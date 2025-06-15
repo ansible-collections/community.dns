@@ -4,6 +4,20 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.2.5
+======
+
+Release Summary
+---------------
+
+Regular maintenance release with bugfixes and updated PSL.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- lookup and lookup_as_dict lookup plugins - removed type ``ALL``, which never worked (https://github.com/ansible-collections/community.dns/issues/264, https://github.com/ansible-collections/community.dns/pull/265).
+
 v3.2.4
 ======
 
