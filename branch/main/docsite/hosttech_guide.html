@@ -207,7 +207,7 @@ The modules support both the old <a class="reference external" href="https://ns1
 <p>To use the JSON REST API, you need to create a API token. You can manage API tokens in the “DNS Editor” in the “API” section. You must provide the token to the <code class="ansible-option docutils literal notranslate"><strong><span><span class="pre">hosttech_token</span></span></strong></code> option of the modules:</p>
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">community.dns.hosttech_dns_record</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">hosttech_token</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;</span><span class="cp">{{</span> <span class="nv">token</span> <span class="cp">}}</span><span class="s">&#39;</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">    </span><span class="c1"># ...</span>
 </pre></div>
 </div>
 <p>In the examples in this guide, we will leave the authentication options away. Please note that you can set them globally with <code class="docutils literal notranslate"><span class="pre">module_defaults</span></code> (see <a class="reference external" href="https://docs.ansible.com/ansible/devel/playbook_guide/playbooks_module_defaults.html#module-defaults" title="(in Ansible vdevel)"><span>Module defaults</span></a>).</p>
@@ -223,7 +223,7 @@ The modules support both the old <a class="reference external" href="https://ns1
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">community.dns.hosttech_dns_record</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">hosttech_username</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;</span><span class="cp">{{</span> <span class="nv">username</span> <span class="cp">}}</span><span class="s">&#39;</span>
 <span class="w">    </span><span class="nt">hosttech_password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;</span><span class="cp">{{</span> <span class="nv">password</span> <span class="cp">}}</span><span class="s">&#39;</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">    </span><span class="c1"># ...</span>
 </pre></div>
 </div>
 <p>In the examples in this guide, we will leave the authentication options away. Please note that you can set them globally with <code class="docutils literal notranslate"><span class="pre">module_defaults</span></code> (see <a class="reference external" href="https://docs.ansible.com/ansible/devel/playbook_guide/playbooks_module_defaults.html#module-defaults" title="(in Ansible vdevel)"><span>Module defaults</span></a>).</p>
@@ -236,8 +236,8 @@ The modules support both the old <a class="reference external" href="https://ns1
 <span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
 <span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">  </span><span class="nt">module_defaults</span><span class="p">:</span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">group/community.dns.hosttech</span>
-<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">hosttech_username</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&#39;</span><span class="cp">{{</span> <span class="nv">username</span> <span class="cp">}}</span><span class="s">&#39;</span>
+<span class="w">    </span><span class="nt">group/community.dns.hosttech</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">hosttech_username</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;</span><span class="cp">{{</span> <span class="nv">username</span> <span class="cp">}}</span><span class="s">&#39;</span>
 <span class="w">      </span><span class="nt">hosttech_password</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;</span><span class="cp">{{</span> <span class="nv">password</span> <span class="cp">}}</span><span class="s">&#39;</span>
 <span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Query zone information</span>
