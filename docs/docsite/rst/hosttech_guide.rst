@@ -44,7 +44,7 @@ To use the JSON REST API, you need to create a API token. You can manage API tok
 
   - community.dns.hosttech_dns_record:
       hosttech_token: '{{ token }}'
-      ...
+      # ...
 
 In the examples in this guide, we will leave the authentication options away. Please note that you can set them globally with ``module_defaults`` (see :ref:`module_defaults`).
 
@@ -64,7 +64,7 @@ You also need to install the `lxml Python module <https://pypi.org/project/lxml/
   - community.dns.hosttech_dns_record:
       hosttech_username: '{{ username }}'
       hosttech_password: '{{ password }}'
-      ...
+      # ...
 
 In the examples in this guide, we will leave the authentication options away. Please note that you can set them globally with ``module_defaults`` (see :ref:`module_defaults`).
 
@@ -80,7 +80,7 @@ To avoid having to specify common parameters for all Hosttech DNS modules in eve
       hosts: localhost
       gather_facts: false
       module_defaults:
-        group/community.dns.hosttech
+        group/community.dns.hosttech:
           hosttech_username: '{{ username }}'
           hosttech_password: '{{ password }}'
       tasks:

@@ -20,6 +20,7 @@ pylint_modules_rcfile = "tests/nox-config-pylint-py2.rc"
 yamllint_config = "tests/nox-config-yamllint.yml"
 yamllint_config_plugins = "tests/nox-config-yamllint-plugins.yml"
 yamllint_config_plugins_examples = "tests/nox-config-yamllint-plugins-examples.yml"
+yamllint_config_extra_docs = "tests/nox-config-yamllint-extra-docs.yml"
 mypy_config = "tests/nox-config-mypy.ini"
 mypy_extra_deps = [
     "dnspython",
