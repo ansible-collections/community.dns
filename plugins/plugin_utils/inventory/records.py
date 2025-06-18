@@ -85,15 +85,11 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
 
             zone_name = self.get_option("zone_name")
             if self.templar.is_template(zone_name):
-                zone_name = self.templar.template(
-                    variable=zone_name, disable_lookups=False
-                )
+                zone_name = self.templar.template(variable=zone_name)
             zone_id = self.get_option("zone_id")
             if zone_id is not None:
                 if self.templar.is_template(zone_id):
-                    zone_id = self.templar.template(
-                        variable=zone_id, disable_lookups=False
-                    )
+                    zone_id = self.templar.template(variable=zone_id)
                 # For templating, we need to make the zone_id type 'string' or 'raw'.
                 # This converts the value to its proper type expected by the API.
                 zone_id_type = self.provider_information.get_record_id_type()
