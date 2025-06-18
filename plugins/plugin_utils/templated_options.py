@@ -19,5 +19,5 @@ class TemplatedOptionProvider:
     def get_option(self, option_name: str) -> t.Any:
         value = self.plugin.get_option(option_name)
         if self.templar.is_template(value):
-            value = self.templar.template(variable=value, disable_lookups=False)
+            value = self.templar.template(variable=value)
         return value
