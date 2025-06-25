@@ -12,7 +12,7 @@ Community.Dns Filter Guide
    :local:
    :depth: 1
 
-The :ref:`community.dns collection <plugins_in_community.dns>` offers several filters for working with DNS names:
+The :anscollection:`community.dns collection <community.dns>` offers several filters for working with DNS names:
 
 - :ansplugin:`community.dns.get_public_suffix#filter`: given a domain name, returns the public suffix;
 - :ansplugin:`community.dns.get_registrable_domain#filter`: given a domain name, returns the registrable domain name;
