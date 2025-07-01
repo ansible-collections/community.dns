@@ -1,0 +1,2 @@
+plugins/plugin_utils/inventory/records.py no-assert  # The asserts are mainly needed for type inference
+plugins/public_suffix_list.dat no-smart-quotes
