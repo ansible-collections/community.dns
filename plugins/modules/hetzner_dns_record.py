@@ -55,6 +55,15 @@ EXAMPLES = r"""
     value: 1.1.1.1
     hetzner_token: access_token
 
+- name: Add A record using prefix for www.example.com
+  community.dns.hetzner_dns_record:
+    state: present
+    zone_name: example.com
+    prefix: www
+    type: A
+    value: 198.51.100.25
+    hetzner_token: "{{ lookup('env', 'HETZNER_DNS_TOKEN') }}"
+
 - name: Remove a new.foo.com A record
   community.dns.hetzner_dns_record:
     state: absent
