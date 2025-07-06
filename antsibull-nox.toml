@@ -52,6 +52,7 @@ no_unwanted_files_skip_paths = [
 no_unwanted_files_yaml_extensions = [".yml"]
 run_action_groups = true
 run_no_trailing_whitespace = true
+run_avoid_characters = true
 
 [[sessions.extra_checks.action_groups_config]]
 name = "hetzner"
@@ -64,6 +65,10 @@ name = "hosttech"
 pattern = "^hosttech_.*$"
 exclusions = []
 doc_fragment = "community.dns.attributes.actiongroup_hosttech"
+
+[[sessions.extra_checks.avoid_character_group]]
+name = "tab"
+regex = "\\x09"
 
 [sessions.build_import_check]
 run_galaxy_importer = true
