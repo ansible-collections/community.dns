@@ -4,6 +4,21 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.2.6
+======
+
+Release Summary
+---------------
+
+Regular bugfix and maintenance release with updated PSL.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- hetzner_dns_records inventory plugin - avoid using deprecated option when templating options (https://github.com/ansible-collections/community.dns/pull/266).
+- hosttech_dns_records inventory plugin - avoid using deprecated option when templating options (https://github.com/ansible-collections/community.dns/pull/266).
+
 v3.2.5
 ======
 

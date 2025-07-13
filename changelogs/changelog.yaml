@@ -1050,3 +1050,17 @@ releases:
       - 3.2.5.yml
       - update-psl.yml
     release_date: '2025-06-15'
+  3.2.6:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+        - hetzner_dns_records inventory plugin - avoid using deprecated option when
+          templating options (https://github.com/ansible-collections/community.dns/pull/266).
+        - hosttech_dns_records inventory plugin - avoid using deprecated option when
+          templating options (https://github.com/ansible-collections/community.dns/pull/266).
+      release_summary: Regular bugfix and maintenance release with updated PSL.
+    fragments:
+      - 266-disable_lookups.yml
+      - 3.2.6.yml
+      - update-psl.yml
+    release_date: '2025-07-13'
