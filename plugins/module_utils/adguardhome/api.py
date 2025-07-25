@@ -54,7 +54,7 @@ class AdGuardHomeAPIHandler:
         if method == "add":
             answer_value = answer
         else:
-           answer_value = target["answer"] if answer is None else answer
+            answer_value = target["answer"] if answer is None else answer
 
         data = {
             "domain": domain,
