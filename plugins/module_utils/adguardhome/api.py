@@ -1,9 +1,7 @@
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
-from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.basic import missing_required_lib
-import base64
 import traceback
 
 REQUESTS_IMP_ERR = None
@@ -98,4 +96,3 @@ class AdGuardHomeAPIHandler:
 
     except requests.exceptions.RequestException as e:
         self.fail_json(msg=str(e), exception=type(e).__name__)
-
