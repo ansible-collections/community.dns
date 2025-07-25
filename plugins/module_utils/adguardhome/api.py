@@ -26,7 +26,7 @@ class AdGuardHomeAPIHandler:
         self.auth = requests.auth.HTTPBasicAuth(username, password)
 
         host = params.get('host')
-        self.url = f"{host}/control/rewrite"
+        self.url = host + "/control/rewrite"
 
         self.ssl_verify = params.get('ssl_verify')
         self.fail_json = fail_json
