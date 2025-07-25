@@ -1,0 +1,81 @@
+---
+####################################################################
+# WARNING: These are designed specifically for Ansible tests       #
+# and should not be used as examples of how to write Ansible roles #
+####################################################################
+
+# Copyright (c) Ansible Project
+# GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+- name: auth anker
+  ansible.builtin.set_fact:
+    adguardhome_connection: &adguardhome_connection
+      username: "{{ adguardhome_user }}"
+      password: "{{ adguardhome_password }}"
+      host: "{{ adguardhome_host }}"
+      ssl_verify: "{{ adguardhome_ssl_verify }}"
+
+- name: Install required libs
+  ansible.builtin.pip:
+    name: requests
+    state: present
+
+- name: get dns all dns rewrites
+  register: rewrites
+  community.dns.adguardhome_rewrite_info:
+    <<: *adguardhome_connection
+
+- name: rewrite rules must be from type of list
+  assert:
+    that:
+      - "'rules' in rewrites"
+      - "rewrites['rules'] is iterable"
+
+- name: set a dns rewrite
+  register: set_rewrite
+  community.dns.adguardhome_rewrite:
+    <<: *adguardhome_connection
+    domain: example.org
+    answer: 127.0.0.1
+
+- name: rewrite is created
+  assert:
+    that:
+      - set_rewrite is changed
+
+- name: idempotent set dns rewrite
+  register: set_rewrite
+  community.dns.adguardhome_rewrite:
+    <<: *adguardhome_connection
+    domain: example.org
+    answer: 127.0.0.1
+
+- name: rewrite is present
+  assert:
+    that:
+      - set_rewrite is not changed
+
+- name: change dns records
+  register: set_rewrite
+  community.dns.adguardhome_rewrite:
+    <<: *adguardhome_connection
+    domain: example.org
+    answer: 127.0.1.1
+
+- name: rewrite is changed
+  assert:
+    that:
+      - set_rewrite is changed
+
+- name: remove set dns records
+  register: rm_rewrite
+  community.dns.adguardhome_rewrite:
+    <<: *adguardhome_connection
+    domain: example.org
+    state: absent
+
+- name: rewrite is changed
+  assert:
+    that:
+      - rm_rewrite is changed
