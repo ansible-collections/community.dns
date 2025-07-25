@@ -8,7 +8,7 @@ __metaclass__ = type
 
 class ModuleDocFragment(object):
 
-      CONNECTIVITY = r'''
+    CONNECTIVITY = r'''
 options:
   username:
     description:
