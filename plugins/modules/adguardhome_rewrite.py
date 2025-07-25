@@ -30,13 +30,14 @@ options:
       - absent
   domain:
     description:
-      - domain that should be rewritten.
+      - domain or wildcard domain that you want to be rewritten by AdGuard Home.
     type: str
     required: true
   answer:
     description:
       - value for the domain rewrite.
       - required when O(state=present).
+      - value can be a CNAME, A or AAAA record.
     type: str
     required: false
 attributes:
