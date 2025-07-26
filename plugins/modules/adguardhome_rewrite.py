@@ -57,7 +57,7 @@ author:
 """
 
 EXAMPLES = r"""
-- name: add dns rewrite rule in adguard home
+- name: Add DNS rewrite rule in AdGuardHome
   community.dns.adguardhome_rewrite:
     state: present
     answer: 127.0.0.1
