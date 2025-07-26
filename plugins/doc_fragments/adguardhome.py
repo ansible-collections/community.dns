@@ -8,7 +8,7 @@ __metaclass__ = type
 
 class ModuleDocFragment(object):
 
-  CONNECTIVITY = r'''
+    CONNECTIVITY = r'''
 options:
   username:
     description:
@@ -33,6 +33,6 @@ options:
     type: bool
     default: true
 requirements:
-    - requests
-    - yaml
+  - requests
+  - yaml
 '''
