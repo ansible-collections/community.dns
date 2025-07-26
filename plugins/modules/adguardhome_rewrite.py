@@ -50,9 +50,6 @@ attributes:
     support: full
   idempotent:
     support: full
-    description:
-      - When run twice in a row outside check mode, with the same arguments, the second invocation indicates no change.
-      - This assumes that the system controlled/queried by the module has not changed in a relevant way.
 
 
 author:
