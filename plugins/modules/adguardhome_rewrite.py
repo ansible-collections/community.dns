@@ -44,8 +44,6 @@ options:
 attributes:
   check_mode:
     support: full
-    details:
-      - This action does not modify state.
   diff_mode:
     support: full
   idempotent:
@@ -149,22 +147,22 @@ def main():
     before = adguardhome.list()
     changed = False
 
-    DOMAIN_EXISTS, VALUE_IS_DIFFERENT, TARGET = find_and_compare(before, domain, answer)
+    domain_exists, value_is_different, target = find_and_compare(before, domain, answer)
     if state == 'present':
-        if not DOMAIN_EXISTS and not module.check_mode and not VALUE_IS_DIFFERENT:
+        if not domain_exists and not module.check_mode and not value_is_different:
             changed = True
             if module.check_mode:
                 checked_mode_after = before + [{"answer": answer, "domain": domain}]
             else:
-                adguardhome.add_or_delete(domain, answer, "add", TARGET)
+                adguardhome.add_or_delete(domain, answer, "add", target)
 
-        if DOMAIN_EXISTS and VALUE_IS_DIFFERENT:
+        if domain_exists and value_is_different:
             changed = True
-            adguardhome.update(domain, answer, TARGET)
+            adguardhome.update(domain, answer, target)
 
     else:
-        if DOMAIN_EXISTS and not module.check_mode:
-            adguardhome.add_or_delete(domain, answer, "delete", TARGET)
+        if domain_exists and not module.check_mode:
+            adguardhome.add_or_delete(domain, answer, "delete", target)
             changed = True
 
     after = adguardhome.list()
