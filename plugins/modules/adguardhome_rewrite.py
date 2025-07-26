@@ -23,7 +23,7 @@ extends_documentation_fragment:
 options:
   state:
     description:
-      - wether a rewrite rule should be added/updated O(state=present) or removed O(state=absent).
+      - Wether a rewrite rule should be added/updated (O(state=present)) or removed (O(state=absent)).
     type: str
     default: present
     choices:
