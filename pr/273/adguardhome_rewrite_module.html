@@ -252,7 +252,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-adgua
 <div class="ansibleOptionAnchor" id="parameter-state"></div><p class="ansible-option-title" id="ansible-collections-community-dns-adguardhome-rewrite-module-parameter-state"><strong>state</strong></p>
 <a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>wether a rewrite rule should be added/updated <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-adguardhome-rewrite-module-parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code> or removed <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-adguardhome-rewrite-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code>.</p>
+<td><div class="ansible-option-cell"><p>Wether a rewrite rule should be added/updated (<code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-adguardhome-rewrite-module-parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>) or removed (<code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-adguardhome-rewrite-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code>).</p>
 <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
 <ul class="simple">
 <li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">&quot;present&quot;</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
@@ -311,15 +311,15 @@ see <a class="reference internal" href="#ansible-collections-community-dns-adgua
 </section>
 <section id="examples">
 <h2><a class="toc-backref" href="#id5" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
-<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">add dns rewrite rule in adguard home</span>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add DNS rewrite rule in AdGuardHome</span>
 <span class="w">  </span><span class="nt">community.dns.adguardhome_rewrite</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 <span class="w">    </span><span class="nt">answer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span>
 <span class="w">    </span><span class="nt">domain</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">example.org</span>
 
-<span class="c1"># when removing a rewrite, the current answer value must also match</span>
-<span class="c1"># therefore you can just leave it out and the existing value</span>
-<span class="c1"># will be used</span>
+<span class="c1"># When removing a rewrite, the current answer value must also match.</span>
+<span class="c1"># Therefore you can just leave it out and the existing value</span>
+<span class="c1"># will be used.</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">remove rewrite for example.org</span>
 <span class="w">  </span><span class="nt">community.dns.adguardhome_rewrite</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
@@ -342,7 +342,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-adgua
 <a class="ansibleOptionLink" href="#return-rules" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The list of fetched rewrite rules.</p>
-<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> always</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
