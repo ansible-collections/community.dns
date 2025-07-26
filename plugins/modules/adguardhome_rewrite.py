@@ -95,7 +95,9 @@ rules:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.basic import missing_required_lib
-from ansible_collections.community.dns.plugins.module_utils.adguardhome.api import AdGuardHomeAPIHandler
+from ansible_collections.community.dns.plugins.module_utils.adguardhome.api import (
+    AdGuardHomeAPIHandler
+)
 import traceback
 
 YAML_IMP_ERR = None

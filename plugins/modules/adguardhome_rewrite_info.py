@@ -34,7 +34,7 @@ EXAMPLES = r"""
     username: admin
     password: admin
     host: https://dns.osuv.de
-    ssl_verify: False
+    ssl_verify: false
 
 - name: display the rewrite rules
   debug:
@@ -59,7 +59,9 @@ rules:
 """
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.community.dns.plugins.module_utils.adguardhome.api import AdGuardHomeAPIHandler
+from ansible_collections.community.dns.plugins.module_utils.adguardhome.api import (
+    AdGuardHomeAPIHandler
+)
 
 
 def main():
