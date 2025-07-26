@@ -19,6 +19,7 @@ description:
   - Add, update or delete DNS rewrite rules from AdGuard Home.
 extends_documentation_fragment:
   - community.dns.adguardhome.connectivity
+  - community.dns.attributes
 options:
   state:
     description:
