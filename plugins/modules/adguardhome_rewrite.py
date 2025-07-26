@@ -49,7 +49,6 @@ attributes:
       - This action does not modify state.
   diff_mode:
     support: full
-    description: Will return details on what has changed (or possibly needs changing in C(check_mode)), when in diff mode.
   idempotent:
     support: full
     description:
