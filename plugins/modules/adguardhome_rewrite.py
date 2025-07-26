@@ -77,7 +77,7 @@ rules:
   description: The list of fetched rewrite rules.
   type: list
   elements: dict
-  returned: always
+  returned: success
   contains:
     answer:
       description: Value of the rewrite.
