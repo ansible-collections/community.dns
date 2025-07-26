@@ -30,7 +30,7 @@ class AdGuardHomeAPIHandler:
         host = params.get('host')
         self.url = host + "/control/rewrite"
 
-        self.ssl_verify = params.get('ssl_verify')
+        self.validate_certs = params.get('validate_certs')
         self.fail_json = fail_json
 
     def list(self):
@@ -38,7 +38,7 @@ class AdGuardHomeAPIHandler:
             response = requests.get(
                 self.url + "/list",
                 auth=self.auth,
-                verify=self.ssl_verify
+                verify=self.validate_certs
             )
 
             response.raise_for_status()
@@ -67,7 +67,7 @@ class AdGuardHomeAPIHandler:
                 self.url + "/" + method,
                 json=data,
                 auth=self.auth,
-                verify=self.ssl_verify
+                verify=self.validate_certs
             )
             response.raise_for_status()
             return response.status_code
@@ -88,7 +88,7 @@ class AdGuardHomeAPIHandler:
                 self.url + "/update",
                 json=data,
                 auth=self.auth,
-                verify=self.ssl_verify
+                verify=self.validate_certs
             )
             response.raise_for_status()
             return response.status_code

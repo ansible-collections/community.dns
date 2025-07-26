@@ -14,7 +14,7 @@
       username: "{{ adguardhome_user }}"
       password: "{{ adguardhome_password }}"
       host: "{{ adguardhome_host }}"
-      ssl_verify: "{{ adguardhome_ssl_verify }}"
+      validate_certs: "{{ adguardhome_validate_certs }}"
 
 - name: Install required libs
   ansible.builtin.pip:

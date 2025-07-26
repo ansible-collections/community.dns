@@ -34,7 +34,7 @@ EXAMPLES = r"""
     username: admin
     password: admin
     host: https://dns.osuv.de
-    ssl_verify: false
+    validate_certs: false
 
 - name: display the rewrite rules
   debug:
@@ -70,7 +70,7 @@ def main():
             username=dict(type='str', required=True),
             password=dict(type='str', required=True, no_log=True),
             host=dict(type='str', required=True),
-            ssl_verify=dict(type='bool', default=True),
+            validate_certs=dict(type='bool', default=True),
         ),
         supports_check_mode=True
     )

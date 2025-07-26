@@ -26,9 +26,9 @@ options:
       - For example, V(https://my-adguard.my-domain) or V(http://192.168.1.2).
     required: true
     type: str
-  ssl_verify:
+  validate_certs:
     description:
-      - ability to skip ssl verification
+      - Ability to skip ssl verification
     required: false
     type: bool
     default: true

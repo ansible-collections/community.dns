@@ -123,7 +123,7 @@ def main():
             username=dict(type='str', required=True),
             password=dict(type='str', required=True, no_log=True),
             host=dict(type='str', required=True),
-            ssl_verify=dict(type='bool', default=True),
+            validate_certs=dict(type='bool', default=True),
             state=dict(type='str', default='present', choices=['present', 'absent']),
             answer=dict(type='str', required=False),
             domain=dict(type='str', required=True),
