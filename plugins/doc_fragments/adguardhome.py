@@ -22,8 +22,8 @@ options:
     type: str
   host:
     description:
-      - IP or FQDN of AdGuard Home host.
-      - Requires also the protocol (http:// or https://).
+      - URL of AdGuard Home host.
+      - For example, V(https://my-adguard.my-domain) or V(http://192.168.1.2).
     required: true
     type: str
   ssl_verify:
