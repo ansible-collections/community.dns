@@ -44,7 +44,6 @@ options:
 attributes:
   check_mode:
     support: full
-    description: Can run in C(check_mode) and return changed status prediction without modifying target.
     details:
       - This action does not modify state.
   diff_mode:
