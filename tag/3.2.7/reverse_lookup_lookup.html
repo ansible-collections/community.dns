@@ -1,0 +1,356 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="2.20.0" name="antsibull-docs" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>community.dns.reverse_lookup lookup – Reverse-look up IP addresses &mdash; Community.Dns Collection  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=41de9001" />
+      <link rel="stylesheet" type="text/css" href="_static/css/ansible.css?v=c5b67dd2" />
+      <link rel="stylesheet" type="text/css" href="_static/antsibull-minimal.css" />
+      <link rel="stylesheet" type="text/css" href="_static/css/rtd-ethical-ads.css?v=289b023e" />
+
+  
+    <link rel="shortcut icon" href="_static/images/Ansible-Mark-RGB_Black.png"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=7f41d439"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="community.dns.lookup_as_dict lookup – Look up DNS records as dictionaries" href="lookup_as_dict_lookup.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
+
+
+
+
+</head>
+
+<body class="wy-body-for-nav"><!-- extra body elements for Ansible beyond RTD Sphinx Theme -->
+
+<div class="DocSite-globalNav ansibleNav">
+  <ul>
+    <li><a href="https://www.ansible.com/blog" target="_blank">Blog</a></li>
+    <li><a href="https://forum.ansible.com/" target="_blank">Ansible community forum</a></li>
+    <li><a href="https://docs.ansible.com/" target="_blank">Documentation</a></li>
+  </ul>
+</div>
+
+<a class="DocSite-nav" href="https://ansible-collections.github.io/community.dns/branch/main/" style="padding-bottom: 30px;">
+
+  <img class="DocSiteNav-logo"
+    src="_static/images/Ansible-Mark-RGB_White.png"
+    alt="Ansible Logo">
+  <div class="DocSiteNav-title">Community.Dns Collection Docs</div>
+</a>
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Community.Dns Collection
+          </a><!--- Based on https://github.com/rtfd/sphinx_rtd_theme/pull/438/files -->
+
+<div class="version">
+  
+    
+  
+</div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <label class="sr-only" for="q">Search docs:</label>
+    <input type="text" class="st-default-search-input" id="q" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+  
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Community.Dns Release Notes</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="docsite/filter_guide.html">Community.Dns Filter Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docsite/hetzner_guide.html">Hetzner DNS Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="docsite/hosttech_guide.html">HostTech DNS Guide</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_module.html">community.dns.hetzner_dns_record module – Add or delete a single record in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_info_module.html">community.dns.hetzner_dns_record_info module – Retrieve records in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_set_module.html">community.dns.hetzner_dns_record_set module – Add or delete record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_set_info_module.html">community.dns.hetzner_dns_record_set_info module – Retrieve record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_sets_module.html">community.dns.hetzner_dns_record_sets module – Bulk synchronize DNS record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_zone_info_module.html">community.dns.hetzner_dns_zone_info module – Retrieve zone information in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_module.html">community.dns.hosttech_dns_record module – Add or delete a single record in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_info_module.html">community.dns.hosttech_dns_record_info module – Retrieve records in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_set_module.html">community.dns.hosttech_dns_record_set module – Add or delete record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_set_info_module.html">community.dns.hosttech_dns_record_set_info module – Retrieve record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_sets_module.html">community.dns.hosttech_dns_record_sets module – Bulk synchronize DNS record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_zone_info_module.html">community.dns.hosttech_dns_zone_info module – Retrieve zone information in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nameserver_info_module.html">community.dns.nameserver_info module – Look up nameservers for a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nameserver_record_info_module.html">community.dns.nameserver_record_info module – Look up all records of a type from all nameservers for a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wait_for_txt_module.html">community.dns.wait_for_txt module – Wait for TXT entries to be available on all authoritative nameservers</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="get_public_suffix_filter.html">community.dns.get_public_suffix filter – Returns the public suffix of a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_registrable_domain_filter.html">community.dns.get_registrable_domain filter – Returns the registrable domain name of a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quote_txt_filter.html">community.dns.quote_txt filter – Quotes a string to use as a TXT record entry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remove_public_suffix_filter.html">community.dns.remove_public_suffix filter – Removes the public suffix from a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="remove_registrable_domain_filter.html">community.dns.remove_registrable_domain filter – Removes the registrable domain name from a DNS name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reverse_pointer_filter.html">community.dns.reverse_pointer filter – Convert an IP address into a DNS name for reverse lookup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unquote_txt_filter.html">community.dns.unquote_txt filter – Unquotes a TXT record entry to a string</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_records_inventory.html">community.dns.hetzner_dns_records inventory – Create inventory from Hetzner DNS records</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_records_inventory.html">community.dns.hosttech_dns_records inventory – Create inventory from Hosttech DNS records</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="lookup_lookup.html">community.dns.lookup lookup – Look up DNS records</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lookup_as_dict_lookup.html">community.dns.lookup_as_dict lookup – Look up DNS records as dictionaries</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">community.dns.reverse_lookup lookup – Reverse-look up IP addresses</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#synopsis">Synopsis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#terms">Terms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#keyword-parameters">Keyword parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#notes">Notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#return-value">Return Value</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#authors">Authors</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#collection-links">Collection links</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<!-- extra nav elements for Ansible beyond RTD Sphinx Theme -->
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Community.Dns Collection</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">community.dns.reverse_lookup lookup – Reverse-look up IP addresses</li>
+      <li class="wy-breadcrumbs-aside">
+              <!-- User defined GitHub URL -->
+              <a href="https://github.com/ansible-collections/community.dns/edit/main/plugins/lookup/reverse_lookup.py?description=%23%23%23%23%23%20SUMMARY%0A%3C!—%20Your%20description%20here%20–%3E%0A%0A%0A%23%23%23%23%23%20ISSUE%20TYPE%0A-%20Docs%20Pull%20Request%0A%0A%2Blabel:%20docsite_pr" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+  
+           <div itemprop="articleBody">
+             
+  <span class="target" id="ansible-collections-community-dns-reverse-lookup-lookup"></span><section id="community-dns-reverse-lookup-lookup-reverse-look-up-ip-addresses">
+<h1>community.dns.reverse_lookup lookup – Reverse-look up IP addresses<a class="headerlink" href="#community-dns-reverse-lookup-lookup-reverse-look-up-ip-addresses" title="Link to this heading"></a></h1>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This lookup plugin is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/community/dns/">community.dns collection</a> (version 3.2.7).</p>
+<p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
+To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
+<p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">community.dns</span></code>.
+You need further requirements to be able to use this lookup plugin,
+see <a class="reference internal" href="#ansible-collections-community-dns-reverse-lookup-lookup-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
+<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">community.dns.reverse_lookup</span></code>.</p>
+</div>
+<p class="ansible-version-added">New in community.dns 3.1.0</p>
+<nav class="contents local" id="contents">
+<ul class="simple">
+<li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
+<li><p><a class="reference internal" href="#requirements" id="id2">Requirements</a></p></li>
+<li><p><a class="reference internal" href="#terms" id="id3">Terms</a></p></li>
+<li><p><a class="reference internal" href="#keyword-parameters" id="id4">Keyword parameters</a></p></li>
+<li><p><a class="reference internal" href="#notes" id="id5">Notes</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id6">Examples</a></p></li>
+<li><p><a class="reference internal" href="#return-value" id="id7">Return Value</a></p></li>
+</ul>
+</nav>
+<section id="synopsis">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Look up hostnames for IP addresses using DNS reverse lookup.</p></li>
+</ul>
+</section>
+<section id="requirements">
+<span id="ansible-collections-community-dns-reverse-lookup-lookup-requirements"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<p>The below requirements are needed on the local controller node that executes this lookup.</p>
+<ul class="simple">
+<li><p>dnspython &gt;= 1.15.0 (maybe older versions also work)</p></li>
+</ul>
+</section>
+<section id="terms">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Terms</a><a class="headerlink" href="#terms" title="Link to this heading"></a></h2>
+<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Comments</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-_terms"></div><p class="ansible-option-title" id="ansible-collections-community-dns-reverse-lookup-lookup-parameter-terms"><strong>Terms</strong></p>
+<a class="ansibleOptionLink" href="#parameter-_terms" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span> / <span class="ansible-option-required">required</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>IP address(es) to look up.</p>
+</div></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="keyword-parameters">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Keyword parameters</a><a class="headerlink" href="#keyword-parameters" title="Link to this heading"></a></h2>
+<p>This describes keyword parameters of the lookup. These are the values <code class="docutils literal notranslate"><span class="pre">key1=value1</span></code>, <code class="docutils literal notranslate"><span class="pre">key2=value2</span></code> and so on in the following
+examples: <code class="docutils literal notranslate"><span class="pre">lookup('community.dns.reverse_lookup',</span> <span class="pre">key1=value1,</span> <span class="pre">key2=value2,</span> <span class="pre">...)</span></code> and <code class="docutils literal notranslate"><span class="pre">query('community.dns.reverse_lookup',</span> <span class="pre">key1=value1,</span> <span class="pre">key2=value2,</span> <span class="pre">...)</span></code></p>
+<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Comments</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-query_retry"></div><p class="ansible-option-title" id="ansible-collections-community-dns-reverse-lookup-lookup-parameter-query-retry"><strong>query_retry</strong></p>
+<a class="ansibleOptionLink" href="#parameter-query_retry" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Number of retries for DNS query timeouts.</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">3</span></code></p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-query_timeout"></div><p class="ansible-option-title" id="ansible-collections-community-dns-reverse-lookup-lookup-parameter-query-timeout"><strong>query_timeout</strong></p>
+<a class="ansibleOptionLink" href="#parameter-query_timeout" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">float</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Timeout per DNS query in seconds.</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">10.0</span></code></p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-server"></div><p class="ansible-option-title" id="ansible-collections-community-dns-reverse-lookup-lookup-parameter-server"><strong>server</strong></p>
+<a class="ansibleOptionLink" href="#parameter-server" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The DNS server(s) to use to look up the result. Must be a list of one or more IP addresses.</p>
+<p>By default, the system’s standard resolver is used.</p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-servfail_retries"></div><p class="ansible-option-title" id="ansible-collections-community-dns-reverse-lookup-lookup-parameter-servfail-retries"><strong>servfail_retries</strong></p>
+<a class="ansibleOptionLink" href="#parameter-servfail_retries" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>How often to retry on SERVFAIL errors.</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">0</span></code></p>
+</div></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="notes">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Notes</a><a class="headerlink" href="#notes" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>When keyword and positional parameters are used together, positional parameters must be listed before keyword parameters:
+<code class="docutils literal notranslate"><span class="pre">lookup('community.dns.reverse_lookup',</span> <span class="pre">term1,</span> <span class="pre">term2,</span> <span class="pre">key1=value1,</span> <span class="pre">key2=value2)</span></code> and <code class="docutils literal notranslate"><span class="pre">query('community.dns.reverse_lookup',</span> <span class="pre">term1,</span> <span class="pre">term2,</span> <span class="pre">key1=value1,</span> <span class="pre">key2=value2)</span></code></p></li>
+<li><p>Note that when using this lookup plugin with <code class="ansible-value docutils literal notranslate"><span class="pre">lookup()</span></code>, and the result is a one-element list, Ansible simply returns the one element not as a list. Since this behavior is surprising and can cause problems, it is better to use <code class="ansible-value docutils literal notranslate"><span class="pre">query()</span></code> instead of <code class="ansible-value docutils literal notranslate"><span class="pre">lookup()</span></code>. See the examples and also <a class="reference external" href="https://docs.ansible.com/ansible/devel/plugins/lookup.html#query" title="(in Ansible vdevel)"><span class="xref std std-ref">Forcing lookups to return lists</span></a> in the Ansible documentation.</p></li>
+</ul>
+</div>
+</section>
+<section id="examples">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Look up hostname of IPv4 address</span>
+<span class="w">  </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">query</span><span class="o">(</span><span class="s1">&#39;community.dns.reverse_lookup&#39;</span><span class="o">,</span> <span class="s1">&#39;192.168.1.1&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="s">&quot;</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Look up hostname of IPv6 address</span>
+<span class="w">  </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">query</span><span class="o">(</span><span class="s1">&#39;community.dns.reverse_lookup&#39;</span><span class="o">,</span> <span class="s1">&#39;1:2:3::4&#39;</span><span class="o">)</span> <span class="cp">}}</span><span class="s">&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="return-value">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Return Value</a><a class="headerlink" href="#return-value" title="Link to this heading"></a></h2>
+<table class="longtable ansible-option-table docutils align-default" style="width: 100%">
+<thead>
+<tr class="row-odd"><th class="head"><p>Key</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-_result"></div><p class="ansible-option-title" id="ansible-collections-community-dns-reverse-lookup-lookup-return-result"><strong>Return value</strong></p>
+<a class="ansibleOptionLink" href="#return-_result" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The hostname(s) returned for the queried IP addresses.</p>
+<p>If multiple IP addresses are queried in <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-reverse-lookup-lookup-parameter-terms"><span class="std std-ref"><span class="pre">_terms</span></span></a></strong></code>, the resulting lists have been concatenated.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
+<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[&quot;example.com&quot;,</span> <span class="pre">&quot;example.org&quot;]</span></code></p>
+</div></td>
+</tr>
+</tbody>
+</table>
+<section id="authors">
+<h3>Authors<a class="headerlink" href="#authors" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Felix Fontein (&#64;felixfontein)</p></li>
+</ul>
+</section>
+<section id="collection-links">
+<h3>Collection links<a class="headerlink" href="#collection-links" title="Link to this heading"></a></h3>
+<ul class="ansible-links">
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/ansible-collections/community.dns/issues" rel="noopener external" target="_blank">Issue Tracker</a></span></li>
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/ansible-collections/community.dns" rel="noopener external" target="_blank">Repository (Sources)</a></span></li>
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://forum.ansible.com/tags/c/help/6/none/dns" rel="noopener external" target="_blank">Ask for help (DNS)</a></span></li>
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/ansible-collections/community.dns/issues/new?assignees=&amp;labels=&amp;template=bug_report.md" rel="noopener external" target="_blank">Submit a bug report</a></span></li>
+<li><span><a aria-role="button" class="ansible-link reference external" href="https://github.com/ansible-collections/community.dns/issues/new?assignees=&amp;labels=&amp;template=feature_request.md" rel="noopener external" target="_blank">Request a feature</a></span></li>
+<li><span><a class="reference internal" href="index.html#communication-for-community-dns"><span class="std std-ref">Communication</span></a></span></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          
+
+<footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lookup_as_dict_lookup.html" class="btn btn-neutral float-left" title="community.dns.lookup_as_dict lookup – Look up DNS records as dictionaries" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright Community.Dns Contributors.</p>
+  </div>
+
+  
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script><!-- extra footer elements for Ansible beyond RTD Sphinx Theme -->
+
+</body>
+</html>
