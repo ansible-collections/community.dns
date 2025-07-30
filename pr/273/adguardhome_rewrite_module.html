@@ -7,7 +7,7 @@
 <meta content="2.20.0" name="antsibull-docs" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>community.dns.adguardhome_rewrite module – Add, update or delete DNS rewrite rules from AdGuard Home &mdash; Community.Dns Collection  documentation</title>
+  <title>community.dns.adguardhome_rewrite module – Add, update or delete DNS rewrite rules from AdGuardHome &mdash; Community.Dns Collection  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=41de9001" />
       <link rel="stylesheet" type="text/css" href="_static/css/ansible.css?v=c5b67dd2" />
       <link rel="stylesheet" type="text/css" href="_static/antsibull-minimal.css" />
@@ -22,7 +22,7 @@
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="community.dns.adguardhome_rewrite_info module – Retrieve DNS rewrite rules from AdGuard Home" href="adguardhome_rewrite_info_module.html" />
+    <link rel="next" title="community.dns.adguardhome_rewrite_info module – Retrieve DNS rewrite rules from AdGuardHome" href="adguardhome_rewrite_info_module.html" />
     <link rel="prev" title="HostTech DNS Guide" href="docsite/hosttech_guide.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
 
 
@@ -82,9 +82,8 @@
 <li class="toctree-l1"><a class="reference internal" href="docsite/hosttech_guide.html">HostTech DNS Guide</a></li>
 </ul>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">community.dns.adguardhome_rewrite module – Add, update or delete DNS rewrite rules from AdGuard Home</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">community.dns.adguardhome_rewrite module – Add, update or delete DNS rewrite rules from AdGuardHome</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#synopsis">Synopsis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#attributes">Attributes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
@@ -95,7 +94,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="adguardhome_rewrite_info_module.html">community.dns.adguardhome_rewrite_info module – Retrieve DNS rewrite rules from AdGuard Home</a></li>
+<li class="toctree-l1"><a class="reference internal" href="adguardhome_rewrite_info_module.html">community.dns.adguardhome_rewrite_info module – Retrieve DNS rewrite rules from AdGuardHome</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_module.html">community.dns.hetzner_dns_record module – Add or delete a single record in Hetzner DNS service</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_info_module.html">community.dns.hetzner_dns_record_info module – Retrieve records in Hetzner DNS service</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_set_module.html">community.dns.hetzner_dns_record_set module – Add or delete record sets in Hetzner DNS service</a></li>
@@ -146,7 +145,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">community.dns.adguardhome_rewrite module – Add, update or delete DNS rewrite rules from AdGuard Home</li>
+      <li class="breadcrumb-item active">community.dns.adguardhome_rewrite module – Add, update or delete DNS rewrite rules from AdGuardHome</li>
       <li class="wy-breadcrumbs-aside">
               <!-- User defined GitHub URL -->
               <a href="https://github.com/ansible-collections/community.dns/edit/main/plugins/modules/adguardhome_rewrite.py?description=%23%23%23%23%23%20SUMMARY%0A%3C!—%20Your%20description%20here%20–%3E%0A%0A%0A%23%23%23%23%23%20ISSUE%20TYPE%0A-%20Docs%20Pull%20Request%0A%0A%2Blabel:%20docsite_pr" class="fa fa-github"> Edit on GitHub</a>
@@ -159,45 +158,34 @@
   
            <div itemprop="articleBody">
              
-  <span class="target" id="ansible-collections-community-dns-adguardhome-rewrite-module"></span><section id="community-dns-adguardhome-rewrite-module-add-update-or-delete-dns-rewrite-rules-from-adguard-home">
-<h1>community.dns.adguardhome_rewrite module – Add, update or delete DNS rewrite rules from AdGuard Home<a class="headerlink" href="#community-dns-adguardhome-rewrite-module-add-update-or-delete-dns-rewrite-rules-from-adguard-home" title="Link to this heading"></a></h1>
+  <span class="target" id="ansible-collections-community-dns-adguardhome-rewrite-module"></span><section id="community-dns-adguardhome-rewrite-module-add-update-or-delete-dns-rewrite-rules-from-adguardhome">
+<h1>community.dns.adguardhome_rewrite module – Add, update or delete DNS rewrite rules from AdGuardHome<a class="headerlink" href="#community-dns-adguardhome-rewrite-module-add-update-or-delete-dns-rewrite-rules-from-adguardhome" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/community/dns/">community.dns collection</a> (version 3.2.7).</p>
 <p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
 To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
-<p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">community.dns</span></code>.
-You need further requirements to be able to use this module,
-see <a class="reference internal" href="#ansible-collections-community-dns-adguardhome-rewrite-module-requirements"><span class="std std-ref">Requirements</span></a> for details.</p>
+<p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">community.dns</span></code>.</p>
 <p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">community.dns.adguardhome_rewrite</span></code>.</p>
 </div>
 <p class="ansible-version-added">New in community.dns 3.3.0</p>
 <nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
-<li><p><a class="reference internal" href="#requirements" id="id2">Requirements</a></p></li>
-<li><p><a class="reference internal" href="#parameters" id="id3">Parameters</a></p></li>
-<li><p><a class="reference internal" href="#attributes" id="id4">Attributes</a></p></li>
-<li><p><a class="reference internal" href="#examples" id="id5">Examples</a></p></li>
-<li><p><a class="reference internal" href="#return-values" id="id6">Return Values</a></p></li>
+<li><p><a class="reference internal" href="#parameters" id="id2">Parameters</a></p></li>
+<li><p><a class="reference internal" href="#attributes" id="id3">Attributes</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id4">Examples</a></p></li>
+<li><p><a class="reference internal" href="#return-values" id="id5">Return Values</a></p></li>
 </ul>
 </nav>
 <section id="synopsis">
 <h2><a class="toc-backref" href="#id1" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Add, update or delete DNS rewrite rules from AdGuard Home.</p></li>
-</ul>
-</section>
-<section id="requirements">
-<span id="ansible-collections-community-dns-adguardhome-rewrite-module-requirements"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">Requirements</a><a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
-<p>The below requirements are needed on the host that executes this module.</p>
-<ul class="simple">
-<li><p>requests</p></li>
-<li><p>yaml</p></li>
+<li><p>Add, update or delete DNS rewrite rules from AdGuardHome.</p></li>
 </ul>
 </section>
 <section id="parameters">
-<h2><a class="toc-backref" href="#id3" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Parameters</a><a class="headerlink" href="#parameters" title="Link to this heading"></a></h2>
 <table class="longtable ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Parameter</p></th>
@@ -218,14 +206,14 @@ see <a class="reference internal" href="#ansible-collections-community-dns-adgua
 <div class="ansibleOptionAnchor" id="parameter-domain"></div><p class="ansible-option-title" id="ansible-collections-community-dns-adguardhome-rewrite-module-parameter-domain"><strong>domain</strong></p>
 <a class="ansibleOptionLink" href="#parameter-domain" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>domain or wildcard domain that you want to be rewritten by AdGuard Home.</p>
+<td><div class="ansible-option-cell"><p>domain or wildcard domain that you want to be rewritten by AdGuardHome.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-host"></div><p class="ansible-option-title" id="ansible-collections-community-dns-adguardhome-rewrite-module-parameter-host"><strong>host</strong></p>
 <a class="ansibleOptionLink" href="#parameter-host" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>URL of AdGuard Home host.</p>
+<td><div class="ansible-option-cell"><p>URL of AdGuardHome host.</p>
 <p>For example, <code class="ansible-value docutils literal notranslate"><span class="pre">https://my-adguard.my-domain</span></code> or <code class="ansible-value docutils literal notranslate"><span class="pre">http://192.168.1.2</span></code>.</p>
 </div></td>
 </tr>
@@ -233,7 +221,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-adgua
 <div class="ansibleOptionAnchor" id="parameter-password"></div><p class="ansible-option-title" id="ansible-collections-community-dns-adguardhome-rewrite-module-parameter-password"><strong>password</strong></p>
 <a class="ansibleOptionLink" href="#parameter-password" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Related password for the AdGuard Home user</p>
+<td><div class="ansible-option-cell"><p>Related password for the AdGuardHome user</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -252,7 +240,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-adgua
 <div class="ansibleOptionAnchor" id="parameter-username"></div><p class="ansible-option-title" id="ansible-collections-community-dns-adguardhome-rewrite-module-parameter-username"><strong>username</strong></p>
 <a class="ansibleOptionLink" href="#parameter-username" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>AdGuard Home user.</p>
+<td><div class="ansible-option-cell"><p>AdGuardHome user.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -271,7 +259,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-adgua
 </table>
 </section>
 <section id="attributes">
-<h2><a class="toc-backref" href="#id4" role="doc-backlink">Attributes</a><a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Attributes</a><a class="headerlink" href="#attributes" title="Link to this heading"></a></h2>
 <table class="longtable ansible-option-table docutils align-default" style="width: 100%">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute</p></th>
@@ -309,7 +297,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-adgua
 </table>
 </section>
 <section id="examples">
-<h2><a class="toc-backref" href="#id5" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add DNS rewrite rule in AdGuardHome</span>
 <span class="w">  </span><span class="nt">community.dns.adguardhome_rewrite</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
@@ -327,7 +315,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-adgua
 </div>
 </section>
 <section id="return-values">
-<h2><a class="toc-backref" href="#id6" role="doc-backlink">Return Values</a><a class="headerlink" href="#return-values" title="Link to this heading"></a></h2>
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">Return Values</a><a class="headerlink" href="#return-values" title="Link to this heading"></a></h2>
 <p>Common return values are documented <a class="reference external" href="https://docs.ansible.com/ansible/devel/reference_appendices/common_return_values.html#common-return-values" title="(in Ansible vdevel)"><span class="xref std std-ref">here</span></a>, the following are the fields unique to this module:</p>
 <table class="longtable ansible-option-table docutils align-default" style="width: 100%">
 <thead>
@@ -391,7 +379,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-adgua
 
 <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="docsite/hosttech_guide.html" class="btn btn-neutral float-left" title="HostTech DNS Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="adguardhome_rewrite_info_module.html" class="btn btn-neutral float-right" title="community.dns.adguardhome_rewrite_info module – Retrieve DNS rewrite rules from AdGuard Home" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="adguardhome_rewrite_info_module.html" class="btn btn-neutral float-right" title="community.dns.adguardhome_rewrite_info module – Retrieve DNS rewrite rules from AdGuardHome" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
