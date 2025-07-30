@@ -16,11 +16,6 @@
       host: "{{ adguardhome_host }}"
       validate_certs: "{{ adguardhome_validate_certs }}"
 
-- name: Install required libs
-  ansible.builtin.pip:
-    name: requests
-    state: present
-
 - name: get dns all dns rewrites
   register: rewrites
   community.dns.adguardhome_rewrite_info:
@@ -31,6 +26,19 @@
     that:
       - "'rules' in rewrites"
       - "rewrites['rules'] is iterable"
+
+- name: check mode - set a dns rewrite
+  register: set_rewrite
+  check_mode: true
+  community.dns.adguardhome_rewrite:
+    <<: *adguardhome_connection
+    domain: example.org
+    answer: 127.0.0.1
+
+- name: check mode - rewrite is created
+  assert:
+    that:
+      - set_rewrite is changed
 
 - name: set a dns rewrite
   register: set_rewrite
@@ -56,6 +64,19 @@
     that:
       - set_rewrite is not changed
 
+- name: check mode - change dns records
+  register: set_rewrite
+  check_mode: true
+  community.dns.adguardhome_rewrite:
+    <<: *adguardhome_connection
+    domain: example.org
+    answer: 127.0.1.1
+
+- name: check mode - rewrite is changed
+  assert:
+    that:
+      - set_rewrite is changed
+
 - name: change dns records
   register: set_rewrite
   community.dns.adguardhome_rewrite:
@@ -68,6 +89,31 @@
     that:
       - set_rewrite is changed
 
+- name: idempotent change dns records
+  register: set_rewrite
+  community.dns.adguardhome_rewrite:
+    <<: *adguardhome_connection
+    domain: example.org
+    answer: 127.0.1.1
+
+- name: rewrite is not changed
+  assert:
+    that:
+      - set_rewrite is not changed
+
+- name: check mode - remove set dns records
+  register: rm_rewrite
+  check_mode: true
+  community.dns.adguardhome_rewrite:
+    <<: *adguardhome_connection
+    domain: example.org
+    state: absent
+
+- name: check mode - rewrite is removed
+  assert:
+    that:
+      - rm_rewrite is changed
+
 - name: remove set dns records
   register: rm_rewrite
   community.dns.adguardhome_rewrite:
@@ -75,7 +121,19 @@
     domain: example.org
     state: absent
 
-- name: rewrite is changed
+- name: rewrite is removed. changed.
   assert:
     that:
       - rm_rewrite is changed
+
+- name: idempotent remove set dns records
+  register: rm_rewrite
+  community.dns.adguardhome_rewrite:
+    <<: *adguardhome_connection
+    domain: example.org
+    state: absent
+
+- name: record is already removed. no change
+  assert:
+    that:
+      - rm_rewrite is not changed

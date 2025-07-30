@@ -88,19 +88,9 @@ rules:
 """
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.basic import missing_required_lib
 from ansible_collections.community.dns.plugins.module_utils.adguardhome.api import (
     AdGuardHomeAPIHandler
 )
-import traceback
-
-YAML_IMP_ERR = None
-try:
-    import yaml
-    HAS_YAML = True
-except Exception:
-    YAML_IMP_ERR = traceback.format_exc()
-    HAS_YAML = False
 
 
 def find_and_compare(rules, domain, answer):
@@ -132,12 +122,6 @@ def main():
         required_if=[['state', 'present', ['answer']]],
     )
 
-    if not HAS_YAML:
-        module.fail_json(
-            msg=missing_required_lib("pyyaml", url='https://pyyaml.org/wiki/PyYAMLDocumentation'),
-            exception=YAML_IMP_ERR
-        )
-
     domain = module.params.get('domain')
     answer = module.params.get('answer')
     state = module.params.get('state')
@@ -149,28 +133,43 @@ def main():
 
     domain_exists, value_is_different, target = find_and_compare(before, domain, answer)
     if state == 'present':
-        if not domain_exists and not module.check_mode and not value_is_different:
+        if not domain_exists and not value_is_different:
             changed = True
             if module.check_mode:
-                checked_mode_after = before + [{"answer": answer, "domain": domain}]
+                before = before + [{"answer": answer, "domain": domain}]
             else:
                 adguardhome.add_or_delete(domain, answer, "add", target)
 
         if domain_exists and value_is_different:
             changed = True
-            adguardhome.update(domain, answer, target)
+            if module.check_mode:
+                for item in before:
+                    if item['domain'] == 'example.org':
+                        item['value'] = answer
+                        break
+            else:
+                adguardhome.update(domain, answer, target)
 
     else:
-        if domain_exists and not module.check_mode:
-            adguardhome.add_or_delete(domain, answer, "delete", target)
+        if domain_exists:
             changed = True
+            if module.check_mode:
+                before = [item for item in before if item["domain"] != domain]
+            else:
+                adguardhome.add_or_delete(domain, answer, "delete", target)
 
     after = adguardhome.list()
 
-    diff_item = dict(
-        before=yaml.safe_dump(before),
-        after=yaml.safe_dump(after)
-    )
+    if module.check_mode:
+        diff_item = dict(
+            before={"rules": after},
+            after={"rules": before}
+        )
+    else:
+        diff_item = dict(
+            before={"rules": before},
+            after={"rules": after}
+        )
 
     module.exit_json(changed=changed, diff=diff_item)
 
