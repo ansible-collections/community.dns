@@ -5,6 +5,7 @@ import ansible.module_utils.six.moves.urllib.error as urllib_error
 from ansible.module_utils.urls import Request
 import json
 
+
 class AdGuardHomeAPIHandler:
     def __init__(self, params, fail_json):
         host = params.get('host')
