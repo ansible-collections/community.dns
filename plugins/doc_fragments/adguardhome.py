@@ -32,7 +32,4 @@ options:
     required: false
     type: bool
     default: true
-requirements:
-  - requests
-  - yaml
 '''
