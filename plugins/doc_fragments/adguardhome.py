@@ -12,17 +12,17 @@ class ModuleDocFragment(object):
 options:
   username:
     description:
-      - AdGuard Home user.
+      - AdGuardHome user.
     required: true
     type: str
   password:
     description:
-      - Related password for the AdGuard Home user
+      - Related password for the AdGuardHome user
     required: true
     type: str
   host:
     description:
-      - URL of AdGuard Home host.
+      - URL of AdGuardHome host.
       - For example, V(https://my-adguard.my-domain) or V(http://192.168.1.2).
     required: true
     type: str

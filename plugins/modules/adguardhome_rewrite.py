@@ -11,12 +11,12 @@ __metaclass__ = type
 DOCUMENTATION = r"""
 module: adguardhome_rewrite
 
-short_description: Add, update or delete DNS rewrite rules from AdGuard Home
+short_description: Add, update or delete DNS rewrite rules from AdGuardHome
 
 version_added: 3.3.0
 
 description:
-  - Add, update or delete DNS rewrite rules from AdGuard Home.
+  - Add, update or delete DNS rewrite rules from AdGuardHome.
 extends_documentation_fragment:
   - community.dns.adguardhome.connectivity
   - community.dns.attributes
@@ -31,7 +31,7 @@ options:
       - absent
   domain:
     description:
-      - domain or wildcard domain that you want to be rewritten by AdGuard Home.
+      - domain or wildcard domain that you want to be rewritten by AdGuardHome.
     type: str
     required: true
   answer:

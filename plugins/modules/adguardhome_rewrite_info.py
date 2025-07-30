@@ -11,12 +11,12 @@ __metaclass__ = type
 DOCUMENTATION = r"""
 module: adguardhome_rewrite_info
 
-short_description: Retrieve DNS rewrite rules from AdGuard Home
+short_description: Retrieve DNS rewrite rules from AdGuardHome
 
 version_added: 3.3.0
 
 description:
-  - Retrieves DNS rewrite rules from AdGuard Home.
+  - Retrieves DNS rewrite rules from AdGuardHome.
 extends_documentation_fragment:
   - community.dns.adguardhome.CONNECTIVITY
   - community.dns.attributes
@@ -28,7 +28,7 @@ author:
 """
 
 EXAMPLES = r"""
-- name: get dns rewrites of adguard home
+- name: get dns rewrites of AdGuardHome
   register: rewrite
   community.dns.adguardhome_rewrite_info:
     username: admin
