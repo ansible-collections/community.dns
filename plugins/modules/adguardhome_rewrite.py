@@ -128,7 +128,7 @@ def main():
 
     adguardhome = AdGuardHomeAPIHandler(module.params, module.fail_json)
 
-    before = adguardhome.list()
+    before = adguardhome.list()  # Note that this is updated to the 'after' value in check mode (but not outside of check mode!)
     changed = False
 
     domain_exists, value_is_different, target = find_and_compare(before, domain, answer)
