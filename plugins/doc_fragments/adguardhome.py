@@ -19,7 +19,7 @@ options:
     type: str
   password:
     description:
-      - Related password for the AdGuardHome user
+      - Related password for the AdGuardHome user.
     required: true
     type: str
   host:
