@@ -31,7 +31,7 @@ options:
       - absent
   domain:
     description:
-      - domain or wildcard domain that you want to be rewritten by AdGuardHome.
+      - Domain or wildcard domain that you want to be rewritten by AdGuardHome.
     type: str
     required: true
   answer:
