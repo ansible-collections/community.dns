@@ -36,9 +36,9 @@ options:
     required: true
   answer:
     description:
-      - value for the domain rewrite.
-      - required when O(state=present).
-      - value can be a CNAME, A or AAAA record.
+      - Value for the domain rewrite.
+      - Required when O(state=present).
+      - Value can be a CNAME, A or AAAA record.
     type: str
     required: false
 attributes:
