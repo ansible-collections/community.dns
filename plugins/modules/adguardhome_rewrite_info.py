@@ -28,7 +28,7 @@ author:
 """
 
 EXAMPLES = r"""
-- name: get dns rewrites of AdGuardHome
+- name: Get DNS rewrites from AdGuardHome
   register: rewrite
   community.dns.adguardhome_rewrite_info:
     username: admin
