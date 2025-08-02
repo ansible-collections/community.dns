@@ -30,7 +30,8 @@ options:
     type: str
   validate_certs:
     description:
-      - Ability to skip ssl verification
+      - Ability to disable TLS certificate validation.
+      - This should only set to V(false) when the network path between the host the module is run on and the AdGuard host is fully under your control and trusted.
     required: false
     type: bool
     default: true
