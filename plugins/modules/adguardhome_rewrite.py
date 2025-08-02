@@ -64,7 +64,7 @@ EXAMPLES = r"""
 # When removing a rewrite, the current answer value must also match.
 # Therefore you can just leave it out and the existing value
 # will be used.
-- name: remove rewrite for example.org
+- name: Remove rewrite for example.org
   community.dns.adguardhome_rewrite:
     state: absent
     domain: example.org
