@@ -34,7 +34,6 @@ EXAMPLES = r"""
     username: admin
     password: admin
     host: https://dns.osuv.de
-    validate_certs: false
 
 - name: Display the rewrite rules
   debug:
