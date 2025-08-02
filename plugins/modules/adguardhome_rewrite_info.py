@@ -36,7 +36,7 @@ EXAMPLES = r"""
     host: https://dns.osuv.de
     validate_certs: false
 
-- name: display the rewrite rules
+- name: Display the rewrite rules
   debug:
     var: rewrite
 """
