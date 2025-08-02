@@ -18,7 +18,7 @@ version_added: 3.3.0
 description:
   - Retrieves DNS rewrite rules from AdGuardHome.
 extends_documentation_fragment:
-  - community.dns.adguardhome.CONNECTIVITY
+  - community.dns.adguardhome.connectivity
   - community.dns.attributes
   - community.dns.attributes.info_module
   - community.dns.attributes.idempotent_not_modify_state
