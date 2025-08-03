@@ -11,6 +11,21 @@ import json
 
 import ansible.module_utils.six.moves.urllib.error as urllib_error  # pylint: disable=import-error
 from ansible.module_utils.urls import Request
+from ansible_collections.community.dns.plugins.module_utils.argspec import ArgumentSpec
+
+
+def create_adguardhome_argument_spec(required_if=None, additional_argument_specs=None):
+    always_argument_spec = {
+        'username': {'type': 'str', 'required': True},
+        'password': {'type': 'str', 'required': True, 'no_log': True},
+        'host': {'type': 'str', 'required': True},
+        'validate_certs': {'type': 'bool', 'default': True},
+    }
+    additional_argument_specs = {} if additional_argument_specs is None else additional_argument_specs
+    return ArgumentSpec(
+        required_if=required_if,
+        argument_spec={**always_argument_spec, **additional_argument_specs}
+    )
 
 
 class AdGuardHomeAPIHandler:

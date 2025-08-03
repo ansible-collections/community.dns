@@ -62,18 +62,15 @@ rules:
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.community.dns.plugins.module_utils.adguardhome.api import (
     AdGuardHomeAPIHandler,
+    create_adguardhome_argument_spec,
 )
 
 
 def main():
+    argument_spec = create_adguardhome_argument_spec()
     module = AnsibleModule(
-        argument_spec={
-            'username': {'type': 'str', 'required': True},
-            'password': {'type': 'str', 'required': True, 'no_log': True},
-            'host': {'type': 'str', 'required': True},
-            'validate_certs': {'type': 'bool', 'default': True},
-        },
-        supports_check_mode=True
+        supports_check_mode=True,
+        **argument_spec.to_kwargs()
     )
 
     adguardhome = AdGuardHomeAPIHandler(module.params, module.fail_json)

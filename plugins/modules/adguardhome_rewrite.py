@@ -92,6 +92,7 @@ rules:
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.community.dns.plugins.module_utils.adguardhome.api import (
     AdGuardHomeAPIHandler,
+    create_adguardhome_argument_spec,
 )
 
 
@@ -110,18 +111,18 @@ def find_and_compare(rules, domain, answer):
 
 
 def main():
+    rewrite_arguments = {
+        'state': {'type': 'str', 'default': 'present', 'choices': ['present', 'absent']},
+        'answer': {'type': 'str', 'required': False},
+        'domain': {'type': 'str', 'required': True}
+    }
+    argument_spec = create_adguardhome_argument_spec(
+        required_if=[['state', 'present', ['answer']]],
+        additional_argument_specs=rewrite_arguments
+    )
     module = AnsibleModule(
-        argument_spec={
-            'username': {'type': 'str', 'required': True},
-            'password': {'type': 'str', 'required': True, 'no_log': True},
-            'host': {'type': 'str', 'required': True},
-            'validate_certs': {'type': 'bool', 'default': True},
-            'state': {'type': 'str', 'default': 'present', 'choices': ['present', 'absent']},
-            'answer': {'type': 'str', 'required': False},
-            'domain': {'type': 'str', 'required': True}
-        },
         supports_check_mode=True,
-        required_if=[['state', 'present', ['answer']]]
+        **argument_spec.to_kwargs()
     )
 
     domain = module.params.get('domain')
