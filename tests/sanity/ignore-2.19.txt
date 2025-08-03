@@ -1,2 +1,3 @@
+plugins/module_utils/_tagging.py pylint:collection-invalid-deprecated-version  # Bug in ansible-test: https://github.com/ansible/ansible/issues/85614
 plugins/plugin_utils/inventory/records.py no-assert  # The asserts are mainly needed for type inference
 plugins/public_suffix_list.dat no-smart-quotes
