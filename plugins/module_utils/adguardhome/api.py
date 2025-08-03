@@ -3,11 +3,14 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from __future__ import absolute_import, division, print_function
+
+
 __metaclass__ = type
 
-import ansible.module_utils.six.moves.urllib.error as urllib_error
-from ansible.module_utils.urls import Request
 import json
+
+import ansible.module_utils.six.moves.urllib.error as urllib_error  # pylint: disable=import-error
+from ansible.module_utils.urls import Request
 
 
 class AdGuardHomeAPIHandler:
@@ -53,7 +56,7 @@ class AdGuardHomeAPIHandler:
             "answer": answer_value
         }).encode('utf-8')
         try:
-            response = self.r.open(
+            self.r.open(
                 'POST',
                 self.url + "/" + method,
                 data=data,
@@ -72,7 +75,7 @@ class AdGuardHomeAPIHandler:
             }
         }).encode('utf-8')
         try:
-            response = self.r.open(
+            self.r.open(
                 "PUT",
                 self.url + "/update",
                 data=data,

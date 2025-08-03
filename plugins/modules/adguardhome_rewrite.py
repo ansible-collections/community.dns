@@ -5,6 +5,8 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 from __future__ import absolute_import, division, print_function
+
+
 __metaclass__ = type
 
 
@@ -72,7 +74,7 @@ EXAMPLES = r"""
 
 RETURN = r"""
 rules:
-  description: The list of fetched rewrite rules.
+  description: The modified list of rewrite rules afte rewrite rule is applied.
   type: list
   elements: dict
   returned: success
@@ -89,7 +91,7 @@ rules:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible_collections.community.dns.plugins.module_utils.adguardhome.api import (
-    AdGuardHomeAPIHandler
+    AdGuardHomeAPIHandler,
 )
 
 
@@ -109,17 +111,17 @@ def find_and_compare(rules, domain, answer):
 
 def main():
     module = AnsibleModule(
-        argument_spec=dict(
-            username=dict(type='str', required=True),
-            password=dict(type='str', required=True, no_log=True),
-            host=dict(type='str', required=True),
-            validate_certs=dict(type='bool', default=True),
-            state=dict(type='str', default='present', choices=['present', 'absent']),
-            answer=dict(type='str', required=False),
-            domain=dict(type='str', required=True),
-        ),
+        argument_spec={
+            'username': {'type': 'str', 'required': True},
+            'password': {'type': 'str', 'required': True, 'no_log': True},
+            'host': {'type': 'str', 'required': True},
+            'validate_certs': {'type': 'bool', 'default': True},
+            'state': {'type': 'str', 'default': 'present', 'choices': ['present', 'absent']},
+            'answer': {'type': 'str', 'required': False},
+            'domain': {'type': 'str', 'required': True}
+        },
         supports_check_mode=True,
-        required_if=[['state', 'present', ['answer']]],
+        required_if=[['state', 'present', ['answer']]]
     )
 
     domain = module.params.get('domain')
@@ -161,15 +163,15 @@ def main():
     after = adguardhome.list()
 
     if module.check_mode:
-        diff_item = dict(
-            before={"rules": after},
-            after={"rules": before}
-        )
+        diff_item = {
+            'before': {'rules': after},
+            'after': {'rules': before}
+        }
     else:
-        diff_item = dict(
-            before={"rules": before},
-            after={"rules": after}
-        )
+        diff_item = {
+            'before': {'rules': before},
+            'after': {'rules': after}
+        }
 
     module.exit_json(changed=changed, diff=diff_item)
 

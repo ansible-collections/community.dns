@@ -4,13 +4,15 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
+
 __metaclass__ = type
 
 
 class ModuleDocFragment(object):
 
-    CONNECTIVITY = r'''
+    CONNECTIVITY = r"""
 options:
   username:
     description:
@@ -31,8 +33,10 @@ options:
   validate_certs:
     description:
       - Ability to disable TLS certificate validation.
-      - This should only set to V(false) when the network path between the host the module is run on and the AdGuard host is fully under your control and trusted.
+      - >
+        This should only set to V(false) when the network path between the host the module is run on and
+        the AdGuard host is fully under your control and trusted.
     required: false
     type: bool
     default: true
-'''
+"""
