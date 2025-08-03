@@ -1,0 +1,80 @@
+---
+# Copyright (c) Ansible Project
+# GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+name: Mirror Docker images for testing
+'on':
+  # Run CI against all pushes (direct commits, also merged PRs), Pull Requests
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/docker-images.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/docker-images.yml
+  # Run CI once per day (at 04:00 UTC)
+  schedule:
+    - cron: '0 3 * * *'
+
+env:
+  CONTAINER_REGISTRY: ghcr.io/ansible-collections
+  DESTINATION_REPO: ansible-collections/community.dns
+
+jobs:
+  build:
+    name: Mirror image ${{ matrix.name }}:${{ matrix.tag }}
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: adguardhome
+            tag: latest
+            tag-as-latest: false
+            source: docker.io/adguard/adguardhome:latest
+
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt-get install buildah podman
+
+      - name: Pull, adjust, and tag image
+        env:
+          SOURCE_IMAGE: ${{ matrix.source }}
+          DEST_IMAGE: ${{ env.CONTAINER_REGISTRY }}/${{ matrix.name }}:${{ matrix.tag }}
+        run: >-
+          echo "FROM ${SOURCE_IMAGE}"
+          |
+          podman build --annotation "org.opencontainers.image.source=https://github.com/${DESTINATION_REPO}" -t "${DEST_IMAGE}" -
+
+      - name: Tag image as latest
+        if: matrix.tag-as-latest && matrix.tag != 'latest'
+        env:
+          SOURCE_IMAGE: ${{ env.CONTAINER_REGISTRY }}/${{ matrix.name }}:${{ matrix.tag }}
+          DEST_IMAGE: ${{ env.CONTAINER_REGISTRY }}/${{ matrix.name }}:latest
+        run: >-
+          podman tag "${SOURCE_IMAGE}" "${DEST_IMAGE}"
+
+      - name: Publish container image ${{ env.CONTAINER_REGISTRY }}/${{ matrix.name }}:${{ matrix.tag }}
+        if: github.event_name != 'pull_request'
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          registry: ${{ env.CONTAINER_REGISTRY }}
+          image: ${{ matrix.name }}
+          tags: ${{ matrix.tag }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish container image ${{ env.CONTAINER_REGISTRY }}/${{ matrix.name }}:latest
+        if: github.event_name != 'pull_request' && matrix.tag-as-latest && matrix.tag != 'latest'
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          registry: ${{ env.CONTAINER_REGISTRY }}
+          image: ${{ matrix.name }}
+          tags: latest
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
