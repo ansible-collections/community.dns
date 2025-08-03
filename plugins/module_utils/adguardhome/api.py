@@ -21,7 +21,10 @@ def create_adguardhome_argument_spec(required_if=None, additional_argument_specs
         'host': {'type': 'str', 'required': True},
         'validate_certs': {'type': 'bool', 'default': True},
     }
-    argument_spec.update({} if additional_argument_specs is None else additional_argument_specs)
+
+    if additional_argument_specs:
+       argument_spec.update(additional_argument_specs)
+
     return ArgumentSpec(
         required_if=required_if,
         argument_spec=argument_spec

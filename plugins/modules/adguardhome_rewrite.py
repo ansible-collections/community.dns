@@ -164,17 +164,19 @@ def main():
     after = adguardhome.list()
 
     if module.check_mode:
+        return_rules = before
         diff_item = {
             'before': {'rules': after},
             'after': {'rules': before}
         }
     else:
+        return_rules = after
         diff_item = {
             'before': {'rules': before},
             'after': {'rules': after}
         }
 
-    module.exit_json(changed=changed, diff=diff_item)
+    module.exit_json(changed=changed, diff=diff_item, rules=return_rules)
 
 
 if __name__ == '__main__':
