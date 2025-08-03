@@ -15,16 +15,16 @@ from ansible_collections.community.dns.plugins.module_utils.argspec import Argum
 
 
 def create_adguardhome_argument_spec(required_if=None, additional_argument_specs=None):
-    always_argument_spec = {
+    argument_spec = {
         'username': {'type': 'str', 'required': True},
         'password': {'type': 'str', 'required': True, 'no_log': True},
         'host': {'type': 'str', 'required': True},
         'validate_certs': {'type': 'bool', 'default': True},
     }
-    additional_argument_specs = {} if additional_argument_specs is None else additional_argument_specs
+    argument_spec.update({} if additional_argument_specs is None else additional_argument_specs)
     return ArgumentSpec(
         required_if=required_if,
-        argument_spec={**always_argument_spec, **additional_argument_specs}
+        argument_spec=argument_spec
     )
 
 
