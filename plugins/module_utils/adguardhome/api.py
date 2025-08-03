@@ -23,7 +23,7 @@ def create_adguardhome_argument_spec(required_if=None, additional_argument_specs
     }
 
     if additional_argument_specs:
-       argument_spec.update(additional_argument_specs)
+        argument_spec.update(additional_argument_specs)
 
     return ArgumentSpec(
         required_if=required_if,
