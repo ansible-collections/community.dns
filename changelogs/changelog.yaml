@@ -1073,3 +1073,19 @@ releases:
       - 3.2.7.yml
       - update-psl.yml
     release_date: '2025-07-27'
+  3.3.0:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+      release_summary: Feature release with support for AdGuard Home.
+    fragments:
+      - 3.3.0.yml
+      - update-psl.yml
+    modules:
+      - description: Add, update or delete DNS rewrite rules from AdGuardHome.
+        name: adguardhome_rewrite
+        namespace: ''
+      - description: Retrieve DNS rewrite rules from AdGuardHome.
+        name: adguardhome_rewrite_info
+        namespace: ''
+    release_date: '2025-08-10'

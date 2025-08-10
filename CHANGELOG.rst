@@ -4,6 +4,25 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.3.0
+======
+
+Release Summary
+---------------
+
+Feature release with support for AdGuard Home.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+
+New Modules
+-----------
+
+- community.dns.adguardhome_rewrite - Add, update or delete DNS rewrite rules from AdGuardHome.
+- community.dns.adguardhome_rewrite_info - Retrieve DNS rewrite rules from AdGuardHome.
+
 v3.2.7
 ======
 
