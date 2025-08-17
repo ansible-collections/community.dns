@@ -9,9 +9,9 @@ from __future__ import annotations
 
 import abc
 import typing as t
+from collections.abc import Sequence
 
 from ansible.errors import AnsibleError
-from ansible.module_utils.common._collections_compat import Sequence
 from ansible.plugins.inventory import BaseInventoryPlugin
 from ansible.template import Templar
 from ansible.utils.display import Display
