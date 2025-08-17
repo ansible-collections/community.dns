@@ -11,7 +11,7 @@ import abc
 import typing as t
 
 from ansible.errors import AnsibleError
-from ansible.module_utils.common._collections_compat import Sequence
+from collections.abc import Sequence
 from ansible.plugins.inventory import BaseInventoryPlugin
 from ansible.template import Templar
 from ansible.utils.display import Display
