@@ -38,7 +38,6 @@ options:
     type: str
     choices:
       - A
-      - ALL
       - AAAA
       - CAA
       - CNAME
@@ -487,7 +486,6 @@ def main():
                 'type': 'str',
                 'choices': [
                     'A',
-                    'ALL',
                     'AAAA',
                     'CAA',
                     'CNAME',
