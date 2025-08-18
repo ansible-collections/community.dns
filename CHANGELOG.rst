@@ -4,6 +4,21 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.3.1
+======
+
+Release Summary
+---------------
+
+Bugfix and maintenance release with updated PSL.
+
+Bugfixes
+--------
+
+- Avoid deprecated functionality in ansible-core 2.20 (https://github.com/ansible-collections/community.dns/pull/280).
+- Update Public Suffix List.
+- nameserver_record_info - removed type ``ALL``, which never worked (https://github.com/ansible-collections/community.dns/issues/278, https://github.com/ansible-collections/community.dns/pull/279).
+
 v3.3.0
 ======
 

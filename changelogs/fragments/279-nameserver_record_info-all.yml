@@ -1,2 +1,0 @@
-bugfixes:
-  - "nameserver_record_info - removed type ``ALL``, which never worked (https://github.com/ansible-collections/community.dns/issues/278, https://github.com/ansible-collections/community.dns/pull/279)."
