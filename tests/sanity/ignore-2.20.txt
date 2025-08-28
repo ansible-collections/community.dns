@@ -1,2 +1,7 @@
+plugins/module_utils/conversion/converter.py pylint:ansible-bad-import-from
+plugins/module_utils/dnspython_records.py pylint:ansible-bad-import-from
+plugins/module_utils/hosttech/wsdl_api.py pylint:ansible-bad-import-from
+plugins/module_utils/http.py pylint:ansible-bad-import-from
+plugins/module_utils/wsdl.py pylint:ansible-bad-import-from
 plugins/plugin_utils/inventory/records.py no-assert  # The asserts are mainly needed for type inference
 plugins/public_suffix_list.dat no-smart-quotes
