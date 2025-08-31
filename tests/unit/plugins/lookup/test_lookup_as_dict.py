@@ -551,7 +551,7 @@ class TestLookupAsDict(TestCase):
         print(exc.value.args[0])
         assert (
             exc.value.args[0]
-            == "Unexpected DNS error for ns.example.com: The DNS query name does not exist: ns.example.com."
+            == "Nameserver ns.example.com does not exist (The DNS query name does not exist: ns.example.com.)"
         )
 
     def test_server_resolve_servfail(self) -> None:
