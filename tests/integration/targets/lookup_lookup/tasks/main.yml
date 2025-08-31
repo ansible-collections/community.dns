@@ -24,3 +24,17 @@
       - ansible_txt | length > 0
       - ansible_txt[0] is string
       - ansible_empty | length == 0
+
+- name: Test with invalid nameserver IP
+  ansible.builtin.set_fact:
+    broken: >-
+      {{ query('community.dns.lookup', 'www.ansible.com', type='A', server='999.999.999.999') }}
+  register: result
+  ignore_errors: true
+
+- name: Check results
+  assert:
+    that:
+      - result is failed
+      - >-
+        "Nameserver 999.999.999.999 does not exist" in result.msg

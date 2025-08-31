@@ -16,7 +16,7 @@
     msg: '{{ result }}'
 
 - name: Validate results
-  assert:
+  ansible.builtin.assert:
     that:
       - result.results[0].result[0].nameserver in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.']
       - result.results[0].result[1].nameserver in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.']
@@ -42,7 +42,24 @@
     msg: '{{ result }}'
 
 - name: Validate results
-  assert:
+  ansible.builtin.assert:
     that:
       - result.results[0].result[0].nameserver in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.']
       - result.results[0].result[1].nameserver in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.']
+
+- name: Test with invalid nameserver IP
+  community.dns.nameserver_record_info:
+    name:
+      - example.com
+    type: A
+    server:
+      - 999.999.999.999
+  register: result
+  ignore_errors: true
+
+- name: Validate results
+  ansible.builtin.assert:
+    that:
+      - result is failed
+      - >-
+        result.msg == "Invalid input: Invalid nameserver IP address 999.999.999.999"

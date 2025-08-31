@@ -21,3 +21,17 @@
       - ansible_aaaa == ['dns.quad9.net.']
       - ansible_both == ['dns9.quad9.net.', 'dns.quad9.net.']
       - ansible_via_other == ['dns9.quad9.net.']
+
+- name: Test with invalid nameserver IP
+  ansible.builtin.set_fact:
+    broken: >-
+      {{ query('community.dns.reverse_lookup', '9.9.9.9', server='999.999.999.999') }}
+  register: result
+  ignore_errors: true
+
+- name: Check results
+  assert:
+    that:
+      - result is failed
+      - >-
+        "Nameserver 999.999.999.999 does not exist" in result.msg

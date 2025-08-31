@@ -442,6 +442,7 @@ from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
 try:
     import dns.resolver
     from dns.rdatatype import RdataType
+    from dns.resolver import NXDOMAIN
 except ImportError:
     # handled by assert_requirements_present_dnspython
     pass
@@ -486,7 +487,13 @@ class LookupModule(LookupBase):
     def _get_resolver(
         resolver: SimpleResolver, server: str
     ) -> t.Callable[[], list[str]]:
-        return lambda: resolver.resolve_addresses(server)
+        def f():
+            try:
+                return resolver.resolve_addresses(server)
+            except NXDOMAIN as exc:
+                raise AnsibleLookupError(f"Nameserver {server} does not exist ({exc})")
+
+        return f
 
     def run(
         self, terms: list[t.Any], variables: t.Any | None = None, **kwargs: t.Any

@@ -29,3 +29,17 @@
       - ansible_txt[0].value is string
       - ansible_txt | map(attribute='strings') | map('join') | list == ansible_txt | map(attribute='value') | list
       - ansible_empty | length == 0
+
+- name: Test with invalid nameserver IP
+  ansible.builtin.set_fact:
+    broken: >-
+      {{ query('community.dns.lookup_as_dict', 'www.ansible.com', type='A', server='999.999.999.999') }}
+  register: result
+  ignore_errors: true
+
+- name: Check results
+  assert:
+    that:
+      - result is failed
+      - >-
+        "Nameserver 999.999.999.999 does not exist" in result.msg
