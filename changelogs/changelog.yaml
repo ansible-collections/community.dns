@@ -1103,3 +1103,16 @@ releases:
       - 3.3.1.yml
       - update-psl.yml
     release_date: '2025-08-18'
+  3.3.2:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+        - various DNS lookup plugins and modules - improve handling of invalid nameserver
+          IPs/names (https://github.com/ansible-collections/community.dns/issues/282,
+          https://github.com/ansible-collections/community.dns/pull/284).
+      release_summary: Bugfix and maintenance release with updated PSL.
+    fragments:
+      - 284-invalid-nameserver.yml
+      - 3.3.2.yml
+      - update-psl.yml
+    release_date: '2025-08-31'

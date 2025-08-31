@@ -4,6 +4,20 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.3.2
+======
+
+Release Summary
+---------------
+
+Bugfix and maintenance release with updated PSL.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- various DNS lookup plugins and modules - improve handling of invalid nameserver IPs/names (https://github.com/ansible-collections/community.dns/issues/282, https://github.com/ansible-collections/community.dns/pull/284).
+
 v3.3.1
 ======
 
