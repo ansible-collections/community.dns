@@ -32,5 +32,6 @@ jobs:
     with:
       upload-codecov: true
       min-ansible-core: 2.19
+      max-ansible-core: 2.19
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
