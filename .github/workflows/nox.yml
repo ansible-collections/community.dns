@@ -31,5 +31,6 @@ jobs:
     uses: ansible-community/antsibull-nox/.github/workflows/reusable-nox-matrix.yml@main
     with:
       upload-codecov: true
+      min-ansible-core: 2.19
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
