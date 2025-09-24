@@ -14,6 +14,7 @@ short_description: Reverse-look up IP addresses
 version_added: 3.1.0
 requirements:
   - dnspython >= 1.15.0 (maybe older versions also work)
+  - some change
 description:
   - Look up hostnames for IP addresses using DNS reverse lookup.
 options:
