@@ -7,6 +7,11 @@
 "community.library_inventory_filtering_v1" = "git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1"
 "community.general" = "git+https://github.com/ansible-collections/community.general.git,main"
 
+[vcs]
+vcs = "git"
+development_branch = "main"
+stable_branches = [ "stable-*" ]
+
 [sessions]
 
 [sessions.lint]
