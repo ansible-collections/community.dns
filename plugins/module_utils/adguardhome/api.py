@@ -9,9 +9,15 @@ __metaclass__ = type
 
 import json
 
-import ansible.module_utils.six.moves.urllib.error as urllib_error  # pylint: disable=import-error
 from ansible.module_utils.urls import Request
 from ansible_collections.community.dns.plugins.module_utils.argspec import ArgumentSpec
+
+
+try:
+    from urllib.error import HTTPError
+except ImportError:
+    # Python 2.x fallback:
+    from urllib2 import HTTPError
 
 
 def create_adguardhome_argument_spec(required_if=None, additional_argument_specs=None):
@@ -55,7 +61,7 @@ class AdGuardHomeAPIHandler:
 
             return json.loads(response.read().decode('utf-8'))
 
-        except urllib_error.HTTPError as e:
+        except HTTPError as e:
             self.fail_json(msg=e.read())
 
     def add_or_delete(self, domain, answer, method, target):
@@ -81,7 +87,7 @@ class AdGuardHomeAPIHandler:
             )
             return True
 
-        except urllib_error.HTTPError as e:
+        except HTTPError as e:
             self.fail_json(msg=e.read())
 
     def update(self, domain, answer, target):
@@ -100,5 +106,5 @@ class AdGuardHomeAPIHandler:
             )
             return True
 
-        except urllib_error.HTTPError as e:
+        except HTTPError as e:
             self.fail_json(msg=e.read())

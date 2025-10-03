@@ -13,11 +13,16 @@ __metaclass__ = type
 import abc
 import sys
 
-import ansible.module_utils.six.moves.urllib.error as urllib_error  # pylint: disable=import-error
-from ansible.module_utils import six
 from ansible.module_utils.common.text.converters import to_native
-from ansible.module_utils.six import PY3
 from ansible.module_utils.urls import ConnectionError, NoSSLError, fetch_url, open_url
+from ansible_collections.community.dns.plugins.module_utils._six import add_metaclass
+
+
+try:
+    from urllib.error import HTTPError
+except ImportError:
+    # Python 2.x fallback:
+    from urllib2 import HTTPError
 
 
 if sys.version_info >= (3, 6):
@@ -31,7 +36,7 @@ class NetworkError(Exception):
     pass
 
 
-@six.add_metaclass(abc.ABCMeta)
+@add_metaclass(abc.ABCMeta)
 class HTTPHelper(object):
     @abc.abstractmethod
     def fetch_url(
@@ -68,7 +73,7 @@ class ModuleHTTPHelper(HTTPHelper):
         try:
             # In Python 2, reading from a closed response yields a TypeError.
             # In Python 3, read() simply returns ''
-            if PY3 and response.closed:
+            if sys.version_info[0] > 2 and response.closed:
                 raise TypeError
             content = response.read()
         except (AttributeError, TypeError):
@@ -93,7 +98,7 @@ class OpenURLHelper(HTTPHelper):
             info['status'] = req.code
             info['url'] = req.geturl()
             req.close()
-        except urllib_error.HTTPError as e:
+        except HTTPError as e:
             try:
                 result = e.read()
             except AttributeError:
