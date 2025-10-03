@@ -16,13 +16,17 @@ import sys
 import time
 
 from ansible.module_utils.common.text.converters import to_native
-from ansible.module_utils.six.moves.urllib.parse import (  # pylint: disable=import-error
-    urlencode,
-)
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIAuthenticationError,
     DNSAPIError,
 )
+
+
+try:
+    from urllib.parse import urlencode
+except ImportError:
+    # Python 2.x fallback:
+    from urllib import urlencode
 
 
 if sys.version_info >= (3, 6):

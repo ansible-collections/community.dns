@@ -139,6 +139,8 @@ This collection is primarily licensed and distributed as a whole under the GNU G
 
 See [LICENSES/GPL-3.0-or-later.txt](https://github.com/ansible-collections/community.dns/blob/main/COPYING) for the full text.
 
-The only content of this collection that is not GPL v3.0+ licensed is `plugins/public_suffix_list.dat`, which is subject to the terms of the Mozilla Public License, v. 2.0. See [LICENSES/MPL-2.0.txt](https://github.com/ansible-collections/community.dns/blob/main/LICENSES/MPL-2.0.txt) for the full text.
+The only content of this collection that is not GPL v3.0+ licensed are:
+* `plugins/public_suffix_list.dat`, which is subject to the terms of the Mozilla Public License, v. 2.0. See [LICENSES/MPL-2.0.txt](https://github.com/ansible-collections/community.dns/blob/main/LICENSES/MPL-2.0.txt) for the full text.
+* `plugins/module_utils/_six.py`, which is licensed under the [MIT license](https://github.com/ansible-collections/community.dns/blob/main/LICENSES/MIT.txt).
 
 All files have a machine readable `SDPX-License-Identifier:` comment denoting its respective license(s) or an equivalent entry in an accompanying `.license` file. Only changelog fragments (which will not be part of a release) are covered by a blanket statement in `REUSE.toml`. This conforms to the [REUSE specification](https://reuse.software/spec/).

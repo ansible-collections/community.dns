@@ -16,8 +16,12 @@ import base64
 import sys
 
 from ansible.module_utils.common.text.converters import to_bytes, to_native, to_text
-from ansible.module_utils.six import binary_type
 
+
+if sys.version_info[0] == 2:
+    binary_type = str
+else:
+    binary_type = bytes
 
 if sys.version_info >= (3, 6):
     import typing

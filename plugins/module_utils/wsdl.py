@@ -9,10 +9,15 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
+import sys
 
 from ansible.module_utils.common.text.converters import to_native
-from ansible.module_utils.six import string_types
 
+
+if sys.version_info[0] == 2:
+    string_types = (str, unicode)  # noqa: F821, pylint: disable=undefined-variable
+else:
+    string_types = (bytes, str)
 
 try:
     import lxml.etree

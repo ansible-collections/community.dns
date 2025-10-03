@@ -13,7 +13,7 @@ __metaclass__ = type
 import warnings
 
 from ansible.module_utils.common.text.converters import to_text
-from ansible.module_utils.six import raise_from
+from ansible_collections.community.dns.plugins.module_utils._six import raise_from
 from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
     DNSConversionError,
 )

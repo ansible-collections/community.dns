@@ -11,7 +11,7 @@ __metaclass__ = type
 
 
 from ansible.module_utils.common.text.converters import to_native
-from ansible.module_utils.six import raise_from
+from ansible_collections.community.dns.plugins.module_utils._six import raise_from
 from ansible_collections.community.dns.plugins.module_utils.record import DNSRecord
 from ansible_collections.community.dns.plugins.module_utils.wsdl import (
     Composer,

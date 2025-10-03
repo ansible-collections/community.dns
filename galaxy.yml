@@ -15,6 +15,7 @@ authors:
 description: Plugins and modules for working with DNS
 license:
   - GPL-3.0-or-later
+  - MIT
   - MPL-2.0
 # license_file: COPYING
 tags:
