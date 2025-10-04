@@ -15,9 +15,9 @@ from ansible.module_utils.common.text.converters import to_native
 
 
 if sys.version_info[0] == 2:
-    string_types = (str, unicode)  # noqa: F821, pylint: disable=undefined-variable
+    string_types = (basestr,)  # noqa: F821, pylint: disable=undefined-variable
 else:
-    string_types = (bytes, str)
+    string_types = (str,)
 
 try:
     import lxml.etree
