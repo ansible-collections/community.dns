@@ -100,7 +100,7 @@ options:
     type: bool
     default: true
 notes:
-  - This plugin returns DNS messages in RFC 8427 JSON format, which includes Header, Question, Answer, Authority, and Additional sections.
+  - This plugin returns DNS messages in RFC 8427 JSON format, which includes C(Header), C(Question), C(Answer), C(Authority), and C(Additional) sections.
   - Note that when using this lookup plugin with V(lookup(\)), and the result is a one-element list, Ansible simply returns
     the one element not as a list. Since this behavior is surprising and can cause problems, it is better to use V(query(\))
     instead of V(lookup(\)). See the examples and also R(Forcing lookups to return lists, query) in the Ansible documentation.
