@@ -97,8 +97,6 @@ options:
       - If V(true), the input is assumed to be a relative domain name if it does not end with C(.), the search list configured
         in the system's resolver configuration will be used for relative names, and the resolver's domain may be added to
         relative names.
-      - Note that this behavior changed in community.dns 3.0.0. In community.dns 2.x.y, O(search=false) was the only available
-        choice.
     type: bool
     default: true
     version_added: 3.0.0
