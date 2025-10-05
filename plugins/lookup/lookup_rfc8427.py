@@ -9,7 +9,9 @@ from __future__ import annotations
 
 DOCUMENTATION = r"""
 name: lookup_rfc8427
-author: Felix Fontein (@felixfontein), Vasiliy Kiryanov (@vasiliyk)
+author:
+  - Felix Fontein (@felixfontein)
+  - Vasiliy Kiryanov (@vasiliyk)
 short_description: Look up DNS records and return RFC 8427 JSON format
 version_added: 3.0.0
 requirements:
