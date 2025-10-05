@@ -4,7 +4,7 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import annotations
+from __future__ import annotations # pylint: disable=illegal-future-imports
 
 
 DOCUMENTATION = r"""
@@ -181,11 +181,11 @@ from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
 
 
 try:
-    import dns.resolver
+    import dns.flags
     import dns.message
     import dns.query
     import dns.rcode
-    import dns.flags
+    import dns.resolver
     from dns.rdatatype import RdataType
     from dns.resolver import NXDOMAIN
 except ImportError:
@@ -209,7 +209,7 @@ class LookupModule(LookupBase):
                 "type": rrset.rdtype,
                 "class": rrset.rdclass,
                 "TTL": rrset.ttl,
-                "data": str(rdata)
+                "data": str(rdata),
             }
             records.append(record)
         return records
@@ -232,18 +232,14 @@ class LookupModule(LookupBase):
                 "QDCOUNT": len(message.question),
                 "ANCOUNT": len(message.answer),
                 "NSCOUNT": len(message.authority),
-                "ARCOUNT": len(message.additional)
+                "ARCOUNT": len(message.additional),
             },
             "Question": [
-                {
-                    "name": question_name,
-                    "type": question_type,
-                    "class": 1  # IN class
-                }
+                {"name": question_name, "type": question_type, "class": 1}  # IN class
             ],
             "Answer": LookupModule._convert_rrset_to_rfc8427(message.answer),
             "Authority": LookupModule._convert_rrset_to_rfc8427(message.authority),
-            "Additional": LookupModule._convert_rrset_to_rfc8427(message.additional)
+            "Additional": LookupModule._convert_rrset_to_rfc8427(message.additional),
         }
         return result
 
@@ -266,16 +262,26 @@ class LookupModule(LookupBase):
                 if server_addresses:
                     nameserver = server_addresses[0]  # Use first server
                     try:
-                        response = dns.query.udp(query, nameserver, timeout=resolver.timeout)
-                        return LookupModule._convert_message_to_rfc8427(response, name, rdtype)
+                        response = dns.query.udp(
+                            query, nameserver, timeout=resolver.timeout
+                        )
+                        return LookupModule._convert_message_to_rfc8427(
+                            response, name, rdtype
+                        )
                     except Exception as e:
                         raise AnsibleLookupError(f"Failed to query {nameserver}: {e}")
 
                 # Use system resolver for direct queries
                 try:
                     # Try direct UDP query first
-                    response = dns.query.udp(query, resolver.default_resolver.nameservers[0], timeout=resolver.timeout)
-                    return LookupModule._convert_message_to_rfc8427(response, name, rdtype)
+                    response = dns.query.udp(
+                        query,
+                        resolver.default_resolver.nameservers[0],
+                        timeout=resolver.timeout,
+                    )
+                    return LookupModule._convert_message_to_rfc8427(
+                        response, name, rdtype
+                    )
                 except Exception:
                     # Fallback to resolver.resolve if direct query fails
                     try:
@@ -295,13 +301,17 @@ class LookupModule(LookupBase):
                         elif nxdomain_handling == "message":
                             response_msg.set_rcode(dns.rcode.NXDOMAIN)
 
-                        return LookupModule._convert_message_to_rfc8427(response_msg, name, rdtype)
+                        return LookupModule._convert_message_to_rfc8427(
+                            response_msg, name, rdtype
+                        )
 
                     except dns.resolver.NXDOMAIN:
                         if nxdomain_handling == "message":
                             response_msg = dns.message.make_response(query)
                             response_msg.set_rcode(dns.rcode.NXDOMAIN)
-                            return LookupModule._convert_message_to_rfc8427(response_msg, name, rdtype)
+                            return LookupModule._convert_message_to_rfc8427(
+                                response_msg, name, rdtype
+                            )
                         raise AnsibleLookupError(f"Got NXDOMAIN when querying {name}")
 
             except Exception as e:
@@ -349,7 +359,9 @@ class LookupModule(LookupBase):
         server_addresses: list[str] | None = None
         if self.get_option("server"):
             server_addresses = []
-            assert_requirements_present_ipaddress("community.dns.lookup_rfc8427", "lookup")
+            assert_requirements_present_ipaddress(
+                "community.dns.lookup_rfc8427", "lookup"
+            )
             servers: list[str] = self.get_option("server")
             for server in servers:
                 if is_ip_address(server):
