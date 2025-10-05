@@ -15,7 +15,7 @@ from ansible.module_utils.common.text.converters import to_native
 
 
 if sys.version_info[0] == 2:
-    string_types = (basestr,)  # noqa: F821, pylint: disable=undefined-variable
+    string_types = (basestring,)  # noqa: F821, pylint: disable=undefined-variable
 else:
     string_types = (str,)
 
