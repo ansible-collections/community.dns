@@ -18,7 +18,7 @@ requirements:
   - dnspython >= 1.15.0 (maybe older versions also work)
   - ipaddress (on Python 2.7 when using O(server))
 description:
-  - Look up DNS records and return them in RFC 8427 DNS message JSON format.
+  - Look up DNS records and return them in L(RFC 8427 DNS message JSON format, https://www.rfc-editor.org/rfc/rfc8427.html).
   - RFC 8427 defines a standardized format for representing DNS messages in JSON.
 options:
   _terms:
