@@ -124,7 +124,7 @@ RETURN = r"""
 _result:
   description:
     - DNS messages in RFC 8427 JSON format for all queried DNS names.
-    - If multiple DNS names are queried in O(_terms), the resulting messages are returned as a list.
+    - Every element in O(_terms) corresponds to one element in this list.
   type: list
   elements: dict
   sample:
