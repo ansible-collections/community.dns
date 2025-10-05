@@ -1,0 +1,381 @@
+# -*- coding: utf-8 -*-
+
+# Copyright (c) 2023-2025, Felix Fontein <felix@fontein.de>
+# GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+from __future__ import annotations
+
+
+DOCUMENTATION = r"""
+name: lookup_rfc8427
+author: Felix Fontein (@felixfontein), Vasiliy Kiryanov (@vasiliyk)
+short_description: Look up DNS records and return RFC 8427 JSON format
+version_added: 3.0.0
+requirements:
+  - dnspython >= 1.15.0 (maybe older versions also work)
+  - ipaddress (on Python 2.7 when using O(server))
+description:
+  - Look up DNS records and return them in RFC 8427 DNS message JSON format.
+  - RFC 8427 defines a standardized format for representing DNS messages in JSON.
+options:
+  _terms:
+    description:
+      - Domain name(s) to query.
+    type: list
+    elements: str
+    required: true
+  type:
+    description:
+      - The record type to retrieve.
+    type: str
+    default: A
+    choices:
+      - A
+      - AAAA
+      - CAA
+      - CNAME
+      - DNAME
+      - DNSKEY
+      - DS
+      - HINFO
+      - LOC
+      - MX
+      - NAPTR
+      - NS
+      - NSEC
+      - NSEC3
+      - NSEC3PARAM
+      - PTR
+      - RP
+      - RRSIG
+      - SOA
+      - SPF
+      - SRV
+      - SSHFP
+      - TLSA
+      - TXT
+  query_retry:
+    description:
+      - Number of retries for DNS query timeouts.
+    type: int
+    default: 3
+  query_timeout:
+    description:
+      - Timeout per DNS query in seconds.
+    type: float
+    default: 10
+  server:
+    description:
+      - The DNS server(s) to use to look up the result. Must be a list of one or more IP addresses.
+      - By default, the system's standard resolver is used.
+    type: list
+    elements: str
+  servfail_retries:
+    description:
+      - How often to retry on SERVFAIL errors.
+    type: int
+    default: 0
+  nxdomain_handling:
+    description:
+      - How to handle NXDOMAIN errors. These appear if an unknown domain name is queried.
+      - V(empty) (default) returns an empty result for that domain name. This means that for the corresponding domain name,
+        nothing is added to RV(_result).
+      - V(fail) makes the lookup fail.
+      - V(message) adds the string V(NXDOMAIN) to RV(_result).
+    type: str
+    choices:
+      - empty
+      - fail
+      - message
+    default: empty
+  search:
+    description:
+      - If V(false), the input is assumed to be an absolute domain name.
+      - If V(true), the input is assumed to be a relative domain name if it does not end with C(.), the search list configured
+        in the system's resolver configuration will be used for relative names, and the resolver's domain may be added to
+        relative names.
+      - Note that this behavior changed in community.dns 3.0.0. In community.dns 2.x.y, O(search=false) was the only available
+        choice.
+    type: bool
+    default: true
+    version_added: 3.0.0
+notes:
+  - This plugin returns DNS messages in RFC 8427 JSON format, which includes Header, Question, Answer, Authority, and Additional sections.
+  - Note that when using this lookup plugin with V(lookup(\)), and the result is a one-element list, Ansible simply returns
+    the one element not as a list. Since this behavior is surprising and can cause problems, it is better to use V(query(\))
+    instead of V(lookup(\)). See the examples and also R(Forcing lookups to return lists, query) in the Ansible documentation.
+"""
+
+EXAMPLES = r"""
+- name: Look up A (IPv4) records for example.org in RFC 8427 JSON format
+  ansible.builtin.debug:
+    msg: "{{ query('community.dns.lookup_rfc8427', 'example.org.') }}"
+
+- name: Look up AAAA (IPv6) records for example.org in RFC 8427 JSON format
+  ansible.builtin.debug:
+    msg: "{{ query('community.dns.lookup_rfc8427', 'example.org.', type='AAAA' ) }}"
+
+- name: Get complete DNS message for MX records
+  ansible.builtin.debug:
+    msg: "{{ query('community.dns.lookup_rfc8427', 'example.org.', type='MX' ) }}"
+"""
+
+RETURN = r"""
+_result:
+  description:
+    - DNS messages in RFC 8427 JSON format for all queried DNS names.
+    - If multiple DNS names are queried in O(_terms), the resulting messages are returned as a list.
+  type: list
+  elements: dict
+  sample:
+    - Header:
+        ID: 12345
+        QR: true
+        Opcode: 0
+        AA: false
+        TC: false
+        RD: true
+        RA: true
+        AD: false
+        CD: false
+        Rcode: 0
+        QDCOUNT: 1
+        ANCOUNT: 1
+        NSCOUNT: 0
+        ARCOUNT: 0
+      Question:
+        - name: example.org.
+          type: 1
+          class: 1
+      Answer:
+        - name: example.org.
+          type: 1
+          class: 1
+          TTL: 3600
+          data: 93.184.216.34
+      Authority: []
+      Additional: []
+"""
+
+import typing as t
+
+from ansible.errors import AnsibleLookupError
+from ansible.module_utils.common.text.converters import to_text
+from ansible.plugins.lookup import LookupBase
+from ansible_collections.community.dns.plugins.module_utils.dnspython_records import (
+    NAME_TO_RDTYPE,
+)
+from ansible_collections.community.dns.plugins.module_utils.ips import is_ip_address
+from ansible_collections.community.dns.plugins.module_utils.resolver import (
+    SimpleResolver,
+)
+from ansible_collections.community.dns.plugins.plugin_utils.ips import (
+    assert_requirements_present as assert_requirements_present_ipaddress,
+)
+from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
+    assert_requirements_present as assert_requirements_present_dnspython,
+)
+from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
+    guarded_run,
+)
+
+
+try:
+    import dns.resolver
+    import dns.message
+    import dns.query
+    import dns.rcode
+    import dns.flags
+    from dns.rdatatype import RdataType
+    from dns.resolver import NXDOMAIN
+except ImportError:
+    # handled by assert_requirements_present_dnspython
+    pass
+else:
+    RdataType = int  # type: ignore  # noqa: F811
+
+
+class LookupModule(LookupBase):
+    @staticmethod
+    def _convert_rrset_to_rfc8427(rrset):
+        """Convert a DNS RRset to RFC 8427 format."""
+        if not rrset:
+            return []
+        
+        records = []
+        for rdata in rrset:
+            record = {
+                "name": str(rrset.name),
+                "type": rrset.rdtype,
+                "class": rrset.rdclass,
+                "TTL": rrset.ttl,
+                "data": str(rdata)
+            }
+            records.append(record)
+        return records
+
+    @staticmethod
+    def _convert_message_to_rfc8427(message, question_name, question_type):
+        """Convert a DNS message to RFC 8427 JSON format."""
+        result = {
+            "Header": {
+                "ID": message.id,
+                "QR": bool(message.flags & dns.flags.QR),
+                "Opcode": (message.flags >> 11) & 0xF,
+                "AA": bool(message.flags & dns.flags.AA),
+                "TC": bool(message.flags & dns.flags.TC),
+                "RD": bool(message.flags & dns.flags.RD),
+                "RA": bool(message.flags & dns.flags.RA),
+                "AD": bool(message.flags & dns.flags.AD),
+                "CD": bool(message.flags & dns.flags.CD),
+                "Rcode": message.rcode(),
+                "QDCOUNT": len(message.question),
+                "ANCOUNT": len(message.answer),
+                "NSCOUNT": len(message.authority),
+                "ARCOUNT": len(message.additional)
+            },
+            "Question": [
+                {
+                    "name": question_name,
+                    "type": question_type,
+                    "class": 1  # IN class
+                }
+            ],
+            "Answer": LookupModule._convert_rrset_to_rfc8427(message.answer),
+            "Authority": LookupModule._convert_rrset_to_rfc8427(message.authority),
+            "Additional": LookupModule._convert_rrset_to_rfc8427(message.additional)
+        }
+        return result
+
+    @staticmethod
+    def _resolve_with_message(
+        resolver: SimpleResolver,
+        name: str,
+        rdtype: RdataType,
+        server_addresses: list[str] | None,
+        nxdomain_handling: t.Literal["empty", "fail", "message"],
+        target_can_be_relative: bool = True,
+        search: bool = True,
+    ) -> dict[str, t.Any]:
+        def callback() -> dict[str, t.Any]:
+            try:
+                # Create a DNS query message
+                query = dns.message.make_query(name, rdtype)
+                
+                # Use direct UDP query if server addresses are specified
+                if server_addresses:
+                    nameserver = server_addresses[0]  # Use first server
+                    try:
+                        response = dns.query.udp(query, nameserver, timeout=resolver.timeout)
+                        return LookupModule._convert_message_to_rfc8427(response, name, rdtype)
+                    except Exception as e:
+                        raise AnsibleLookupError(f"Failed to query {nameserver}: {e}")
+                
+                # Use system resolver for direct queries
+                try:
+                    # Try direct UDP query first
+                    response = dns.query.udp(query, resolver.default_resolver.nameservers[0], timeout=resolver.timeout)
+                    return LookupModule._convert_message_to_rfc8427(response, name, rdtype)
+                except Exception:
+                    # Fallback to resolver.resolve if direct query fails
+                    try:
+                        rrset = resolver.resolve(
+                            name,
+                            rdtype=rdtype,
+                            server_addresses=server_addresses,
+                            nxdomain_is_empty=nxdomain_handling == "empty",
+                            target_can_be_relative=target_can_be_relative,
+                            search=search,
+                        )
+                        
+                        # Create a response message
+                        response_msg = dns.message.make_response(query)
+                        if rrset:
+                            response_msg.answer.append(rrset)
+                        elif nxdomain_handling == "message":
+                            response_msg.set_rcode(dns.rcode.NXDOMAIN)
+                        
+                        return LookupModule._convert_message_to_rfc8427(response_msg, name, rdtype)
+                        
+                    except dns.resolver.NXDOMAIN:
+                        if nxdomain_handling == "message":
+                            response_msg = dns.message.make_response(query)
+                            response_msg.set_rcode(dns.rcode.NXDOMAIN)
+                            return LookupModule._convert_message_to_rfc8427(response_msg, name, rdtype)
+                        raise AnsibleLookupError(f"Got NXDOMAIN when querying {name}")
+                
+            except Exception as e:
+                raise AnsibleLookupError(f"DNS query failed: {e}")
+
+        return guarded_run(
+            callback,
+            error_class=AnsibleLookupError,
+            server=name,
+        )
+
+    @staticmethod
+    def _get_resolver(
+        resolver: SimpleResolver, server: str
+    ) -> t.Callable[[], list[str]]:
+        def f():
+            try:
+                return resolver.resolve_addresses(server)
+            except NXDOMAIN as exc:
+                raise AnsibleLookupError(f"Nameserver {server} does not exist ({exc})")
+
+        return f
+
+    def run(
+        self, terms: list[t.Any], variables: t.Any | None = None, **kwargs: t.Any
+    ) -> list[dict[str, t.Any]]:
+        assert_requirements_present_dnspython("community.dns.lookup_rfc8427", "lookup")
+
+        self.set_options(var_options=variables, direct=kwargs)
+
+        resolver = SimpleResolver(
+            timeout=self.get_option("query_timeout"),
+            timeout_retries=self.get_option("query_retry"),
+            servfail_retries=self.get_option("servfail_retries"),
+        )
+
+        rdtype = NAME_TO_RDTYPE[self.get_option("type")]
+
+        nxdomain_handling: t.Literal["empty", "fail", "message"] = self.get_option(
+            "nxdomain_handling"
+        )
+
+        search: bool = self.get_option("search")
+
+        server_addresses: list[str] | None = None
+        if self.get_option("server"):
+            server_addresses = []
+            assert_requirements_present_ipaddress("community.dns.lookup_rfc8427", "lookup")
+            servers: list[str] = self.get_option("server")
+            for server in servers:
+                if is_ip_address(server):
+                    server_addresses.append(server)
+                    continue
+                server_addresses.extend(
+                    guarded_run(
+                        self._get_resolver(resolver, server),
+                        error_class=AnsibleLookupError,
+                        server=server,
+                    )
+                )
+
+        result = []
+        for name in terms:
+            result.append(
+                self._resolve_with_message(
+                    resolver,
+                    to_text(name),
+                    rdtype,
+                    server_addresses,
+                    nxdomain_handling,
+                    target_can_be_relative=search,
+                    search=search,
+                )
+            )
+        return result
+        
