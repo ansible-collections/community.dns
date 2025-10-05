@@ -13,7 +13,7 @@ author:
   - Felix Fontein (@felixfontein)
   - Vasiliy Kiryanov (@vasiliyk)
 short_description: Look up DNS records and return RFC 8427 JSON format
-version_added: 3.0.0
+version_added: 3.4.0
 requirements:
   - dnspython >= 1.15.0 (maybe older versions also work)
   - ipaddress (on Python 2.7 when using O(server))
