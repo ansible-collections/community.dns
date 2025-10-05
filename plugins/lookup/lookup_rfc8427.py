@@ -201,7 +201,7 @@ class LookupModule(LookupBase):
         """Convert a DNS RRset to RFC 8427 format."""
         if not rrset:
             return []
-        
+
         records = []
         for rdata in rrset:
             record = {
@@ -261,7 +261,7 @@ class LookupModule(LookupBase):
             try:
                 # Create a DNS query message
                 query = dns.message.make_query(name, rdtype)
-                
+
                 # Use direct UDP query if server addresses are specified
                 if server_addresses:
                     nameserver = server_addresses[0]  # Use first server
@@ -270,7 +270,7 @@ class LookupModule(LookupBase):
                         return LookupModule._convert_message_to_rfc8427(response, name, rdtype)
                     except Exception as e:
                         raise AnsibleLookupError(f"Failed to query {nameserver}: {e}")
-                
+
                 # Use system resolver for direct queries
                 try:
                     # Try direct UDP query first
@@ -287,23 +287,23 @@ class LookupModule(LookupBase):
                             target_can_be_relative=target_can_be_relative,
                             search=search,
                         )
-                        
+
                         # Create a response message
                         response_msg = dns.message.make_response(query)
                         if rrset:
                             response_msg.answer.append(rrset)
                         elif nxdomain_handling == "message":
                             response_msg.set_rcode(dns.rcode.NXDOMAIN)
-                        
+
                         return LookupModule._convert_message_to_rfc8427(response_msg, name, rdtype)
-                        
+
                     except dns.resolver.NXDOMAIN:
                         if nxdomain_handling == "message":
                             response_msg = dns.message.make_response(query)
                             response_msg.set_rcode(dns.rcode.NXDOMAIN)
                             return LookupModule._convert_message_to_rfc8427(response_msg, name, rdtype)
                         raise AnsibleLookupError(f"Got NXDOMAIN when querying {name}")
-                
+
             except Exception as e:
                 raise AnsibleLookupError(f"DNS query failed: {e}")
 
@@ -377,4 +377,3 @@ class LookupModule(LookupBase):
                 )
             )
         return result
-        
