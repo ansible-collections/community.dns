@@ -4,6 +4,25 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.3.4
+======
+
+Release Summary
+---------------
+
+Maintenance release with updated PSL.
+
+Minor Changes
+-------------
+
+- Note that some new code in ``plugins/module_utils/_six.py`` is MIT licensed (https://github.com/ansible-collections/community.dns/pull/287).
+
+Bugfixes
+--------
+
+- Avoid using ``ansible.module_utils.six`` to avoid deprecation warnings with ansible-core 2.20 (https://github.com/ansible-collections/community.dns/pull/287).
+- Update Public Suffix List.
+
 v3.3.3
 ======
 

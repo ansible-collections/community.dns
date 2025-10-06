@@ -1125,3 +1125,18 @@ releases:
       - 3.3.3.yml
       - update-psl.yml
     release_date: '2025-09-08'
+  3.3.4:
+    changes:
+      bugfixes:
+        - Avoid using ``ansible.module_utils.six`` to avoid deprecation warnings with
+          ansible-core 2.20 (https://github.com/ansible-collections/community.dns/pull/287).
+        - Update Public Suffix List.
+      minor_changes:
+        - Note that some new code in ``plugins/module_utils/_six.py`` is MIT licensed
+          (https://github.com/ansible-collections/community.dns/pull/287).
+      release_summary: Maintenance release with updated PSL.
+    fragments:
+      - 287-six.yml
+      - 3.3.4.yml
+      - update-psl.yml
+    release_date: '2025-10-06'
