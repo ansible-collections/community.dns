@@ -242,7 +242,7 @@ class LookupModule(LookupBase):
         return result
 
     @staticmethod
-    def _resolve_with_message(
+    def _resolve(
         resolver: SimpleResolver,
         name: str,
         rdtype: RdataType,
