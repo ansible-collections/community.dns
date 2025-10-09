@@ -84,7 +84,6 @@ options:
       - V(empty) (default) returns an empty result for that domain name. This means that for the corresponding domain name,
         nothing is added to RV(_result).
       - V(fail) makes the lookup fail.
-      - V(message) adds the string V(NXDOMAIN) to RV(_result).
     type: str
     choices:
       - empty
