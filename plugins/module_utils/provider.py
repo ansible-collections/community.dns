@@ -12,7 +12,6 @@ __metaclass__ = type
 
 import abc
 
-from ansible.module_utils import six
 from ansible.module_utils.common.validation import (
     check_type_bool,
     check_type_dict,
@@ -20,6 +19,9 @@ from ansible.module_utils.common.validation import (
     check_type_int,
     check_type_list,
     check_type_str,
+)
+from ansible_collections.community.dns.plugins.module_utils._six import (
+    add_metaclass,
 )
 
 
@@ -39,7 +41,7 @@ def ensure_type(value, type_name):
     return value
 
 
-@six.add_metaclass(abc.ABCMeta)
+@add_metaclass(abc.ABCMeta)
 class ProviderInformation(object):
     @abc.abstractmethod
     def get_zone_id_type(self):
