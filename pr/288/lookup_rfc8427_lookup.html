@@ -237,12 +237,10 @@ examples: <code class="docutils literal notranslate"><span class="pre">lookup('c
 <td><div class="ansible-option-cell"><p>How to handle NXDOMAIN errors. These appear if an unknown domain name is queried.</p>
 <p><code class="ansible-value docutils literal notranslate"><span class="pre">empty</span></code> (default) returns an empty result for that domain name. This means that for the corresponding domain name, nothing is added to <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-rfc8427-lookup-return-result"><span class="std std-ref"><span class="pre">_result</span></span></a></code>.</p>
 <p><code class="ansible-value docutils literal notranslate"><span class="pre">fail</span></code> makes the lookup fail.</p>
-<p><code class="ansible-value docutils literal notranslate"><span class="pre">message</span></code> adds the string <code class="ansible-value docutils literal notranslate"><span class="pre">NXDOMAIN</span></code> to <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-lookup-rfc8427-lookup-return-result"><span class="std std-ref"><span class="pre">_result</span></span></a></code>.</p>
 <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
 <ul class="simple">
 <li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">&quot;empty&quot;</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;fail&quot;</span></code></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;message&quot;</span></code></p></li>
 </ul>
 </div></td>
 </tr>
