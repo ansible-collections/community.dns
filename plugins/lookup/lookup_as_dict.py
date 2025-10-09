@@ -457,7 +457,7 @@ class LookupModule(LookupBase):
         name: str,
         rdtype: RdataType,
         server_addresses: list[str] | None,
-        nxdomain_handling: t.Literal["empty", "fail", "message"],
+        nxdomain_handling: t.Literal["empty", "fail"],
         target_can_be_relative: bool = True,
         search: bool = True,
     ) -> list[dict[str, t.Any]]:
@@ -510,7 +510,7 @@ class LookupModule(LookupBase):
 
         rdtype = NAME_TO_RDTYPE[self.get_option("type")]
 
-        nxdomain_handling: t.Literal["empty", "fail", "message"] = self.get_option(
+        nxdomain_handling: t.Literal["empty", "fail"] = self.get_option(
             "nxdomain_handling"
         )
 
