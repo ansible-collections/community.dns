@@ -348,7 +348,7 @@ class LookupModule(LookupBase):
 
         rdtype = NAME_TO_RDTYPE[self.get_option("type")]
 
-        nxdomain_handling: t.Literal["empty", "fail", "message"] = self.get_option(
+        nxdomain_handling: t.Literal["empty", "fail"] = self.get_option(
             "nxdomain_handling"
         )
 
