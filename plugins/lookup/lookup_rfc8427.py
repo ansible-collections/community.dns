@@ -247,7 +247,7 @@ class LookupModule(LookupBase):
         name: str,
         rdtype: RdataType,
         server_addresses: list[str] | None,
-        nxdomain_handling: t.Literal["empty", "fail", "message"],
+        nxdomain_handling: t.Literal["empty", "fail"],
         target_can_be_relative: bool = True,
         search: bool = True,
     ) -> dict[str, t.Any]:
