@@ -12,7 +12,9 @@ __metaclass__ = type
 
 import abc
 
-from ansible.module_utils import six
+from ansible_collections.community.dns.plugins.module_utils._six import (
+    add_metaclass,
+)
 from ansible_collections.community.dns.plugins.module_utils.zone import (
     DNSZoneWithRecords,
 )
@@ -33,7 +35,7 @@ class NotProvidedType(object):
 NOT_PROVIDED = NotProvidedType()
 
 
-@six.add_metaclass(abc.ABCMeta)
+@add_metaclass(abc.ABCMeta)
 class ZoneRecordAPI(object):
     @abc.abstractmethod
     def get_zone_by_name(self, name):
