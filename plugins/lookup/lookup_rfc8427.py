@@ -88,7 +88,6 @@ options:
     choices:
       - empty
       - fail
-      - message
     default: empty
   search:
     description:
