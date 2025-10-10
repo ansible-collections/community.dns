@@ -280,8 +280,6 @@ class LookupModule(LookupBase):
                 )
             except dns.resolver.NXDOMAIN:
                 raise AnsibleLookupError(f"Got NXDOMAIN when querying {name}")
-            except Exception as e:
-                raise AnsibleLookupError(f"DNS query failed: {e}")
 
         return guarded_run(
             callback,
