@@ -195,7 +195,9 @@ else:
 
 class LookupModule(LookupBase):
     @staticmethod
-    def _convert_rrset_to_rfc8427(rrset):
+    def _convert_rrset_to_rfc8427(
+        rrset: dns.rrset.RRset | None,
+    ) -> list[dict[str, object]]:
         """Convert a DNS RRset to RFC 8427 format."""
         if not rrset:
             return []
@@ -213,9 +215,18 @@ class LookupModule(LookupBase):
         return records
 
     @staticmethod
-    def _convert_message_to_rfc8427(message, question_name, question_type):
+    def _convert_message_to_rfc8427(
+        message: dns.message.Message, question_name: str, question_type: int
+    ) -> dict[str, object]:
         """Convert a DNS message to RFC 8427 JSON format."""
-        result = {
+
+        def rrsets_to_records(rrsets: list[dns.rrset.RRset]) -> list[dict[str, object]]:
+            records: list[dict[str, object]] = []
+            for rrset in rrsets:
+                records.extend(LookupModule._convert_rrset_to_rfc8427(rrset))
+            return records
+
+        result: dict[str, object] = {
             "Header": {
                 "ID": message.id,
                 "QR": bool(message.flags & dns.flags.QR),
@@ -232,12 +243,10 @@ class LookupModule(LookupBase):
                 "NSCOUNT": len(message.authority),
                 "ARCOUNT": len(message.additional),
             },
-            "Question": [
-                {"name": question_name, "type": question_type, "class": 1}  # IN class
-            ],
-            "Answer": LookupModule._convert_rrset_to_rfc8427(message.answer),
-            "Authority": LookupModule._convert_rrset_to_rfc8427(message.authority),
-            "Additional": LookupModule._convert_rrset_to_rfc8427(message.additional),
+            "Question": [{"name": question_name, "type": question_type, "class": 1}],
+            "Answer": rrsets_to_records(message.answer),
+            "Authority": rrsets_to_records(message.authority),
+            "Additional": rrsets_to_records(message.additional),
         }
         return result
 
@@ -253,65 +262,24 @@ class LookupModule(LookupBase):
     ) -> dict[str, t.Any]:
         def callback() -> dict[str, t.Any]:
             try:
-                # Create a DNS query message
+                rrset = resolver.resolve(
+                    name,
+                    rdtype=rdtype,
+                    server_addresses=server_addresses,
+                    nxdomain_is_empty=nxdomain_handling == "empty",
+                    target_can_be_relative=target_can_be_relative,
+                    search=search,
+                )
+                # Create a response message and append the answer
                 query = dns.message.make_query(name, rdtype)
-
-                # Use direct UDP query if server addresses are specified
-                if server_addresses:
-                    nameserver = server_addresses[0]  # Use first server
-                    try:
-                        response = dns.query.udp(
-                            query, nameserver, timeout=resolver.timeout
-                        )
-                        return LookupModule._convert_message_to_rfc8427(
-                            response, name, rdtype
-                        )
-                    except Exception as e:
-                        raise AnsibleLookupError(f"Failed to query {nameserver}: {e}")
-
-                # Use system resolver for direct queries
-                try:
-                    # Try direct UDP query first
-                    response = dns.query.udp(
-                        query,
-                        resolver.default_resolver.nameservers[0],
-                        timeout=resolver.timeout,
-                    )
-                    return LookupModule._convert_message_to_rfc8427(
-                        response, name, rdtype
-                    )
-                except Exception:
-                    # Fallback to resolver.resolve if direct query fails
-                    try:
-                        rrset = resolver.resolve(
-                            name,
-                            rdtype=rdtype,
-                            server_addresses=server_addresses,
-                            nxdomain_is_empty=nxdomain_handling == "empty",
-                            target_can_be_relative=target_can_be_relative,
-                            search=search,
-                        )
-
-                        # Create a response message
-                        response_msg = dns.message.make_response(query)
-                        if rrset:
-                            response_msg.answer.append(rrset)
-                        elif nxdomain_handling == "message":
-                            response_msg.set_rcode(dns.rcode.NXDOMAIN)
-
-                        return LookupModule._convert_message_to_rfc8427(
-                            response_msg, name, rdtype
-                        )
-
-                    except dns.resolver.NXDOMAIN:
-                        if nxdomain_handling == "message":
-                            response_msg = dns.message.make_response(query)
-                            response_msg.set_rcode(dns.rcode.NXDOMAIN)
-                            return LookupModule._convert_message_to_rfc8427(
-                                response_msg, name, rdtype
-                            )
-                        raise AnsibleLookupError(f"Got NXDOMAIN when querying {name}")
-
+                response_msg = dns.message.make_response(query)
+                if rrset:
+                    response_msg.answer.append(rrset)
+                return LookupModule._convert_message_to_rfc8427(
+                    response_msg, name, rdtype
+                )
+            except dns.resolver.NXDOMAIN:
+                raise AnsibleLookupError(f"Got NXDOMAIN when querying {name}")
             except Exception as e:
                 raise AnsibleLookupError(f"DNS query failed: {e}")
 
@@ -376,7 +344,7 @@ class LookupModule(LookupBase):
         result = []
         for name in terms:
             result.append(
-                self._resolve_with_message(
+                self._resolve(
                     resolver,
                     to_text(name),
                     rdtype,
