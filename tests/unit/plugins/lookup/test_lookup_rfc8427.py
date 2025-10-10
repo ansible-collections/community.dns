@@ -98,7 +98,6 @@ class TestLookupRFC8427(TestCase):
         msg = result[0]
         assert msg["Answer"] == []
 
-
     def test_rfc8427_nxdomain_fail(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
