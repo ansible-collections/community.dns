@@ -12,6 +12,7 @@ from __future__ import annotations
 import typing as t
 
 import pytest
+
 from ansible_collections.community.dns.plugins.plugin_utils.public_suffix import (
     PUBLIC_SUFFIX_LIST,
     PublicSuffixList,

@@ -11,6 +11,7 @@ __metaclass__ = type
 
 
 import pytest
+
 from ansible_collections.community.dns.plugins.module_utils.module._utils import (
     get_prefix,
     normalize_dns_name,

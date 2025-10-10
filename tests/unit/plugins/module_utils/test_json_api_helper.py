@@ -11,15 +11,16 @@ __metaclass__ = type
 
 
 import pytest
+from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
+    MagicMock,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.json_api_helper import (
     JSONAPIHelper,
     _get_header_value,
 )
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
-)
-from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
-    MagicMock,
 )
 
 

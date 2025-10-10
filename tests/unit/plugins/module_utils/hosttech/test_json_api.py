@@ -11,6 +11,10 @@ __metaclass__ = type
 
 
 import pytest
+from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
+    MagicMock,
+)
+
 from ansible_collections.community.dns.plugins.module_utils.hosttech.json_api import (
     HostTechJSONAPI,
     _create_record_from_json,
@@ -19,9 +23,6 @@ from ansible_collections.community.dns.plugins.module_utils.hosttech.json_api im
 from ansible_collections.community.dns.plugins.module_utils.record import DNSRecord
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
-)
-from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
-    MagicMock,
 )
 
 

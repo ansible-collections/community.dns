@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import pytest
 from ansible.errors import AnsibleError
+
 from ansible_collections.community.dns.plugins.plugin_utils import resolver
 from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
     assert_requirements_present,

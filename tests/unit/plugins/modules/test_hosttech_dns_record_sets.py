@@ -8,14 +8,15 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-# These imports are needed so patching below works
-import ansible_collections.community.dns.plugins.module_utils.http  # noqa: F401, pylint: disable=unused-import
 import pytest
-from ansible_collections.community.dns.plugins.modules import hosttech_dns_record_sets
 from ansible_collections.community.internal_test_tools.tests.unit.utils.fetch_url_module_framework import (
     BaseTestModule,
     FetchUrlCall,
 )
+
+# These imports are needed so patching below works
+import ansible_collections.community.dns.plugins.module_utils.http  # noqa: F401, pylint: disable=unused-import
+from ansible_collections.community.dns.plugins.modules import hosttech_dns_record_sets
 
 from .hosttech import (
     HOSTTECH_JSON_ZONE_GET_RESULT,

@@ -21,6 +21,7 @@ from ansible_collections.community.internal_test_tools.tests.unit.compat.mock im
 lxmletree = pytest.importorskip("lxml.etree")
 
 from ansible.module_utils.common.text.converters import to_native
+
 from ansible_collections.community.dns.plugins.module_utils.wsdl import Composer, Parser
 
 

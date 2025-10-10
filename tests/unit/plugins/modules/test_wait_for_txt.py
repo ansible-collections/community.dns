@@ -11,7 +11,6 @@ __metaclass__ = type
 
 
 import pytest
-from ansible_collections.community.dns.plugins.modules import wait_for_txt
 from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
     MagicMock,
     patch,
@@ -22,6 +21,8 @@ from ansible_collections.community.internal_test_tools.tests.unit.plugins.module
     ModuleTestCase,
     set_module_args,
 )
+
+from ansible_collections.community.dns.plugins.modules import wait_for_txt
 
 from ..module_utils.resolver_helper import (
     create_mock_answer,

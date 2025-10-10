@@ -13,6 +13,7 @@ __metaclass__ = type
 import warnings
 
 import pytest
+
 from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
     DNSConversionError,
 )

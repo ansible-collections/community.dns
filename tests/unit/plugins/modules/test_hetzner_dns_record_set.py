@@ -8,9 +8,6 @@ from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
 
-# These imports are needed so patching below works
-import ansible_collections.community.dns.plugins.module_utils.http  # noqa: F401, pylint: disable=unused-import
-from ansible_collections.community.dns.plugins.modules import hetzner_dns_record_set
 from ansible_collections.community.internal_test_tools.tests.unit.plugins.modules.utils import (
     extract_warnings_texts,
 )
@@ -18,6 +15,10 @@ from ansible_collections.community.internal_test_tools.tests.unit.utils.fetch_ur
     BaseTestModule,
     FetchUrlCall,
 )
+
+# These imports are needed so patching below works
+import ansible_collections.community.dns.plugins.module_utils.http  # noqa: F401, pylint: disable=unused-import
+from ansible_collections.community.dns.plugins.modules import hetzner_dns_record_set
 
 from .hetzner import (
     HETZNER_JSON_DEFAULT_ENTRIES,

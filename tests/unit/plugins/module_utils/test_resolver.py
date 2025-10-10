@@ -11,15 +11,16 @@ __metaclass__ = type
 
 
 import pytest
+from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
+    MagicMock,
+    patch,
+)
+
 from ansible_collections.community.dns.plugins.module_utils import resolver
 from ansible_collections.community.dns.plugins.module_utils.resolver import (
     ResolveDirectlyFromNameServers,
     ResolverError,
     assert_requirements_present,
-)
-from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
-    MagicMock,
-    patch,
 )
 
 from .resolver_helper import (

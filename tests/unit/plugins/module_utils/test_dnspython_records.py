@@ -11,6 +11,7 @@ __metaclass__ = type
 
 
 import pytest
+
 from ansible_collections.community.dns.plugins.module_utils.dnspython_records import (
     RDTYPE_TO_FIELDS,
     convert_rdata_to_dict,
