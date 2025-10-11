@@ -6,7 +6,6 @@
 
 from __future__ import annotations
 
-
 DOCUMENTATION = r"""
 name: lookup_rfc8427
 author:
@@ -177,7 +176,6 @@ from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
     guarded_run,
 )
 
-
 try:
     import dns.flags
     import dns.message
@@ -223,8 +221,7 @@ class LookupModule(LookupBase):
 
     @staticmethod
     def _convert_message_to_rfc8427(
-            def _convert_message_to_rfc8427(
-            message: dns.message.Message, question_name: str, question_type: int
+        message: dns.message.Message, question_name: str, question_type: int
     ) -> dict[str, object]:
         """Convert a DNS message to RFC 8427 JSON format."""
 
@@ -263,13 +260,13 @@ class LookupModule(LookupBase):
 
     @staticmethod
     def _resolve(
-        resolver: SimpleResolver,
-        name: str,
-        rdtype: RdataType,
-        server_addresses: list[str] | None,
-        nxdomain_handling: t.Literal["empty", "fail"],
-        target_can_be_relative: bool = True,
-        search: bool = True,
+            resolver: SimpleResolver,
+            name: str,
+            rdtype: RdataType,
+            server_addresses: list[str] | None,
+            nxdomain_handling: t.Literal["empty", "fail"],
+            target_can_be_relative: bool = True,
+            search: bool = True,
     ) -> dict[str, t.Any]:
         def callback() -> dict[str, t.Any]:
             try:
@@ -300,7 +297,7 @@ class LookupModule(LookupBase):
 
     @staticmethod
     def _get_resolver(
-        resolver: SimpleResolver, server: str
+            resolver: SimpleResolver, server: str
     ) -> t.Callable[[], list[str]]:
         def f():
             try:
@@ -311,7 +308,7 @@ class LookupModule(LookupBase):
         return f
 
     def run(
-        self, terms: list[t.Any], variables: t.Any | None = None, **kwargs: t.Any
+            self, terms: list[t.Any], variables: t.Any | None = None, **kwargs: t.Any
     ) -> list[dict[str, t.Any]]:
         assert_requirements_present_dnspython("community.dns.lookup_rfc8427", "lookup")
 
