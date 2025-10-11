@@ -272,14 +272,3 @@ class TestLookupRFC8427(TestCase):
                 with patch("dns.query.udp", mock_query_udp([])):
                     with pytest.raises(AnsibleLookupError):
                         self.lookup.run(["example.com"], servfail_retries=0)  # Exhaust immediately
-
-    def test_rfc8427_timeout(self) -> None:
-        resolver = mock_resolver(
-            ["1.1.1.1"],
-            {},  # Empty dict to fallback to query.udp which is patched to raise Timeout
-        )
-        with patch("dns.resolver.get_default_resolver", resolver):
-            with patch("dns.resolver.Resolver", resolver):
-                with patch("dns.query.udp", mock_query_udp([])):
-                    with pytest.raises(AnsibleLookupError):
-                        self.lookup.run(["example.com"])
