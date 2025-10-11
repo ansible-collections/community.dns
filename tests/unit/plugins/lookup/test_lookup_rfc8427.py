@@ -5,8 +5,10 @@
 from __future__ import annotations
 
 import pytest
+import json
 from ansible.errors import AnsibleLookupError
 from ansible.plugins.loader import lookup_loader
+from dns.rdataclass import to_text
 from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
     patch,
 )
@@ -267,4 +269,3 @@ class TestLookupRFC8427(TestCase):
                 with patch("dns.query.udp", mock_query_udp([])):
                     with pytest.raises(AnsibleLookupError):
                         self.lookup.run(["example.com"])
-
