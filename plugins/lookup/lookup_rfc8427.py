@@ -196,7 +196,7 @@ else:
 class LookupModule(LookupBase):
     @staticmethod
     def _convert_rrset_to_rfc8427(
-        rrset: dns.rrset.RRset | None,
+            rrset: dns.rrset.RRset | None,
     ) -> list[dict[str, object]]:
         """Convert a DNS RRset to RFC 8427 format."""
         if not rrset:
@@ -205,18 +205,26 @@ class LookupModule(LookupBase):
         records = []
         for rdata in rrset:
             record = {
-                "name": str(rrset.name),
+                "name": str(rrset.name).rstrip("."),  # RFC 8427: no trailing dot
                 "type": rrset.rdtype,
-                "class": rrset.rdclass,
-                "TTL": rrset.ttl,
+                "class": dns.rdataclass.to_text(rrset.rdclass),
+                "ttl": rrset.ttl,
                 "data": str(rdata),
             }
+            # For MX and similar, parse data as object if needed
+            if rrset.rdtype == dns.rdatatype.MX:
+                preference, exchange = str(rdata).split(" ", 1)
+                record["data"] = {
+                    "preference": int(preference),
+                    "exchange": exchange.rstrip("."),
+                }
             records.append(record)
         return records
 
     @staticmethod
     def _convert_message_to_rfc8427(
-        message: dns.message.Message, question_name: str, question_type: int
+            def _convert_message_to_rfc8427(
+            message: dns.message.Message, question_name: str, question_type: int
     ) -> dict[str, object]:
         """Convert a DNS message to RFC 8427 JSON format."""
 
@@ -226,24 +234,27 @@ class LookupModule(LookupBase):
                 records.extend(LookupModule._convert_rrset_to_rfc8427(rrset))
             return records
 
+        # RFC 8427 header fields
+        header = {
+            "id": message.id,
+            "flags": [f for f in dns.flags.to_text(message.flags).split() if f],  # list of flag strings
+            "rcode": dns.rcode.to_text(message.rcode()),
+            "question_count": len(message.question),
+            "answer_count": len(message.answer),
+            "authority_count": len(message.authority),
+            "additional_count": len(message.additional),
+        }
+
+        # RFC 8427 Question section
+        question = [{
+            "name": question_name.rstrip("."),
+            "type": question_type,
+            "class": dns.rdataclass.to_text(dns.rdataclass.IN),
+        }]
+
         result: dict[str, object] = {
-            "Header": {
-                "ID": message.id,
-                "QR": bool(message.flags & dns.flags.QR),
-                "Opcode": (message.flags >> 11) & 0xF,
-                "AA": bool(message.flags & dns.flags.AA),
-                "TC": bool(message.flags & dns.flags.TC),
-                "RD": bool(message.flags & dns.flags.RD),
-                "RA": bool(message.flags & dns.flags.RA),
-                "AD": bool(message.flags & dns.flags.AD),
-                "CD": bool(message.flags & dns.flags.CD),
-                "Rcode": message.rcode(),
-                "QDCOUNT": len(message.question),
-                "ANCOUNT": len(message.answer),
-                "NSCOUNT": len(message.authority),
-                "ARCOUNT": len(message.additional),
-            },
-            "Question": [{"name": question_name, "type": question_type, "class": 1}],
+            "Header": header,
+            "Question": question,
             "Answer": rrsets_to_records(message.answer),
             "Authority": rrsets_to_records(message.authority),
             "Additional": rrsets_to_records(message.additional),
