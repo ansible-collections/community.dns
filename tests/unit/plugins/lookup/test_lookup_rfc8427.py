@@ -28,6 +28,112 @@ class TestLookupRFC8427(TestCase):
     def setUp(self) -> None:
         self.lookup = lookup_loader.get("community.dns.lookup_rfc8427")
 
+    def test_rfc8427_json_correctness(self) -> None:
+        resolver = mock_resolver(
+            ["1.1.1.1"],
+            {
+                ("1.1.1.1",): [
+                    {
+                        "target": dns.name.from_unicode("www.example.com", origin=None),
+                        "search": True,
+                        "rdtype": dns.rdatatype.A,
+                        "lifetime": 10,
+                        "result": create_mock_answer(
+                            dns.rrset.from_rdata(
+                                "www.example.com",
+                                300,
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN, dns.rdatatype.A, "127.0.0.1"
+                                ),
+                            )
+                        ),
+                    },
+                ],
+            },
+        )
+        with patch("dns.resolver.get_default_resolver", resolver):
+            with patch("dns.resolver.Resolver", resolver):
+                with patch("dns.query.udp", mock_query_udp([])):
+                    result = self.lookup.run(["www.example.com"])
+
+        assert isinstance(result, list)
+        assert len(result) == 1
+        msg = result[0]
+
+        # Ensure JSON serializable
+        json.dumps(msg)  # No exception
+
+        # Header validation (RFC 8427 Section 4.1)
+        header = msg["Header"]
+        assert isinstance(header, dict)
+        assert "id" in header and isinstance(header["id"], int)
+        assert "flags" in header and isinstance(header["flags"], list) and all(
+            isinstance(f, str) for f in header["flags"])
+        assert "rcode" in header and isinstance(header["rcode"], str)  # e.g., "NOERROR"
+        assert "question_count" in header and isinstance(header["question_count"], int)
+        assert "answer_count" in header and isinstance(header["answer_count"], int)
+        assert "authority_count" in header and isinstance(header["authority_count"], int)
+        assert "additional_count" in header and isinstance(header["additional_count"], int)
+
+        # Question validation (RFC 8427 Section 4.2)
+        question = msg["Question"]
+        assert isinstance(question, list)
+        assert len(question) == 1
+        q = question[0]
+        assert isinstance(q, dict)
+        assert "name" in q and isinstance(q["name"], str) and q["name"] == "www.example.com"
+        assert "type" in q and isinstance(q["type"], int) and q["type"] == dns.rdatatype.A
+        assert "class" in q and isinstance(q["class"], str) and q["class"] == to_text(dns.rdataclass.IN)
+
+        # Answer validation (RFC 8427 Section 4.3; similar for Authority/Additional)
+        answer = msg["Answer"]
+        assert isinstance(answer, list)
+        assert len(answer) == 1
+        rr = answer[0]
+        assert isinstance(rr, dict)
+        assert "name" in rr and isinstance(rr["name"], str) and rr["name"] == "www.example.com"
+        assert "type" in rr and isinstance(rr["type"], int) and rr["type"] == dns.rdatatype.A
+        assert "class" in rr and isinstance(rr["class"], str) and rr["class"] == to_text(dns.rdataclass.IN)
+        assert "ttl" in rr and isinstance(rr["ttl"], int) and rr["ttl"] == 300
+        assert "data" in rr and isinstance(rr["data"], str) and rr["data"] == "127.0.0.1"  # A record specific
+
+        # Authority and Additional should be empty lists
+        assert msg["Authority"] == []
+        assert msg["Additional"] == []
+
+        # Test with MX for complex data object (add another query mock if needed)
+        mx_rrset = dns.rrset.from_rdata(
+            "example.com",
+            3600,
+            dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.MX, "10 mail.example.com"),
+        )
+        resolver_mx = mock_resolver(
+            ["1.1.1.1"],
+            {
+                ("1.1.1.1",): [
+                    {
+                        "target": dns.name.from_unicode("example.com", origin=None),
+                        "search": True,
+                        "rdtype": dns.rdatatype.MX,
+                        "lifetime": 10,
+                        "result": create_mock_answer(mx_rrset),
+                    },
+                ],
+            },
+        )
+        with patch("dns.resolver.get_default_resolver", resolver_mx):
+            with patch("dns.resolver.Resolver", resolver_mx):
+                with patch("dns.query.udp", mock_query_udp([])):
+                    result_mx = self.lookup.run(["example.com"], qtype=dns.rdatatype.MX)
+
+        msg_mx = result_mx[0]
+        mx_rr = msg_mx["Answer"][0]
+        assert isinstance(mx_rr["data"], dict)  # MX data as object
+        assert "preference" in mx_rr["data"] and isinstance(mx_rr["data"]["preference"], int) and mx_rr["data"][
+            "preference"] == 10
+        assert "exchange" in mx_rr["data"] and isinstance(mx_rr["data"]["exchange"], str) and mx_rr["data"][
+            "exchange"] == "mail.example.com"
+
     def test_rfc8427_simple(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
@@ -119,3 +225,46 @@ class TestLookupRFC8427(TestCase):
                 with patch("dns.query.udp", mock_query_udp([])):
                     with pytest.raises(AnsibleLookupError):
                         self.lookup.run(["nope.example.com"], nxdomain_handling="fail")
+
+    def test_rfc8427_servfail_exhaustion(self) -> None:
+        resolver = mock_resolver(
+            ["1.1.1.1"],
+            {
+                ("1.1.1.1",): [
+                    {
+                        "target": dns.name.from_unicode("example.com", origin=None),
+                        "search": True,
+                        "rdtype": dns.rdatatype.A,
+                        "lifetime": 10,
+                        "result": create_mock_answer(rcode=dns.rcode.SERVFAIL),
+                    },
+                ],
+            },
+        )
+        with patch("dns.resolver.get_default_resolver", resolver):
+            with patch("dns.resolver.Resolver", resolver):
+                with patch("dns.query.udp", mock_query_udp([])):
+                    with pytest.raises(AnsibleLookupError):
+                        self.lookup.run(["example.com"], servfail_retries=0)  # Exhaust immediately
+
+    def test_rfc8427_timeout(self) -> None:
+        resolver = mock_resolver(
+            ["1.1.1.1"],
+            {
+                ("1.1.1.1",): [
+                    {
+                        "target": dns.name.from_unicode("example.com", origin=None),
+                        "search": True,
+                        "rdtype": dns.rdatatype.A,
+                        "lifetime": 10,
+                        "result": None,  # Simulate timeout by returning None (raises dns.exception.Timeout)
+                    },
+                ],
+            },
+        )
+        with patch("dns.resolver.get_default_resolver", resolver):
+            with patch("dns.resolver.Resolver", resolver):
+                with patch("dns.query.udp", mock_query_udp([])):
+                    with pytest.raises(AnsibleLookupError):
+                        self.lookup.run(["example.com"])
+
