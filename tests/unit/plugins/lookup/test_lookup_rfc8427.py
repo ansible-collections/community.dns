@@ -4,8 +4,9 @@
 
 from __future__ import annotations
 
-import pytest
 import json
+
+import pytest
 from ansible.errors import AnsibleLookupError
 from ansible.plugins.loader import lookup_loader
 from dns.rdataclass import to_text
