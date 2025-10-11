@@ -204,7 +204,7 @@ class LookupModule(LookupBase):
         for rdata in rrset:
             record = {
                 "name": str(rrset.name).rstrip("."),  # RFC 8427: no trailing dot
-                "type": rrset.rdtype,
+                "type": int(rrset.rdtype),
                 "class": dns.rdataclass.to_text(rrset.rdclass),
                 "ttl": rrset.ttl,
                 "data": str(rdata),
@@ -284,7 +284,7 @@ class LookupModule(LookupBase):
                 if rrset:
                     response_msg.answer.append(rrset)
                 return LookupModule._convert_message_to_rfc8427(
-                    response_msg, name, rdtype
+                    response_msg, name, int(rdtype)
                 )
             except dns.resolver.NXDOMAIN:
                 raise AnsibleLookupError(f"Got NXDOMAIN when querying {name}")
