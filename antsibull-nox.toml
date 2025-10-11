@@ -7,6 +7,18 @@
 "community.library_inventory_filtering_v1" = "git+https://github.com/ansible-collections/community.library_inventory_filtering.git,stable-1"
 "community.general" = "git+https://github.com/ansible-collections/community.general.git,main"
 
+[collection_sources_per_ansible.'2.14']
+# community.general's main branch needs ansible-core >= 2.15
+"community.general" = "git+https://github.com/ansible-collections/community.general.git,stable-9"
+
+[collection_sources_per_ansible.'2.15']
+# community.general's main branch needs ansible-core >= 2.16
+"community.general" = "git+https://github.com/ansible-collections/community.general.git,stable-10"
+
+[collection_sources_per_ansible.'2.16']
+# community.general's main branch needs ansible-core >= 2.17
+"community.general" = "git+https://github.com/ansible-collections/community.general.git,stable-11"
+
 [vcs]
 vcs = "git"
 development_branch = "main"
