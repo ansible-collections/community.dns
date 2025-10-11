@@ -126,15 +126,39 @@ class TestLookupRFC8427(TestCase):
         with patch("dns.resolver.get_default_resolver", resolver_mx):
             with patch("dns.resolver.Resolver", resolver_mx):
                 with patch("dns.query.udp", mock_query_udp([])):
-                    result_mx = self.lookup.run(["example.com"], qtype=dns.rdatatype.MX)
+                    result_mx = self.lookup.run(["example.com"], type="MX")
 
         msg_mx = result_mx[0]
-        mx_rr = msg_mx["Answer"][0]
+
+        # Question validation for MX (RFC 8427 Section 4.2)
+        question_mx = msg_mx["Question"]
+        assert isinstance(question_mx, list)
+        assert len(question_mx) == 1
+        q_mx = question_mx[0]
+        assert isinstance(q_mx, dict)
+        assert "name" in q_mx and isinstance(q_mx["name"], str) and q_mx["name"] == "example.com"
+        assert "type" in q_mx and isinstance(q_mx["type"], int) and q_mx["type"] == dns.rdatatype.MX
+        assert "class" in q_mx and isinstance(q_mx["class"], str) and q_mx["class"] == to_text(dns.rdataclass.IN)
+
+        # Answer validation for MX
+        answer_mx = msg_mx["Answer"]
+        assert isinstance(answer_mx, list)
+        assert len(answer_mx) == 1
+        mx_rr = answer_mx[0]
+        assert isinstance(mx_rr, dict)
+        assert "name" in mx_rr and isinstance(mx_rr["name"], str) and mx_rr["name"] == "example.com"
+        assert "type" in mx_rr and isinstance(mx_rr["type"], int) and mx_rr["type"] == dns.rdatatype.MX
+        assert "class" in mx_rr and isinstance(mx_rr["class"], str) and mx_rr["class"] == to_text(dns.rdataclass.IN)
+        assert "ttl" in mx_rr and isinstance(mx_rr["ttl"], int) and mx_rr["ttl"] == 3600
         assert isinstance(mx_rr["data"], dict)  # MX data as object
         assert "preference" in mx_rr["data"] and isinstance(mx_rr["data"]["preference"], int) and mx_rr["data"][
             "preference"] == 10
         assert "exchange" in mx_rr["data"] and isinstance(mx_rr["data"]["exchange"], str) and mx_rr["data"][
             "exchange"] == "mail.example.com"
+
+        # Authority and Additional should be empty lists for MX too
+        assert msg_mx["Authority"] == []
+        assert msg_mx["Additional"] == []
 
     def test_rfc8427_simple(self) -> None:
         resolver = mock_resolver(
@@ -252,17 +276,7 @@ class TestLookupRFC8427(TestCase):
     def test_rfc8427_timeout(self) -> None:
         resolver = mock_resolver(
             ["1.1.1.1"],
-            {
-                ("1.1.1.1",): [
-                    {
-                        "target": dns.name.from_unicode("example.com", origin=None),
-                        "search": True,
-                        "rdtype": dns.rdatatype.A,
-                        "lifetime": 10,
-                        "result": None,  # Simulate timeout by returning None (raises dns.exception.Timeout)
-                    },
-                ],
-            },
+            {},  # Empty dict to fallback to query.udp which is patched to raise Timeout
         )
         with patch("dns.resolver.get_default_resolver", resolver):
             with patch("dns.resolver.Resolver", resolver):
