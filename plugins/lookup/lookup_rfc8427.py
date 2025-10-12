@@ -194,7 +194,7 @@ else:
 class LookupModule(LookupBase):
     @staticmethod
     def _convert_rrset_to_rfc8427(
-            rrset: dns.rrset.RRset | None,
+        rrset: dns.rrset.RRset | None,
     ) -> list[dict[str, object]]:
         """Convert a DNS RRset to RFC 8427 format."""
         if not rrset:
@@ -234,7 +234,9 @@ class LookupModule(LookupBase):
         # RFC 8427 header fields
         header = {
             "id": message.id,
-            "flags": [f for f in dns.flags.to_text(message.flags).split() if f],  # list of flag strings
+            "flags": [
+                f for f in dns.flags.to_text(message.flags).split() if f
+            ],  # list of flag strings
             "rcode": dns.rcode.to_text(message.rcode()),
             "question_count": len(message.question),
             "answer_count": len(message.answer),
@@ -243,11 +245,13 @@ class LookupModule(LookupBase):
         }
 
         # RFC 8427 Question section
-        question = [{
-            "name": question_name.rstrip("."),
-            "type": question_type,
-            "class": dns.rdataclass.to_text(dns.rdataclass.IN),
-        }]
+        question = [
+            {
+                "name": question_name.rstrip("."),
+                "type": question_type,
+                "class": dns.rdataclass.to_text(dns.rdataclass.IN),
+            }
+        ]
 
         result: dict[str, object] = {
             "Header": header,
@@ -260,13 +264,13 @@ class LookupModule(LookupBase):
 
     @staticmethod
     def _resolve(
-            resolver: SimpleResolver,
-            name: str,
-            rdtype: RdataType,
-            server_addresses: list[str] | None,
-            nxdomain_handling: t.Literal["empty", "fail"],
-            target_can_be_relative: bool = True,
-            search: bool = True,
+        resolver: SimpleResolver,
+        name: str,
+        rdtype: RdataType,
+        server_addresses: list[str] | None,
+        nxdomain_handling: t.Literal["empty", "fail"],
+        target_can_be_relative: bool = True,
+        search: bool = True,
     ) -> dict[str, t.Any]:
         def callback() -> dict[str, t.Any]:
             try:
@@ -297,7 +301,7 @@ class LookupModule(LookupBase):
 
     @staticmethod
     def _get_resolver(
-            resolver: SimpleResolver, server: str
+        resolver: SimpleResolver, server: str
     ) -> t.Callable[[], list[str]]:
         def f():
             try:
@@ -308,7 +312,7 @@ class LookupModule(LookupBase):
         return f
 
     def run(
-            self, terms: list[t.Any], variables: t.Any | None = None, **kwargs: t.Any
+        self, terms: list[t.Any], variables: t.Any | None = None, **kwargs: t.Any
     ) -> list[dict[str, t.Any]]:
         assert_requirements_present_dnspython("community.dns.lookup_rfc8427", "lookup")
 
