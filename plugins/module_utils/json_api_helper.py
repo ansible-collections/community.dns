@@ -26,7 +26,7 @@ try:
     from urllib.parse import urlencode
 except ImportError:
     # Python 2.x fallback:
-    from urllib import urlencode
+    from urllib import urlencode  # type: ignore
 
 
 if sys.version_info >= (3, 6):

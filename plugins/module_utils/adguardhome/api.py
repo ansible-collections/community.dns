@@ -17,7 +17,7 @@ try:
     from urllib.error import HTTPError
 except ImportError:
     # Python 2.x fallback:
-    from urllib2 import HTTPError
+    from urllib2 import HTTPError  # type: ignore
 
 
 def create_adguardhome_argument_spec(required_if=None, additional_argument_specs=None):
