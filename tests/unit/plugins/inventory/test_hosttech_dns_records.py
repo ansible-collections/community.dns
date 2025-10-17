@@ -7,6 +7,7 @@ from __future__ import annotations
 import os
 import textwrap
 import typing as t
+from collections.abc import Callable
 
 from ansible import constants as C
 from ansible.inventory.manager import InventoryManager
@@ -200,7 +201,7 @@ original_access = os.access
 
 def exists_mock(
     path: os.PathLike | str, can_access: bool = True
-) -> t.Callable[[os.PathLike | str], bool]:
+) -> Callable[[os.PathLike | str], bool]:
     def exists_fn(f: os.PathLike | str) -> bool:
         if to_native(f) == path:
             return can_access

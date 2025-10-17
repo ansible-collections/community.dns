@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import typing as t
+from collections.abc import Callable
 
 from ansible.errors import AnsibleFilterError
 from ansible.module_utils.common.text.converters import to_text
@@ -49,7 +50,7 @@ def unquote_txt(value: t.Any, character_encoding: t.Any = "decimal") -> str:
 class FilterModule:
     """Ansible jinja2 filters"""
 
-    def filters(self) -> dict[str, t.Callable]:
+    def filters(self) -> dict[str, Callable]:
         return {
             "quote_txt": quote_txt,
             "unquote_txt": unquote_txt,

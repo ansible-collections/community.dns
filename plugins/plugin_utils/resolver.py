@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import typing as t
+from collections.abc import Callable
 
 from ansible.errors import AnsibleError
 from ansible.module_utils.basic import missing_required_lib
@@ -36,7 +37,7 @@ _T = t.TypeVar("_T")
 
 
 def guarded_run(
-    runner: t.Callable[[], _T],
+    runner: Callable[[], _T],
     error_class: t.Type[Exception] = AnsibleError,
     server: str | None = None,
 ) -> _T:
