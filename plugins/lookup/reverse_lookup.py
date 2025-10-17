@@ -73,6 +73,7 @@ _result:
 """
 
 import typing as t
+from collections.abc import Callable
 
 from ansible.errors import AnsibleLookupError
 from ansible.module_utils.common.text.converters import to_text
@@ -137,9 +138,7 @@ class LookupModule(LookupBase):
         )
 
     @staticmethod
-    def _get_resolver(
-        resolver: SimpleResolver, server: str
-    ) -> t.Callable[[], list[str]]:
+    def _get_resolver(resolver: SimpleResolver, server: str) -> Callable[[], list[str]]:
         def f():
             try:
                 return resolver.resolve_addresses(server)

@@ -47,6 +47,7 @@ _value:
 
 
 import typing as t
+from collections.abc import Callable
 
 from ansible.errors import AnsibleFilterError
 from ansible.module_utils.common.text.converters import to_text
@@ -83,7 +84,7 @@ def reverse_pointer(ip: t.Any) -> str:
 class FilterModule:
     """Ansible jinja2 filters"""
 
-    def filters(self) -> dict[str, t.Callable]:
+    def filters(self) -> dict[str, Callable]:
         return {
             "reverse_pointer": reverse_pointer,
         }

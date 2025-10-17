@@ -127,7 +127,7 @@ def test_make_unsafe_idempotence() -> None:
 
 
 def test_make_unsafe_dict_key() -> None:
-    value = {
+    value: dict[t.Any, t.Any] = {
         _make_trusted("test"): 2,
     }
     if not SUPPORTS_DATA_TAGGING:
@@ -149,7 +149,7 @@ def test_make_unsafe_dict_key() -> None:
 
 
 def test_make_unsafe_set() -> None:
-    value = set([_make_trusted("test")])
+    value: set[t.Any] = set([_make_trusted("test")])
     if not SUPPORTS_DATA_TAGGING:
         value.add(_make_trusted(b"test"))
     unsafe_value = make_unsafe(value)
