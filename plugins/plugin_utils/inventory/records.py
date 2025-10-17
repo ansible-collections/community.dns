@@ -42,12 +42,12 @@ display = Display()
 
 class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
     VALID_ENDINGS = ("dns.yaml", "dns.yml")
+    NAME: str
 
     def __init__(self) -> None:
         super().__init__()
         self.provider_information: ProviderInformation | None = None
         self.api: ZoneRecordAPI | None = None
-        self.templar: Templar | None = None
 
     @abc.abstractmethod
     def setup_api(self) -> None:
@@ -129,6 +129,8 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
         ):
             filter_types = [filter_types]
 
+        if self.inventory is None:
+            raise AssertionError("Inventory must not be None in parse()")
         for record in zone_with_records.records:
             if record.type in filter_types:
                 name = zone_with_records.zone.name
