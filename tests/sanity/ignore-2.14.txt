@@ -4,6 +4,8 @@ plugins/lookup/lookup.py validate-modules:illegal-future-imports
 plugins/lookup/lookup.py validate-modules:import-before-documentation
 plugins/lookup/lookup_as_dict.py validate-modules:illegal-future-imports
 plugins/lookup/lookup_as_dict.py validate-modules:import-before-documentation
+plugins/lookup/lookup_rfc8427.py validate-modules:illegal-future-imports
+plugins/lookup/lookup_rfc8427.py validate-modules:import-before-documentation
 plugins/lookup/reverse_lookup.py validate-modules:illegal-future-imports
 plugins/lookup/reverse_lookup.py validate-modules:import-before-documentation
 plugins/module_utils/adguardhome/api.py pylint:ansible-bad-import-from
