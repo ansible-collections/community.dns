@@ -14,7 +14,6 @@ short_description: Look up DNS records as dictionaries
 version_added: 2.6.0
 requirements:
   - dnspython >= 1.15.0 (maybe older versions also work)
-  - ipaddress (on Python 2.7 when using O(server))
 description:
   - Look up DNS records and return them as interpreted dictionaries.
 options:
