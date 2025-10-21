@@ -187,8 +187,6 @@ try:
 except ImportError:
     # handled by assert_requirements_present_dnspython
     pass
-else:
-    RdataType = int  # type: ignore  # noqa: F811
 
 
 class LookupModule(LookupBase):

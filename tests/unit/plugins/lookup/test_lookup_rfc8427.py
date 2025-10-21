@@ -342,3 +342,105 @@ class TestLookupRFC8427(TestCase):
                         self.lookup.run(
                             ["example.com"], servfail_retries=0
                         )  # Exhaust immediately
+
+    def test_server_resolve(self) -> None:
+        resolver = mock_resolver(
+            ["1.1.1.1"],
+            {
+                ("1.1.1.1",): [
+                    {
+                        "target": dns.name.from_unicode("ns.example.com"),
+                        "rdtype": dns.rdatatype.A,
+                        "lifetime": 10,
+                        "result": create_mock_answer(
+                            dns.rrset.from_rdata(
+                                "ns.example.com",
+                                300,
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN, dns.rdatatype.A, "1.2.3.4"
+                                ),
+                            )
+                        ),
+                    },
+                    {
+                        "target": dns.name.from_unicode("ns.example.com"),
+                        "rdtype": dns.rdatatype.AAAA,
+                        "lifetime": 10,
+                        "result": create_mock_answer(
+                            dns.rrset.from_rdata(
+                                "ns.example.com",
+                                300,
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN, dns.rdatatype.AAAA, "1::2"
+                                ),
+                            )
+                        ),
+                    },
+                ],
+                ("1.2.3.4", "1::2", "2.2.2.2", "3.3.3.3"): [
+                    {
+                        "target": dns.name.from_unicode("example.org", origin=None),
+                        "search": True,
+                        "rdtype": dns.rdatatype.AAAA,
+                        "lifetime": 10,
+                        "result": create_mock_answer(
+                            dns.rrset.from_rdata(
+                                "example.org",
+                                300,
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN, dns.rdatatype.AAAA, "::1"
+                                ),
+                            )
+                        ),
+                    },
+                ],
+            },
+        )
+        with patch("dns.resolver.get_default_resolver", resolver):
+            with patch("dns.resolver.Resolver", resolver):
+                with patch("dns.query.udp", mock_query_udp([])):
+                    result = self.lookup.run(
+                        ["example.org"],
+                        type="AAAA",
+                        server=["2.2.2.2", "ns.example.com", "3.3.3.3"],
+                    )
+
+        print(result)
+        assert len(result) == 1
+        assert result[0]["Answer"] == [
+            {
+                "class": "IN",
+                "data": "::1",
+                "name": "example.org",
+                "ttl": 300,
+                "type": 28,
+            },
+        ]
+
+    def test_server_resolve_nxdomain(self) -> None:
+        resolver = mock_resolver(
+            ["1.1.1.1"],
+            {
+                ("1.1.1.1",): [
+                    {
+                        "target": dns.name.from_unicode("ns.example.com"),
+                        "rdtype": dns.rdatatype.A,
+                        "lifetime": 10,
+                        "result": create_mock_answer(rcode=dns.rcode.NXDOMAIN),
+                    },
+                ],
+            },
+        )
+        with patch("dns.resolver.get_default_resolver", resolver):
+            with patch("dns.resolver.Resolver", resolver):
+                with patch("dns.query.udp", mock_query_udp([])):
+                    with pytest.raises(AnsibleLookupError) as exc:
+                        self.lookup.run(
+                            ["www.example.com"], server=["2.2.2.2", "ns.example.com"]
+                        )
+
+        print(exc.value.args[0])
+        assert (
+            exc.value.args[0]
+            == "Nameserver ns.example.com does not exist (The DNS query name does not exist: ns.example.com.)"
+        )
