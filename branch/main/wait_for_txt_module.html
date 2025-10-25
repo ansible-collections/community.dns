@@ -277,10 +277,13 @@ see <a class="reference internal" href="#ansible-collections-community-dns-wait-
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-records/values"></div><p class="ansible-option-title" id="ansible-collections-community-dns-wait-for-txt-module-parameter-records-values"><strong>values</strong></p>
-<a class="ansibleOptionLink" href="#parameter-records/values" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span> / <span class="ansible-option-required">required</span></p>
+<div class="ansibleOptionAnchor" id="parameter-records/values"></div>
+<div class="ansibleOptionAnchor" id="parameter-records/entries"></div><p class="ansible-option-title" id="ansible-collections-community-dns-wait-for-txt-module-parameter-records-values"><span id="ansible-collections-community-dns-wait-for-txt-module-parameter-records-entries"></span><strong>values</strong></p>
+<a class="ansibleOptionLink" href="#parameter-records/values" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: entries</span></p>
+<p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The TXT values to look for.</p>
+<p>The alias <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-wait-for-txt-module-parameter-records-entries"><span class="std std-ref"><span class="pre">records[].entries</span></span></a></strong></code> has been added in community.dns 3.4.0.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -398,7 +401,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-wait-
 <td><div class="ansible-option-cell"><p>Results on the TXT records queried.</p>
 <p>The entries are in a 1:1 correspondence to the entries of the <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-wait-for-txt-module-parameter-records"><span class="std std-ref"><span class="pre">records</span></span></a></strong></code> parameter, in exactly the same order.</p>
 <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> always</p>
-<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[{&quot;check_count&quot;:</span> <span class="pre">1,</span> <span class="pre">&quot;done&quot;:</span> <span class="pre">true,</span> <span class="pre">&quot;name&quot;:</span> <span class="pre">&quot;example.com&quot;,</span> <span class="pre">&quot;values&quot;:</span> <span class="pre">[&quot;a&quot;,</span> <span class="pre">&quot;b&quot;,</span> <span class="pre">&quot;c&quot;]},</span> <span class="pre">{&quot;check_count&quot;:</span> <span class="pre">0,</span> <span class="pre">&quot;done&quot;:</span> <span class="pre">false,</span> <span class="pre">&quot;name&quot;:</span> <span class="pre">&quot;foo.example.org&quot;}]</span></code></p>
+<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">[{&quot;check_count&quot;:</span> <span class="pre">1,</span> <span class="pre">&quot;done&quot;:</span> <span class="pre">true,</span> <span class="pre">&quot;entries&quot;:</span> <span class="pre">[&quot;a&quot;,</span> <span class="pre">&quot;b&quot;,</span> <span class="pre">&quot;c&quot;],</span> <span class="pre">&quot;name&quot;:</span> <span class="pre">&quot;example.com&quot;},</span> <span class="pre">{&quot;check_count&quot;:</span> <span class="pre">0,</span> <span class="pre">&quot;done&quot;:</span> <span class="pre">false,</span> <span class="pre">&quot;name&quot;:</span> <span class="pre">&quot;foo.example.org&quot;}]</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
@@ -420,6 +423,19 @@ see <a class="reference internal" href="#ansible-collections-community-dns-wait-
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="return-records/entries"></div><p class="ansible-option-title" id="ansible-collections-community-dns-wait-for-txt-module-return-records-entries"><strong>entries</strong></p>
+<a class="ansibleOptionLink" href="#return-records/entries" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
+<p><em class="ansible-option-versionadded">added in community.dns 3.4.0</em></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>For every authoritative nameserver for the DNS name, lists the TXT records retrieved during the last lookup made.</p>
+<p>Once the check completed for all TXT records retrieved, the TXT records for this DNS name are no longer checked.</p>
+<p>If these are multiple TXT entries for a nameserver, the order is as it was received from that nameserver. This might not be the same order provided in the check.</p>
+<p>This field has been called <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-wait-for-txt-module-return-records-values"><span class="std std-ref"><span class="pre">records[].values</span></span></a></code> before.</p>
+<p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> lookup was done at least once</p>
+<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">{&quot;ns1.example.com&quot;:</span> <span class="pre">[&quot;TXT</span> <span class="pre">value</span> <span class="pre">1&quot;,</span> <span class="pre">&quot;TXT</span> <span class="pre">value</span> <span class="pre">2&quot;],</span> <span class="pre">&quot;ns2.example.com&quot;:</span> <span class="pre">[&quot;TXT</span> <span class="pre">value</span> <span class="pre">2&quot;]}</span></code></p>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="return-records/name"></div><p class="ansible-option-title" id="ansible-collections-community-dns-wait-for-txt-module-return-records-name"><strong>name</strong></p>
 <a class="ansibleOptionLink" href="#return-records/name" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -428,15 +444,15 @@ see <a class="reference internal" href="#ansible-collections-community-dns-wait-
 <p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">&quot;example.com&quot;</span></code></p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="return-records/values"></div><p class="ansible-option-title" id="ansible-collections-community-dns-wait-for-txt-module-return-records-values"><strong>values</strong></p>
 <a class="ansibleOptionLink" href="#return-records/values" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>For every authoritative nameserver for the DNS name, lists the TXT records retrieved during the last lookup made.</p>
 <p>Once the check completed for all TXT records retrieved, the TXT records for this DNS name are no longer checked.</p>
 <p>If these are multiple TXT entries for a nameserver, the order is as it was received from that nameserver. This might not be the same order provided in the check.</p>
+<p><strong>The field has been renamed</strong> to <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-wait-for-txt-module-return-records-entries"><span class="std std-ref"><span class="pre">records[].entries</span></span></a></code> in community.dns 3.4.0. While the old name will be around for a longer time, prefer using the new one.</p>
 <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> lookup was done at least once</p>
-<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">{&quot;ns1.example.com&quot;:</span> <span class="pre">[&quot;TXT</span> <span class="pre">value</span> <span class="pre">1&quot;,</span> <span class="pre">&quot;TXT</span> <span class="pre">value</span> <span class="pre">2&quot;],</span> <span class="pre">&quot;ns2.example.com&quot;:</span> <span class="pre">[&quot;TXT</span> <span class="pre">value</span> <span class="pre">2&quot;]}</span></code></p>
 </div></td>
 </tr>
 </tbody>
