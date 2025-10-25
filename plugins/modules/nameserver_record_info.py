@@ -135,10 +135,10 @@ results:
       elements: dict
       sample:
         - nameserver: ns1.example.com
-          values:
+          entries:
             - X
         - nameserver: ns2.example.com
-          values:
+          entries:
             - X
       contains:
         nameserver:
@@ -151,7 +151,19 @@ results:
           description:
             - The records of type O(type).
             - Depending on O(type), different fields are returned.
-            - For O(type=TXT) and O(type=SPF), also the concatenated value is returned as RV(results[].result[].values[].value).
+            - For O(type=TXT) and O(type=SPF), also the concatenated value is returned as RV(results[].result[].entries[].value).
+            - B(The field has been renamed) to RV(results[].result[].entries) in community.dns 3.4.0.
+              While the old name will be around for a longer time, prefer using the new one.
+          returned: success
+          type: list
+          elements: dict
+        entries:
+          description:
+            - The records of type O(type).
+            - Depending on O(type), different fields are returned.
+            - For O(type=TXT) and O(type=SPF), also the concatenated value is returned as RV(results[].result[].entries[].value).
+            - This field has been called RV(results[].result[].values) before.
+          version_added: 3.4.0
           returned: success
           type: list
           elements: dict
@@ -392,7 +404,7 @@ results:
             strings:
               description:
                 - List of strings for this record.
-                - See RV(results[].result[].values[].value) for the concatenated result.
+                - See RV(results[].result[].entries[].value) for the concatenated result.
               type: list
               elements: str
               returned: if O(type=SPF) or O(type=TXT)
@@ -424,7 +436,7 @@ results:
             value:
               description:
                 - The value.
-                - For O(type=SPF) or O(type=TXT), this is the concatenation of RV(results[].result[].values[].strings).
+                - For O(type=SPF) or O(type=TXT), this is the concatenation of RV(results[].result[].entries[].strings).
               type: str
               returned: if O(type=CAA) or O(type=SPF) or O(type=TXT)
             vertical_precision:
@@ -554,6 +566,7 @@ def main():
                     for data in records:
                         values.append(convert_rdata_to_dict(data))
                 ns_result['values'] = values
+                ns_result['entries'] = values
             result.sort(key=lambda v: v['nameserver'])
 
     guarded_run(f, module, generate_additional_results=lambda: {'results': results})

@@ -1,0 +1,4 @@
+minor_changes:
+  - "nameserver_record_info - the return value ``results[].result[].values`` has been renamed to ``results[].result[].entries``. The old name will still be available for a longer time (https://github.com/ansible-collections/community.dns/issues/289, https://github.com/ansible-collections/community.dns/pull/298)."
+  - "wait_for_txt - the return value ``records[].values`` has been renamed to ``records[].entries``. The old name will still be available for a longer time (https://github.com/ansible-collections/community.dns/issues/289, https://github.com/ansible-collections/community.dns/pull/298)."
+  - "wait_for_txt - the option ``records[].values`` now has an alias ``records[].entries`` (https://github.com/ansible-collections/community.dns/pull/298)."

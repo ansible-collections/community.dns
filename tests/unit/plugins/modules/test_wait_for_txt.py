@@ -217,6 +217,10 @@ class TestWaitForTXT(ModuleTestCase):
             'ns.example.com': ['asdf'],
             'ns.example.org': ['asdf'],
         }
+        assert exc.value.args[0]['records'][0]['entries'] == {
+            'ns.example.com': ['asdf'],
+            'ns.example.org': ['asdf'],
+        }
         assert exc.value.args[0]['records'][0]['check_count'] == 1
 
     def test_double(self):
@@ -355,7 +359,7 @@ class TestWaitForTXT(ModuleTestCase):
                                     },
                                     {
                                         'name': 'mail.example.com',
-                                        'values': [
+                                        'entries': [
                                             'foo bar',
                                             'any bar',
                                         ],
@@ -375,10 +379,16 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['values'] == {
             'ns.example.com': ['asdf'],
         }
+        assert exc.value.args[0]['records'][0]['entries'] == {
+            'ns.example.com': ['asdf'],
+        }
         assert exc.value.args[0]['records'][0]['check_count'] == 3
         assert exc.value.args[0]['records'][1]['name'] == 'mail.example.com'
         assert exc.value.args[0]['records'][1]['done'] is True
         assert exc.value.args[0]['records'][1]['values'] == {
+            'ns.example.com': ['any bar'],
+        }
+        assert exc.value.args[0]['records'][1]['entries'] == {
             'ns.example.com': ['any bar'],
         }
         assert exc.value.args[0]['records'][1]['check_count'] == 1
@@ -497,6 +507,9 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['name'] == 'example.com'
         assert exc.value.args[0]['records'][0]['done'] is True
         assert exc.value.args[0]['records'][0]['values'] == {
+            'ns.example.com': ['foo bar', 'another one', 'asdf'],
+        }
+        assert exc.value.args[0]['records'][0]['entries'] == {
             'ns.example.com': ['foo bar', 'another one', 'asdf'],
         }
         assert exc.value.args[0]['records'][0]['check_count'] == 3
@@ -627,7 +640,7 @@ class TestWaitForTXT(ModuleTestCase):
                                 'records': [
                                     {
                                         'name': 'www.example.com',
-                                        'values': [
+                                        'entries': [
                                             'asdf',
                                             'bee',
                                         ],
@@ -654,10 +667,16 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['values'] == {
             'ns.example.com': ['asdf', 'bee'],
         }
+        assert exc.value.args[0]['records'][0]['entries'] == {
+            'ns.example.com': ['asdf', 'bee'],
+        }
         assert exc.value.args[0]['records'][0]['check_count'] == 3
         assert exc.value.args[0]['records'][1]['name'] == 'mail.example.com'
         assert exc.value.args[0]['records'][1]['done'] is True
         assert exc.value.args[0]['records'][1]['values'] == {
+            'ns.example.com': [],
+        }
+        assert exc.value.args[0]['records'][1]['entries'] == {
             'ns.example.com': [],
         }
         assert exc.value.args[0]['records'][1]['check_count'] == 1
@@ -763,7 +782,7 @@ class TestWaitForTXT(ModuleTestCase):
                                 'records': [
                                     {
                                         'name': 'example.com',
-                                        'values': [
+                                        'entries': [
                                             'bumble',
                                             'bee',
                                         ],
@@ -780,6 +799,9 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['name'] == 'example.com'
         assert exc.value.args[0]['records'][0]['done'] is True
         assert exc.value.args[0]['records'][0]['values'] == {
+            'ns.example.com': ['bumble', 'bee'],
+        }
+        assert exc.value.args[0]['records'][0]['entries'] == {
             'ns.example.com': ['bumble', 'bee'],
         }
         assert exc.value.args[0]['records'][0]['check_count'] == 4
@@ -905,6 +927,9 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['values'] == {
             'ns.example.com': ['bumble bee', 'wizard', 'foo'],
         }
+        assert exc.value.args[0]['records'][0]['entries'] == {
+            'ns.example.com': ['bumble bee', 'wizard', 'foo'],
+        }
         assert exc.value.args[0]['records'][0]['check_count'] == 4
 
     def test_equals_ordered(self):
@@ -1027,6 +1052,9 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['name'] == 'example.com'
         assert exc.value.args[0]['records'][0]['done'] is True
         assert exc.value.args[0]['records'][0]['values'] == {
+            'ns.example.com': ['foo', 'bumble bee', 'wizard'],
+        }
+        assert exc.value.args[0]['records'][0]['entries'] == {
             'ns.example.com': ['foo', 'bumble bee', 'wizard'],
         }
         assert exc.value.args[0]['records'][0]['check_count'] == 4
@@ -1189,10 +1217,16 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['values'] == {
             'ns.example.com': ['asdfasdf'],
         }
+        assert exc.value.args[0]['records'][0]['entries'] == {
+            'ns.example.com': ['asdfasdf'],
+        }
         assert exc.value.args[0]['records'][0]['check_count'] == 3
         assert exc.value.args[0]['records'][1]['name'] == 'mail.example.com'
         assert exc.value.args[0]['records'][1]['done'] is True
         assert exc.value.args[0]['records'][1]['values'] == {
+            'ns.example.com': ['any bar'],
+        }
+        assert exc.value.args[0]['records'][1]['entries'] == {
             'ns.example.com': ['any bar'],
         }
         assert exc.value.args[0]['records'][1]['check_count'] == 1
@@ -1297,7 +1331,9 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['name'] == 'www.example.com'
         assert exc.value.args[0]['records'][0]['done'] is False
         assert len(exc.value.args[0]['records'][0]['values']) == 1
+        assert len(exc.value.args[0]['records'][0]['entries']) == 1
         assert exc.value.args[0]['records'][0]['values']['ns.example.com'] == []
+        assert exc.value.args[0]['records'][0]['entries']['ns.example.com'] == []
         assert exc.value.args[0]['records'][0]['check_count'] == 2
 
     def test_servfail(self):
@@ -1337,6 +1373,7 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['name'] == 'www.example.com'
         assert exc.value.args[0]['records'][0]['done'] is False
         assert 'values' not in exc.value.args[0]['records'][0]
+        assert 'entries' not in exc.value.args[0]['records'][0]
         assert exc.value.args[0]['records'][0]['check_count'] == 0
 
     def test_cname_loop(self):
@@ -1477,4 +1514,5 @@ class TestWaitForTXT(ModuleTestCase):
         assert exc.value.args[0]['records'][0]['name'] == 'www.example.com'
         assert exc.value.args[0]['records'][0]['done'] is False
         assert 'values' not in exc.value.args[0]['records'][0]
+        assert 'entries' not in exc.value.args[0]['records'][0]
         assert exc.value.args[0]['records'][0]['check_count'] == 0
