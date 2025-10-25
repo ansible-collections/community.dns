@@ -48,6 +48,9 @@ options:
       values:
         description:
           - The TXT values to look for.
+          - The alias O(records[].entries) has been added in community.dns 3.4.0.
+        aliases:
+          - entries
         type: list
         elements: str
         required: true
@@ -160,6 +163,18 @@ records:
         - Once the check completed for all TXT records retrieved, the TXT records for this DNS name are no longer checked.
         - If these are multiple TXT entries for a nameserver, the order is as it was received from that nameserver. This might
           not be the same order provided in the check.
+        - B(The field has been renamed) to RV(records[].entries) in community.dns 3.4.0.
+          While the old name will be around for a longer time, prefer using the new one.
+      returned: lookup was done at least once
+      type: dict
+      elements: list
+    entries:
+      description:
+        - For every authoritative nameserver for the DNS name, lists the TXT records retrieved during the last lookup made.
+        - Once the check completed for all TXT records retrieved, the TXT records for this DNS name are no longer checked.
+        - If these are multiple TXT entries for a nameserver, the order is as it was received from that nameserver. This might
+          not be the same order provided in the check.
+        - This field has been called RV(records[].values) before.
       returned: lookup was done at least once
       type: dict
       elements: list
@@ -169,6 +184,7 @@ records:
           - TXT value 2
         ns2.example.com:
           - TXT value 2
+      version_added: 3.4.0
     check_count:
       description:
         - How often the TXT records for this DNS name were checked.
@@ -178,7 +194,7 @@ records:
   sample:
     - name: example.com
       done: true
-      values: [a, b, c]
+      entries: [a, b, c]
       check_count: 1
     - name: foo.example.org
       done: false
@@ -289,6 +305,7 @@ class Waiter(object):
                     continue
                 txts = lookup(self.resolver, record['name'])
                 self.results[index]['values'] = txts
+                self.results[index]['entries'] = txts
                 self.results[index]['check_count'] += 1
                 if txts and all(validate_check(txt, record['values'], record['mode']) for txt in txts.values()):
                     self.results[index]['done'] = True
@@ -333,7 +350,7 @@ def main():
         argument_spec={
             'records': {'required': True, 'type': 'list', 'elements': 'dict', 'options': {
                 'name': {'required': True, 'type': 'str'},
-                'values': {'required': True, 'type': 'list', 'elements': 'str'},
+                'values': {'required': True, 'type': 'list', 'elements': 'str', 'aliases': ['entries']},
                 'mode': {'type': 'str', 'default': 'subset', 'choices': ['subset', 'superset', 'superset_not_empty', 'equals', 'equals_ordered']},
             }},
             'query_retry': {'type': 'int', 'default': 3},
