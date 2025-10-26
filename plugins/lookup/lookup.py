@@ -26,6 +26,7 @@ options:
   type:
     description:
       - The record type to retrieve.
+      - Support for V(HTTPS) and V(SVCB) has been added in community.dns 3.4.0.
     type: str
     default: A
     choices:
@@ -37,6 +38,7 @@ options:
       - DNSKEY
       - DS
       - HINFO
+      - HTTPS
       - LOC
       - MX
       - NAPTR
@@ -51,6 +53,7 @@ options:
       - SPF
       - SRV
       - SSHFP
+      - SVCB
       - TLSA
       - TXT
   query_retry:
@@ -133,6 +136,7 @@ from ansible.module_utils.common.text.converters import to_text
 from ansible.plugins.lookup import LookupBase
 from ansible_collections.community.dns.plugins.module_utils.dnspython_records import (
     NAME_TO_RDTYPE,
+    NAME_TO_REQUIRED_VERSION,
 )
 from ansible_collections.community.dns.plugins.module_utils.ips import is_ip_address
 from ansible_collections.community.dns.plugins.module_utils.resolver import (
@@ -218,7 +222,13 @@ class LookupModule(LookupBase):
             servfail_retries=self.get_option("servfail_retries"),
         )
 
-        rdtype = NAME_TO_RDTYPE[self.get_option("type")]
+        record_type = self.get_option("type")
+        if record_type not in NAME_TO_RDTYPE:
+            min_version = NAME_TO_REQUIRED_VERSION[record_type]
+            raise AnsibleLookupError(
+                f"Your dnspython version does not support {record_type} records. You need version {min_version} or newer."
+            )
+        rdtype = NAME_TO_RDTYPE[record_type]
 
         nxdomain_handling: t.Literal["empty", "fail", "message"] = self.get_option(
             "nxdomain_handling"

@@ -26,6 +26,7 @@ options:
   type:
     description:
       - The record type to retrieve.
+      - Support for V(HTTPS) and V(SVCB) has been added in community.dns 3.4.0.
     type: str
     default: A
     choices:
@@ -37,6 +38,7 @@ options:
       - DNSKEY
       - DS
       - HINFO
+      - HTTPS
       - LOC
       - MX
       - NAPTR
@@ -51,6 +53,7 @@ options:
       - SPF
       - SRV
       - SSHFP
+      - SVCB
       - TLSA
       - TXT
   query_retry:
@@ -277,6 +280,48 @@ _result:
         - The operating system.
       type: str
       returned: if O(type=HINFO)
+    params:
+      description:
+        - The parameters. See L(RFC 9460, https://datatracker.ietf.org/doc/rfc9460/?include_text=1) for details.
+      type: dict
+      returned: if O(type=HTTPS) or O(type=SVCB)
+      contains:
+        mandatory:
+          description:
+            - Keys of parameters that are considered mandatory.
+          type: list
+          elements: str
+        alpn:
+          description:
+            - List of Base64-encoded ALPN IDs.
+          type: list
+          elements: str
+        no-default-alpn:
+          description:
+            - The value will always be V(null) if this key is present.
+          type: raw
+        port:
+          description:
+            - A port.
+          type: int
+        ipv4hint:
+          description:
+            - A list of IPv4 addresses.
+          type: list
+          elements: str
+        ech:
+          description:
+            - A Base64-encoded ECH (Encrypted Client Hello) key.
+          type: raw
+        ipv6hint:
+          description:
+            - A list of IPv6 addresses.
+          type: list
+          elements: str
+        ohttp:
+          description:
+            - The value will always be V(null) if this key is present.
+          type: raw
     port:
       description:
         - The port.
@@ -291,7 +336,7 @@ _result:
       description:
         - The priority value for this record.
       type: int
-      returned: if O(type=SRV)
+      returned: if O(type=HTTPS), O(type=SRV), or O(type=SVCB)
     protocol:
       description:
         - The protocol.
@@ -375,7 +420,7 @@ _result:
       description:
         - The target.
       type: str
-      returned: if O(type=CNAME) or O(type=DNAME) or O(type=NS) or O(type=PTR) or O(type=SRV)
+      returned: if O(type=CNAME), O(type=DNAME), O(type=HTTPS), O(type=NS), O(type=PTR), O(type=SRV), or O(type=SVCB)
     txt:
       description:
         - The TXT value.
@@ -422,6 +467,7 @@ from ansible.module_utils.common.text.converters import to_text
 from ansible.plugins.lookup import LookupBase
 from ansible_collections.community.dns.plugins.module_utils.dnspython_records import (
     NAME_TO_RDTYPE,
+    NAME_TO_REQUIRED_VERSION,
     convert_rdata_to_dict,
 )
 from ansible_collections.community.dns.plugins.module_utils.ips import is_ip_address
@@ -506,7 +552,13 @@ class LookupModule(LookupBase):
             servfail_retries=self.get_option("servfail_retries"),
         )
 
-        rdtype = NAME_TO_RDTYPE[self.get_option("type")]
+        record_type = self.get_option("type")
+        if record_type not in NAME_TO_RDTYPE:
+            min_version = NAME_TO_REQUIRED_VERSION[record_type]
+            raise AnsibleLookupError(
+                f"Your dnspython version does not support {record_type} records. You need version {min_version} or newer."
+            )
+        rdtype = NAME_TO_RDTYPE[record_type]
 
         nxdomain_handling: t.Literal["empty", "fail"] = self.get_option(
             "nxdomain_handling"
