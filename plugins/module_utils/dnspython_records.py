@@ -101,21 +101,21 @@ def _convert_dns_rdtypes_svcbbase_param(
     value  # type: dns.rdtypes.svcbbase.Param
 ):  # type: (...) -> tuple[typing.Any, bool]
     if value is None:
-        return None
+        return None, False
     if isinstance(value, dns.rdtypes.svcbbase.GenericParam):
-        return base64.b64encode(value.value), True
+        return to_native(base64.b64encode(value.value)), True
     if isinstance(value, dns.rdtypes.svcbbase.MandatoryParam):
         return [dns.rdtypes.svcbbase.key_to_text(k) for k in value.keys], False
     if isinstance(value, dns.rdtypes.svcbbase.ALPNParam):
-        return [base64.b64encode(id) for id in value.ids], True
+        return [to_native(base64.b64encode(id)) for id in value.ids], True
     if isinstance(value, dns.rdtypes.svcbbase.PortParam):
         return value.port, False
     if isinstance(value, dns.rdtypes.svcbbase.IPv4HintParam):
-        return value.addresses, False
+        return [to_native(v) for v in value.addresses], False
     if isinstance(value, dns.rdtypes.svcbbase.IPv6HintParam):
-        return value.addresses, False
+        return [to_native(v) for v in value.addresses], False
     if isinstance(value, dns.rdtypes.svcbbase.ECHParam):
-        return base64.b64encode(value.ech), True
+        return to_native(base64.b64encode(value.ech)), True
     # Fallbacks:
     if hasattr(value, "to_text"):
         return value.to_text(), False

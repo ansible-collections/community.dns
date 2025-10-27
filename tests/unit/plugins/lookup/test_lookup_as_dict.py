@@ -625,3 +625,253 @@ class TestLookupAsDict(TestCase):
 
         print(result)
         assert len(result) == 0
+
+    def test_https(self) -> None:
+        resolver = mock_resolver(
+            ["1.1.1.1"],
+            {
+                ("1.1.1.1",): [
+                    {
+                        "target": dns.name.from_unicode("example.com", origin=None),
+                        "search": True,
+                        "rdtype": dns.rdatatype.HTTPS,
+                        "lifetime": 10,
+                        "result": create_mock_answer(
+                            dns.rrset.from_rdata(
+                                "example.com",
+                                300,
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    '1 . alpn="h2,h3"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    "2 foo",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    "3 foo port=53",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    "4 foo key667=hello",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    '5 foo key667="hello\\210qoo"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    '6 foo ipv6hint="2001:db8::1,2001:db8::53:1"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    "7 foo alpn=h2,h3-19 mandatory=ipv4hint,alpn ipv4hint=192.0.2.1",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    '8 foo alpn="f\\\\oo\\,bar,h2"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    "9 foo alpn=f\\\092oo\092,bar,h2",
+                                ),
+                            )
+                        ),
+                    },
+                ],
+            },
+        )
+        with patch("dns.resolver.get_default_resolver", resolver):
+            with patch("dns.resolver.Resolver", resolver):
+                with patch("dns.query.udp", mock_query_udp([])):
+                    result = self.lookup.run(["example.com"], type="HTTPS")
+
+        print(result)
+        assert len(result) == 9
+        assert result[0] == {
+            "priority": 1,
+            "target": ".",
+            "params": {"alpn": ["aDI=", "aDM="]},
+        }
+        assert result[1] == {"priority": 2, "target": "foo", "params": {}}
+        assert result[2] == {"priority": 3, "target": "foo", "params": {"port": 53}}
+        assert result[3] == {
+            "priority": 4,
+            "target": "foo",
+            "params": {"key667": "aGVsbG8="},
+        }
+        assert result[4] == {
+            "priority": 5,
+            "target": "foo",
+            "params": {"key667": "aGVsbG/ScW9v"},
+        }
+        assert result[5] == {
+            "priority": 6,
+            "target": "foo",
+            "params": {"ipv6hint": ["2001:db8::1", "2001:db8::53:1"]},
+        }
+        assert result[6] == {
+            "priority": 7,
+            "target": "foo",
+            "params": {
+                "alpn": ["aDI=", "aDMtMTk="],
+                "mandatory": ["alpn", "ipv4hint"],
+                "ipv4hint": ["192.0.2.1"],
+            },
+        }
+        assert result[7] == {
+            "priority": 8,
+            "target": "foo",
+            "params": {"alpn": ["Zm9v", "YmFy", "aDI="]},
+        }
+        assert result[8] == {
+            "priority": 9,
+            "target": "foo",
+            "params": {"alpn": ["ZgA5Mm9vADky", "YmFy", "aDI="]},
+        }
+
+    def test_svcb(self) -> None:
+        resolver = mock_resolver(
+            ["1.1.1.1"],
+            {
+                ("1.1.1.1",): [
+                    {
+                        "target": dns.name.from_unicode("example.com", origin=None),
+                        "search": True,
+                        "rdtype": dns.rdatatype.SVCB,
+                        "lifetime": 10,
+                        "result": create_mock_answer(
+                            dns.rrset.from_rdata(
+                                "example.com",
+                                300,
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    '1 . alpn="h2,h3"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    "2 foo",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    "3 foo port=53",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    "4 foo key667=hello",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    '5 foo key667="hello\\210qoo"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    '6 foo ipv6hint="2001:db8::1,2001:db8::53:1"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    "7 foo alpn=h2,h3-19 mandatory=ipv4hint,alpn ipv4hint=192.0.2.1",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    '8 foo alpn="f\\\\oo\\,bar,h2"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    "9 foo alpn=f\\\092oo\092,bar,h2",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    '10 . ech="AEX+DQBBSQAgACBuPcsDfK+zfZY0gE1U80ppEIny7ZVjHw+y2AiJFqsZBAAEAAEAAQASY292ZXIuZWNoLWxhYnMuY29tAAA="',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    "11 . no-default-alpn alpn=h3",
+                                ),
+                            )
+                        ),
+                    },
+                ],
+            },
+        )
+        with patch("dns.resolver.get_default_resolver", resolver):
+            with patch("dns.resolver.Resolver", resolver):
+                with patch("dns.query.udp", mock_query_udp([])):
+                    result = self.lookup.run(["example.com"], type="SVCB")
+
+        print(result)
+        assert len(result) == 11
+        assert result[0] == {
+            "priority": 1,
+            "target": ".",
+            "params": {"alpn": ["aDI=", "aDM="]},
+        }
+        assert result[1] == {"priority": 2, "target": "foo", "params": {}}
+        assert result[2] == {"priority": 3, "target": "foo", "params": {"port": 53}}
+        assert result[3] == {
+            "priority": 4,
+            "target": "foo",
+            "params": {"key667": "aGVsbG8="},
+        }
+        assert result[4] == {
+            "priority": 5,
+            "target": "foo",
+            "params": {"key667": "aGVsbG/ScW9v"},
+        }
+        assert result[5] == {
+            "priority": 6,
+            "target": "foo",
+            "params": {"ipv6hint": ["2001:db8::1", "2001:db8::53:1"]},
+        }
+        assert result[6] == {
+            "priority": 7,
+            "target": "foo",
+            "params": {
+                "alpn": ["aDI=", "aDMtMTk="],
+                "mandatory": ["alpn", "ipv4hint"],
+                "ipv4hint": ["192.0.2.1"],
+            },
+        }
+        assert result[7] == {
+            "priority": 8,
+            "target": "foo",
+            "params": {"alpn": ["Zm9v", "YmFy", "aDI="]},
+        }
+        assert result[8] == {
+            "priority": 9,
+            "target": "foo",
+            "params": {"alpn": ["ZgA5Mm9vADky", "YmFy", "aDI="]},
+        }
+        assert result[9] == {
+            "priority": 10,
+            "target": ".",
+            "params": {
+                "ech": "AEX+DQBBSQAgACBuPcsDfK+zfZY0gE1U80ppEIny7ZVjHw+y2AiJFqsZBAAEAAEAAQASY292ZXIuZWNoLWxhYnMuY29tAAA="
+            },
+        }
+        assert result[10] == {
+            "priority": 11,
+            "target": ".",
+            "params": {"no-default-alpn": None, "alpn": ["aDM="]},
+        }
