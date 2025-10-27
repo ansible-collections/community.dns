@@ -31,6 +31,7 @@ if sys.version_info >= (3, 6):
 
 
 NAME_TO_RDTYPE = {}  # type: dict[str, dns.rdatatype.RdataType]
+NAME_TO_REQUIRED_VERSION = {}  # type: dict[str, str]
 RDTYPE_TO_NAME = {}  # type: dict[dns.rdatatype.RdataType, str]
 RDTYPE_TO_FIELDS = {}  # type: dict[dns.rdatatype.RdataType, list[str]]
 
@@ -42,42 +43,83 @@ try:
         import dns.rdtypes.ANY.NSEC3
     except ImportError:
         pass
+    try:
+        import dns.rdtypes.svcbbase
+    except ImportError:
+        pass
+
+    _HTTPS = getattr(dns.rdatatype, 'HTTPS', None)
+    _SVCB = getattr(dns.rdatatype, 'SVCB', None)
 
     # The following data has been borrowed from community.general's dig lookup plugin.
     #
     # Note: adding support for RRSIG is hard work. :)
-    for _name, _rdtype, _fields in [
-        ('A', dns.rdatatype.A, ['address']),
-        ('AAAA', dns.rdatatype.AAAA, ['address']),
-        ('CAA', dns.rdatatype.CAA, ['flags', 'tag', 'value']),
-        ('CNAME', dns.rdatatype.CNAME, ['target']),
-        ('DNAME', dns.rdatatype.DNAME, ['target']),
-        ('DNSKEY', dns.rdatatype.DNSKEY, ['flags', 'algorithm', 'protocol', 'key']),
-        ('DS', dns.rdatatype.DS, ['algorithm', 'digest_type', 'key_tag', 'digest']),
-        ('HINFO', dns.rdatatype.HINFO, ['cpu', 'os']),
-        ('LOC', dns.rdatatype.LOC, ['latitude', 'longitude', 'altitude', 'size', 'horizontal_precision', 'vertical_precision']),
-        ('MX', dns.rdatatype.MX, ['preference', 'exchange']),
-        ('NAPTR', dns.rdatatype.NAPTR, ['order', 'preference', 'flags', 'service', 'regexp', 'replacement']),
-        ('NS', dns.rdatatype.NS, ['target']),
-        ('NSEC', dns.rdatatype.NSEC, ['next', 'windows']),
-        ('NSEC3', dns.rdatatype.NSEC3, ['algorithm', 'flags', 'iterations', 'salt', 'next', 'windows']),
-        ('NSEC3PARAM', dns.rdatatype.NSEC3PARAM, ['algorithm', 'flags', 'iterations', 'salt']),
-        ('PTR', dns.rdatatype.PTR, ['target']),
-        ('RP', dns.rdatatype.RP, ['mbox', 'txt']),
-        ('RRSIG', dns.rdatatype.RRSIG, ['type_covered', 'algorithm', 'labels', 'original_ttl', 'expiration', 'inception', 'key_tag', 'signer', 'signature']),
-        ('SOA', dns.rdatatype.SOA, ['mname', 'rname', 'serial', 'refresh', 'retry', 'expire', 'minimum']),
-        ('SPF', dns.rdatatype.SPF, ['strings']),
-        ('SRV', dns.rdatatype.SRV, ['priority', 'weight', 'port', 'target']),
-        ('SSHFP', dns.rdatatype.SSHFP, ['algorithm', 'fp_type', 'fingerprint']),
-        ('TLSA', dns.rdatatype.TLSA, ['usage', 'selector', 'mtype', 'cert']),
-        ('TXT', dns.rdatatype.TXT, ['strings']),
+    for _name, _rdtype, _min_version, _fields in [
+        ('A', dns.rdatatype.A, None, ['address']),
+        ('AAAA', dns.rdatatype.AAAA, None, ['address']),
+        ('CAA', dns.rdatatype.CAA, None, ['flags', 'tag', 'value']),
+        ('CNAME', dns.rdatatype.CNAME, None, ['target']),
+        ('DNAME', dns.rdatatype.DNAME, None, ['target']),
+        ('DNSKEY', dns.rdatatype.DNSKEY, None, ['flags', 'algorithm', 'protocol', 'key']),
+        ('DS', dns.rdatatype.DS, None, ['algorithm', 'digest_type', 'key_tag', 'digest']),
+        ('HINFO', dns.rdatatype.HINFO, None, ['cpu', 'os']),
+        ('HTTPS', _HTTPS, '2.2.0', ['priority', 'target', 'params']),
+        ('LOC', dns.rdatatype.LOC, None, ['latitude', 'longitude', 'altitude', 'size', 'horizontal_precision', 'vertical_precision']),
+        ('MX', dns.rdatatype.MX, None, ['preference', 'exchange']),
+        ('NAPTR', dns.rdatatype.NAPTR, None, ['order', 'preference', 'flags', 'service', 'regexp', 'replacement']),
+        ('NS', dns.rdatatype.NS, None, ['target']),
+        ('NSEC', dns.rdatatype.NSEC, None, ['next', 'windows']),
+        ('NSEC3', dns.rdatatype.NSEC3, None, ['algorithm', 'flags', 'iterations', 'salt', 'next', 'windows']),
+        ('NSEC3PARAM', dns.rdatatype.NSEC3PARAM, None, ['algorithm', 'flags', 'iterations', 'salt']),
+        ('PTR', dns.rdatatype.PTR, None, ['target']),
+        ('RP', dns.rdatatype.RP, None, ['mbox', 'txt']),
+        ('RRSIG', dns.rdatatype.RRSIG, None, [
+            'type_covered', 'algorithm', 'labels', 'original_ttl', 'expiration', 'inception', 'key_tag', 'signer', 'signature'
+        ]),
+        ('SOA', dns.rdatatype.SOA, None, ['mname', 'rname', 'serial', 'refresh', 'retry', 'expire', 'minimum']),
+        ('SPF', dns.rdatatype.SPF, None, ['strings']),
+        ('SRV', dns.rdatatype.SRV, None, ['priority', 'weight', 'port', 'target']),
+        ('SSHFP', dns.rdatatype.SSHFP, None, ['algorithm', 'fp_type', 'fingerprint']),
+        ('SVCB', _SVCB, '2.2.0', ['priority', 'target', 'params']),
+        ('TLSA', dns.rdatatype.TLSA, None, ['usage', 'selector', 'mtype', 'cert']),
+        ('TXT', dns.rdatatype.TXT, None, ['strings']),
     ]:
-        NAME_TO_RDTYPE[_name] = _rdtype
-        RDTYPE_TO_NAME[_rdtype] = _name
-        RDTYPE_TO_FIELDS[_rdtype] = _fields
+        if _rdtype is None:
+            if _min_version is None:
+                raise RuntimeError('Internal error: rdtype {name} is None, but min_version is also None!'.format(name=_name))
+            NAME_TO_REQUIRED_VERSION[_name] = _min_version
+        else:
+            NAME_TO_RDTYPE[_name] = _rdtype
+            RDTYPE_TO_NAME[_rdtype] = _name
+            RDTYPE_TO_FIELDS[_rdtype] = _fields
 
 except ImportError:
     pass  # has to be handled on application level
+
+
+def _convert_dns_rdtypes_svcbbase_param(
+    value  # type: dns.rdtypes.svcbbase.Param
+):  # type: (...) -> tuple[typing.Any, bool]
+    if value is None:
+        return None, False
+    if isinstance(value, dns.rdtypes.svcbbase.GenericParam):
+        return to_native(base64.b64encode(value.value)), True
+    if isinstance(value, dns.rdtypes.svcbbase.MandatoryParam):
+        return [dns.rdtypes.svcbbase.key_to_text(k) for k in value.keys], False
+    if isinstance(value, dns.rdtypes.svcbbase.ALPNParam):
+        return [to_native(base64.b64encode(id)) for id in value.ids], True
+    if isinstance(value, dns.rdtypes.svcbbase.PortParam):
+        return value.port, False
+    if isinstance(value, dns.rdtypes.svcbbase.IPv4HintParam):
+        return [to_native(v) for v in value.addresses], False
+    if isinstance(value, dns.rdtypes.svcbbase.IPv6HintParam):
+        return [to_native(v) for v in value.addresses], False
+    if isinstance(value, dns.rdtypes.svcbbase.ECHParam):
+        return to_native(base64.b64encode(value.ech)), True
+    # Fallbacks:
+    if hasattr(value, "to_text"):
+        return value.to_text(), False
+    return str(value), False
 
 
 def convert_rdata_to_dict(
@@ -138,6 +180,16 @@ def convert_rdata_to_dict(
             val = dns.rdata._hexify(rdata.fingerprint).replace(' ', '')  # type: ignore
         if rdata.rdtype == dns.rdatatype.TLSA and f == 'cert':
             val = dns.rdata._hexify(rdata.cert).replace(' ', '')  # type: ignore
+        if rdata.rdtype in (_HTTPS, _SVCB) and f == 'params':
+            val_res = {}
+            for k, v in val.items():
+                kk = dns.rdtypes.svcbbase.key_to_text(k)
+                vv, _b64 = _convert_dns_rdtypes_svcbbase_param(v)
+                val_res[kk] = vv
+                # Not sure whether we want to include that:
+                # if _b64:
+                #     val_res[kk + "_encoded"] = v.to_text()
+            val = val_res
 
         if isinstance(val, (list, tuple)):
             if to_unicode:

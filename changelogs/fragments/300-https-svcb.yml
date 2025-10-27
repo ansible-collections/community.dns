@@ -1,0 +1,3 @@
+minor_changes:
+  - "lookup_* plugins - support ``type=HTTPS`` and ``type=SVCB`` (https://github.com/ansible-collections/community.dns/issues/299, https://github.com/ansible-collections/community.dns/pull/300)."
+  - "nameserver_record_info - support ``type=HTTPS`` and ``type=SVCB`` (https://github.com/ansible-collections/community.dns/issues/299, https://github.com/ansible-collections/community.dns/pull/300)."

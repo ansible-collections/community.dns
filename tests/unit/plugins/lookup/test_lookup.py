@@ -649,3 +649,188 @@ class TestLookup(TestCase):
 
         print(result)
         assert len(result) == 0
+
+    def test_https(self) -> None:
+        resolver = mock_resolver(
+            ["1.1.1.1"],
+            {
+                ("1.1.1.1",): [
+                    {
+                        "target": dns.name.from_unicode("example.com", origin=None),
+                        "search": True,
+                        "rdtype": dns.rdatatype.HTTPS,
+                        "lifetime": 10,
+                        "result": create_mock_answer(
+                            dns.rrset.from_rdata(
+                                "example.com",
+                                300,
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    '1 . alpn="h2,h3"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    "2 foo",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    "3 foo port=53",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    "4 foo key667=hello",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    '5 foo key667="hello\\210qoo"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    '6 foo ipv6hint="2001:db8::1,2001:db8::53:1"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    "7 foo alpn=h2,h3-19 mandatory=ipv4hint,alpn ipv4hint=192.0.2.1",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    '8 foo alpn="f\\\\oo\\,bar,h2"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.HTTPS,
+                                    "9 foo alpn=f\\\092oo\092,bar,h2",
+                                ),
+                            )
+                        ),
+                    },
+                ],
+            },
+        )
+        with patch("dns.resolver.get_default_resolver", resolver):
+            with patch("dns.resolver.Resolver", resolver):
+                with patch("dns.query.udp", mock_query_udp([])):
+                    result = self.lookup.run(["example.com"], type="HTTPS")
+
+        print(result)
+        assert len(result) == 9
+        assert result[0] == '1 . alpn="h2,h3"'
+        assert result[1] == "2 foo"
+        assert result[2] == '3 foo port="53"'
+        assert result[3] == '4 foo key667="hello"'
+        assert result[4] == '5 foo key667="hello\\210qoo"'
+        assert result[5] == '6 foo ipv6hint="2001:db8::1,2001:db8::53:1"'
+        assert (
+            result[6]
+            == '7 foo mandatory="alpn,ipv4hint" alpn="h2,h3-19" ipv4hint="192.0.2.1"'
+        )
+        assert result[7] == '8 foo alpn="foo,bar,h2"'
+        assert result[8] == '9 foo alpn="f\\\\00092oo\\\\00092,bar,h2"'
+
+    def test_svcb(self) -> None:
+        resolver = mock_resolver(
+            ["1.1.1.1"],
+            {
+                ("1.1.1.1",): [
+                    {
+                        "target": dns.name.from_unicode("example.com", origin=None),
+                        "search": True,
+                        "rdtype": dns.rdatatype.SVCB,
+                        "lifetime": 10,
+                        "result": create_mock_answer(
+                            dns.rrset.from_rdata(
+                                "example.com",
+                                300,
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    '1 . alpn="h2,h3"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    "2 foo",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    "3 foo port=53",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    "4 foo key667=hello",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    '5 foo key667="hello\\210qoo"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    '6 foo ipv6hint="2001:db8::1,2001:db8::53:1"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    "7 foo alpn=h2,h3-19 mandatory=ipv4hint,alpn ipv4hint=192.0.2.1",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    '8 foo alpn="f\\\\oo\\,bar,h2"',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    "9 foo alpn=f\\\092oo\092,bar,h2",
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    '10 . ech="AEX+DQBBSQAgACBuPcsDfK+zfZY0gE1U80ppEIny7ZVjHw+y2AiJFqsZBAAEAAEAAQASY292ZXIuZWNoLWxhYnMuY29tAAA="',
+                                ),
+                                dns.rdata.from_text(
+                                    dns.rdataclass.IN,
+                                    dns.rdatatype.SVCB,
+                                    "11 . no-default-alpn alpn=h3",
+                                ),
+                            )
+                        ),
+                    },
+                ],
+            },
+        )
+        with patch("dns.resolver.get_default_resolver", resolver):
+            with patch("dns.resolver.Resolver", resolver):
+                with patch("dns.query.udp", mock_query_udp([])):
+                    result = self.lookup.run(["example.com"], type="SVCB")
+
+        print(result)
+        assert len(result) == 11
+        assert result[0] == '1 . alpn="h2,h3"'
+        assert result[1] == "2 foo"
+        assert result[2] == '3 foo port="53"'
+        assert result[3] == '4 foo key667="hello"'
+        assert result[4] == '5 foo key667="hello\\210qoo"'
+        assert result[5] == '6 foo ipv6hint="2001:db8::1,2001:db8::53:1"'
+        assert (
+            result[6]
+            == '7 foo mandatory="alpn,ipv4hint" alpn="h2,h3-19" ipv4hint="192.0.2.1"'
+        )
+        assert result[7] == '8 foo alpn="foo,bar,h2"'
+        assert result[8] == '9 foo alpn="f\\\\00092oo\\\\00092,bar,h2"'
+        assert (
+            result[9]
+            == '10 . ech="AEX+DQBBSQAgACBuPcsDfK+zfZY0gE1U80ppEIny7ZVjHw+y2AiJFqsZBAAEAAEAAQASY292ZXIuZWNoLWxhYnMuY29tAAA="'
+        )
+        assert result[10] == '11 . alpn="h3" no-default-alpn'
