@@ -4,6 +4,37 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.4.0
+======
+
+Release Summary
+---------------
+
+Feature and maintenance release.
+
+Minor Changes
+-------------
+
+- lookup_* plugins - support ``type=HTTPS`` and ``type=SVCB`` (https://github.com/ansible-collections/community.dns/issues/299, https://github.com/ansible-collections/community.dns/pull/300).
+- nameserver_record_info - support ``type=HTTPS`` and ``type=SVCB`` (https://github.com/ansible-collections/community.dns/issues/299, https://github.com/ansible-collections/community.dns/pull/300).
+- nameserver_record_info - the return value ``results[].result[].values`` has been renamed to ``results[].result[].entries``. The old name will still be available for a longer time (https://github.com/ansible-collections/community.dns/issues/289, https://github.com/ansible-collections/community.dns/pull/298).
+- wait_for_txt - the option ``records[].values`` now has an alias ``records[].entries`` (https://github.com/ansible-collections/community.dns/pull/298).
+- wait_for_txt - the return value ``records[].values`` has been renamed to ``records[].entries``. The old name will still be available for a longer time (https://github.com/ansible-collections/community.dns/issues/289, https://github.com/ansible-collections/community.dns/pull/298).
+
+Bugfixes
+--------
+
+- Avoid using ``ansible.module_utils.six`` in more places to avoid deprecation warnings with ansible-core 2.20 (https://github.com/ansible-collections/community.dns/pull/291).
+- Update Public Suffix List.
+
+New Plugins
+-----------
+
+Lookup
+~~~~~~
+
+- community.dns.lookup_rfc8427 - Look up DNS records and return RFC 8427 JSON format.
+
 v3.3.4
 ======
 

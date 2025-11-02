@@ -1,3 +1,0 @@
-bugfixes:
-  - Avoid using ``ansible.module_utils.six`` in more places to avoid deprecation warnings with
-    ansible-core 2.20 (https://github.com/ansible-collections/community.dns/pull/291).
