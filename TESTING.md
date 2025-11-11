@@ -25,7 +25,7 @@ TODO: Use nox for this
 
 ## Running nox based sanity tests and code formatting
 
-These tests require [`nox` (version 2025.02.09 or greater)](https://pypi.org/project/nox) and [`antsibull-nox`](https://pypi.org/project/antsibull-nox/). Note that running `nox` without `antsibull-nox` present will automatically create a venv that installs all needed requirements. You can also use `pipx run noxfile.py` or similar Python runners; they detect the script metadata in `noxfile.py` and will automatically install `nox` and `antsibull-nox`. Details can be found [on the antsibull-nox Getting Started page](https://ansible.readthedocs.io/projects/antsibull-nox/getting-started/#running-tests).
+These tests require [`nox` (version 2025.02.09 or greater)](https://pypi.org/project/nox) and [`antsibull-nox`](https://pypi.org/project/antsibull-nox/). Note that running `nox` without `antsibull-nox` present will automatically create a venv that installs all needed requirements. You can also use `pipx run noxfile.py` or similar Python runners; they detect the script metadata in `noxfile.py` and will automatically install `nox` and `antsibull-nox`. Details can be found [on the antsibull-nox Getting Started page](https://docs.ansible.com/projects/antsibull-nox/getting-started/#running-tests).
 
 Run `nox -e lint` to run all sanity tests, including code formatting.
 

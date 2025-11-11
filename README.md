@@ -5,7 +5,7 @@ SPDX-License-Identifier: GPL-3.0-or-later
 -->
 
 # Community DNS Collection
-[![Documentation](https://img.shields.io/badge/docs-brightgreen.svg)](https://docs.ansible.com/ansible/devel/collections/community/dns/)
+[![Documentation](https://img.shields.io/badge/docs-brightgreen.svg)](https://docs.ansible.com/projects/ansible/devel/collections/community/dns/)
 [![CI](https://github.com/ansible-collections/community.dns/actions/workflows/nox.yml/badge.svg?branch=main)](https://github.com/ansible-collections/community.dns/actions)
 [![Public Suffix List up-to-date](https://github.com/ansible-collections/community.dns/actions/workflows/check-psl.yml/badge.svg?branch=main)](https://github.com/ansible-collections/community.dns/actions/workflows/check-psl.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/ansible-collections/community.dns)](https://codecov.io/gh/ansible-collections/community.dns)
@@ -17,9 +17,9 @@ Please note that this collection does **not** support Windows targets.
 
 ## Code of Conduct
 
-We follow [Ansible Code of Conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html) in all our interactions within this project.
+We follow [Ansible Code of Conduct](https://docs.ansible.com/projects/ansible/latest/community/code_of_conduct.html) in all our interactions within this project.
 
-If you encounter abusive behavior violating the [Ansible Code of Conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html), please refer to the [policy violations](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html#policy-violations) section of the Code of Conduct for information on how to raise a complaint.
+If you encounter abusive behavior violating the [Ansible Code of Conduct](https://docs.ansible.com/projects/ansible/latest/community/code_of_conduct.html), please refer to the [policy violations](https://docs.ansible.com/projects/ansible/latest/community/code_of_conduct.html#policy-violations) section of the Code of Conduct for information on how to raise a complaint.
 
 ## Communication
 
@@ -29,9 +29,9 @@ If you encounter abusive behavior violating the [Ansible Code of Conduct](https:
   * [Social Spaces](https://forum.ansible.com/c/chat/4): gather and interact with fellow enthusiasts.
   * [News & Announcements](https://forum.ansible.com/c/news/5): track project-wide announcements including social events.
 
-* The Ansible [Bullhorn newsletter](https://docs.ansible.com/ansible/devel/community/communication.html#the-bullhorn): used to announce releases and important changes.
+* The Ansible [Bullhorn newsletter](https://docs.ansible.com/projects/ansible/devel/community/communication.html#the-bullhorn): used to announce releases and important changes.
 
-For more information about communication, see the [Ansible communication guide](https://docs.ansible.com/ansible/devel/community/communication.html).
+For more information about communication, see the [Ansible communication guide](https://docs.ansible.com/projects/ansible/devel/community/communication.html).
 
 ## Tested with Ansible
 
@@ -43,9 +43,9 @@ Depends on the plugin or module used.
 
 ## Collection Documentation
 
-Browsing the [**latest** collection documentation](https://docs.ansible.com/ansible/latest/collections/community/dns) will show docs for the _latest version released in the Ansible package_, not the latest version of the collection released on Galaxy.
+Browsing the [**latest** collection documentation](https://docs.ansible.com/projects/ansible/latest/collections/community/dns/) will show docs for the _latest version released in the Ansible package_, not the latest version of the collection released on Galaxy.
 
-Browsing the [**devel** collection documentation](https://docs.ansible.com/ansible/devel/collections/community/dns) shows docs for the _latest version released on Galaxy_.
+Browsing the [**devel** collection documentation](https://docs.ansible.com/projects/ansible/devel/collections/community/dns/) shows docs for the _latest version released on Galaxy_.
 
 We also separately publish [**latest commit** collection documentation](https://ansible-collections.github.io/community.dns/branch/main/) which shows docs for the _latest commit in the `main` branch_.
 
@@ -98,15 +98,15 @@ collections:
 - name: community.dns
 ```
 
-See [Ansible Using collections](https://docs.ansible.com/ansible/latest/user_guide/collections_using.html) for more details.
+See [Ansible Using collections](https://docs.ansible.com/projects/ansible/latest/user_guide/collections_using.html) for more details.
 
 ## Contributing to this collection
 
-If you want to develop new content for this collection or improve what is already here, the easiest way to work on the collection is to clone it into one of the configured [`COLLECTIONS_PATH`](https://docs.ansible.com/ansible/latest/reference_appendices/config.html#collections-paths), and work on it there.
+If you want to develop new content for this collection or improve what is already here, the easiest way to work on the collection is to clone it into one of the configured [`COLLECTIONS_PATH`](https://docs.ansible.com/projects/ansible/latest/reference_appendices/config.html#collections-paths), and work on it there.
 
 See [TESTING.md](https://github.com/ansible-collections/community.dns/tree/main/TESTING.md) for information on running the tests.
 
-You can find more information in the [developer guide for collections](https://docs.ansible.com/ansible/devel/dev_guide/developing_collections.html#contributing-to-collections), and in the [Ansible Community Guide](https://docs.ansible.com/ansible/latest/community/index.html).
+You can find more information in the [developer guide for collections](https://docs.ansible.com/projects/ansible/devel/dev_guide/developing_collections.html#contributing-to-collections), and in the [Ansible Community Guide](https://docs.ansible.com/projects/ansible/latest/community/index.html).
 
 ## Release notes
 
@@ -114,7 +114,7 @@ See the [changelog](https://github.com/ansible-collections/community.dns/tree/ma
 
 ## Releasing, Versioning and Deprecation
 
-This collection follows [Semantic Versioning](https://semver.org/). More details on versioning can be found [in the Ansible docs](https://docs.ansible.com/ansible/latest/dev_guide/developing_collections.html#collection-versions).
+This collection follows [Semantic Versioning](https://semver.org/). More details on versioning can be found [in the Ansible docs](https://docs.ansible.com/projects/ansible/latest/dev_guide/developing_collections.html#collection-versions).
 
 We plan to regularly release new minor or bugfix versions once new features or bugfixes have been implemented.
 
@@ -125,11 +125,11 @@ We currently are not planning any deprecations or new major releases like 2.0.0 
 ## More information
 
 - [Ansible Collection overview](https://github.com/ansible-collections/overview)
-- [Ansible User guide](https://docs.ansible.com/ansible/latest/user_guide/index.html)
-- [Ansible Developer guide](https://docs.ansible.com/ansible/latest/dev_guide/index.html)
-- [Antsibull-nox documentation](https://ansible.readthedocs.io/projects/antsibull-nox/)
+- [Ansible User guide](https://docs.ansible.com/projects/ansible/latest/user_guide/index.html)
+- [Ansible Developer guide](https://docs.ansible.com/projects/ansible/latest/dev_guide/index.html)
+- [Antsibull-nox documentation](https://docs.ansible.com/projects/antsibull-nox/)
 - [Ansible Collections Checklist](https://github.com/ansible-collections/overview/blob/master/collection_requirements.rst)
-- [Ansible Community code of conduct](https://docs.ansible.com/ansible/latest/community/code_of_conduct.html)
+- [Ansible Community code of conduct](https://docs.ansible.com/projects/ansible/latest/community/code_of_conduct.html)
 - [The Bullhorn (the Ansible Contributor newsletter)](https://us19.campaign-archive.com/home/?u=56d874e027110e35dea0e03c1&id=d6635f5420)
 - [Changes impacting Contributors](https://github.com/ansible-collections/overview/issues/45)
 
