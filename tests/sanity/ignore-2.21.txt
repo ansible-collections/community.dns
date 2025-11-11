@@ -1,3 +1,6 @@
+plugins/lookup/lookup_as_dict.py validate-modules:bad-return-value-key  # no-default-alpn is OK
 plugins/module_utils/http.py pylint:unused-import  # https://github.com/ansible/ansible/issues/85990#issuecomment-3406323414
+plugins/modules/nameserver_record_info.py validate-modules:bad-return-value-key  # Bad return value 'values' is in the process of being renamed; no-default-alpn is OK
+plugins/modules/wait_for_txt.py validate-modules:bad-return-value-key  # Bad return value 'values' is in the process of being renamed
 plugins/plugin_utils/inventory/records.py no-assert  # The asserts are mainly needed for type inference
 plugins/public_suffix_list.dat no-smart-quotes
