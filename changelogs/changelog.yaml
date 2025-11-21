@@ -625,13 +625,13 @@ releases:
         - Ansible markup will show up in raw form on ansible-doc text output for ansible-core
           before 2.15. If you have trouble deciphering the documentation markup, please
           upgrade to ansible-core 2.15 (or newer), or read the HTML documentation
-          on https://docs.ansible.com/ansible/devel/collections/community/dns/.
+          on https://docs.ansible.com/projects/ansible/devel/collections/community/dns/.
       release_summary: 'Maintenance release.
 
 
         From this version on, community.dns is using the new `Ansible semantic markup
 
-        <https://docs.ansible.com/ansible/devel/dev_guide/developing_modules_documenting.html#semantic-markup-within-module-documentation>`__
+        <https://docs.ansible.com/projects/ansible/devel/dev_guide/developing_modules_documenting.html#semantic-markup-within-module-documentation>`__
 
         in its documentation. If you look at documentation with the ansible-doc CLI
         tool
@@ -643,7 +643,7 @@ releases:
         ansible-core 2.15 or later to see it as it is intended. Alternatively you
         can
 
-        look at `the devel docsite <https://docs.ansible.com/ansible/devel/collections/community/dns/>`__
+        look at `the devel docsite <https://docs.ansible.com/projects/ansible/devel/collections/community/dns/>`__
 
         for the rendered HTML version of the documentation of the latest release.
 

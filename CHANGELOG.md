@@ -902,18 +902,18 @@ Regular maintenance release with updated Public Suffix List\.
 
 Maintenance release\.
 
-From this version on\, community\.dns is using the new [Ansible semantic markup](https\://docs\.ansible\.com/ansible/devel/dev\_guide/developing\_modules\_documenting\.html\#semantic\-markup\-within\-module\-documentation)
+From this version on\, community\.dns is using the new [Ansible semantic markup](https\://docs\.ansible\.com/projects/ansible/devel/dev\_guide/developing\_modules\_documenting\.html\#semantic\-markup\-within\-module\-documentation)
 in its documentation\. If you look at documentation with the ansible\-doc CLI tool
 from ansible\-core before 2\.15\, please note that it does not render the markup
 correctly\. You should be still able to read it in most cases\, but you need
 ansible\-core 2\.15 or later to see it as it is intended\. Alternatively you can
-look at [the devel docsite](https\://docs\.ansible\.com/ansible/devel/collections/community/dns/)
+look at [the devel docsite](https\://docs\.ansible\.com/projects/ansible/devel/collections/community/dns/)
 for the rendered HTML version of the documentation of the latest release\.
 
 <a id="known-issues"></a>
 ### Known Issues
 
-* Ansible markup will show up in raw form on ansible\-doc text output for ansible\-core before 2\.15\. If you have trouble deciphering the documentation markup\, please upgrade to ansible\-core 2\.15 \(or newer\)\, or read the HTML documentation on [https\://docs\.ansible\.com/ansible/devel/collections/community/dns/](https\://docs\.ansible\.com/ansible/devel/collections/community/dns/)\.
+* Ansible markup will show up in raw form on ansible\-doc text output for ansible\-core before 2\.15\. If you have trouble deciphering the documentation markup\, please upgrade to ansible\-core 2\.15 \(or newer\)\, or read the HTML documentation on [https\://docs\.ansible\.com/projects/ansible/devel/collections/community/dns/](https\://docs\.ansible\.com/projects/ansible/devel/collections/community/dns/)\.
 
 <a id="v2-5-5"></a>
 ## v2\.5\.5
