@@ -625,7 +625,7 @@ releases:
         - Ansible markup will show up in raw form on ansible-doc text output for ansible-core
           before 2.15. If you have trouble deciphering the documentation markup, please
           upgrade to ansible-core 2.15 (or newer), or read the HTML documentation
-          on https://docs.ansible.com/projects/ansible/devel/collections/community/dns/
+          on https://docs.ansible.com/projects/ansible/devel/collections/community/dns/.
       release_summary: 'Maintenance release.
 
 
