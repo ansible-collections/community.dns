@@ -17,6 +17,7 @@ if sys.version_info >= (3, 6):
 
     if typing.TYPE_CHECKING:
         from .record import DNSRecord  # pragma: no cover
+        from .record_set import DNSRecordSet  # pragma: no cover
 
 
 class DNSZone(object):
@@ -55,3 +56,19 @@ class DNSZoneWithRecords(object):
 
     def __repr__(self):  # type: (...) -> str
         return 'DNSZoneWithRecords({0!r}, {1!r})'.format(self.zone, self.records)
+
+
+class DNSZoneWithRecordSets(object):
+    def __init__(
+        self,
+        zone,  # type: DNSZone
+        record_sets,  # type: list[DNSRecordSet]
+    ):  # type: (...) -> None
+        self.zone = zone  # type: DNSZone
+        self.record_sets = record_sets  # type: list[DNSRecordSet]
+
+    def __str__(self):  # type: (...) -> str
+        return '({0}, {1})'.format(self.zone, self.record_sets)
+
+    def __repr__(self):  # type: (...) -> str
+        return 'DNSZoneWithRecordSets({0!r}, {1!r})'.format(self.zone, self.record_sets)
