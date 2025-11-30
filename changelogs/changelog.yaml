@@ -1173,3 +1173,12 @@ releases:
           name: lookup_rfc8427
           namespace: null
     release_date: '2025-11-02'
+  3.4.1:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+      release_summary: Maintenance release.
+    fragments:
+      - 3.4.1.yml
+      - update-psl.yml
+    release_date: '2025-11-30'
