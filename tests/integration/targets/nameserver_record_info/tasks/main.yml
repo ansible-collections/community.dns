@@ -18,10 +18,10 @@
 - name: Validate results
   ansible.builtin.assert:
     that:
-      - result.results[0].result[0].nameserver in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.']
-      - result.results[0].result[1].nameserver in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.']
-      - result.results[1].result[0].nameserver in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.']
-      - result.results[1].result[1].nameserver in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.']
+      - result.results[0].result[0].nameserver in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.', 'ns1.cloudflare.net.']
+      - result.results[0].result[1].nameserver in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.', 'ns2.cloudflare.net.']
+      - result.results[1].result[0].nameserver in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.', 'ns3.cloudflare.net.']
+      - result.results[1].result[1].nameserver in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.', 'ns4.cloudflare.net.']
 
 - name: Retrieve TXT values from all nameservers for two DNS names using custom DNS servers
   community.dns.nameserver_record_info:
@@ -44,8 +44,8 @@
 - name: Validate results
   ansible.builtin.assert:
     that:
-      - result.results[0].result[0].nameserver in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.']
-      - result.results[0].result[1].nameserver in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.']
+      - result.results[0].result[0].nameserver in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.', 'ns1.cloudflare.net.']
+      - result.results[0].result[1].nameserver in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.', 'ns2.cloudflare.net.']
 
 - name: Test with invalid nameserver IP
   community.dns.nameserver_record_info:
