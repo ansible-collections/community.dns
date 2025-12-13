@@ -9,6 +9,9 @@
       - www.example.com
       - example.org
     type: TXT
+    # Use 8.8.8.8 so this is at least partially reproducible...
+    server:
+      - 8.8.8.8
   register: result
 
 - name: Show all results
@@ -20,8 +23,8 @@
     that:
       - result.results[0].result[0].nameserver in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.', 'ns1.cloudflare.net.']
       - result.results[0].result[1].nameserver in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.', 'ns2.cloudflare.net.']
-      - result.results[1].result[0].nameserver in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.', 'ns3.cloudflare.net.']
-      - result.results[1].result[1].nameserver in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.', 'ns4.cloudflare.net.']
+      - result.results[1].result[0].nameserver in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.', 'ns3.cloudflare.net.', 'katelyn.ns.cloudflare.com.', 'mitch.ns.cloudflare.com.']
+      - result.results[1].result[1].nameserver in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.', 'ns4.cloudflare.net.', 'katelyn.ns.cloudflare.com.', 'mitch.ns.cloudflare.com.']
 
 - name: Retrieve TXT values from all nameservers for two DNS names using custom DNS servers
   community.dns.nameserver_record_info:
