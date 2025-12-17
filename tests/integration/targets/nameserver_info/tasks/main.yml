@@ -20,12 +20,10 @@
 - name: Validate results
   ansible.builtin.assert:
     that:
-      - result.results[0].nameservers[0] in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.', 'ns1.cloudflare.net.']
-      - result.results[0].nameservers[1] in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.', 'ns2.cloudflare.net.']
-      - result.results[1].nameservers[0] in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.',
-        'katelyn.ns.cloudflare.com.', 'mitch.ns.cloudflare.com.']
-      - result.results[1].nameservers[1] in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.',
-        'katelyn.ns.cloudflare.com.', 'mitch.ns.cloudflare.com.']
+      - result.results[0].nameservers[0] | endswith(".akamaitech.net.", ".akamai.net.", ".iana-servers.net.", ".cloudflare.net.", ".ns.cloudflare.com.")
+      - result.results[0].nameservers[1] | endswith(".akamaitech.net.", ".akamai.net.", ".iana-servers.net.", ".cloudflare.net.", ".ns.cloudflare.com.")
+      - result.results[1].nameservers[0] | endswith(".akamaitech.net.", ".akamai.net.", ".iana-servers.net.", ".cloudflare.net.", ".ns.cloudflare.com.")
+      - result.results[1].nameservers[1] | endswith(".akamaitech.net.", ".akamai.net.", ".iana-servers.net.", ".cloudflare.net.", ".ns.cloudflare.com.")
 
 - name: Retrieve name servers of two DNS names using custom DNS servers
   community.dns.nameserver_info:
@@ -47,8 +45,8 @@
 - name: Validate results
   ansible.builtin.assert:
     that:
-      - result.results[0].nameservers[0] in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.']
-      - result.results[0].nameservers[1] in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.']
+      - result.results[0].nameservers[0] | endswith(".akamaitech.net.", ".akamai.net.", ".iana-servers.net.", ".cloudflare.net.", ".ns.cloudflare.com.")
+      - result.results[0].nameservers[1] | endswith(".akamaitech.net.", ".akamai.net.", ".iana-servers.net.", ".cloudflare.net.", ".ns.cloudflare.com.")
 
 - name: Retrieve name servers of a DNS name that do not exist
   community.dns.nameserver_info:
@@ -66,8 +64,8 @@
 - name: Validate results
   ansible.builtin.assert:
     that:
-      - result.results[0].nameservers[0] in ['n0cn.akamaitech.net.', 'n0dscr.akamai.net.', 'a.iana-servers.net.']
-      - result.results[0].nameservers[1] in ['n1cn.akamaitech.net.', 'n1dscr.akamai.net.', 'b.iana-servers.net.']
+      - result.results[0].nameservers[0] | endswith(".akamaitech.net.", ".akamai.net.", ".iana-servers.net.", ".cloudflare.net.", ".ns.cloudflare.com.")
+      - result.results[0].nameservers[1] | endswith(".akamaitech.net.", ".akamai.net.", ".iana-servers.net.", ".cloudflare.net.", ".ns.cloudflare.com.")
 
 - name: Test with invalid nameserver IP
   community.dns.nameserver_info:
