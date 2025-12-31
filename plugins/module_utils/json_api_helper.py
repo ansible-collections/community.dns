@@ -107,7 +107,7 @@ class JSONAPIHelper(object):
         if info is None:
             raise DNSAPIError('Internal error: info needs to be provided')
         status = info['status']
-        url = info['url']
+        url = info.get('url')  # not present when using open_url
         # Check expected status
         error_code = ERROR_CODES.get(status, UNKNOWN_ERROR)
         if expected is not None:
@@ -202,6 +202,12 @@ class JSONAPIHelper(object):
             'accept': 'application/json',
         }
 
+    def _create_post_headers(self):  # type: (...) -> dict[str, str]
+        return self._create_headers()
+
+    def _create_put_headers(self):  # type: (...) -> dict[str, str]
+        return self._create_headers()
+
     def _get(
         self,
         url,  # type: str
@@ -229,7 +235,7 @@ class JSONAPIHelper(object):
         if self._debug:
             pass  # pragma: no cover
             # q.q('Request: POST {0}'.format(full_url))
-        headers = self._create_headers()
+        headers = self._create_post_headers()
         encoded_data = None
         if data is not None:
             headers['content-type'] = 'application/json'
@@ -249,7 +255,7 @@ class JSONAPIHelper(object):
         if self._debug:
             pass  # pragma: no cover
             # q.q('Request: PUT {0}'.format(full_url))
-        headers = self._create_headers()
+        headers = self._create_put_headers()
         encoded_data = None
         if data is not None:
             headers['content-type'] = 'application/json'

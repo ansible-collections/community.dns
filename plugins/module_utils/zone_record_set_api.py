@@ -18,21 +18,12 @@ from ansible_collections.community.dns.plugins.module_utils._six import (
 from ansible_collections.community.dns.plugins.module_utils.zone import (
     DNSZoneWithRecordSets,
 )
-
-
-class DNSAPIError(Exception):
-    pass
-
-
-class DNSAPIAuthenticationError(DNSAPIError):
-    pass
-
-
-class NotProvidedType(object):
-    pass
-
-
-NOT_PROVIDED = NotProvidedType()
+from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (  # pylint: disable=unused-import
+    DNSAPIError,
+    DNSAPIAuthenticationError,
+    NotProvidedType,
+    NOT_PROVIDED,
+)
 
 
 @add_metaclass(abc.ABCMeta)
@@ -108,12 +99,14 @@ class ZoneRecordSetAPI(object):
         """
 
     @abc.abstractmethod
-    def update_record_set(self, zone_id, record_set):
+    def update_record_set(self, zone_id, record_set, updated_records=True, updated_ttl=True):
         """
         Update a record set.
 
         @param zone_id: The zone ID
         @param record_set: The DNS record set (DNSRecordSet)
+        @param updated_records: Hint whether the values were updated.
+        @param updated_ttl: Hint whether the values were updated.
         @return The DNS record set (DNSRecordSet)
         """
 
@@ -158,7 +151,9 @@ class ZoneRecordSetAPI(object):
         """
         Update multiple record sets.
 
-        @param record_sets_per_zone_id: Maps a zone ID to a list of DNS record sets (DNSRecordSet)
+        @param record_sets_per_zone_id: Maps a zone ID to a list of tuples
+                                        (record_set, updated_records, updated_ttl)
+                                        of type (DNSRecordSet, bool, bool).
         @param stop_early_on_errors: If set to ``True``, try to stop changes after the first error happens.
                                      This might only work on some APIs.
         @return A dictionary mapping zone IDs to lists of tuples ``(record_set, updated, failed)``.
@@ -172,9 +167,9 @@ class ZoneRecordSetAPI(object):
         for zone_id, record_sets in record_sets_per_zone_id.items():
             result = []
             results_per_zone_id[zone_id] = result
-            for record_set in record_sets:
+            for record_set, updated_records, updated_ttl in record_sets:
                 try:
-                    result.append((self.update_record_set(zone_id, record_set), True, None))
+                    result.append((self.update_record_set(zone_id, record_set, updated_records=updated_records, updated_ttl=updated_ttl), True, None))
                 except DNSAPIError as e:
                     result.append((record_set, False, e))
                     if stop_early_on_errors:

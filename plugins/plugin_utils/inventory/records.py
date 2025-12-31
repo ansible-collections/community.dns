@@ -100,18 +100,47 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
                         f"Error while ensuring that zone_id is of type {zone_id_type}: {exc}"
                     )
 
-            if zone_name is not None:
-                zone_with_records = self.api.get_zone_with_records_by_name(zone_name)
-            elif zone_id is not None:
-                zone_with_records = self.api.get_zone_with_records_by_id(zone_id)
+            if isinstance(self.api, ZoneRecordAPI):
+                if zone_name is not None:
+                    zone_with_records = self.api.get_zone_with_records_by_name(
+                        zone_name
+                    )
+                elif zone_id is not None:
+                    zone_with_records = self.api.get_zone_with_records_by_id(zone_id)
+                else:
+                    raise AnsibleError(
+                        "One of zone_name and zone_id must be specified!"
+                    )
+
+                if zone_with_records is None:
+                    raise AnsibleError("Zone does not exist")
+
+                zone = zone_with_records.zone
+                records = zone_with_records.records
             else:
-                raise AnsibleError("One of zone_name and zone_id must be specified!")
+                if zone_name is not None:
+                    zone_with_record_sets = self.api.get_zone_with_record_sets_by_name(
+                        zone_name
+                    )
+                elif zone_id is not None:
+                    zone_with_record_sets = self.api.get_zone_with_record_sets_by_id(
+                        zone_id
+                    )
+                else:
+                    raise AnsibleError(
+                        "One of zone_name and zone_id must be specified!"
+                    )
 
-            if zone_with_records is None:
-                raise AnsibleError("Zone does not exist")
+                if zone_with_record_sets is None:
+                    raise AnsibleError("Zone does not exist")
 
-            record_converter.process_multiple_from_api(zone_with_records.records)
-            record_converter.process_multiple_to_user(zone_with_records.records)
+                zone = zone_with_record_sets.zone
+                records = []
+                for record_set in zone_with_record_sets.record_sets:
+                    records.extend(record_set.records)
+
+            record_converter.process_multiple_from_api(records)
+            record_converter.process_multiple_to_user(records)
 
         except DNSConversionError as e:
             raise AnsibleError(f"Error while converting DNS values: {e.error_message}")
@@ -131,9 +160,9 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
 
         if self.inventory is None:
             raise AssertionError("Inventory must not be None in parse()")
-        for record in zone_with_records.records:
+        for record in records:
             if record.type in filter_types:
-                name = zone_with_records.zone.name
+                name = zone.name
                 if record.prefix:
                     name = f"{record.prefix}.{name}"
                 facts = {

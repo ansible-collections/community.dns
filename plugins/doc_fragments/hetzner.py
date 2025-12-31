@@ -17,12 +17,22 @@ class ModuleDocFragment(object):
 options:
   hetzner_token:
     description:
-      - The token for the Hetzner API.
+      - The token for the classic Hetzner DNS API.
       - If not provided, will be read from the environment variable E(HETZNER_DNS_TOKEN).
+      - Exactly one of O(hetzner_token) and O(hetzner_api_token) must be provided.
     aliases:
       - api_token
     type: str
-    required: true
+  hetzner_api_token:
+    description:
+      - The token for the new Hetzner DNS API.
+      - If not provided, will be read from the environment variable E(HETZNER_API_TOKEN).
+      - Exactly one of O(hetzner_token) and O(hetzner_api_token) must be provided.
+    type: str
+notes:
+  - Note that not all record types are supported by both APIs.
+    The old API (O(hetzner_token)) does not support V(HTTPS), V(PTR), and V(SVCB) records.
+    The new API (O(hetzner_api_token)) does not support V(DANE) records.
 """
 
     # NOTE: This document fragment augments the above standard DOCUMENTATION document fragment
@@ -33,6 +43,9 @@ options:
   hetzner_token:
     env:
       - name: HETZNER_DNS_TOKEN
+  hetzner_api_token:
+    env:
+      - name: HETZNER_API_TOKEN
 """
 
     # NOTE: This document fragment adds additional information on records.
@@ -75,11 +88,14 @@ options:
       - DANE
       - DS
       - HINFO
+      - HTTPS
       - MX
       - NS
+      - PTR
       - RP
       - SOA
       - SRV
+      - SVCB
       - TLSA
       - TXT
 """
@@ -125,11 +141,14 @@ options:
           - DANE
           - DS
           - HINFO
+          - HTTPS
           - MX
           - NS
+          - PTR
           - RP
           - SOA
           - SRV
+          - SVCB
           - TLSA
           - TXT
       value:
@@ -174,11 +193,14 @@ options:
           - DANE
           - DS
           - HINFO
+          - HTTPS
           - MX
           - NS
+          - PTR
           - RP
           - SOA
           - SRV
+          - SVCB
           - TLSA
           - TXT
 """

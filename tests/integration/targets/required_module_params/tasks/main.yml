@@ -11,7 +11,6 @@
 - name: Validate hetzner_dns_record run
   assert:
     that:
-      - "'hetzner_token' in result.msg"
       - "'state' in result.msg"
       - "'type' in result.msg"
       - "'value' in result.msg"
@@ -44,7 +43,6 @@
 - name: Validate hetzner_dns_record_set run
   assert:
     that:
-      - "'hetzner_token' in result.msg"
       - "'state' in result.msg"
       - "'type' in result.msg"
 
@@ -56,7 +54,6 @@
 - name: Validate hetzner_dns_record_sets run
   assert:
     that:
-      - "'hetzner_token' in result.msg"
       - "'record_sets' in result.msg"
 
 - name: Run hetzner_dns_zone_info without options

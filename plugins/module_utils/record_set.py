@@ -19,6 +19,17 @@ class DNSRecordSet(object):
         self.prefix = None
         self.ttl = None
         self.records = []
+        self.extra = {}
+
+    def clone(self):
+        result = DNSRecordSet()
+        result.id = self.id
+        result.type = self.type
+        result.prefix = self.prefix
+        result.records = [record.clone() for record in self.records]
+        result.ttl = self.ttl
+        result.extra = dict(self.extra)
+        return result
 
     def __str__(self):
         data = []
@@ -31,6 +42,8 @@ class DNSRecordSet(object):
             data.append('prefix: (none)')
         data.append('ttl: {0}'.format(_format_ttl(self.ttl)))
         data.append('records: [{0}]'.format(', '.join([str(record) for record in self.records])))
+        if self.extra:
+            data.append('extra: {0}'.format(self.extra))
         return 'DNSRecordSet(' + ', '.join(data) + ')'
 
     def __repr__(self):
@@ -42,7 +55,7 @@ def format_record_set_for_output(record_set, record_name, prefix=None, record_co
         'prefix': prefix or '',
         'type': record_set.type,
         'ttl': record_set.ttl,
-        'value': [record.target for record in record_set.records],
+        'value': sorted((record.target for record in record_set.records)),
     }
     if record_converter:
         entry['value'] = record_converter.process_values_to_user(entry['type'], entry['value'])

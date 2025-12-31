@@ -110,3 +110,13 @@ class ProviderInformation(object):
         Note: the default return value changed from 'octal' to 'decimal' in community.dns 3.0.0.
         """
         return 'decimal'
+
+    def txt_always_quote(self):
+        """
+        Return whether TXT records sent to the API should always be quoted.
+
+        Returns a boolean.
+
+        This return value is only used if txt_record_handling does not return 'decoded'.
+        """
+        return False
