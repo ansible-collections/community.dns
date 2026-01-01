@@ -1,0 +1,3 @@
+bugfixes:
+  - "hetzner_dns_record_set, hosttech_dns_record_set - fix ``on_existing != 'replace'`` mis-triggering when ``state=absent`` and the values to delete do not show up in the list of records
+     (https://github.com/ansible-collections/community.dns/pull/301)."

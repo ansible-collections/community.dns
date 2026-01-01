@@ -865,7 +865,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'hosttech_token': 'foo',
             'state': 'absent',
             'zone_name': 'example.com.',
-            'record': 'somewhere.example.com.',
+            'record': '*.example.com.',
             'type': 'A',
             'ttl': 3600,
             'value': [
@@ -899,7 +899,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
             'hosttech_token': 'foo',
             'state': 'absent',
             'zone_name': 'example.com.',
-            'record': 'somewhere.example.com.',
+            'record': '*.example.com.',
             'type': 'A',
             'ttl': 3600,
             'value': [

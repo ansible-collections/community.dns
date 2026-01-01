@@ -436,7 +436,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'hetzner_token': 'foo',
             'state': 'absent',
             'zone_name': 'example.com.',
-            'record': 'somewhere.example.com.',
+            'record': '*.example.com.',
             'type': 'A',
             'ttl': 3600,
             'value': [
@@ -473,7 +473,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
             'hetzner_token': 'foo',
             'state': 'absent',
             'zone_name': 'example.com.',
-            'record': 'somewhere.example.com.',
+            'record': '*.example.com.',
             'type': 'A',
             'ttl': 3600,
             'value': [
@@ -502,6 +502,82 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         ])
 
         assert result['msg'] == "Record already exists with different value. Set on_existing=replace to remove it"
+
+    def test_idempotency_absent_record_warn_bugfix(self, mocker):
+        # Fixes a bug that caused the warning to trigger when it shouldn't
+        result = self.run_module_success(mocker, hetzner_dns_record_set, {
+            'hetzner_token': 'foo',
+            'state': 'absent',
+            'zone_name': 'example.com.',
+            'record': 'somewhere.example.com.',
+            'type': 'A',
+            'ttl': 3600,
+            'value': [
+                '1.2.3.6',
+            ],
+            'on_existing': 'keep_and_warn',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+        ])
+
+        assert result['changed'] is False
+        assert result['zone_id'] == '42'
+        assert extract_warnings_texts(result) == []
+
+    def test_idempotency_absent_record_fail_bugfix(self, mocker):
+        # Fixes a bug that caused the failure to trigger when it shouldn't
+        result = self.run_module_success(mocker, hetzner_dns_record_set, {
+            'hetzner_token': 'foo',
+            'state': 'absent',
+            'zone_name': 'example.com.',
+            'record': 'somewhere.example.com.',
+            'type': 'A',
+            'ttl': 3600,
+            'value': [
+                '1.2.3.6',
+            ],
+            'on_existing': 'keep_and_fail',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/zones', without_query=True)
+            .expect_query_values('name', 'example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_LIST_RESULT),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('auth-api-token', 'foo')
+            .expect_url('https://dns.hetzner.com/api/v1/records', without_query=True)
+            .expect_query_values('zone_id', '42')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+        ])
+
+        assert result['changed'] is False
+        assert result['zone_id'] == '42'
+        assert extract_warnings_texts(result) == []
 
     def test_absent(self, mocker):
         record = HETZNER_JSON_DEFAULT_ENTRIES[0]

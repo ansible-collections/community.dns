@@ -149,7 +149,7 @@ def _run_module_record_api(option_provider, module, provider_information, record
             mismatch = True
             mismatch_records.append(record)
             continue
-    if values:
+    if values and module.params.get('state') == 'present':
         mismatch = True
 
     before = [record.clone() for record in records]
