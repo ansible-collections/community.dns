@@ -21,6 +21,7 @@ from .hetzner import (
     HETZNER_JSON_ZONE_GET_RESULT,
     HETZNER_JSON_ZONE_GET_RESULT_NO_LEGACY,
     HETZNER_JSON_ZONE_LIST_RESULT,
+    HETZNER_ZONE_NEW_JSON,
 )
 
 
@@ -228,4 +229,251 @@ class TestHetznerDNSZoneInfoJSON(BaseTestModule):
                 'name': 'string',
                 'token': 'string',
             },
+        }
+
+
+class TestHetznerDNSZoneInfoNewJSON(BaseTestModule):
+    MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = 'ansible_collections.community.dns.plugins.modules.hetzner_dns_zone_info.AnsibleModule'
+    MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = 'ansible_collections.community.dns.plugins.module_utils.http.fetch_url'
+
+    def test_unknown_zone(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_zone_info, {
+            'hetzner_api_token': 'foo',
+            'zone_name': 'example.org',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 404)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foo')
+            .expect_url('https://api.hetzner.cloud/v1/zones/example.org')
+            .return_header('Content-Type', 'application/json')
+            .result_json({"error": {
+                "code": "not_found",
+                "message": "Zone not found",
+                "details": None,
+            }}),
+        ])
+
+        assert result['msg'] == 'Zone not found'
+
+    def test_unknown_zone_id(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_zone_info, {
+            'hetzner_api_token': 'foo',
+            'zone_id': '23',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 404)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foo')
+            .expect_url('https://api.hetzner.cloud/v1/zones/23')
+            .return_header('Content-Type', 'application/json')
+            .result_json({"error": {
+                "code": "not_found",
+                "message": "Zone not found",
+                "details": None,
+            }}),
+        ])
+
+        assert result['msg'] == 'Zone not found'
+
+    def test_auth_error(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_zone_info, {
+            'hetzner_api_token': 'foo',
+            'zone_name': 'example.org',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 401)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foo')
+            .expect_url('https://api.hetzner.cloud/v1/zones/example.org')
+            .result_json({"error": {
+                "code": "unauthorized",
+                "message": "the token you have provided is invalid",
+                "details": None,
+            }}),
+        ])
+
+        assert result['msg'] == 'Cannot authenticate: Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
+
+    def test_auth_error_forbidden(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_zone_info, {
+            'hetzner_api_token': 'foo',
+            'zone_id': '23',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 403)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foo')
+            .expect_url('https://api.hetzner.cloud/v1/zones/23')
+            .return_header('Content-Type', 'application/json')
+            .result_json({'error': {
+                "code": "forbidden",
+                "message": "no idea how this would look like",
+                "details": None,
+            }}),
+        ])
+
+        assert result['msg'] == 'Cannot authenticate: Forbidden: you do not have access to this resource (HTTP status 403)'
+
+    def test_other_error(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_zone_info, {
+            'hetzner_api_token': 'foo',
+            'zone_name': 'example.org',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 500)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foo')
+            .expect_url('https://api.hetzner.cloud/v1/zones/example.org')
+            .return_header('Content-Type', 'application/json')
+            .result_json({"error": {
+                "code": "server_error",
+                "message": "something went wrong",
+                "details": None,
+            }}),
+        ])
+
+        assert result['msg'] == (
+            'Error: Expected HTTP status 200, 404 for GET https://api.hetzner.cloud/v1/zones/example.org,'
+            ' but got HTTP status 500 (Internal Server Error) with error message "something went wrong" (error code server_error)'
+        )
+
+    def test_get(self, mocker):
+        result = self.run_module_success(mocker, hetzner_dns_zone_info, {
+            'hetzner_api_token': 'foo',
+            'zone_name': 'example.com',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foo')
+            .expect_url('https://api.hetzner.cloud/v1/zones/example.com')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_ZONE_NEW_JSON),
+        ])
+        assert result['changed'] is False
+        assert result['zone_id'] == '42'
+        assert result['zone_name'] == 'example.com'
+        assert result['zone_info'] == {
+            "mode": "primary",
+            "ttl": 3600,
+            "labels": {},
+            "primary_nameservers": [],
+            "created": "2016-01-30T23:55:00Z",
+            "protection": {
+                "delete": False,
+            },
+            "status": "ok",
+            "authoritative_nameservers": {
+                "assigned": [
+                    "hydrogen.ns.hetzner.com.",
+                    "oxygen.ns.hetzner.com.",
+                    "helium.ns.hetzner.de.",
+                ],
+                "delegated": [
+                    "hydrogen.ns.hetzner.com.",
+                    "oxygen.ns.hetzner.com.",
+                    "helium.ns.hetzner.de.",
+                ],
+                "delegation_last_check": "2016-01-30T23:55:00Z",
+                "delegation_status": "valid",
+            },
+            "record_count": 23,
+            "registrar": "other",
+        }
+
+    def test_get_id(self, mocker):
+        result = self.run_module_success(mocker, hetzner_dns_zone_info, {
+            'hetzner_api_token': 'foo',
+            'zone_id': '42',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foo')
+            .expect_url('https://api.hetzner.cloud/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_ZONE_NEW_JSON),
+        ])
+        assert result['changed'] is False
+        assert result['zone_id'] == '42'
+        assert result['zone_name'] == 'example.com'
+        assert result['zone_info'] == {
+            "mode": "primary",
+            "ttl": 3600,
+            "labels": {},
+            "primary_nameservers": [],
+            "created": "2016-01-30T23:55:00Z",
+            "protection": {
+                "delete": False,
+            },
+            "status": "ok",
+            "authoritative_nameservers": {
+                "assigned": [
+                    "hydrogen.ns.hetzner.com.",
+                    "oxygen.ns.hetzner.com.",
+                    "helium.ns.hetzner.de.",
+                ],
+                "delegated": [
+                    "hydrogen.ns.hetzner.com.",
+                    "oxygen.ns.hetzner.com.",
+                    "helium.ns.hetzner.de.",
+                ],
+                "delegation_last_check": "2016-01-30T23:55:00Z",
+                "delegation_status": "valid",
+            },
+            "record_count": 23,
+            "registrar": "other",
+        }
+
+    def test_get_id_no_legacy(self, mocker):
+        result = self.run_module_success(mocker, hetzner_dns_zone_info, {
+            'hetzner_api_token': 'foo',
+            'zone_id': '42',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foo')
+            .expect_url('https://api.hetzner.cloud/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_ZONE_NEW_JSON),
+        ])
+        assert result['changed'] is False
+        assert result['zone_id'] == '42'
+        assert result['zone_name'] == 'example.com'
+        assert result['zone_info'] == {
+            "mode": "primary",
+            "ttl": 3600,
+            "labels": {},
+            "primary_nameservers": [],
+            "created": "2016-01-30T23:55:00Z",
+            "protection": {
+                "delete": False,
+            },
+            "status": "ok",
+            "authoritative_nameservers": {
+                "assigned": [
+                    "hydrogen.ns.hetzner.com.",
+                    "oxygen.ns.hetzner.com.",
+                    "helium.ns.hetzner.de.",
+                ],
+                "delegated": [
+                    "hydrogen.ns.hetzner.com.",
+                    "oxygen.ns.hetzner.com.",
+                    "helium.ns.hetzner.de.",
+                ],
+                "delegation_last_check": "2016-01-30T23:55:00Z",
+                "delegation_status": "valid",
+            },
+            "record_count": 23,
+            "registrar": "other",
         }

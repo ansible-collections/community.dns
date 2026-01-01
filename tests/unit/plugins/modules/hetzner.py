@@ -176,3 +176,213 @@ HETZNER_JSON_ZONE_GET_RESULT_NO_LEGACY = {
 HETZNER_JSON_ZONE_RECORDS_GET_RESULT = {
     'records': HETZNER_JSON_DEFAULT_ENTRIES,
 }
+
+#############################################################################################
+# New API
+
+HETZNER_ZONE_NEW_JSON = {
+    "zone": {
+        "id": 42,
+        "name": "example.com",
+        "mode": "primary",
+        "ttl": 3600,
+        "labels": {},
+        "primary_nameservers": [],
+        "created": "2016-01-30T23:55:00Z",
+        "protection": {
+            "delete": False,
+        },
+        "status": "ok",
+        "authoritative_nameservers": {
+            "assigned": [
+                "hydrogen.ns.hetzner.com.",
+                "oxygen.ns.hetzner.com.",
+                "helium.ns.hetzner.de.",
+            ],
+            "delegated": [
+                "hydrogen.ns.hetzner.com.",
+                "oxygen.ns.hetzner.com.",
+                "helium.ns.hetzner.de.",
+            ],
+            "delegation_last_check": "2016-01-30T23:55:00Z",
+            "delegation_status": "valid",
+        },
+        "record_count": 23,
+        "registrar": "other",
+    },
+}
+
+HETZNER_NEW_JSON_DEFAULT_ENTRIES = [
+    {
+        'id': '@/A',
+        'type': 'A',
+        'name': '@',
+        "labels": {},
+        "protection": {
+            "change": False,
+        },
+        "records": [
+            {
+                'value': '1.2.3.4',
+                "comment": "",
+            },
+        ],
+        'ttl': 3600,
+        'zone': '42',
+    },
+    {
+        'id': '*/A',
+        'type': 'A',
+        'name': '*',
+        "labels": {},
+        "protection": {
+            "change": False,
+        },
+        "records": [
+            {
+                'value': '1.2.3.5',
+                "comment": "",
+            },
+        ],
+        'ttl': 3600,
+        'zone': '42',
+    },
+    {
+        'id': '@/AAAA',
+        'type': 'AAAA',
+        'name': '@',
+        "labels": {},
+        "protection": {
+            "change": False,
+        },
+        "records": [
+            {
+                'value': '2001:1:2::3',
+                "comment": "",
+            },
+        ],
+        'ttl': 3600,
+        'zone': '42',
+    },
+    {
+        'id': '*/AAAA',
+        'type': 'AAAA',
+        'name': '*',
+        "labels": {},
+        "protection": {
+            "change": False,
+        },
+        "records": [
+            {
+                'value': '2001:1:2::4',
+                "comment": "",
+            },
+        ],
+        'ttl': 3600,
+        'zone': '42',
+    },
+    {
+        'id': '@/MX',
+        'type': 'MX',
+        'name': '@',
+        "labels": {},
+        "protection": {
+            "change": False,
+        },
+        "records": [
+            {
+                'value': '10 example.com',
+                "comment": "",
+            },
+        ],
+        'ttl': 3600,
+        'zone': '42',
+    },
+    {
+        'id': '@/NS',
+        'type': 'NS',
+        'name': '@',
+        "labels": {},
+        "protection": {
+            "change": False,
+        },
+        "records": [
+            {
+                'value': 'helium.ns.hetzner.de.',
+                "comment": "",
+            },
+            {
+                'value': 'hydrogen.ns.hetzner.com.',
+                "comment": "",
+            },
+            {
+                'value': 'oxygen.ns.hetzner.com.',
+                "comment": "foo",
+            },
+        ],
+        "ttl": None,
+        'zone': '42',
+    },
+    {
+        'id': '@/SOA',
+        'type': 'SOA',
+        'name': '@',
+        "labels": {},
+        "protection": {
+            "change": False,
+        },
+        "records": [
+            {
+                'value': 'hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600',
+                "comment": "",
+            },
+        ],
+        "ttl": None,
+        'zone': '42',
+    },
+    {
+        'id': 'foo/TXT',
+        'type': 'TXT',
+        'name': 'foo',
+        "labels": {},
+        "protection": {
+            "change": False,
+        },
+        "records": [
+            {
+                'value': u'"bär" " \\"with quotes\\"" " " "(use \\\\ to escape)"',
+                "comment": "",
+            },
+        ],
+        "ttl": None,
+        'zone': '42',
+    },
+]
+
+
+def get_hetzner_new_json_pagination_meta(total_entries, page=1, per_page=100, last_page=1):
+    return {
+        "pagination": {
+            "last_page": last_page,
+            "next_page": None if page == last_page else page + 1,
+            "page": page,
+            "per_page": per_page,
+            "previous_page": None if page == 1 else page - 1,
+            "total_entries": total_entries
+        }
+    }
+
+
+def get_hetzner_new_json_records(indices=None, name=None, record_type=None):
+    if indices is None:
+        rrsets = list(HETZNER_NEW_JSON_DEFAULT_ENTRIES)
+    else:
+        rrsets = [HETZNER_NEW_JSON_DEFAULT_ENTRIES[idx] for idx in indices]
+    if record_type is not None:
+        rrsets = [rrset for rrset in rrsets if rrset["type"] == record_type]
+    if name is not None:
+        rrsets = [rrset for rrset in rrsets if rrset["name"] == name]
+    return {
+        "meta": get_hetzner_new_json_pagination_meta(len(rrsets)),
+        "rrsets": rrsets,
+    }

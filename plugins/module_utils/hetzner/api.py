@@ -13,6 +13,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
+import json
 import time
 
 from ansible.module_utils.basic import env_fallback
@@ -465,21 +466,37 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                 return res
         return ' with data: {0}'.format(result)
 
-    def _validate(self, result=None, info=None, expected=None, method='GET'):
-        super(_HetznerNewAPI, self)._validate(result=result, info=info, expected=expected, method=method)
-        if isinstance(result, dict):
-            error = result.get('error')
-            if isinstance(error, dict):
-                status = error.get('code')
-                if status is None:
-                    return
-                url = info.get('url')  # not present when using open_url
-                if expected is not None and status in expected:
-                    return
-                error_code = ERROR_CODES.get(status, UNKNOWN_ERROR)
-                more = self._extract_error_message(result)
-                raise DNSAPIError(
-                    '{0} {1} resulted in API error {2} ({3}){4}'.format(method, url, status, error_code, more))
+    def _is_rate_limiting_result(self, content, info):
+        if info['status'] != 429:
+            return False
+        try:
+            result = json.loads(content.decode('utf8'))
+        except Exception:
+            return False
+        if not isinstance(result, dict):
+            return False
+        error = result.get('error')
+        if not isinstance(error, dict):
+            return False
+        status = error.get('code')
+        if status != 'rate_limit_exceeded':
+            return False
+        # TODO: is there a hint how much time we should wait?
+        # If yes, adjust check_done_delay accordingly!
+        return 5
+
+    def _check_error(self, method, url, result, accepted=None):
+        if not isinstance(result, dict):
+            return None
+        error = result.get('error')
+        if not isinstance(error, dict):
+            return None
+        status = error.get('code')
+        if accepted is not None and status in accepted:
+            return status
+        more = self._extract_error_message(result)
+        raise DNSAPIError(
+            '{0} {1} resulted in API error {2}{3}'.format(method, url, status, more))
 
     def _list_pagination(self, url, data_key, query=None, block_size=100, accept_404=False):
         result = []
@@ -491,6 +508,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
             res, info = self._get(url, query_, must_have_content=[200], expected=[200, 404] if accept_404 and page == 1 else [200])
             if accept_404 and page == 1 and info['status'] == 404:
                 return None
+            self._check_error('GET', url, res, accepted=["not_found"] if accept_404 and page == 1 else [])
             result.extend(res[data_key])
             if 'meta' not in res and page == 1:
                 return result
@@ -505,8 +523,9 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
         @param name: The zone name (string)
         @return The zone information (DNSZone), or None if not found
         """
-        result, info = self._get("v1/zones/{0}".format(_q(name)), expected=[200, 404])
-        if info['status'] == 404:
+        url = "v1/zones/{0}".format(_q(name))
+        result, _info = self._get(url, expected=[200, 404])
+        if self._check_error('GET', url, result, accepted=["not_found"]) == "not_found":
             return None
         return _create_zone_from_new_json(result["zone"])
 
@@ -520,8 +539,9 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
         return self.get_zone_by_name(str(zone_id))
 
     def _get_record_set(self, zone_id, prefix, record_type):
-        result, info = self._get(_get_rrset_url(zone_id, prefix, record_type), expected=[200, 404])
-        if info['status'] == 404:
+        url = _get_rrset_url(zone_id, prefix, record_type)
+        result, _info = self._get(url, expected=[200, 404])
+        if self._check_error('GET', url, result, accepted=["not_found"]) == "not_found":
             return None
         return _create_record_set_from_new_json(result["rrset"])
 
@@ -565,10 +585,14 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
             time.sleep(1)
             action_ids = [str(action["id"]) for action in actions]
             if len(action_ids) == 1:
-                result, dummy = self._get("v1/actions/{0}".format(_q(action_ids[0])), expected=[200])
+                url = "v1/actions/{0}".format(_q(action_ids[0]))
+                result, dummy = self._get(url, expected=[200])
+                self._check_error('GET', url, result)
                 actions = [result["action"]]
             else:
-                result, dummy = self._get("v1/actions/", query=[("id", action_id) for action_id in action_ids], expected=[200])
+                url = "v1/actions"
+                result, dummy = self._get(url, query=[("id", action_id) for action_id in action_ids], expected=[200])
+                self._check_error('GET', url, result)
                 actions = result["actions"]
         if errors and fail_on_error:
             error_messages = [_format_action_error(error) for error in errors]
@@ -585,9 +609,11 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
         @return The created DNS record set (DNSRecordSet)
         """
         data = _get_creation_json_data(record_set)
-        result, dummy = self._post('v1/zones/{0}/rrsets'.format(_q(zone_id)), data=data, expected=[201])
+        url = 'v1/zones/{0}/rrsets'.format(_q(zone_id))
+        result, dummy = self._post(url, data=data, expected=[201])
+        self._check_error('POST', url, result)
         self._wait_for_actions([result["action"]], "adding record set")
-        return self._get_record_set(zone_id, record_set.prefix, record_set.type)
+        return _create_record_set_from_new_json(result["rrset"])
 
     def update_record_set(self, zone_id, record_set, updated_records=True, updated_ttl=True):
         """
@@ -605,11 +631,13 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
             data = _get_update_json_data_ttl(record_set)
             url = '{0}/actions/change_ttl'.format(base_url)
             ttl_result, dummy = self._post(url, data=data, expected=[201])
+            self._check_error('POST', url, ttl_result)
             actions.append(ttl_result["action"])
         if updated_records:
             data = _get_update_json_data_value(record_set)
             url = '{0}/actions/set_records'.format(base_url)
             set_result, dummy = self._post(url, data=data, expected=[201])
+            self._check_error("POST", url, set_result)
             actions.append(set_result["action"])
         self._wait_for_actions(actions, "changing record set")
         return self._get_record_set(zone_id, record_set.prefix, record_set.type)
@@ -623,8 +651,8 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
         @return True in case of success (boolean)
         """
         url = _get_rrset_url(zone_id, record_set.prefix, record_set.type)
-        result, info = self._delete(url, expected=[201, 404])
-        if info["status"] == 404:
+        result, _info = self._delete(url, expected=[201, 404])
+        if self._check_error("DELETE", url, result, accepted=["not_found"]) == "not_found":
             return False
         self._wait_for_actions([result["action"]], "deleting record set")
         return True
@@ -695,10 +723,12 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
             for record_set in record_sets:
                 creation_data = _get_creation_json_data(record_set)
                 try:
-                    res, dummy = self._post('v1/zones/{0}/rrsets'.format(_q(zone_id)), data=creation_data, expected=[201])
+                    url = 'v1/zones/{0}/rrsets'.format(_q(zone_id))
+                    res, dummy = self._post(url, data=creation_data, expected=[201])
+                    self._check_error("POST", url, res)
                     action = res["action"]
                     actions[action["id"]] = action
-                    data.append((record_set, [action["id"]], None))
+                    data.append((_create_record_set_from_new_json(res["rrset"]), [action["id"]], None))
                 except DNSAPIError as e:
                     data.append((record_set, None, e))
                     if stop_early_on_errors:
@@ -706,7 +736,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                         break
             if stop:
                 break
-        return self._collect_results(data_per_zone_id, actions, do_wait=not stop, stop_early_on_errors=stop_early_on_errors)
+        return self._collect_results(data_per_zone_id, actions, do_wait=not stop, stop_early_on_errors=stop_early_on_errors, refresh_rrsets=False)
 
     def update_record_sets(self, record_sets_per_zone_id, stop_early_on_errors=True):
         """
@@ -738,6 +768,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                         ttl_data = _get_update_json_data_ttl(record_set)
                         ttl_url = '{0}/actions/change_ttl'.format(base_url)
                         ttl_result, dummy = self._post(ttl_url, data=ttl_data, expected=[201])
+                        self._check_error("POST", ttl_url, ttl_result)
                         action = ttl_result["action"]
                         action_id = action["id"]
                         actions[action_id] = action
@@ -746,6 +777,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                         set_data = _get_update_json_data_value(record_set)
                         set_url = '{0}/actions/set_records'.format(base_url)
                         set_result, dummy = self._post(set_url, data=set_data, expected=[201])
+                        self._check_error("POST", set_url, set_result)
                         action = set_result["action"]
                         action_id = action["id"]
                         actions[action_id] = action
@@ -782,8 +814,8 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
             for record_set in record_sets:
                 try:
                     url = _get_rrset_url(zone_id, record_set.prefix, record_set.type)
-                    result, info = self._delete(url, expected=[201, 404])
-                    if info["status"] == 404:
+                    result, _info = self._delete(url, expected=[201, 404])
+                    if self._check_error("DELETE", url, result, accepted=["not_found"]) == "not_found":
                         data.append((record_set, None, None))
                     else:
                         action = result["action"]

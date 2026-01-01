@@ -323,7 +323,6 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
     else:
         mismatch_ttl = False
         mismatch_records = []
-    mismatch_values = bool(mismatch_records or values)
 
     before = record_set.clone() if record_set else None
     after = before
@@ -338,7 +337,8 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
     on_existing = module.params.get('on_existing')
     no_mod = False
     if module.params.get('state') == 'present':
-        if mismatch_values and record_set:
+        mismatch_values = bool(mismatch_records or values)
+        if (mismatch_values or mismatch_ttl) and record_set:
             # Mismatch: user wants to overwrite?
             if on_existing == 'replace':
                 pass
@@ -380,8 +380,10 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
                         after = api.update_record_set(zone_id, new_record_set, updated_records=mismatch_values, updated_ttl=mismatch_ttl)
                     else:
                         after = api.add_record_set(zone_id, new_record_set)
+                    after = record_converter.process_set_from_api(after)
     if module.params.get('state') == 'absent':
-        if mismatch_values and record_set:
+        mismatch_values = bool(mismatch_records)
+        if (mismatch_values or mismatch_ttl) and record_set:
             # Mismatch: user wants to overwrite?
             if on_existing == 'replace':
                 no_mod = False

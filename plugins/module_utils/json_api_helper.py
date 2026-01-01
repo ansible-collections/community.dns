@@ -174,6 +174,14 @@ class JSONAPIHelper(object):
         self._validate(result=result, info=info, expected=expected, method=method)
         return result, info
 
+    def _is_rate_limiting_result(self, content, info):
+        if info['status'] != 429:
+            return False
+        try:
+            return max(min(float(_get_header_value(info, 'retry-after')), 60), 1)  # type: ignore
+        except (ValueError, TypeError):
+            return 10
+
     def _request(
         self,
         url,  # type: str
@@ -185,12 +193,11 @@ class JSONAPIHelper(object):
         while True:
             content, info = self._http_helper.fetch_url(url, **kwargs)
             countdown -= 1
-            if info['status'] == 429:
+            retry_after = self._is_rate_limiting_result(content, info)
+            if retry_after is not False:
                 if countdown <= 0:
                     break
-                try:
-                    retry_after = max(min(float(_get_header_value(info, 'retry-after')), 60), 1)  # type: ignore
-                except (ValueError, TypeError):
+                if retry_after is True:
                     retry_after = 10
                 time.sleep(retry_after)
                 continue
