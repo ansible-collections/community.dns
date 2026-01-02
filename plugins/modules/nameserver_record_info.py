@@ -600,7 +600,7 @@ def main():
     if record_type not in NAME_TO_RDTYPE:
         min_version = NAME_TO_REQUIRED_VERSION[record_type]
         module.fail_json(
-            "Your dnspython version does not support {record_type} records. You need version {min_version} or newer.".format(
+            msg="Your dnspython version does not support {record_type} records. You need version {min_version} or newer.".format(
                 record_type=record_type,
                 min_version=min_version,
             )

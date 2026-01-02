@@ -16,10 +16,19 @@ from ansible_collections.community.internal_test_tools.tests.unit.compat.unittes
     TestCase,
 )
 
+from ansible_collections.community.dns.plugins.module_utils.dnspython_records import (
+    NAME_TO_RDTYPE,
+    NAME_TO_REQUIRED_VERSION,
+)
+
 from ..module_utils.resolver_helper import (
     create_mock_answer,
     mock_query_udp,
     mock_resolver,
+)
+from ..utils import (
+    patch_dict,
+    patch_dict_absent,
 )
 
 
@@ -875,3 +884,15 @@ class TestLookupAsDict(TestCase):
             "target": ".",
             "params": {"no-default-alpn": None, "alpn": ["aDM="]},
         }
+
+    def test_unsupported_type(self):
+        with patch_dict(NAME_TO_REQUIRED_VERSION, "A", "1.2.3"):
+            with patch_dict_absent(NAME_TO_RDTYPE, "A"):
+                with pytest.raises(AnsibleLookupError) as exc:
+                    self.lookup.run(["www.example.com"], type="A")
+
+        print(exc.value.args[0])
+        assert (
+            exc.value.args[0]
+            == "Your dnspython version does not support A records. You need version 1.2.3 or newer."
+        )

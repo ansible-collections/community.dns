@@ -158,8 +158,10 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
         ):
             filter_types = [filter_types]
 
-        if self.inventory is None:
-            raise AssertionError("Inventory must not be None in parse()")
+        if self.inventory is None:  # pragma: no cover
+            raise AssertionError(  # pragma: no cover
+                "Inventory must not be None in parse()"
+            )
         for record in records:
             if record.type in filter_types:
                 name = zone.name

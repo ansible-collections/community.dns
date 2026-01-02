@@ -1,0 +1,5 @@
+bugfixes:
+  - "remove_registrable_domain filter plugin - fix plugin name in error message (https://github.com/ansible-collections/community.dns/pull/308)."
+  - "remove_public_suffix filter plugin - fix plugin name in error message (https://github.com/ansible-collections/community.dns/pull/308)."
+  - "lookup_rfc8427 lookup plugin - remove unused code (https://github.com/ansible-collections/community.dns/pull/308)."
+  - "hosttech_record_sets, hetzner_record_sets - ensure stable order also with Python < 3.6 (https://github.com/ansible-collections/community.dns/pull/301)."

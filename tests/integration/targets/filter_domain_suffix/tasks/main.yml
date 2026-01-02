@@ -19,6 +19,28 @@
       - "'www.ck' | community.dns.get_public_suffix == '.ck'"
       - "'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63' | community.dns.get_public_suffix == ''"
 
+- name: "Test get_public_suffix failures I"
+  set_fact:
+    failure: "{{ 42 | community.dns.get_public_suffix }}"
+  ignore_errors: true
+  register: result1
+
+- name: "Test get_public_suffix failures II"
+  set_fact:
+    failure: "{{ '' | community.dns.get_public_suffix(keep_unknown_suffix=42) }}"
+  ignore_errors: true
+  register: result2
+
+- name: "Test get_public_suffix failures"
+  assert:
+    that:
+      - result1 is failed
+      - >-
+        "Input for community.dns.get_registrable_domain must be a string" in result1.msg
+      - result2 is failed
+      - >-
+        "keep_unknown_suffix must be a boolean, not 42" in result2.msg
+
 - name: "Test remove_public_suffix filter"
   assert:
     that:
@@ -40,6 +62,28 @@
         'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63' | community.dns.remove_public_suffix
         == 'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63'
 
+- name: "Test remove_public_suffix failures I"
+  set_fact:
+    failure: "{{ 42 | community.dns.remove_public_suffix }}"
+  ignore_errors: true
+  register: result1
+
+- name: "Test remove_public_suffix failures II"
+  set_fact:
+    failure: "{{ '' | community.dns.remove_public_suffix(keep_unknown_suffix=42) }}"
+  ignore_errors: true
+  register: result2
+
+- name: "Test remove_public_suffix failures"
+  assert:
+    that:
+      - result1 is failed
+      - >-
+        "Input for community.dns.remove_public_suffix must be a string" in result1.msg
+      - result2 is failed
+      - >-
+        "keep_unknown_suffix must be a boolean, not 42" in result2.msg
+
 - name: "Test get_registrable_domain filter"
   assert:
     that:
@@ -58,6 +102,28 @@
       - "'www.example.cloudfront.net' | community.dns.get_registrable_domain(icann_only=true) == 'cloudfront.net'"
       - "'prefix.www.ck' | community.dns.get_registrable_domain == 'www.ck'"
       - "'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63' | community.dns.get_registrable_domain == ''"
+
+- name: "Test get_registrable_domain failures I"
+  set_fact:
+    failure: "{{ 42 | community.dns.get_registrable_domain }}"
+  ignore_errors: true
+  register: result1
+
+- name: "Test get_registrable_domain failures II"
+  set_fact:
+    failure: "{{ '' | community.dns.get_registrable_domain(only_if_registerable=42) }}"
+  ignore_errors: true
+  register: result2
+
+- name: "Test get_registrable_domain failures"
+  assert:
+    that:
+      - result1 is failed
+      - >-
+        "Input for community.dns.get_registrable_domain must be a string" in result1.msg
+      - result2 is failed
+      - >-
+        "only_if_registerable must be a boolean, not 42" in result2.msg
 
 - name: "Test remove_registrable_domain filter"
   assert:
@@ -82,3 +148,25 @@
       - >-
         'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63' | community.dns.remove_registrable_domain
         == 'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63'
+
+- name: "Test remove_registrable_domain failures I"
+  set_fact:
+    failure: "{{ 42 | community.dns.remove_registrable_domain }}"
+  ignore_errors: true
+  register: result1
+
+- name: "Test remove_registrable_domain failures II"
+  set_fact:
+    failure: "{{ '' | community.dns.remove_registrable_domain(only_if_registerable=42) }}"
+  ignore_errors: true
+  register: result2
+
+- name: "Test remove_registrable_domain failures"
+  assert:
+    that:
+      - result1 is failed
+      - >-
+        "Input for community.dns.remove_registrable_domain must be a string" in result1.msg
+      - result2 is failed
+      - >-
+        "only_if_registerable must be a boolean, not 42" in result2.msg

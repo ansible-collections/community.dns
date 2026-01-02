@@ -30,6 +30,10 @@ from ..module_utils.resolver_helper import (
     mock_query_udp,
     mock_resolver,
 )
+from ..utils import (
+    patch_dict,
+    patch_dict_absent,
+)
 
 
 # We need dnspython
@@ -703,3 +707,16 @@ class TestNameserverRecordInfo(ModuleTestCase):
         assert len(exc.value.args[0]['results']) == 1
         assert exc.value.args[0]['results'][0]['name'] == 'www.example.com'
         assert exc.value.args[0]['results'][0]['result'] == []
+
+    def test_unsupported_type(self):
+        with patch_dict(nameserver_record_info.NAME_TO_REQUIRED_VERSION, "A", "1.2.3"):
+            with patch_dict_absent(nameserver_record_info.NAME_TO_RDTYPE, "A"):
+                with pytest.raises(AnsibleFailJson) as exc:
+                    with set_module_args({
+                        'name': ['www.example.com'],
+                        'type': 'A',
+                    }):
+                        nameserver_record_info.main()
+
+        print(exc.value.args[0])
+        assert exc.value.args[0]['msg'] == 'Your dnspython version does not support A records. You need version 1.2.3 or newer.'

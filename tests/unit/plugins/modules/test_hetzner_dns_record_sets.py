@@ -2450,6 +2450,169 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
             ],
         }
 
+    def test_delete_already_gone(self, mocker):
+        with patch('time.sleep', mock_sleep):
+            result = self.run_module_success(mocker, hetzner_dns_record_sets, {
+                'hetzner_api_token': 'foo',
+                'zone_name': 'example.com',
+                'record_sets': [
+                    {
+                        'prefix': '',
+                        'ttl': 3600,
+                        'type': 'AAAA',
+                        'value': [],
+                    },
+                ],
+                '_ansible_diff': True,
+                '_ansible_remote_tmp': '/tmp/tmp',
+                '_ansible_keep_remote_files': True,
+            }, [
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/example.com')
+                .return_header('Content-Type', 'application/json')
+                .result_json(HETZNER_ZONE_NEW_JSON),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets', without_query=True)
+                .expect_query_absent('name')
+                .expect_query_absent('type')
+                .expect_query_values('page', '1')
+                .expect_query_values('per_page', '100')
+                .return_header('Content-Type', 'application/json')
+                .result_json(get_hetzner_new_json_records()),
+                FetchUrlCall('DELETE', 404)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets/@/AAAA')
+                .return_header('Content-Type', 'application/json')
+                .result_json({
+                    "error": {
+                        "code": "not_found",
+                        "message": "Record not found",
+                        "details": None,
+                    },
+                }),
+            ])
+
+        assert result['changed'] is True
+        assert result['zone_id'] == '42'
+        assert result['diff']['before'] == {
+            'record_sets': [
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.5'],
+                },
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::3'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'MX',
+                    'value': ['10 example.com'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': None,
+                    'type': 'NS',
+                    'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': None,
+                    'type': 'SOA',
+                    'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
+                },
+                {
+                    'record': 'foo.example.com',
+                    'prefix': 'foo',
+                    'ttl': None,
+                    'type': 'TXT',
+                    'value': [u'bär "with quotes" (use \\ to escape)'],
+                },
+            ],
+        }
+        assert result['diff']['after'] == {
+            'record_sets': [
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.5'],
+                },
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'MX',
+                    'value': ['10 example.com'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': None,
+                    'type': 'NS',
+                    'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': None,
+                    'type': 'SOA',
+                    'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
+                },
+                {
+                    'record': 'foo.example.com',
+                    'prefix': 'foo',
+                    'ttl': None,
+                    'type': 'TXT',
+                    'value': [u'bär "with quotes" (use \\ to escape)'],
+                },
+            ],
+        }
+
     def test_delete_idempotent(self, mocker):
         with patch('time.sleep', mock_sleep):
             result = self.run_module_success(mocker, hetzner_dns_record_sets, {
