@@ -222,20 +222,34 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-hetzner_token"></div>
-<div class="ansibleOptionAnchor" id="parameter-api_token"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-hetzner-token"><span id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-api-token"></span><strong>hetzner_token</strong></p>
-<a class="ansibleOptionLink" href="#parameter-hetzner_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: api_token</span></p>
-<p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
+<div class="ansibleOptionAnchor" id="parameter-hetzner_api_token"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-hetzner-api-token"><strong>hetzner_api_token</strong></p>
+<a class="ansibleOptionLink" href="#parameter-hetzner_api_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>The token for the Hetzner API.</p>
-<p>If not provided, will be read from the environment variable <a class="reference internal" href="environment_variables.html#envvar-HETZNER_DNS_TOKEN"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">HETZNER_DNS_TOKEN</span></code></a>.</p>
+<td><div class="ansible-option-cell"><p>The token for the new Hetzner DNS API.</p>
+<p>If not provided, will be read from the environment variable <a class="reference internal" href="environment_variables.html#envvar-HETZNER_API_TOKEN"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">HETZNER_API_TOKEN</span></code></a>.</p>
+<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-hetzner-token"><span class="std std-ref"><span class="pre">hetzner_token</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-hetzner-api-token"><span class="std std-ref"><span class="pre">hetzner_api_token</span></span></a></strong></code> must be provided.</p>
 <p class="ansible-option-line"><strong class="ansible-option-configuration">Configuration:</strong></p>
 <ul class="simple">
-<li><p>Environment variable: <span class="target" id="index-0"></span><a class="reference internal" href="environment_variables.html#envvar-HETZNER_DNS_TOKEN"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">HETZNER_DNS_TOKEN</span></code></a></p></li>
+<li><p>Environment variable: <span class="target" id="index-0"></span><a class="reference internal" href="environment_variables.html#envvar-HETZNER_API_TOKEN"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">HETZNER_API_TOKEN</span></code></a></p></li>
 </ul>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-hetzner_token"></div>
+<div class="ansibleOptionAnchor" id="parameter-api_token"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-hetzner-token"><span id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-api-token"></span><strong>hetzner_token</strong></p>
+<a class="ansibleOptionLink" href="#parameter-hetzner_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: api_token</span></p>
+<p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>The token for the classic Hetzner DNS API.</p>
+<p>If not provided, will be read from the environment variable <a class="reference internal" href="environment_variables.html#envvar-HETZNER_DNS_TOKEN"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">HETZNER_DNS_TOKEN</span></code></a>.</p>
+<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-hetzner-token"><span class="std std-ref"><span class="pre">hetzner_token</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-hetzner-api-token"><span class="std std-ref"><span class="pre">hetzner_api_token</span></span></a></strong></code> must be provided.</p>
+<p class="ansible-option-line"><strong class="ansible-option-configuration">Configuration:</strong></p>
+<ul class="simple">
+<li><p>Environment variable: <span class="target" id="index-1"></span><a class="reference internal" href="environment_variables.html#envvar-HETZNER_DNS_TOKEN"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">HETZNER_DNS_TOKEN</span></code></a></p></li>
+</ul>
+</div></td>
+</tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-plugin"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-plugin"><strong>plugin</strong></p>
 <a class="ansibleOptionLink" href="#parameter-plugin" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
@@ -246,7 +260,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </ul>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-simple_filters"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-simple-filters"><strong>simple_filters</strong></p>
 <a class="ansibleOptionLink" href="#parameter-simple_filters" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">dictionary</span></p>
 </div></td>
@@ -255,7 +269,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">{}</span></code></p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-simple_filters/type"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-simple-filters-type"><strong>type</strong></p>
 <a class="ansibleOptionLink" href="#parameter-simple_filters/type" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
 </div></td>
@@ -269,18 +283,21 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;DANE&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;DS&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;HINFO&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;HTTPS&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;MX&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;NS&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;PTR&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;RP&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;SOA&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;SRV&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;SVCB&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;TLSA&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;TXT&quot;</span></code></p></li>
 </ul>
 <p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">[&quot;A&quot;,</span> <span class="pre">&quot;AAAA&quot;,</span> <span class="pre">&quot;CNAME&quot;]</span></code></p>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-txt_character_encoding"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-txt-character-encoding"><strong>txt_character_encoding</strong></p>
 <a class="ansibleOptionLink" href="#parameter-txt_character_encoding" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 <p><em class="ansible-option-versionadded">added in community.dns 2.5.0</em></p>
@@ -294,7 +311,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </ul>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-txt_transformation"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-txt-transformation"><strong>txt_transformation</strong></p>
 <a class="ansibleOptionLink" href="#parameter-txt_transformation" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -312,7 +329,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </ul>
 </div></td>
 </tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
+<tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone-id"><strong>zone_id</strong></p>
 <a class="ansibleOptionLink" href="#parameter-zone_id" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -320,7 +337,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-zone_name"></div>
 <div class="ansibleOptionAnchor" id="parameter-zone"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone-name"><span id="ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone"></span><strong>zone_name</strong></p>
 <a class="ansibleOptionLink" href="#parameter-zone_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: zone</span></p>
@@ -339,6 +356,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>The provider-specific <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-hetzner-token"><span class="std std-ref"><span class="pre">hetzner_token</span></span></a></strong></code> option can be templated.</p></li>
+<li><p>Note that not all record types are supported by both APIs. The old API (<code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-hetzner-token"><span class="std std-ref"><span class="pre">hetzner_token</span></span></a></strong></code>) does not support <code class="ansible-value docutils literal notranslate"><span class="pre">HTTPS</span></code>, <code class="ansible-value docutils literal notranslate"><span class="pre">PTR</span></code>, and <code class="ansible-value docutils literal notranslate"><span class="pre">SVCB</span></code> records. The new API (<code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-hetzner-api-token"><span class="std std-ref"><span class="pre">hetzner_api_token</span></span></a></strong></code>) does not support <code class="ansible-value docutils literal notranslate"><span class="pre">DANE</span></code> records.</p></li>
 <li><p>The <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-records-inventory-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> options can be templated.</p></li>
 </ul>
 </div>
