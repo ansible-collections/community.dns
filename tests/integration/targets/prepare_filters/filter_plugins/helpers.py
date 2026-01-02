@@ -4,18 +4,9 @@
 
 from __future__ import annotations
 
-from ansible.module_utils.common.collections import is_sequence
-
 
 def endswith(text, *suffixes):
-    for suffix in suffixes:
-        if is_sequence(suffix):
-            if text.endswith(tuple(suffix)):
-                return True
-        else:
-            if text.endswith(suffix):
-                return True
-    return False
+    return any(text.endswith(suffix) for suffix in suffixes)
 
 
 class FilterModule:
