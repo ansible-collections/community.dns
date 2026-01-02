@@ -298,13 +298,10 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
     to_change = []
     for (prefix, record_type), record_set in record_sets_dict.items():
         key = (prefix, record_type)
+        existing_record_sets.pop(key, None)
         if record_set['ignore']:
-            existing_record_sets.pop(key, None)
-            old_record_sets.pop(key, None)
-            new_record_sets.pop(key, None)
             continue
 
-        existing_record_sets.pop(key, None)
         new_rrset = new_record_sets.get(key)
 
         ttl = record_set['ttl']
@@ -312,6 +309,7 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
         if not values:
             if new_rrset:
                 to_delete.append(new_rrset)
+                new_record_sets.pop(key)
             continue
 
         if new_rrset is None:
@@ -343,7 +341,7 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
                 existing_records[rec.target] = []
             existing_records[rec.target].append(rec)
 
-        new_rrset.records.clear()
+        new_rrset.records[:] = []
         new_rrset.ttl = ttl
         for value in values:
             recs = existing_records.get(value)
