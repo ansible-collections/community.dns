@@ -13,6 +13,7 @@ __metaclass__ = type
 
 
 import traceback
+from collections import OrderedDict
 
 from ansible.module_utils.common.text.converters import to_text
 from ansible_collections.community.dns.plugins.module_utils.argspec import (
@@ -88,7 +89,7 @@ def create_module_argument_spec(provider_information):
 
 def _get_record_sets_dict(module, provider_information, record_converter, zone_in):
     record_sets = module.params['record_sets']
-    record_sets_dict = {}
+    record_sets_dict = OrderedDict()
     for index, record_set in enumerate(record_sets):
         record_set = record_set.copy()
         record_name = record_set['record']
@@ -110,7 +111,10 @@ def _get_record_sets_dict(module, provider_information, record_converter, zone_i
                 i2=index,
             ))
         record_sets_dict[key] = (index, record_set)
-    return {k: v for k, (dummy, v) in record_sets_dict.items()}
+    result = OrderedDict()
+    for k, (dummy, v) in record_sets_dict.items():
+        result[k] = v
+    return result
 
 
 def _run_module_record_api(option_provider, module, provider_information, record_converter, api):
@@ -283,7 +287,7 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
     record_sets_dict = _get_record_sets_dict(module, provider_information, record_converter, zone_in)
 
     # Group existing record sets
-    existing_record_sets = {}
+    existing_record_sets = OrderedDict()
     for record_set in zone_record_sets:
         key = (record_set.prefix, record_set.type)
         existing_record_sets[key] = record_set
