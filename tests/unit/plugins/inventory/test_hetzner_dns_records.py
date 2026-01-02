@@ -26,6 +26,11 @@ from ansible_collections.community.internal_test_tools.tests.unit.utils.trust im
     is_trusted,
 )
 
+from ..modules.hetzner import (
+    HETZNER_ZONE_NEW_JSON,
+    get_hetzner_new_json_pagination_meta,
+)
+
 
 HETZNER_DEFAULT_ZONE = {
     "id": "42",
@@ -208,6 +213,246 @@ HETZNER_JSON_ZONE_RECORDS_GET_RESULT_UNSAFE = {
 
 HETZNER_JSON_ZONE_RECORDS_GET_RESULT_2 = {
     "records": HETZNER_JSON_BAD_ENTRIES,
+}
+
+#############################################################################################
+# New API
+
+HETZNER_NEW_JSON_ZONE_RECORDS_GET_RESULT = {
+    "meta": get_hetzner_new_json_pagination_meta(6),
+    "rrsets": [
+        {
+            "id": "@/A",
+            "type": "A",
+            "name": "@",
+            "labels": {},
+            "protection": {
+                "change": False,
+            },
+            "records": [
+                {
+                    "value": "1.2.3.4",
+                    "comment": "",
+                },
+            ],
+            "ttl": 3600,
+            "zone": "42",
+        },
+        {
+            "id": "*/A",
+            "type": "A",
+            "name": "*",
+            "labels": {},
+            "protection": {
+                "change": False,
+            },
+            "records": [
+                {
+                    "value": "1.2.3.5",
+                    "comment": "",
+                },
+            ],
+            "ttl": 3600,
+            "zone": "42",
+        },
+        {
+            "id": "@/AAAA",
+            "type": "AAAA",
+            "name": "@",
+            "labels": {},
+            "protection": {
+                "change": False,
+            },
+            "records": [
+                {
+                    "value": "2001:1:2::3",
+                    "comment": "",
+                },
+            ],
+            "ttl": 3600,
+            "zone": "42",
+        },
+        {
+            "id": "foo/AAAA",
+            "type": "AAAA",
+            "name": "foo",
+            "labels": {},
+            "protection": {
+                "change": False,
+            },
+            "records": [
+                {
+                    "value": "2001:1:2::4",
+                    "comment": "",
+                },
+            ],
+            "ttl": 3600,
+            "zone": "42",
+        },
+        {
+            "id": "@/MX",
+            "type": "MX",
+            "name": "@",
+            "labels": {},
+            "protection": {
+                "change": False,
+            },
+            "records": [
+                {
+                    "value": "10 example.com",
+                    "comment": "",
+                },
+            ],
+            "ttl": 3600,
+            "zone": "42",
+        },
+        {
+            "id": "bar/CNAME",
+            "type": "CNAME",
+            "name": "bar",
+            "labels": {},
+            "protection": {
+                "change": False,
+            },
+            "records": [
+                {
+                    "value": "example.org.",
+                    "comment": "",
+                },
+            ],
+            "zone": "42",
+        },
+    ],
+}
+
+HETZNER_NEW_JSON_ZONE_RECORDS_GET_RESULT_UNSAFE = {
+    "meta": get_hetzner_new_json_pagination_meta(6),
+    "rrsets": [
+        {
+            "id": "@/A",
+            "type": "A",
+            "name": "@",
+            "labels": {},
+            "protection": {
+                "change": False,
+            },
+            "records": [
+                {
+                    "value": "1.2.{3.4",
+                    "comment": "",
+                },
+            ],
+            "ttl": 3600,
+            "zone": "42",
+        },
+        {
+            "id": "*/A",
+            "type": "A",
+            "name": "*",
+            "labels": {},
+            "protection": {
+                "change": False,
+            },
+            "records": [
+                {
+                    "value": "1.2.{3.5",
+                    "comment": "",
+                },
+            ],
+            "ttl": 3600,
+            "zone": "42",
+        },
+        {
+            "id": "@/AAAA",
+            "type": "AAAA",
+            "name": "@",
+            "labels": {},
+            "protection": {
+                "change": False,
+            },
+            "records": [
+                {
+                    "value": "2001:1:2::{3",
+                    "comment": "",
+                },
+            ],
+            "ttl": 3600,
+            "zone": "42",
+        },
+        {
+            "id": "foo/AAAA",
+            "type": "AAAA",
+            "name": "foo",
+            "labels": {},
+            "protection": {
+                "change": False,
+            },
+            "records": [
+                {
+                    "value": "2001:1:2::{4",
+                    "comment": "",
+                },
+            ],
+            "ttl": 3600,
+            "zone": "42",
+        },
+        {
+            "id": "@/MX",
+            "type": "MX",
+            "name": "@",
+            "labels": {},
+            "protection": {
+                "change": False,
+            },
+            "records": [
+                {
+                    "value": "10 example.com",
+                    "comment": "",
+                },
+            ],
+            "ttl": 3600,
+            "zone": "42",
+        },
+        {
+            "id": "bar/CNAME",
+            "type": "CNAME",
+            "name": "bar",
+            "labels": {},
+            "protection": {
+                "change": False,
+            },
+            "records": [
+                {
+                    "value": "example.org.",
+                    "comment": "",
+                },
+            ],
+            "zone": "42",
+        },
+    ],
+}
+
+HETZNER_NEW_JSON_ZONE_RECORDS_GET_RESULT_2 = {
+    "meta": get_hetzner_new_json_pagination_meta(1),
+    "rrsets": [
+        {
+            "id": "@/TXT",
+            "type": "TXT",
+            "name": "@",
+            "labels": {},
+            "protection": {
+                "change": False,
+            },
+            "records": [
+                {
+                    "value": '"this is wrongly quoted',
+                    "comment": "",
+                },
+            ],
+            "ttl": 3600,
+            "zone": "42",
+        },
+    ],
 }
 
 
@@ -811,6 +1056,574 @@ def test_inventory_no_file(mocker) -> None:
     mocker.patch("os.path.exists", exists_mock(inventory_filename, False))
     mocker.patch("os.access", access_mock(inventory_filename, False))
     im = InventoryManager(loader=DictDataLoader({}), sources=inventory_filename)
+
+    open_url.assert_is_done()
+
+    # TODO: make sure that the correct error was reported
+
+    assert not im._inventory.hosts
+    assert len(im._inventory.groups["ungrouped"].hosts) == 0
+    assert len(im._inventory.groups["all"].hosts) == 0
+
+
+def test_inventory_file_simple_new_api(mocker) -> None:
+    inventory_filename = "test.hetzner_dns.yaml"
+    C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
+    inventory_file = {
+        inventory_filename: textwrap.dedent(
+            """\
+    ---
+    plugin: community.dns.hetzner_dns_records
+    hetzner_api_token: foo
+    zone_name: example.com
+    simple_filters:
+      type: A
+    """
+        )
+    }
+
+    open_url = OpenUrlProxy(
+        [
+            OpenUrlCall("GET", 200)
+            .expect_header("accept", "application/json")
+            .expect_header("Authorization", "Bearer foo")
+            .expect_url("https://api.hetzner.cloud/v1/zones/example.com")
+            .return_header("Content-Type", "application/json")
+            .result_json(HETZNER_ZONE_NEW_JSON),
+            OpenUrlCall("GET", 200)
+            .expect_header("accept", "application/json")
+            .expect_header("Authorization", "Bearer foo")
+            .expect_url(
+                "https://api.hetzner.cloud/v1/zones/42/rrsets", without_query=True
+            )
+            .expect_query_absent("name")
+            .expect_query_absent("type")
+            .expect_query_values("page", "1")
+            .expect_query_values("per_page", "100")
+            .return_header("Content-Type", "application/json")
+            .result_json(HETZNER_NEW_JSON_ZONE_RECORDS_GET_RESULT_UNSAFE),
+        ]
+    )
+    mocker.patch(
+        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+    )
+    mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
+    mocker.patch("os.path.exists", exists_mock(inventory_filename))
+    mocker.patch("os.access", access_mock(inventory_filename))
+    im = InventoryManager(
+        loader=DictDataLoader(inventory_file), sources=inventory_filename
+    )
+
+    open_url.assert_is_done()
+
+    assert im._inventory.hosts
+    assert "example.com" in im._inventory.hosts
+    assert "*.example.com" in im._inventory.hosts
+    assert "foo.example.com" not in im._inventory.hosts
+    assert "bar.example.com" not in im._inventory.hosts
+    assert (
+        im._inventory.get_host("example.com") in im._inventory.groups["ungrouped"].hosts
+    )
+    assert (
+        im._inventory.get_host("*.example.com")
+        in im._inventory.groups["ungrouped"].hosts
+    )
+    assert (
+        im._inventory.get_host("example.com").get_vars()["ansible_host"] == "1.2.{3.4"
+    )
+    assert (
+        im._inventory.get_host("*.example.com").get_vars()["ansible_host"] == "1.2.{3.5"
+    )
+    assert not is_trusted(
+        im._inventory.get_host("example.com").get_vars()["ansible_host"]
+    )
+    assert not is_trusted(
+        im._inventory.get_host("*.example.com").get_vars()["ansible_host"]
+    )
+    assert len(im._inventory.groups["ungrouped"].hosts) == 2
+    assert len(im._inventory.groups["all"].hosts) == 0
+
+
+def test_inventory_file_simple_2_new_api(mocker) -> None:
+    inventory_filename = "test.hetzner_dns.yaml"
+    C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
+    inventory_file = {
+        inventory_filename: textwrap.dedent(
+            """\
+    ---
+    plugin: community.dns.hetzner_dns_records
+    hetzner_api_token: foo
+    zone_name: example.com
+    filters:
+      - include: ansible_host == '1.2.{3.4'
+      - include: ansible_host == '1.2.{3.5'
+      - exclude: true
+    """
+        )
+    }
+
+    open_url = OpenUrlProxy(
+        [
+            OpenUrlCall("GET", 200)
+            .expect_header("accept", "application/json")
+            .expect_header("Authorization", "Bearer foo")
+            .expect_url("https://api.hetzner.cloud/v1/zones/example.com")
+            .return_header("Content-Type", "application/json")
+            .result_json(HETZNER_ZONE_NEW_JSON),
+            OpenUrlCall("GET", 200)
+            .expect_header("accept", "application/json")
+            .expect_header("Authorization", "Bearer foo")
+            .expect_url(
+                "https://api.hetzner.cloud/v1/zones/42/rrsets", without_query=True
+            )
+            .expect_query_absent("name")
+            .expect_query_absent("type")
+            .expect_query_values("page", "1")
+            .expect_query_values("per_page", "100")
+            .return_header("Content-Type", "application/json")
+            .result_json(HETZNER_NEW_JSON_ZONE_RECORDS_GET_RESULT_UNSAFE),
+        ]
+    )
+    mocker.patch(
+        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+    )
+    mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
+    mocker.patch("os.path.exists", exists_mock(inventory_filename))
+    mocker.patch("os.access", access_mock(inventory_filename))
+    im = InventoryManager(
+        loader=DictDataLoader(inventory_file), sources=inventory_filename
+    )
+
+    open_url.assert_is_done()
+
+    assert im._inventory.hosts
+    assert "example.com" in im._inventory.hosts
+    assert "*.example.com" in im._inventory.hosts
+    assert "foo.example.com" not in im._inventory.hosts
+    assert "bar.example.com" not in im._inventory.hosts
+    assert (
+        im._inventory.get_host("example.com") in im._inventory.groups["ungrouped"].hosts
+    )
+    assert (
+        im._inventory.get_host("*.example.com")
+        in im._inventory.groups["ungrouped"].hosts
+    )
+    assert (
+        im._inventory.get_host("example.com").get_vars()["ansible_host"] == "1.2.{3.4"
+    )
+    assert (
+        im._inventory.get_host("*.example.com").get_vars()["ansible_host"] == "1.2.{3.5"
+    )
+    assert not is_trusted(
+        im._inventory.get_host("example.com").get_vars()["ansible_host"]
+    )
+    assert not is_trusted(
+        im._inventory.get_host("*.example.com").get_vars()["ansible_host"]
+    )
+    assert len(im._inventory.groups["ungrouped"].hosts) == 2
+    assert len(im._inventory.groups["all"].hosts) == 0
+
+
+def test_inventory_file_collision_new_api(mocker) -> None:
+    inventory_filename = "test.hetzner_dns.yaml"
+    C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
+    inventory_file = {
+        inventory_filename: textwrap.dedent(
+            """\
+    ---
+    plugin: community.dns.hetzner_dns_records
+    hetzner_api_token: '{{ "foo" }}'
+    zone_name: '{{ "example." ~ "com" }}'
+    simple_filters:
+      type:
+        - A
+        - AAAA
+    """
+        )
+    }
+
+    open_url = OpenUrlProxy(
+        [
+            OpenUrlCall("GET", 200)
+            .expect_header("accept", "application/json")
+            .expect_header("Authorization", "Bearer foo")
+            .expect_url("https://api.hetzner.cloud/v1/zones/example.com")
+            .return_header("Content-Type", "application/json")
+            .result_json(HETZNER_ZONE_NEW_JSON),
+            OpenUrlCall("GET", 200)
+            .expect_header("accept", "application/json")
+            .expect_header("Authorization", "Bearer foo")
+            .expect_url(
+                "https://api.hetzner.cloud/v1/zones/42/rrsets", without_query=True
+            )
+            .expect_query_absent("name")
+            .expect_query_absent("type")
+            .expect_query_values("page", "1")
+            .expect_query_values("per_page", "100")
+            .return_header("Content-Type", "application/json")
+            .result_json(HETZNER_NEW_JSON_ZONE_RECORDS_GET_RESULT),
+        ]
+    )
+    mocker.patch(
+        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+    )
+    mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
+    mocker.patch("os.path.exists", exists_mock(inventory_filename))
+    mocker.patch("os.access", access_mock(inventory_filename))
+    im = InventoryManager(
+        loader=DictDataLoader(inventory_file), sources=inventory_filename
+    )
+
+    open_url.assert_is_done()
+
+    assert im._inventory.hosts
+    assert "example.com" in im._inventory.hosts
+    assert "*.example.com" in im._inventory.hosts
+    assert "foo.example.com" in im._inventory.hosts
+    assert "bar.example.com" not in im._inventory.hosts
+    assert (
+        im._inventory.get_host("example.com") in im._inventory.groups["ungrouped"].hosts
+    )
+    assert (
+        im._inventory.get_host("*.example.com")
+        in im._inventory.groups["ungrouped"].hosts
+    )
+    assert (
+        im._inventory.get_host("foo.example.com")
+        in im._inventory.groups["ungrouped"].hosts
+    )
+    assert (
+        im._inventory.get_host("example.com").get_vars()["ansible_host"]
+        == "2001:1:2::3"
+    )
+    assert (
+        im._inventory.get_host("*.example.com").get_vars()["ansible_host"] == "1.2.3.5"
+    )
+    assert (
+        im._inventory.get_host("foo.example.com").get_vars()["ansible_host"]
+        == "2001:1:2::4"
+    )
+    assert len(im._inventory.groups["ungrouped"].hosts) == 3
+    assert len(im._inventory.groups["all"].hosts) == 0
+
+
+def test_inventory_file_no_filter_new_api(mocker) -> None:
+    inventory_filename = "test.hetzner_dns.yaml"
+    C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
+    inventory_file = {
+        inventory_filename: textwrap.dedent(
+            """\
+    ---
+    plugin: community.dns.hetzner_dns_records
+    hetzner_api_token: foo
+    zone_id: '42'
+    """
+        )
+    }
+
+    open_url = OpenUrlProxy(
+        [
+            OpenUrlCall("GET", 200)
+            .expect_header("accept", "application/json")
+            .expect_header("Authorization", "Bearer foo")
+            .expect_url("https://api.hetzner.cloud/v1/zones/42")
+            .return_header("Content-Type", "application/json")
+            .result_json(HETZNER_ZONE_NEW_JSON),
+            OpenUrlCall("GET", 200)
+            .expect_header("accept", "application/json")
+            .expect_header("Authorization", "Bearer foo")
+            .expect_url(
+                "https://api.hetzner.cloud/v1/zones/42/rrsets", without_query=True
+            )
+            .expect_query_absent("name")
+            .expect_query_absent("type")
+            .expect_query_values("page", "1")
+            .expect_query_values("per_page", "100")
+            .return_header("Content-Type", "application/json")
+            .result_json(HETZNER_NEW_JSON_ZONE_RECORDS_GET_RESULT),
+        ]
+    )
+    mocker.patch(
+        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+    )
+    mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
+    mocker.patch("os.path.exists", exists_mock(inventory_filename))
+    mocker.patch("os.access", access_mock(inventory_filename))
+    im = InventoryManager(
+        loader=DictDataLoader(inventory_file), sources=inventory_filename
+    )
+
+    open_url.assert_is_done()
+
+    assert im._inventory.hosts
+    assert "example.com" in im._inventory.hosts
+    assert "*.example.com" in im._inventory.hosts
+    assert "foo.example.com" in im._inventory.hosts
+    assert "bar.example.com" in im._inventory.hosts
+    assert (
+        im._inventory.get_host("example.com") in im._inventory.groups["ungrouped"].hosts
+    )
+    assert (
+        im._inventory.get_host("*.example.com")
+        in im._inventory.groups["ungrouped"].hosts
+    )
+    assert (
+        im._inventory.get_host("foo.example.com")
+        in im._inventory.groups["ungrouped"].hosts
+    )
+    assert (
+        im._inventory.get_host("bar.example.com")
+        in im._inventory.groups["ungrouped"].hosts
+    )
+    assert (
+        im._inventory.get_host("example.com").get_vars()["ansible_host"]
+        == "2001:1:2::3"
+    )
+    assert (
+        im._inventory.get_host("*.example.com").get_vars()["ansible_host"] == "1.2.3.5"
+    )
+    assert (
+        im._inventory.get_host("foo.example.com").get_vars()["ansible_host"]
+        == "2001:1:2::4"
+    )
+    assert (
+        im._inventory.get_host("bar.example.com").get_vars()["ansible_host"]
+        == "example.org."
+    )
+    assert len(im._inventory.groups["ungrouped"].hosts) == 4
+    assert len(im._inventory.groups["all"].hosts) == 0
+
+
+def test_inventory_file_record_conversion_error_new_api(mocker) -> None:
+    inventory_filename = "test.hetzner_dns.yaml"
+    C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
+    inventory_file = {
+        inventory_filename: textwrap.dedent(
+            """\
+    ---
+    plugin: community.dns.hetzner_dns_records
+    hetzner_api_token: foo
+    zone_id: "{{ '42' }}"
+    """
+        )
+    }
+
+    open_url = OpenUrlProxy(
+        [
+            OpenUrlCall("GET", 200)
+            .expect_header("accept", "application/json")
+            .expect_header("Authorization", "Bearer foo")
+            .expect_url("https://api.hetzner.cloud/v1/zones/42")
+            .return_header("Content-Type", "application/json")
+            .result_json(HETZNER_ZONE_NEW_JSON),
+            OpenUrlCall("GET", 200)
+            .expect_header("accept", "application/json")
+            .expect_header("Authorization", "Bearer foo")
+            .expect_url(
+                "https://api.hetzner.cloud/v1/zones/42/rrsets", without_query=True
+            )
+            .expect_query_absent("name")
+            .expect_query_absent("type")
+            .expect_query_values("page", "1")
+            .expect_query_values("per_page", "100")
+            .return_header("Content-Type", "application/json")
+            .result_json(HETZNER_NEW_JSON_ZONE_RECORDS_GET_RESULT_2),
+        ]
+    )
+    mocker.patch(
+        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+    )
+    mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
+    mocker.patch("os.path.exists", exists_mock(inventory_filename))
+    mocker.patch("os.access", access_mock(inventory_filename))
+    im = InventoryManager(
+        loader=DictDataLoader(inventory_file), sources=inventory_filename
+    )
+
+    open_url.assert_is_done()
+
+    # TODO: make sure that the correct error was reported
+
+    assert not im._inventory.hosts
+    assert len(im._inventory.groups["ungrouped"].hosts) == 0
+    assert len(im._inventory.groups["all"].hosts) == 0
+
+
+def test_inventory_file_missing_zone_new_api(mocker) -> None:
+    inventory_filename = "test.hetzner_dns.yaml"
+    C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
+    inventory_file = {
+        inventory_filename: textwrap.dedent(
+            """\
+    ---
+    plugin: community.dns.hetzner_dns_records
+    hetzner_api_token: foo
+    """
+        )
+    }
+
+    open_url = OpenUrlProxy([])
+    mocker.patch(
+        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+    )
+    mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
+    mocker.patch("os.path.exists", exists_mock(inventory_filename))
+    mocker.patch("os.access", access_mock(inventory_filename))
+    im = InventoryManager(
+        loader=DictDataLoader(inventory_file), sources=inventory_filename
+    )
+
+    open_url.assert_is_done()
+
+    # TODO: make sure that the correct error was reported
+
+    assert not im._inventory.hosts
+    assert len(im._inventory.groups["ungrouped"].hosts) == 0
+    assert len(im._inventory.groups["all"].hosts) == 0
+
+
+def test_inventory_file_zone_not_found_new_api(mocker) -> None:
+    inventory_filename = "test.hetzner_dns.yaml"
+    C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
+    inventory_file = {
+        inventory_filename: textwrap.dedent(
+            """\
+    ---
+    plugin: community.dns.hetzner_dns_records
+    hetzner_api_token: foo
+    zone_id: '23'
+    """
+        )
+    }
+
+    open_url = OpenUrlProxy(
+        [
+            OpenUrlCall("GET", 200)
+            .expect_header("accept", "application/json")
+            .expect_header("Authorization", "Bearer foo")
+            .expect_url("https://api.hetzner.cloud/v1/zones/23")
+            .return_header("Content-Type", "application/json")
+            .result_json(
+                {
+                    "error": {
+                        "code": "not_found",
+                        "message": "Zone not found",
+                        "details": None,
+                    }
+                }
+            ),
+        ]
+    )
+    mocker.patch(
+        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+    )
+    mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
+    mocker.patch("os.path.exists", exists_mock(inventory_filename))
+    mocker.patch("os.access", access_mock(inventory_filename))
+    im = InventoryManager(
+        loader=DictDataLoader(inventory_file), sources=inventory_filename
+    )
+
+    open_url.assert_is_done()
+
+    # TODO: make sure that the correct error was reported
+
+    assert not im._inventory.hosts
+    assert len(im._inventory.groups["ungrouped"].hosts) == 0
+    assert len(im._inventory.groups["all"].hosts) == 0
+
+
+def test_inventory_file_unauthorized_new_api(mocker) -> None:
+    inventory_filename = "test.hetzner_dns.yaml"
+    C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
+    inventory_file = {
+        inventory_filename: textwrap.dedent(
+            """\
+    ---
+    plugin: community.dns.hetzner_dns_records
+    hetzner_api_token: foo
+    zone_id: '23'
+    """
+        )
+    }
+
+    open_url = OpenUrlProxy(
+        [
+            OpenUrlCall("GET", 401)
+            .expect_header("accept", "application/json")
+            .expect_header("Authorization", "Bearer foo")
+            .expect_url("https://api.hetzner.cloud/v1/zones/example.org")
+            .result_json(
+                {
+                    "error": {
+                        "code": "unauthorized",
+                        "message": "the token you have provided is invalid",
+                        "details": None,
+                    }
+                }
+            ),
+        ]
+    )
+    mocker.patch(
+        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+    )
+    mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
+    mocker.patch("os.path.exists", exists_mock(inventory_filename))
+    mocker.patch("os.access", access_mock(inventory_filename))
+    im = InventoryManager(
+        loader=DictDataLoader(inventory_file), sources=inventory_filename
+    )
+
+    open_url.assert_is_done()
+
+    # TODO: make sure that the correct error was reported
+
+    assert not im._inventory.hosts
+    assert len(im._inventory.groups["ungrouped"].hosts) == 0
+    assert len(im._inventory.groups["all"].hosts) == 0
+
+
+def test_inventory_file_error_new_api(mocker) -> None:
+    inventory_filename = "test.hetzner_dns.yaml"
+    C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
+    inventory_file = {
+        inventory_filename: textwrap.dedent(
+            """\
+    ---
+    plugin: community.dns.hetzner_dns_records
+    hetzner_api_token: foo
+    zone_id: '42'
+    """
+        )
+    }
+
+    open_url = OpenUrlProxy(
+        [
+            OpenUrlCall("GET", 500)
+            .expect_header("accept", "application/json")
+            .expect_header("Authorization", "Bearer foo")
+            .expect_url("https://api.hetzner.cloud/v1/zones/example.org")
+            .return_header("Content-Type", "application/json")
+            .result_json(
+                {
+                    "error": {
+                        "code": "server_error",
+                        "message": "something went wrong",
+                        "details": None,
+                    }
+                }
+            ),
+        ]
+    )
+    mocker.patch(
+        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+    )
+    mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
+    mocker.patch("os.path.exists", exists_mock(inventory_filename))
+    mocker.patch("os.access", access_mock(inventory_filename))
+    im = InventoryManager(
+        loader=DictDataLoader(inventory_file), sources=inventory_filename
+    )
 
     open_url.assert_is_done()
 

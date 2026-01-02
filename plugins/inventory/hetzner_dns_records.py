@@ -92,7 +92,8 @@ class InventoryModule(RecordsInventoryModule):
     VALID_ENDINGS = ("hetzner_dns.yaml", "hetzner_dns.yml")
 
     def setup_api(self) -> None:
-        self.provider_information = create_hetzner_provider_information()
-        self.api = create_hetzner_api(
-            TemplatedOptionProvider(self, self.templar), OpenURLHelper()
+        option_provider = TemplatedOptionProvider(self, self.templar)
+        self.provider_information = create_hetzner_provider_information(
+            option_provider=option_provider
         )
+        self.api = create_hetzner_api(option_provider, OpenURLHelper())

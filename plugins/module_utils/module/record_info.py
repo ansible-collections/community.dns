@@ -35,6 +35,7 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
     NOT_PROVIDED,
     DNSAPIAuthenticationError,
     DNSAPIError,
+    ZoneRecordAPI,
 )
 
 from ._utils import get_prefix, normalize_dns_name
@@ -65,6 +66,110 @@ def create_module_argument_spec(provider_information):
     ).merge(create_record_transformation_argspec())
 
 
+def _run_module_record_api(module, provider_information, record_converter, filter_record_type, filter_prefix, api):
+    # Get zone information
+    if module.params.get('zone_name') is not None:
+        zone_in = normalize_dns_name(module.params.get('zone_name'))
+        zone = api.get_zone_with_records_by_name(zone_in, prefix=filter_prefix, record_type=filter_record_type)
+        if zone is None:
+            module.fail_json(msg='Zone not found')
+    else:
+        zone = api.get_zone_with_records_by_id(module.params.get('zone_id'), prefix=filter_prefix, record_type=filter_record_type)
+        if zone is None:
+            module.fail_json(msg='Zone not found')
+        zone_in = normalize_dns_name(zone.zone.name)
+
+    # Retrieve requested information
+    records = []
+    if module.params.get('what') in ('single_record', 'all_types_for_record'):
+        check_prefix = True
+        record_in = normalize_dns_name(module.params.get('record'))
+        prefix_in = module.params.get('prefix')
+        record_in, prefix = get_prefix(
+            normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in, provider_information=provider_information)
+    else:
+        check_prefix = False
+        prefix = None
+
+    # Find matching records
+    for record in zone.records:
+        if check_prefix:
+            if record.prefix != prefix:
+                continue
+        records.append((
+            (record.prefix + '.' + zone_in) if record.prefix else zone_in,
+            record,
+        ))
+
+    # Convert records
+    only_records = [record for record_name, record in records]
+    record_converter.process_multiple_from_api(only_records)
+    record_converter.process_multiple_to_user(only_records)
+
+    # Format output
+    data = [
+        format_record_for_output(record, record_name, prefix=record.prefix)
+        for record_name, record in records
+    ]
+    module.exit_json(
+        changed=False,
+        records=data,
+        zone_id=zone.zone.id,
+    )
+
+
+def _run_module_record_set_api(module, provider_information, record_converter, filter_record_type, filter_prefix, api):
+    # Get zone information
+    if module.params.get('zone_name') is not None:
+        zone_in = normalize_dns_name(module.params.get('zone_name'))
+        zone = api.get_zone_with_record_sets_by_name(zone_in, prefix=filter_prefix, record_type=filter_record_type)
+        if zone is None:
+            module.fail_json(msg='Zone not found')
+    else:
+        zone = api.get_zone_with_record_sets_by_id(module.params.get('zone_id'), prefix=filter_prefix, record_type=filter_record_type)
+        if zone is None:
+            module.fail_json(msg='Zone not found')
+        zone_in = normalize_dns_name(zone.zone.name)
+
+    # Retrieve requested information
+    if module.params.get('what') in ('single_record', 'all_types_for_record'):
+        check_prefix = True
+        record_in = normalize_dns_name(module.params.get('record'))
+        prefix_in = module.params.get('prefix')
+        record_in, prefix = get_prefix(
+            normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in, provider_information=provider_information)
+    else:
+        check_prefix = False
+        prefix = None
+
+    # Find matching records
+    records = []
+    for record_set in zone.record_sets:
+        if check_prefix:
+            if record_set.prefix != prefix:
+                continue
+        records.extend([(
+            (record.prefix + '.' + zone_in) if record.prefix else zone_in,
+            record,
+        ) for record in record_set.records])
+
+    # Convert records
+    only_records = [record for record_name, record in records]
+    record_converter.process_multiple_from_api(only_records)
+    record_converter.process_multiple_to_user(only_records)
+
+    # Format output
+    data = [
+        format_record_for_output(record, record_name, prefix=record.prefix)
+        for record_name, record in records
+    ]
+    module.exit_json(
+        changed=False,
+        records=data,
+        zone_id=zone.zone.id,
+    )
+
+
 def run_module(module, create_api, provider_information):
     option_provider = ModuleOptionProvider(module)
     record_converter = RecordConverter(provider_information, option_provider)
@@ -74,6 +179,8 @@ def run_module(module, create_api, provider_information):
     filter_prefix = NOT_PROVIDED
     if module.params.get('what') == 'single_record':
         filter_record_type = module.params.get('type')
+        if filter_record_type and filter_record_type not in provider_information.get_supported_record_types():
+            module.fail_json(msg='Invalid record type {type}'.format(type=filter_record_type))
         if module.params.get('prefix') is not None:
             filter_prefix = provider_information.normalize_prefix(module.params.get('prefix'))
     elif module.params.get('what') == 'all_types_for_record':
@@ -84,56 +191,10 @@ def run_module(module, create_api, provider_information):
         # Create API
         api = create_api()
 
-        # Get zone information
-        if module.params.get('zone_name') is not None:
-            zone_in = normalize_dns_name(module.params.get('zone_name'))
-            zone = api.get_zone_with_records_by_name(zone_in, prefix=filter_prefix, record_type=filter_record_type)
-            if zone is None:
-                module.fail_json(msg='Zone not found')
+        if isinstance(api, ZoneRecordAPI):
+            _run_module_record_api(module, provider_information, record_converter, filter_record_type, filter_prefix, api)
         else:
-            zone = api.get_zone_with_records_by_id(module.params.get('zone_id'), prefix=filter_prefix, record_type=filter_record_type)
-            if zone is None:
-                module.fail_json(msg='Zone not found')
-            zone_in = normalize_dns_name(zone.zone.name)
-
-        # Retrieve requested information
-        records = []
-        if module.params.get('what') in ('single_record', 'all_types_for_record'):
-            check_prefix = True
-            record_in = normalize_dns_name(module.params.get('record'))
-            prefix_in = module.params.get('prefix')
-            record_in, prefix = get_prefix(
-                normalized_zone=zone_in, normalized_record=record_in, prefix=prefix_in, provider_information=provider_information)
-        else:
-            check_prefix = False
-            prefix = None
-
-        # Find matching records
-        records = []
-        for record in zone.records:
-            if check_prefix:
-                if record.prefix != prefix:
-                    continue
-            records.append((
-                (record.prefix + '.' + zone_in) if record.prefix else zone_in,
-                record,
-            ))
-
-        # Convert records
-        only_records = [record for record_name, record in records]
-        record_converter.process_multiple_from_api(only_records)
-        record_converter.process_multiple_to_user(only_records)
-
-        # Format output
-        data = [
-            format_record_for_output(record, record_name, prefix=record.prefix)
-            for record_name, record in records
-        ]
-        module.exit_json(
-            changed=False,
-            records=data,
-            zone_id=zone.zone.id,
-        )
+            _run_module_record_set_api(module, provider_information, record_converter, filter_record_type, filter_prefix, api)
     except DNSConversionError as e:
         module.fail_json(msg='Error while converting DNS values: {0}'.format(e.error_message), error=e.error_message, exception=traceback.format_exc())
     except DNSAPIAuthenticationError as e:

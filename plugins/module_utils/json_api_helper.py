@@ -107,7 +107,7 @@ class JSONAPIHelper(object):
         if info is None:
             raise DNSAPIError('Internal error: info needs to be provided')
         status = info['status']
-        url = info['url']
+        url = info.get('url')  # not present when using open_url
         # Check expected status
         error_code = ERROR_CODES.get(status, UNKNOWN_ERROR)
         if expected is not None:
@@ -174,6 +174,14 @@ class JSONAPIHelper(object):
         self._validate(result=result, info=info, expected=expected, method=method)
         return result, info
 
+    def _is_rate_limiting_result(self, content, info):
+        if info['status'] != 429:
+            return False
+        try:
+            return max(min(float(_get_header_value(info, 'retry-after')), 60), 1)  # type: ignore
+        except (ValueError, TypeError):
+            return 10
+
     def _request(
         self,
         url,  # type: str
@@ -185,12 +193,11 @@ class JSONAPIHelper(object):
         while True:
             content, info = self._http_helper.fetch_url(url, **kwargs)
             countdown -= 1
-            if info['status'] == 429:
+            retry_after = self._is_rate_limiting_result(content, info)
+            if retry_after is not False:
                 if countdown <= 0:
                     break
-                try:
-                    retry_after = max(min(float(_get_header_value(info, 'retry-after')), 60), 1)  # type: ignore
-                except (ValueError, TypeError):
+                if retry_after is True:
                     retry_after = 10
                 time.sleep(retry_after)
                 continue
@@ -201,6 +208,12 @@ class JSONAPIHelper(object):
         return {
             'accept': 'application/json',
         }
+
+    def _create_post_headers(self):  # type: (...) -> dict[str, str]
+        return self._create_headers()
+
+    def _create_put_headers(self):  # type: (...) -> dict[str, str]
+        return self._create_headers()
 
     def _get(
         self,
@@ -229,7 +242,7 @@ class JSONAPIHelper(object):
         if self._debug:
             pass  # pragma: no cover
             # q.q('Request: POST {0}'.format(full_url))
-        headers = self._create_headers()
+        headers = self._create_post_headers()
         encoded_data = None
         if data is not None:
             headers['content-type'] = 'application/json'
@@ -249,7 +262,7 @@ class JSONAPIHelper(object):
         if self._debug:
             pass  # pragma: no cover
             # q.q('Request: PUT {0}'.format(full_url))
-        headers = self._create_headers()
+        headers = self._create_put_headers()
         encoded_data = None
         if data is not None:
             headers['content-type'] = 'application/json'
