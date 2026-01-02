@@ -1538,3 +1538,15 @@ class TestHetznerDNSRecordSetInfoNewJSON(BaseTestModule):
         assert result['set']['type'] == 'TXT'
         assert result['set']['value'] == [u'"b\\303\\244r \\"with quotes\\" (use \\\\ to escape)"']
         assert 'sets' not in result
+
+    def test_wrong_tpye(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_record_set_info, {
+            'hetzner_api_token': 'foo',
+            'zone_name': 'example.com',
+            'record': 'foo.example.com',
+            'type': 'DANE',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [])
+
+        assert result['msg'] == "Invalid record type DANE"

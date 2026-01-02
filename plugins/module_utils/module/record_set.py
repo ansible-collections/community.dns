@@ -295,7 +295,7 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
     # Find matching records
     record_sets = filter_record_sets(record_sets, prefix=prefix)
     if len(record_sets) > 1:
-        module.fail_json(msg='Internal error: should have at most one record set, but got {0}'.format(len(record_sets)))
+        module.fail_json(msg='Internal error: should have at most one record set, but got {0}'.format(len(record_sets)))  # pragma: no cover
     record_set = None
     if record_sets:
         record_set = record_sets[0]

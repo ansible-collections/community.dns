@@ -1701,3 +1701,15 @@ class TestHetznerDNSRecordInfoNewJSON(BaseTestModule):
             'value': u'"b\\303\\244r \\"with quotes\\" (use \\\\ to escape)"',
             'extra': {},
         }]
+
+    def test_wrong_tpye(self, mocker):
+        result = self.run_module_failed(mocker, hetzner_dns_record_info, {
+            'hetzner_api_token': 'foo',
+            'zone_name': 'example.com',
+            'prefix': 'foo',
+            'type': 'DANE',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [])
+
+        assert result['msg'] == "Invalid record type DANE"

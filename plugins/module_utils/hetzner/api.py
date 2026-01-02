@@ -591,7 +591,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                 actions = [result["action"]]
             else:
                 url = "v1/actions"
-                result, dummy = self._get(url, query=[("id", action_id) for action_id in action_ids], expected=[200])
+                result, dummy = self._get(url, query=[("id", action_id) for action_id in sorted(action_ids)], expected=[200])
                 self._check_error('GET', url, result)
                 actions = result["actions"]
         if errors and fail_on_error:
@@ -790,7 +790,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                         break
             if stop:
                 break
-        return self._collect_results(data_per_zone_id, actions, do_wait=not stop, stop_early_on_errors=stop_early_on_errors)
+        return self._collect_results(data_per_zone_id, actions, do_wait=not stop, stop_early_on_errors=stop_early_on_errors, refresh_rrsets=not stop)
 
     def delete_record_sets(self, record_sets_per_zone_id, stop_early_on_errors=True):
         """
@@ -946,4 +946,4 @@ def create_hetzner_api(option_provider, http_helper):
         return HetznerAPI(http_helper, hetzner_token)
     if hetzner_api_token is not None:
         return _HetznerNewAPI(http_helper, hetzner_api_token)
-    raise AssertionError("One of hetzner_token and hetzner_api_token must be provided")
+    raise AssertionError("One of hetzner_token and hetzner_api_token must be provided")  # pragma: no cover

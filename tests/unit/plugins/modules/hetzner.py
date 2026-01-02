@@ -373,15 +373,17 @@ def get_hetzner_new_json_pagination_meta(total_entries, page=1, per_page=100, la
     }
 
 
-def get_hetzner_new_json_records(indices=None, name=None, record_type=None):
-    if indices is None:
-        rrsets = list(HETZNER_NEW_JSON_DEFAULT_ENTRIES)
-    else:
-        rrsets = [HETZNER_NEW_JSON_DEFAULT_ENTRIES[idx] for idx in indices]
+def get_hetzner_new_json_records(name=None, record_type=None, update=None):
+    rrsets = list(HETZNER_NEW_JSON_DEFAULT_ENTRIES)
     if record_type is not None:
         rrsets = [rrset for rrset in rrsets if rrset["type"] == record_type]
     if name is not None:
         rrsets = [rrset for rrset in rrsets if rrset["name"] == name]
+    if update is not None:
+        for index, rrset in enumerate(rrsets):
+            upd = update.get((rrset['name'], rrset['type']))
+            if upd is not None:
+                rrsets[index] = upd
     return {
         "meta": get_hetzner_new_json_pagination_meta(len(rrsets)),
         "rrsets": rrsets,
