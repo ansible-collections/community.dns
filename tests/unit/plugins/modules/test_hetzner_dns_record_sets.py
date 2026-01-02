@@ -1747,6 +1747,240 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
             ],
         }
 
+    def test_removal_prune_already_gone(self, mocker):
+        with patch('time.sleep', mock_sleep):
+            result = self.run_module_success(mocker, hetzner_dns_record_sets, {
+                'hetzner_api_token': 'foo',
+                'zone_name': 'example.com',
+                'prune': 'true',
+                'record_sets': [
+                    {
+                        'prefix': '*',
+                        'ttl': 3600,
+                        'type': 'A',
+                        'value': ['1.2.3.5'],
+                    },
+                    {
+                        'prefix': '',
+                        'ttl': 3600,
+                        'type': 'A',
+                        'value': ['1.2.3.4'],
+                    },
+                    {
+                        'prefix': '@',
+                        'ttl': 3600,
+                        'type': 'AAAA',
+                        'value': [],
+                    },
+                    {
+                        'record': 'example.com',
+                        'type': 'MX',
+                        'ignore': True,
+                    },
+                    {
+                        'record': 'example.com',
+                        'type': 'NS',
+                        'ignore': True,
+                    },
+                    {
+                        'record': 'example.com',
+                        'type': 'SOA',
+                        'ignore': True,
+                    },
+                    {
+                        'record': 'foo.example.com',
+                        'type': 'TXT',
+                        'ttl': None,
+                        'value': [u'bär "with quotes" (use \\ to escape)'],
+                    },
+                ],
+                '_ansible_diff': True,
+                '_ansible_remote_tmp': '/tmp/tmp',
+                '_ansible_keep_remote_files': True,
+            }, [
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/example.com')
+                .return_header('Content-Type', 'application/json')
+                .result_json(HETZNER_ZONE_NEW_JSON),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets', without_query=True)
+                .expect_query_absent('name')
+                .expect_query_absent('type')
+                .expect_query_values('page', '1')
+                .expect_query_values('per_page', '100')
+                .return_header('Content-Type', 'application/json')
+                .result_json(get_hetzner_new_json_records()),
+                FetchUrlCall('DELETE', 201)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets/@/AAAA')
+                .return_header('Content-Type', 'application/json')
+                .result_json({
+                    "action": {
+                        "id": 1,
+                        "command": "delete_rrset",
+                        "status": "running",
+                        "progress": 50,
+                        "started": "2016-01-30T23:55:00Z",
+                        "finished": None,
+                        "resources": [
+                            {
+                                "id": 42,
+                                "type": "zone",
+                            },
+                        ],
+                        "error": None,
+                    },
+                }),
+                FetchUrlCall('DELETE', 404)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets/*/AAAA')
+                .return_header('Content-Type', 'application/json')
+                .result_json({
+                    "error": {
+                        "code": "not_found",
+                        "message": "Record not found",
+                        "details": None,
+                    },
+                }),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/actions/1')
+                .return_header('Content-Type', 'application/json')
+                .result_json({
+                    "action": {
+                        "id": 1,
+                        "command": "delete_rrset",
+                        "status": "success",
+                        "progress": 100,
+                        "started": "2016-01-30T23:55:00Z",
+                        "finished": "2026-01-30T23:55:00Z",
+                        "resources": [
+                            {
+                                "id": 42,
+                                "type": "zone",
+                            },
+                        ],
+                        "error": None,
+                    },
+                }),
+            ])
+
+        assert result['changed'] is True
+        assert result['zone_id'] == '42'
+        assert result['diff']['before'] == {
+            'record_sets': [
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.5'],
+                },
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::3'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'MX',
+                    'value': ['10 example.com'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': None,
+                    'type': 'NS',
+                    'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': None,
+                    'type': 'SOA',
+                    'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
+                },
+                {
+                    'record': 'foo.example.com',
+                    'prefix': 'foo',
+                    'ttl': None,
+                    'type': 'TXT',
+                    'value': [u'bär "with quotes" (use \\ to escape)'],
+                },
+            ],
+        }
+        assert result['diff']['after'] == {
+            'record_sets': [
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.5'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'MX',
+                    'value': ['10 example.com'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'type': 'NS',
+                    'ttl': None,
+                    'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': None,
+                    'type': 'SOA',
+                    'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
+                },
+                {
+                    'record': 'foo.example.com',
+                    'prefix': 'foo',
+                    'ttl': None,
+                    'type': 'TXT',
+                    'value': [u'bär "with quotes" (use \\ to escape)'],
+                },
+            ],
+        }
+
     def test_removal_prune_fail(self, mocker):
         with patch('time.sleep', mock_sleep):
             result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
@@ -1906,6 +2140,119 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
             "Errors: Delete record set AAAA *.example.com with TTL=1h and value=['2001:1:2::4']: something went wrong (server_error)",
             # Python 2 compat:
             "Errors: Delete record set AAAA *.example.com with TTL=1h and value=[u'2001:1:2::4']: something went wrong (server_error)",
+        )
+
+    def test_removal_prune_fail_2(self, mocker):
+        with patch('time.sleep', mock_sleep):
+            result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
+                'hetzner_api_token': 'foo',
+                'zone_name': 'example.com',
+                'prune': 'true',
+                'record_sets': [
+                    {
+                        'prefix': '*',
+                        'ttl': 3600,
+                        'type': 'A',
+                        'value': ['1.2.3.5'],
+                    },
+                    {
+                        'prefix': '',
+                        'ttl': 3600,
+                        'type': 'A',
+                        'value': ['1.2.3.4'],
+                    },
+                    {
+                        'prefix': '@',
+                        'ttl': 3600,
+                        'type': 'AAAA',
+                        'value': [],
+                    },
+                    {
+                        'record': 'example.com',
+                        'type': 'MX',
+                        'ignore': True,
+                    },
+                    {
+                        'record': 'example.com',
+                        'type': 'NS',
+                        'ignore': True,
+                    },
+                    {
+                        'record': 'example.com',
+                        'type': 'SOA',
+                        'ignore': True,
+                    },
+                    {
+                        'record': 'foo.example.com',
+                        'type': 'TXT',
+                        'ttl': None,
+                        'value': [u'bär "with quotes" (use \\ to escape)'],
+                    },
+                ],
+                '_ansible_diff': True,
+                '_ansible_remote_tmp': '/tmp/tmp',
+                '_ansible_keep_remote_files': True,
+            }, [
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/example.com')
+                .return_header('Content-Type', 'application/json')
+                .result_json(HETZNER_ZONE_NEW_JSON),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets', without_query=True)
+                .expect_query_absent('name')
+                .expect_query_absent('type')
+                .expect_query_values('page', '1')
+                .expect_query_values('per_page', '100')
+                .return_header('Content-Type', 'application/json')
+                .result_json(get_hetzner_new_json_records()),
+                FetchUrlCall('DELETE', 201)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets/@/AAAA')
+                .return_header('Content-Type', 'application/json')
+                .result_json({
+                    "action": {
+                        "id": 1,
+                        "command": "delete_rrset",
+                        "status": "running",
+                        "progress": 50,
+                        "started": "2016-01-30T23:55:00Z",
+                        "finished": None,
+                        "resources": [
+                            {
+                                "id": 42,
+                                "type": "zone",
+                            },
+                        ],
+                        "error": None,
+                    },
+                }),
+                FetchUrlCall('DELETE', 500)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets/*/AAAA')
+                .return_header('Content-Type', 'application/json')
+                .result_json({
+                    "error": {
+                        "code": "server_error",
+                        "message": "something went wrong",
+                        "details": None,
+                    },
+                }),
+            ])
+
+        assert result['msg'] in (
+            'Errors: Delete record set AAAA *.example.com with TTL=1h and value=[\'2001:1:2::4\']: Expected HTTP status 201, 404'
+            ' for DELETE https://api.hetzner.cloud/v1/zones/42/rrsets/*/AAAA, but got HTTP status 500 (Internal Server Error)'
+            ' with error message "something went wrong" (error code server_error)',
+            # Python 2 compat:
+            'Errors: Delete record set AAAA *.example.com with TTL=1h and value=[u\'2001:1:2::4\']: Expected HTTP status 201, 404'
+            ' for DELETE https://api.hetzner.cloud/v1/zones/42/rrsets/*/AAAA, but got HTTP status 500 (Internal Server Error)'
+            ' with error message "something went wrong" (error code server_error)',
         )
 
     def test_delete(self, mocker):
@@ -3712,6 +4059,294 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                             },
                         ],
                         "zone": 42,
+                    },
+                }),
+            ])
+
+        assert result['changed'] is True
+        assert result['zone_id'] == '42'
+        assert 'diff' in result
+        assert 'before' in result['diff']
+        assert 'after' in result['diff']
+        assert result['diff']['before'] == {
+            'record_sets': [
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.5'],
+                },
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::3'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'MX',
+                    'value': ['10 example.com'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': None,
+                    'type': 'NS',
+                    'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': None,
+                    'type': 'SOA',
+                    'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
+                },
+                {
+                    'record': 'foo.example.com',
+                    'prefix': 'foo',
+                    'ttl': None,
+                    'type': 'TXT',
+                    'value': [u'bär "with quotes" (use \\ to escape)'],
+                },
+            ],
+        }
+        assert result['diff']['after'] == {
+            'record_sets': [
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.5'],
+                },
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::3'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'MX',
+                    'value': ['10 example.com'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'type': 'NS',
+                    'ttl': 3600,
+                    'value': ['helium.ns.hetzner.de.', 'ytterbium.ns.hetzner.com.'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': None,
+                    'type': 'SOA',
+                    'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
+                },
+                {
+                    'record': 'foo.example.com',
+                    'prefix': 'foo',
+                    'ttl': None,
+                    'type': 'TXT',
+                    'value': [u'bär "with quotes" (use \\ to escape)'],
+                },
+            ],
+        }
+
+    def test_change_modify_list_and_ttl_suddenly_gone(self, mocker):
+        with patch('time.sleep', mock_sleep):
+            result = self.run_module_success(mocker, hetzner_dns_record_sets, {
+                'hetzner_api_token': 'foo',
+                'zone_name': 'example.com',
+                'record_sets': [
+                    {
+                        'record': 'example.com',
+                        'type': 'NS',
+                        'ttl': 3600,
+                        'value': [
+                            'helium.ns.hetzner.de.',
+                            'ytterbium.ns.hetzner.com.',
+                        ],
+                    },
+                ],
+                '_ansible_diff': True,
+                '_ansible_remote_tmp': '/tmp/tmp',
+                '_ansible_keep_remote_files': True,
+            }, [
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/example.com')
+                .return_header('Content-Type', 'application/json')
+                .result_json(HETZNER_ZONE_NEW_JSON),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets', without_query=True)
+                .expect_query_absent('name')
+                .expect_query_absent('type')
+                .expect_query_values('page', '1')
+                .expect_query_values('per_page', '100')
+                .return_header('Content-Type', 'application/json')
+                .result_json(get_hetzner_new_json_records()),
+                FetchUrlCall('POST', 201)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets/@/NS/actions/change_ttl')
+                .expect_json_value(["ttl"], 3600)
+                .expect_json_value_absent(["records"])
+                .return_header('Content-Type', 'application/json')
+                .result_json({
+                    "action": {
+                        "id": 1,
+                        "command": "change_rrset_ttl",
+                        "status": "running",
+                        "progress": 50,
+                        "started": "2016-01-30T23:55:00Z",
+                        "finished": None,
+                        "resources": [
+                            {
+                                "id": 42,
+                                "type": "zone",
+                            },
+                        ],
+                        "error": None,
+                    },
+                }),
+                FetchUrlCall('POST', 201)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets/@/NS/actions/set_records')
+                .expect_json_value(["records", 0, "value"], "helium.ns.hetzner.de.")
+                .expect_json_value(["records", 0, "comment"], None)
+                .expect_json_value(["records", 1, "value"], "ytterbium.ns.hetzner.com.")
+                .expect_json_value(["records", 1, "comment"], None)
+                .expect_json_value_absent(["records", 2])
+                .return_header('Content-Type', 'application/json')
+                .result_json({
+                    "action": {
+                        "id": 2,
+                        "command": "set_records",
+                        "status": "running",
+                        "progress": 50,
+                        "started": "2016-01-30T23:55:00Z",
+                        "finished": None,
+                        "resources": [
+                            {
+                                "id": 42,
+                                "type": "zone",
+                            },
+                        ],
+                        "error": None,
+                    },
+                }),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/actions?id=1&id=2')
+                .return_header('Content-Type', 'application/json')
+                .result_json({
+                    "actions": [
+                        {
+                            "id": 1,
+                            "command": "change_rrset_ttl",
+                            "status": "success",
+                            "progress": 100,
+                            "started": "2016-01-30T23:55:00Z",
+                            "finished": "2026-01-30T23:55:00Z",
+                            "resources": [
+                                {
+                                    "id": 42,
+                                    "type": "zone",
+                                },
+                            ],
+                            "error": None,
+                        },
+                        {
+                            "id": 2,
+                            "command": "set_records",
+                            "status": "running",
+                            "progress": 75,
+                            "started": "2016-01-30T23:55:00Z",
+                            "finished": None,
+                            "resources": [
+                                {
+                                    "id": 42,
+                                    "type": "zone",
+                                },
+                            ],
+                            "error": None,
+                        },
+                    ],
+                }),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/actions/2')
+                .return_header('Content-Type', 'application/json')
+                .result_json({
+                    "action": {
+                        "id": 2,
+                        "command": "set_records",
+                        "status": "success",
+                        "progress": 100,
+                        "started": "2016-01-30T23:55:00Z",
+                        "finished": "2026-01-30T23:55:00Z",
+                        "resources": [
+                            {
+                                "id": 42,
+                                "type": "zone",
+                            },
+                        ],
+                        "error": None,
+                    },
+                }),
+                FetchUrlCall('GET', 404)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets/@/NS')
+                .return_header('Content-Type', 'application/json')
+                .result_json({
+                    "error": {
+                        "code": "not_found",
+                        "message": "Record not found",
+                        "details": None,
                     },
                 }),
             ])
