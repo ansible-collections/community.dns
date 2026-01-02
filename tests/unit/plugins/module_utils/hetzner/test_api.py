@@ -17,6 +17,8 @@ from ansible_collections.community.internal_test_tools.tests.unit.compat.mock im
 
 from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
     HetznerAPI,
+    _format_action_error,
+    _HetznerNewAPI,
 )
 from ansible_collections.community.dns.plugins.module_utils.record import DNSRecord
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
@@ -144,3 +146,59 @@ def test_extract_error_message():
         ' with error message "baz" (error code 123) with message "foo"'
     )
     assert api._extract_error_message({'error': {'message': 'baz', 'code': 123}}) == ' with error message "baz" (error code 123)'
+
+
+def test__format_action_error():
+    assert _format_action_error({}) is None
+    assert _format_action_error({"error": False}) is None
+    assert _format_action_error({"error": {}}) is None
+    assert _format_action_error({"error": {"code": "foo", "message": "bar"}}) == "bar (foo)"
+
+
+def test_new_api__extract_only_error_message():
+    api = _HetznerNewAPI(MagicMock(), '123')
+    assert api._extract_only_error_message({}) == ''
+    assert api._extract_only_error_message({"error": 123}) == ''
+    assert api._extract_only_error_message({"error": {"message": "foo", "code": "bar", "details": None}}) == (
+        ' with error message "foo" (error code bar)'
+    )
+    assert api._extract_only_error_message({"error": {"message": "foo", "code": "bar", "details": []}}) == (
+        ' with error message "foo" (error code bar)'
+    )
+    assert api._extract_only_error_message({"error": {"message": "foo", "code": "bar", "details": [{}]}}) == (
+        ' with error message "foo" (error code bar). Details: [{}]'
+    )
+
+
+def test_new_api__extract_error_message():
+    api = _HetznerNewAPI(MagicMock(), '123')
+    assert api._extract_error_message(None) == ''
+    assert api._extract_error_message("foo") == ' with data: foo'
+    assert api._extract_error_message({}) == ' with data: {}'
+    assert api._extract_error_message({"error": {"message": "foo", "code": "bar", "details": None}}) == (
+        ' with error message "foo" (error code bar)'
+    )
+
+
+def test_new_api__is_rate_limiting_result():
+    api = _HetznerNewAPI(MagicMock(), '123')
+    assert api._is_rate_limiting_result(None, {'status': 1}) is False
+    assert api._is_rate_limiting_result(None, {'status': 429}) is False
+    assert api._is_rate_limiting_result(b"[]", {'status': 429}) is False
+    assert api._is_rate_limiting_result(b"{}", {'status': 429}) is False
+    assert api._is_rate_limiting_result(b'{"error": []}', {'status': 429}) is False
+    assert api._is_rate_limiting_result(b'{"error": {}}', {'status': 429}) is False
+    assert api._is_rate_limiting_result(b'{"error": {"code": "foo"}}', {'status': 429}) is False
+    assert api._is_rate_limiting_result(b'{"error": {"code": "rate_limit_exceeded"}}', {'status': 429}) == 5
+
+
+def test_new_api__check_error():
+    api = _HetznerNewAPI(MagicMock(), '123')
+    assert api._check_error("GET", "https://example.com", None) is None
+    assert api._check_error("GET", "https://example.com", {}) is None
+    assert api._check_error("GET", "https://example.com", {"error": 42}) is None
+
+    with pytest.raises(DNSAPIError, match='^GET https://example\\.com resulted in API error foo with error message "bar" \\(error code foo\\)$'):
+        api._check_error("GET", "https://example.com", {"error": {"code": "foo", "message": "bar", "details": None}})
+
+    assert api._check_error("GET", "https://example.com", {"error": {"code": "foo", "message": "bar", "details": None}}, accepted=["foo"]) == "foo"

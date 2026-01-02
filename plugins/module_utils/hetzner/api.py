@@ -147,7 +147,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
             if accept_404 and page == 1 and info['status'] == 404:
                 return None
             result.extend(res[data_key])
-            if 'meta' not in res and page == 1:
+            if not isinstance(res.get('meta'), dict) and page == 1:
                 return result
             if page >= res['meta']['pagination']['last_page']:
                 return result
@@ -358,11 +358,10 @@ def _create_zone_from_new_json(source):
     return zone
 
 
-def _create_record_set_from_new_json(source, record_type=None, has_id=True):
+def _create_record_set_from_new_json(source, record_type=None):
     source = dict(source)
     result = DNSRecordSet()
-    if has_id:
-        result.id = source.pop('id')
+    result.id = source.pop('id')
     result.type = source.pop('type', record_type)
     result.ttl = source.pop('ttl', None)
     name = source.pop('name', None)
@@ -510,7 +509,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                 return None
             self._check_error('GET', url, res, accepted=["not_found"] if accept_404 and page == 1 else [])
             result.extend(res[data_key])
-            if 'meta' not in res and page == 1:
+            if not isinstance(res.get('meta'), dict) and page == 1:
                 return result
             if page >= res['meta']['pagination']['last_page']:
                 return result
@@ -670,12 +669,17 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
             common_type = NOT_PROVIDED
         return self.get_zone_record_sets(zone_id, prefix=common_prefix, record_type=common_type)
 
-    def _collect_results(self, data_per_zone_id, actions, do_wait, stop_early_on_errors, refresh_rrsets=True):
+    def _collect_results(self, what, data_per_zone_id, actions, do_wait, stop_early_on_errors, refresh_rrsets=True):
         errors = {}
         if do_wait:
-            errors, _other_actions = self._wait_for_actions(list(actions.values()), "adding record sets", stop_on_first_error=stop_early_on_errors)
-            for error in errors:
-                errors[error["id"]] = error
+            action_errors, _other_actions = self._wait_for_actions(
+                list(actions.values()),
+                what,
+                fail_on_error=False,
+                stop_on_first_error=stop_early_on_errors,
+            )
+            for error in action_errors:
+                errors[error["id"]] = DNSAPIError(_format_action_error(error))
         results_per_zone_id = {}
         for zone_id, datas in data_per_zone_id.items():
             result = []
@@ -736,7 +740,8 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                         break
             if stop:
                 break
-        return self._collect_results(data_per_zone_id, actions, do_wait=not stop, stop_early_on_errors=stop_early_on_errors, refresh_rrsets=False)
+        return self._collect_results(
+            "adding record sets", data_per_zone_id, actions, do_wait=not stop, stop_early_on_errors=stop_early_on_errors, refresh_rrsets=False)
 
     def update_record_sets(self, record_sets_per_zone_id, stop_early_on_errors=True):
         """
@@ -790,7 +795,8 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                         break
             if stop:
                 break
-        return self._collect_results(data_per_zone_id, actions, do_wait=not stop, stop_early_on_errors=stop_early_on_errors, refresh_rrsets=not stop)
+        return self._collect_results(
+            "updating record sets", data_per_zone_id, actions, do_wait=not stop, stop_early_on_errors=stop_early_on_errors, refresh_rrsets=not stop)
 
     def delete_record_sets(self, record_sets_per_zone_id, stop_early_on_errors=True):
         """
@@ -828,7 +834,8 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                         break
             if stop:
                 break
-        return self._collect_results(data_per_zone_id, actions, do_wait=not stop, stop_early_on_errors=stop_early_on_errors, refresh_rrsets=False)
+        return self._collect_results(
+            "deleting record sets", data_per_zone_id, actions, do_wait=not stop, stop_early_on_errors=stop_early_on_errors, refresh_rrsets=False)
 
 
 class HetznerProviderInformation(ProviderInformation):

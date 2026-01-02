@@ -26,6 +26,7 @@ from .hetzner import (
     HETZNER_JSON_ZONE_GET_RESULT,
     HETZNER_JSON_ZONE_LIST_RESULT,
     HETZNER_JSON_ZONE_RECORDS_GET_RESULT,
+    HETZNER_NEW_JSON_DEFAULT_ENTRIES,
     HETZNER_ZONE_NEW_JSON,
     get_hetzner_new_json_pagination_meta,
     get_hetzner_new_json_records,
@@ -1245,31 +1246,7 @@ class TestHetznerDNSRecordSetInfoNewJSON(BaseTestModule):
             'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
         }
 
-    def test_get_all(self, mocker):
-        result = self.run_module_success(mocker, hetzner_dns_record_set_info, {
-            'hetzner_api_token': 'foobar',
-            'what': 'all_records',
-            'zone_id': '42',
-            '_ansible_remote_tmp': '/tmp/tmp',
-            '_ansible_keep_remote_files': True,
-        }, [
-            FetchUrlCall('GET', 200)
-            .expect_header('accept', 'application/json')
-            .expect_header('Authorization', 'Bearer foobar')
-            .expect_url('https://api.hetzner.cloud/v1/zones/42')
-            .return_header('Content-Type', 'application/json')
-            .result_json(HETZNER_ZONE_NEW_JSON),
-            FetchUrlCall('GET', 200)
-            .expect_header('accept', 'application/json')
-            .expect_header('Authorization', 'Bearer foobar')
-            .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets', without_query=True)
-            .expect_query_absent('name')
-            .expect_query_absent('type')
-            .expect_query_values('page', '1')
-            .expect_query_values('per_page', '100')
-            .return_header('Content-Type', 'application/json')
-            .result_json(get_hetzner_new_json_records())
-        ])
+    def _check_all_result(self, result):
         assert result['changed'] is False
         assert result['zone_id'] == '42'
         assert 'set' not in result
@@ -1332,6 +1309,33 @@ class TestHetznerDNSRecordSetInfoNewJSON(BaseTestModule):
             'type': 'TXT',
             'value': [u'bär "with quotes" (use \\ to escape)'],
         }
+
+    def test_get_all(self, mocker):
+        result = self.run_module_success(mocker, hetzner_dns_record_set_info, {
+            'hetzner_api_token': 'foobar',
+            'what': 'all_records',
+            'zone_id': '42',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foobar')
+            .expect_url('https://api.hetzner.cloud/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_ZONE_NEW_JSON),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foobar')
+            .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets', without_query=True)
+            .expect_query_absent('name')
+            .expect_query_absent('type')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json(get_hetzner_new_json_records())
+        ])
+        self._check_all_result(result)
 
     def test_get_single_txt_api(self, mocker):
         with patch('time.sleep', mock_sleep):
@@ -1550,3 +1554,76 @@ class TestHetznerDNSRecordSetInfoNewJSON(BaseTestModule):
         }, [])
 
         assert result['msg'] == "Invalid record type DANE"
+
+    def test_get_all_pagination_1(self, mocker):
+        result = self.run_module_success(mocker, hetzner_dns_record_set_info, {
+            'hetzner_api_token': 'foobar',
+            'what': 'all_records',
+            'zone_id': '42',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foobar')
+            .expect_url('https://api.hetzner.cloud/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_ZONE_NEW_JSON),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foobar')
+            .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets', without_query=True)
+            .expect_query_absent('name')
+            .expect_query_absent('type')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                "meta": get_hetzner_new_json_pagination_meta(len(HETZNER_NEW_JSON_DEFAULT_ENTRIES), page=1, per_page=10, last_page=2),
+                "rrsets": HETZNER_NEW_JSON_DEFAULT_ENTRIES[:10],
+            }),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foobar')
+            .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets', without_query=True)
+            .expect_query_absent('name')
+            .expect_query_absent('type')
+            .expect_query_values('page', '2')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                "meta": get_hetzner_new_json_pagination_meta(len(HETZNER_NEW_JSON_DEFAULT_ENTRIES), page=2, per_page=100, last_page=2),
+                "rrsets": HETZNER_NEW_JSON_DEFAULT_ENTRIES[10:],
+            }),
+        ])
+        self._check_all_result(result)
+
+    def test_get_all_pagination_2(self, mocker):
+        result = self.run_module_success(mocker, hetzner_dns_record_set_info, {
+            'hetzner_api_token': 'foobar',
+            'what': 'all_records',
+            'zone_id': '42',
+            '_ansible_remote_tmp': '/tmp/tmp',
+            '_ansible_keep_remote_files': True,
+        }, [
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foobar')
+            .expect_url('https://api.hetzner.cloud/v1/zones/42')
+            .return_header('Content-Type', 'application/json')
+            .result_json(HETZNER_ZONE_NEW_JSON),
+            FetchUrlCall('GET', 200)
+            .expect_header('accept', 'application/json')
+            .expect_header('Authorization', 'Bearer foobar')
+            .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets', without_query=True)
+            .expect_query_absent('name')
+            .expect_query_absent('type')
+            .expect_query_values('page', '1')
+            .expect_query_values('per_page', '100')
+            .return_header('Content-Type', 'application/json')
+            .result_json({
+                "meta": "foo",
+                "rrsets": HETZNER_NEW_JSON_DEFAULT_ENTRIES,
+            }),
+        ])
+        self._check_all_result(result)
