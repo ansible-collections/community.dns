@@ -26,7 +26,7 @@ from ..module_utils.resolver_helper import (
     mock_query_udp,
     mock_resolver,
 )
-from ..utils import (
+from ..module_utils.utils import (
     patch_dict,
     patch_dict_absent,
 )
