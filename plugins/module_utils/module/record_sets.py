@@ -13,7 +13,7 @@ __metaclass__ = type
 
 
 import traceback
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 from ansible.module_utils.common.text.converters import to_text
 from ansible_collections.community.dns.plugins.module_utils.argspec import (
@@ -339,10 +339,8 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
             continue
 
         to_change.append((new_rrset, mismatch_values, mismatch_ttl))
-        existing_records = {}
+        existing_records = defaultdict(list)
         for rec in new_rrset.records:
-            if rec.target not in existing_records:
-                existing_records[rec.target] = []
             existing_records[rec.target].append(rec)
 
         new_rrset.records[:] = []

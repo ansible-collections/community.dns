@@ -2690,6 +2690,40 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
         assert result['changed'] is True
         assert result['zone_id'] == '42'
 
+    def test_absent_via_empty_idempotent(self, mocker):
+        with patch('time.sleep', mock_sleep):
+            result = self.run_module_success(mocker, hetzner_dns_record_set, {
+                'hetzner_api_token': 'foo',
+                'state': 'present',
+                'zone_name': 'example.com',
+                'record': 'foobar.example.com',
+                'type': 'A',
+                'ttl': 3600,
+                'value': [],
+                '_ansible_remote_tmp': '/tmp/tmp',
+                '_ansible_keep_remote_files': True,
+            }, [
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/example.com')
+                .return_header('Content-Type', 'application/json')
+                .result_json(HETZNER_ZONE_NEW_JSON),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets', without_query=True)
+                .expect_query_values('name', 'foobar')
+                .expect_query_values('type', 'A')
+                .expect_query_values('page', '1')
+                .expect_query_values('per_page', '100')
+                .return_header('Content-Type', 'application/json')
+                .result_json(get_hetzner_new_json_records(name='foobar', record_type='A')),
+            ])
+
+        assert result['changed'] is False
+        assert result['zone_id'] == '42'
+
     def test_absent_error(self, mocker):
         record = HETZNER_NEW_JSON_DEFAULT_ENTRIES[0]
         result = self.run_module_failed(mocker, hetzner_dns_record_set, {

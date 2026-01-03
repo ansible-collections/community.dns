@@ -17,10 +17,19 @@ from ansible_collections.community.internal_test_tools.tests.unit.compat.unittes
 )
 from dns.rdataclass import to_text
 
+from ansible_collections.community.dns.plugins.module_utils.dnspython_records import (
+    NAME_TO_RDTYPE,
+    NAME_TO_REQUIRED_VERSION,
+)
+
 from ..module_utils.resolver_helper import (
     create_mock_answer,
     mock_query_udp,
     mock_resolver,
+)
+from ..module_utils.utils import (
+    patch_dict,
+    patch_dict_absent,
 )
 
 
@@ -443,4 +452,16 @@ class TestLookupRFC8427(TestCase):
         assert (
             exc.value.args[0]
             == "Nameserver ns.example.com does not exist (The DNS query name does not exist: ns.example.com.)"
+        )
+
+    def test_unsupported_type(self):
+        with patch_dict(NAME_TO_REQUIRED_VERSION, "A", "1.2.3"):
+            with patch_dict_absent(NAME_TO_RDTYPE, "A"):
+                with pytest.raises(AnsibleLookupError) as exc:
+                    self.lookup.run(["www.example.com"], type="A")
+
+        print(exc.value.args[0])
+        assert (
+            exc.value.args[0]
+            == "Your dnspython version does not support A records. You need version 1.2.3 or newer."
         )

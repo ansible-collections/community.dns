@@ -41,8 +41,8 @@ try:
     import dns.rdatatype
     try:
         import dns.rdtypes.ANY.NSEC3
-    except ImportError:
-        pass
+    except ImportError:  # pragma: no cover
+        pass  # pragma: no cover
     try:
         import dns.rdtypes.svcbbase
     except ImportError:
@@ -85,8 +85,8 @@ try:
         ('TXT', dns.rdatatype.TXT, None, ['strings']),
     ]:
         if _rdtype is None:
-            if _min_version is None:
-                raise RuntimeError('Internal error: rdtype {name} is None, but min_version is also None!'.format(name=_name))
+            if _min_version is None:  # pragma: no cover
+                raise RuntimeError('Internal error: rdtype {name} is None, but min_version is also None!'.format(name=_name))  # pragma: no cover
             NAME_TO_REQUIRED_VERSION[_name] = _min_version
         else:
             NAME_TO_RDTYPE[_name] = _rdtype
@@ -117,9 +117,9 @@ def _convert_dns_rdtypes_svcbbase_param(
     if isinstance(value, dns.rdtypes.svcbbase.ECHParam):
         return to_native(base64.b64encode(value.ech)), True
     # Fallbacks:
-    if hasattr(value, "to_text"):
-        return value.to_text(), False
-    return str(value), False
+    if hasattr(value, "to_text"):  # pragma: no cover
+        return value.to_text(), False  # pragma: no cover
+    return str(value), False  # pragma: no cover
 
 
 def convert_rdata_to_dict(

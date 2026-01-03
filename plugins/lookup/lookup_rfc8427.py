@@ -195,12 +195,9 @@ except ImportError:
 class LookupModule(LookupBase):
     @staticmethod
     def _convert_rrset_to_rfc8427(
-        rrset: dns.rrset.RRset | None,
+        rrset: dns.rrset.RRset,
     ) -> list[dict[str, object]]:
         """Convert a DNS RRset to RFC 8427 format."""
-        if not rrset:
-            return []
-
         records = []
         for rdata in rrset:
             record = {

@@ -102,8 +102,9 @@ class RecordConverter(object):
             if record.type == 'TXT':
                 self._handle_txt_api(True, record)
             return record
-        except DNSConversionError as e:
-            raise_from(DNSConversionError(u'While processing record for the API: {0}'.format(e.error_message)), e)
+        except DNSConversionError as e:  # pragma: no cover
+            # This can never happen
+            raise_from(DNSConversionError(u'While processing record for the API: {0}'.format(e.error_message)), e)  # pragma: no cover
 
     def process_from_user(self, record):
         """
@@ -127,8 +128,9 @@ class RecordConverter(object):
             if record.type == 'TXT':
                 self._handle_txt_user(True, record)
             return record
-        except DNSConversionError as e:
-            raise_from(DNSConversionError(u'While processing record for the user: {0}'.format(e.error_message)), e)
+        except DNSConversionError as e:  # pragma: no cover
+            # This can never happen
+            raise_from(DNSConversionError(u'While processing record for the user: {0}'.format(e.error_message)), e)  # pragma: no cover
 
     def clone_from_api(self, record):
         """

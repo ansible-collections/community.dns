@@ -1095,6 +1095,71 @@ class TestHetznerDNSRecordSetInfoNewJSON(BaseTestModule):
         assert result['set']['value'] == ['1.2.3.4']
         assert 'sets' not in result
 
+    def test_get_single_absent(self, mocker):
+        with patch('time.sleep', mock_sleep):
+            result = self.run_module_success(mocker, hetzner_dns_record_set_info, {
+                'hetzner_api_token': 'foo',
+                'zone_name': 'example.com',
+                'record': 'example.com',
+                'type': 'A',
+                '_ansible_remote_tmp': '/tmp/tmp',
+                '_ansible_keep_remote_files': True,
+            }, [
+                FetchUrlCall('GET', 429)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/example.com')
+                .return_header('Content-Type', 'application/json')
+                .return_header('RateLimit-Limit', '23')
+                .return_header('RateLimit-Remaining', '0')
+                .return_header('RateLimit-Reset', '1234567891')
+                .result_json({
+                    'error': {
+                        'code': 'rate_limit_exceeded',
+                        'message': 'Rate limit exceeded',
+                        'details': {},
+                    },
+                }),
+                FetchUrlCall('GET', 429)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/example.com')
+                .return_header('Content-Type', 'application/json')
+                .return_header('RateLimit-Limit', '23')
+                .return_header('RateLimit-Remaining', '0')
+                .return_header('RateLimit-Reset', '1234567891')
+                .result_json({
+                    'error': {
+                        'code': 'rate_limit_exceeded',
+                        'message': 'Rate limit exceeded',
+                        'details': {},
+                    },
+                }),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/example.com')
+                .return_header('Content-Type', 'application/json')
+                .result_json(HETZNER_ZONE_NEW_JSON),
+                FetchUrlCall('GET', 200)
+                .expect_header('accept', 'application/json')
+                .expect_header('Authorization', 'Bearer foo')
+                .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets', without_query=True)
+                .expect_query_absent('name')
+                .expect_query_values('type', "A")
+                .expect_query_values('page', '1')
+                .expect_query_values('per_page', '100')
+                .return_header('Content-Type', 'application/json')
+                .result_json({
+                    "rrsets": [],
+                })
+            ])
+        assert result['changed'] is False
+        assert result['zone_id'] == '42'
+        assert 'set' in result
+        assert result['set'] == {}
+        assert 'sets' not in result
+
     def test_get_single_prefix(self, mocker):
         result = self.run_module_success(mocker, hetzner_dns_record_set_info, {
             'hetzner_api_token': 'foo',
