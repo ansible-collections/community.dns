@@ -37,13 +37,13 @@ class _TestZoneRecordSetAPI(ZoneRecordSetAPI):
         assert len(self.delete_record_set_return_values) == 0
 
     def get_zone_by_name(self, name):
-        raise NotImplementedError()
+        raise NotImplementedError()  # pragma: no coverage
 
     def get_zone_by_id(self, zone_id):
-        raise NotImplementedError()
+        raise NotImplementedError()  # pragma: no coverage
 
     def get_zone_record_sets(self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
-        raise NotImplementedError()
+        raise NotImplementedError()  # pragma: no coverage
 
     def add_record_set(self, zone_id, record_set):
         self.commands.append(("add_record_set", zone_id, record_set))

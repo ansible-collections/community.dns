@@ -52,11 +52,11 @@ def add_metaclass(metaclass):
     def wrapper(cls):
         orig_vars = cls.__dict__.copy()
         slots = orig_vars.get('__slots__')
-        if slots is not None:
-            if isinstance(slots, str):
-                slots = [slots]
-            for slots_var in slots:
-                orig_vars.pop(slots_var)
+        if slots is not None:  # pragma: no coverage
+            if isinstance(slots, str):  # pragma: no coverage
+                slots = [slots]  # pragma: no coverage
+            for slots_var in slots:  # pragma: no coverage
+                orig_vars.pop(slots_var)  # pragma: no coverage
         orig_vars.pop('__dict__', None)
         orig_vars.pop('__weakref__', None)
         if hasattr(cls, '__qualname__'):
