@@ -4,6 +4,28 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.5.0
+======
+
+Release Summary
+---------------
+
+Bugfix and feature release.
+
+Minor Changes
+-------------
+
+- Hetzner DNS modules and plugins - support the `new Hetzner DNS API <https://docs.hetzner.com/networking/dns/faq/beta/>`__ (https://github.com/ansible-collections/community.dns/pull/301).
+
+Bugfixes
+--------
+
+- hetzner_dns_record_set, hosttech_dns_record_set - fix ``on_existing != 'replace'`` mis-triggering when ``state=absent`` and the values to delete do not show up in the list of records (https://github.com/ansible-collections/community.dns/pull/301).
+- hosttech_record_sets, hetzner_record_sets - ensure stable order also with Python < 3.6 (https://github.com/ansible-collections/community.dns/pull/301).
+- lookup_rfc8427 lookup plugin - remove unused code (https://github.com/ansible-collections/community.dns/pull/308).
+- remove_public_suffix filter plugin - fix plugin name in error message (https://github.com/ansible-collections/community.dns/pull/308).
+- remove_registrable_domain filter plugin - fix plugin name in error message (https://github.com/ansible-collections/community.dns/pull/308).
+
 v3.4.2
 ======
 
