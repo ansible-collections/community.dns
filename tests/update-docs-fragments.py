@@ -147,6 +147,7 @@ class Dumper(yaml.SafeDumper):
     def ignore_aliases(self, *args):
         return True
 
+    # pylint: disable-next=keyword-arg-before-vararg
     def increase_indent(self, flow=False, *args, **kwargs):
         self.best_indent = kwargs.pop("ident_override", 2)
         return super().increase_indent(*args, **kwargs)
@@ -191,6 +192,9 @@ class DocFragmentFile:
         self.fragments_by_name = {}
 
         where = "prefix"
+        body_prefix = []
+        body_name = ""
+        body_lines = []
         for line in lines:
             if where == "prefix":
                 self.prefix.append(line)
@@ -262,6 +266,8 @@ def compare_doc_fragment(name, doc_fragment):
 
 
 def augment_fragment(provider_fragment, provider_info):
+    # pylint: disable=too-many-nested-blocks
+
     data = {
         "record_type": {"choices": sorted(provider_info.get_supported_record_types())},
         "zone_id_type": {"type": provider_info.get_zone_id_type()},
