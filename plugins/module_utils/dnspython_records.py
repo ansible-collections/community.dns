@@ -190,10 +190,7 @@ def convert_rdata_to_dict(
             val = val_res
 
         if isinstance(val, (list, tuple)):
-            if to_unicode:
-                val = [to_text(v) if isinstance(v, binary_type) else v for v in val]
-            else:
-                val = list(val)
+            val = [to_text(v) if isinstance(v, binary_type) else v for v in val] if to_unicode else list(val)
         elif to_unicode and isinstance(val, binary_type):
             val = to_text(val)
 
