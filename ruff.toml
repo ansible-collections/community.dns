@@ -4,6 +4,39 @@
 
 line-length = 160
 
+[lint]
+# https://docs.astral.sh/ruff/rules/
+
+# Add "UP" once we drop Python 2 support
+select = ["A", "B", "E", "F", "FA", "FLY", "SIM"]
+ignore = [
+    # Better keep ignored (for now)
+    "B904",  # Use 'raise ... from'
+    "E402",  # Module level import not at top of file
+    "F401",  # Unused import (ruff check doesn't notice type comments apparently)
+    "FLY002",  # Use f-string
+    "SIM105",  # suppressible-exception
+    "SIM117",  # Combine multiple 'with' statements
+    # To fix:
+    "A001",
+    "A004",
+    "B009",
+    "B028",
+    "F811",
+    "SIM102",
+    "SIM108",
+    "SIM110",
+    "SIM114",
+    "SIM300",
+]
+
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+
+# Allow unused variables when underscore-prefixed or starting with dummy
+dummy-variable-rgx = "^(_|dummy).*$"
+
 [lint.isort]
 known-third-party = [
     "ansible_collections.community.internal_test_tools",

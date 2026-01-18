@@ -38,6 +38,8 @@ ruff_autofix_select = [
     "I",
     "RUF022",
 ]
+run_ruff_check = true
+ruff_check_config = "ruff.toml"
 run_flake8 = true
 flake8_config = ".flake8"
 run_pylint = true
