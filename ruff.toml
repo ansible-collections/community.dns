@@ -18,7 +18,6 @@ ignore = [
     "SIM105",  # suppressible-exception
     "SIM117",  # Combine multiple 'with' statements
     # To fix:
-    "A001",
     "A004",
     "B009",
     "B028",

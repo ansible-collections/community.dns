@@ -105,7 +105,7 @@ def _convert_dns_rdtypes_svcbbase_param(
     if isinstance(value, dns.rdtypes.svcbbase.MandatoryParam):
         return [dns.rdtypes.svcbbase.key_to_text(k) for k in value.keys], False
     if isinstance(value, dns.rdtypes.svcbbase.ALPNParam):
-        return [to_native(base64.b64encode(id)) for id in value.ids], True
+        return [to_native(base64.b64encode(identifier)) for identifier in value.ids], True
     if isinstance(value, dns.rdtypes.svcbbase.PortParam):
         return value.port, False
     if isinstance(value, dns.rdtypes.svcbbase.IPv4HintParam):
@@ -202,7 +202,7 @@ def convert_rdata_to_dict(
     if add_synthetic:
         if rdata.rdtype in (dns.rdatatype.TXT, dns.rdatatype.SPF):
             if to_unicode:
-                result['value'] = u''.join([to_text(str) for str in rdata.strings])  # type: ignore
+                result['value'] = u''.join([to_text(value) for value in rdata.strings])  # type: ignore
             else:
-                result['value'] = b''.join([to_bytes(str) for str in rdata.strings])  # type: ignore
+                result['value'] = b''.join([to_bytes(value) for value in rdata.strings])  # type: ignore
     return result
