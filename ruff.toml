@@ -19,7 +19,6 @@ ignore = [
     "SIM117",  # Combine multiple 'with' statements
     # To fix:
     "A004",
-    "B028",
     "F811",
     "SIM102",
     "SIM108",

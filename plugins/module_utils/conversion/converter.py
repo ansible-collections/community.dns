@@ -35,7 +35,10 @@ class RecordConverter(object):
         # Valid values: 'decoded', 'encoded', 'encoded-no-octal' (deprecated), 'encoded-no-char-encoding'
         self._txt_api_handling = self._provider_information.txt_record_handling()
         if self._txt_api_handling == 'encoded-no-octal':
-            warnings.warn('provider_information.txt_record_handling() returned deprecated value "encoded-no-octal"')
+            warnings.warn(
+                'provider_information.txt_record_handling() returned deprecated value "encoded-no-octal"',
+                stacklevel=2,
+            )
         self._txt_api_character_encoding = self._provider_information.txt_character_encoding()
         self._txt_always_quote = self._provider_information.txt_always_quote()
         # Valid values: 'api', 'quoted', 'unquoted'
