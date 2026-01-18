@@ -6,7 +6,6 @@
 
 from __future__ import annotations
 
-
 DOCUMENTATION = r"""
 name: reverse_pointer
 short_description: Convert an IP address into a DNS name for reverse lookup
@@ -54,7 +53,6 @@ from ansible.module_utils.common.text.converters import to_text
 from ansible_collections.community.dns.plugins.plugin_utils.ips import (
     assert_requirements_present,
 )
-
 
 try:
     import ipaddress

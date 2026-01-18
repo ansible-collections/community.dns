@@ -13,7 +13,6 @@ from pathlib import Path
 
 import nox
 
-
 try:
     import antsibull_nox
     import antsibull_nox.sessions
@@ -70,11 +69,9 @@ def update_psl(session: nox.Session) -> None:
 
     fragment = Path("changelogs", "fragments", "update-psl.yml")
     if not fragment.exists():
-        fragment.write_text(
-            r"""bugfixes:
+        fragment.write_text(r"""bugfixes:
   - "Update Public Suffix List."
-"""
-        )
+""")
 
     session.run("git", "status", filename, fragment)
 

@@ -6,7 +6,6 @@
 
 from __future__ import annotations
 
-
 DOCUMENTATION = r"""
 name: lookup_as_dict
 author: Felix Fontein (@felixfontein)
@@ -483,7 +482,6 @@ from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
 from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
     guarded_run,
 )
-
 
 try:
     import dns.resolver

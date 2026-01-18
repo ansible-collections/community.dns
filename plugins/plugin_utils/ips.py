@@ -9,7 +9,6 @@ from __future__ import annotations
 from ansible.errors import AnsibleError
 from ansible.module_utils.basic import missing_required_lib
 
-
 IPADDRESS_IMPORT_EXC: ImportError | None
 try:
     import ipaddress  # pylint: disable=unused-import

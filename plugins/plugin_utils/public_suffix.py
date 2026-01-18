@@ -16,7 +16,6 @@ from ansible_collections.community.dns.plugins.module_utils.names import (
     split_into_labels,
 )
 
-
 _BEGIN_SUBSET_MATCHER = re.compile(r"===BEGIN ([^=]*) DOMAINS===")
 _END_SUBSET_MATCHER = re.compile(r"===END ([^=]*) DOMAINS===")
 

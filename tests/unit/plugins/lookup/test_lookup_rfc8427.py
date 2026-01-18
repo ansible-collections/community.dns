@@ -32,7 +32,6 @@ from ..module_utils.utils import (
     patch_dict_absent,
 )
 
-
 dns = pytest.importorskip("dns")
 
 

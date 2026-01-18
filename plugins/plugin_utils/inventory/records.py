@@ -36,7 +36,6 @@ from ansible_collections.community.library_inventory_filtering_v1.plugins.plugin
     parse_filters,
 )
 
-
 display = Display()
 
 

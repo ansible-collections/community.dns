@@ -22,7 +22,6 @@ from ..module_utils.resolver_helper import (
     mock_resolver,
 )
 
-
 # We need dnspython
 dns = pytest.importorskip("dns")
 

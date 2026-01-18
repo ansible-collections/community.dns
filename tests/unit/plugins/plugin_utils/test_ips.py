@@ -13,7 +13,6 @@ from ansible_collections.community.dns.plugins.plugin_utils.ips import (
     assert_requirements_present,
 )
 
-
 # We need ipaddress
 ipaddress = pytest.importorskip("ipaddress")
 

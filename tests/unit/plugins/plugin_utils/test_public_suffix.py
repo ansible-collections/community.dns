@@ -18,7 +18,6 @@ from ansible_collections.community.dns.plugins.plugin_utils.public_suffix import
     PublicSuffixList,
 )
 
-
 TEST_GET_SUFFIX = [
     ("", {}, {}, "", ""),
     (".", {}, {}, "", ""),
@@ -191,13 +190,9 @@ def test_get_suffix_official(
 
 def test_load_psl_dot(tmpdir) -> None:
     fn = tmpdir / "psl.dat"
-    fn.write(
-        """// ===BEGIN BLA BLA DOMAINS===
+    fn.write("""// ===BEGIN BLA BLA DOMAINS===
 .com.
-// ===END BLA BLA DOMAINS===""".encode(
-            "utf-8"
-        )
-    )
+// ===END BLA BLA DOMAINS===""".encode("utf-8"))
     psl = PublicSuffixList.load(str(fn))
     assert len(psl._rules) == 1
     rule = psl._rules[0]
@@ -208,14 +203,10 @@ def test_load_psl_dot(tmpdir) -> None:
 
 def test_load_psl_no_part(tmpdir) -> None:
     fn = tmpdir / "psl.dat"
-    fn.write(
-        """// ===BEGIN BLA BLA DOMAINS===
+    fn.write("""// ===BEGIN BLA BLA DOMAINS===
 com
 // ===END BLA BLA DOMAINS===
-net""".encode(
-            "utf-8"
-        )
-    )
+net""".encode("utf-8"))
     with pytest.raises(Exception) as excinfo:
         PublicSuffixList.load(str(fn))
     assert str(excinfo.value) == "Internal error: found PSL entry with no part!"

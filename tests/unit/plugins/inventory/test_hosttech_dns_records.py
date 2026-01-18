@@ -26,7 +26,6 @@ from ansible_collections.community.internal_test_tools.tests.unit.utils.trust im
     is_trusted,
 )
 
-
 HOSTTECH_WSDL_DEFAULT_ENTRIES = [
     (125, 42, "A", "", "1.2.3.4", 3600, None, None),
     (126, 42, "A", "*", "1.2.3.5", 3600, None, None),
@@ -222,18 +221,14 @@ def access_mock(path: os.PathLike | str, can_access: bool = True):
 def test_inventory_file_simple(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hosttech_dns_records
     hosttech_token: foo
     zone_name: example.com
     simple_filters:
       type: A
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -297,9 +292,7 @@ def test_inventory_file_simple(mocker) -> None:
 def test_inventory_file_simple_2(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hosttech_dns_records
     hosttech_token: foo
@@ -308,9 +301,7 @@ def test_inventory_file_simple_2(mocker) -> None:
       - include: ansible_host == '1.2.{3.4'
       - include: ansible_host == '1.2.{3.5'
       - exclude: true
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -374,9 +365,7 @@ def test_inventory_file_simple_2(mocker) -> None:
 def test_inventory_file_collision(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hosttech_dns_records
     hosttech_token: "{{ 'foo' }}"
@@ -385,9 +374,7 @@ def test_inventory_file_collision(mocker) -> None:
       type:
         - A
         - AAAA
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -454,16 +441,12 @@ def test_inventory_file_collision(mocker) -> None:
 def test_inventory_file_no_filter(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hosttech_dns_records
     hosttech_token: foo
     zone_id: 42
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -529,16 +512,12 @@ def test_inventory_file_no_filter(mocker) -> None:
 def test_inventory_file_invalid_zone_id(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hosttech_dns_records
     hosttech_token: foo
     zone_id: invalid
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy([])
     mocker.patch(
@@ -561,15 +540,11 @@ def test_inventory_file_invalid_zone_id(mocker) -> None:
 def test_inventory_file_missing_zone(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hosttech_dns_records
     hosttech_token: foo
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy([])
     mocker.patch(
@@ -592,16 +567,12 @@ def test_inventory_file_missing_zone(mocker) -> None:
 def test_inventory_file_zone_not_found(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hosttech_dns_records
     hosttech_token: foo
     zone_id: "{{ 11 + 12 }}"
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -633,16 +604,12 @@ def test_inventory_file_zone_not_found(mocker) -> None:
 def test_inventory_file_unauthorized(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hosttech_dns_records
     hosttech_token: foo
     zone_id: 23
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -673,16 +640,12 @@ def test_inventory_file_unauthorized(mocker) -> None:
 def test_inventory_file_error(mocker) -> None:
     inventory_filename = "test.hosttech_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hosttech_dns_records
     hosttech_token: foo
     zone_id: 42
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -713,15 +676,11 @@ def test_inventory_file_error(mocker) -> None:
 def test_inventory_wrong_file(mocker) -> None:
     inventory_filename = "test.hetznerdns.yml"
     C.INVENTORY_ENABLED = ["community.dns.hosttech_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hosttech_dns_records
     hosttech_token: foo
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy([])
     mocker.patch(

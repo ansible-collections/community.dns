@@ -31,7 +31,6 @@ from ..module_utils.utils import (
     patch_dict_absent,
 )
 
-
 # We need dnspython
 dns = pytest.importorskip("dns")
 

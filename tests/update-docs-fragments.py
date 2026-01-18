@@ -17,7 +17,6 @@ import textwrap
 
 import yaml
 
-
 PROVIDERS = ["hetzner", "hosttech"]
 
 DEPENDENT_FRAGMENTS = [

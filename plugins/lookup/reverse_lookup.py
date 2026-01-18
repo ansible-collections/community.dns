@@ -6,7 +6,6 @@
 
 from __future__ import annotations
 
-
 DOCUMENTATION = r"""
 name: reverse_lookup
 author: Felix Fontein (@felixfontein)
@@ -91,7 +90,6 @@ from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
 from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
     guarded_run,
 )
-
 
 try:
     import dns.resolver

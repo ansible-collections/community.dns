@@ -31,7 +31,6 @@ from ..modules.hetzner import (
     get_hetzner_new_json_pagination_meta,
 )
 
-
 HETZNER_DEFAULT_ZONE = {
     "id": "42",
     "created": "2021-07-09T11:18:37Z",
@@ -483,18 +482,14 @@ def access_mock(path: os.PathLike | str, can_access: bool = True):
 def test_inventory_file_simple(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_token: foo
     zone_name: example.com
     simple_filters:
       type: A
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -559,9 +554,7 @@ def test_inventory_file_simple(mocker) -> None:
 def test_inventory_file_simple_2(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_token: foo
@@ -570,9 +563,7 @@ def test_inventory_file_simple_2(mocker) -> None:
       - include: ansible_host == '1.2.{3.4'
       - include: ansible_host == '1.2.{3.5'
       - exclude: true
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -637,9 +628,7 @@ def test_inventory_file_simple_2(mocker) -> None:
 def test_inventory_file_collision(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_token: '{{ "foo" }}'
@@ -648,9 +637,7 @@ def test_inventory_file_collision(mocker) -> None:
       type:
         - A
         - AAAA
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -718,16 +705,12 @@ def test_inventory_file_collision(mocker) -> None:
 def test_inventory_file_no_filter(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_token: foo
     zone_id: '42'
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -802,16 +785,12 @@ def test_inventory_file_no_filter(mocker) -> None:
 def test_inventory_file_record_conversion_error(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_token: foo
     zone_id: "{{ '42' }}"
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -854,15 +833,11 @@ def test_inventory_file_record_conversion_error(mocker) -> None:
 def test_inventory_file_missing_zone(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_token: foo
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy([])
     mocker.patch(
@@ -887,16 +862,12 @@ def test_inventory_file_missing_zone(mocker) -> None:
 def test_inventory_file_zone_not_found(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_token: foo
     zone_id: '23'
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -930,16 +901,12 @@ def test_inventory_file_zone_not_found(mocker) -> None:
 def test_inventory_file_unauthorized(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_token: foo
     zone_id: '23'
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -972,16 +939,12 @@ def test_inventory_file_unauthorized(mocker) -> None:
 def test_inventory_file_error(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_token: foo
     zone_id: '42'
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -1014,15 +977,11 @@ def test_inventory_file_error(mocker) -> None:
 def test_inventory_wrong_file(mocker) -> None:
     inventory_filename = "test.hetznerdns.yml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_token: foo
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy([])
     mocker.patch(
@@ -1069,18 +1028,14 @@ def test_inventory_no_file(mocker) -> None:
 def test_inventory_file_simple_new_api(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_api_token: foo
     zone_name: example.com
     simple_filters:
       type: A
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -1147,9 +1102,7 @@ def test_inventory_file_simple_new_api(mocker) -> None:
 def test_inventory_file_simple_2_new_api(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_api_token: foo
@@ -1158,9 +1111,7 @@ def test_inventory_file_simple_2_new_api(mocker) -> None:
       - include: ansible_host == '1.2.{3.4'
       - include: ansible_host == '1.2.{3.5'
       - exclude: true
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -1227,9 +1178,7 @@ def test_inventory_file_simple_2_new_api(mocker) -> None:
 def test_inventory_file_collision_new_api(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_api_token: '{{ "foo" }}'
@@ -1238,9 +1187,7 @@ def test_inventory_file_collision_new_api(mocker) -> None:
       type:
         - A
         - AAAA
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -1310,16 +1257,12 @@ def test_inventory_file_collision_new_api(mocker) -> None:
 def test_inventory_file_no_filter_new_api(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_api_token: foo
     zone_id: '42'
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -1397,16 +1340,12 @@ def test_inventory_file_no_filter_new_api(mocker) -> None:
 def test_inventory_file_record_conversion_error_new_api(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_api_token: foo
     zone_id: "{{ '42' }}"
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -1452,15 +1391,11 @@ def test_inventory_file_record_conversion_error_new_api(mocker) -> None:
 def test_inventory_file_missing_zone_new_api(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_api_token: foo
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy([])
     mocker.patch(
@@ -1485,16 +1420,12 @@ def test_inventory_file_missing_zone_new_api(mocker) -> None:
 def test_inventory_file_zone_not_found_new_api(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_api_token: foo
     zone_id: '23'
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -1536,16 +1467,12 @@ def test_inventory_file_zone_not_found_new_api(mocker) -> None:
 def test_inventory_file_unauthorized_new_api(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_api_token: foo
     zone_id: '23'
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [
@@ -1586,16 +1513,12 @@ def test_inventory_file_unauthorized_new_api(mocker) -> None:
 def test_inventory_file_error_new_api(mocker) -> None:
     inventory_filename = "test.hetzner_dns.yaml"
     C.INVENTORY_ENABLED = ["community.dns.hetzner_dns_records"]  # type: ignore
-    inventory_file = {
-        inventory_filename: textwrap.dedent(
-            """\
+    inventory_file = {inventory_filename: textwrap.dedent("""\
     ---
     plugin: community.dns.hetzner_dns_records
     hetzner_api_token: foo
     zone_id: '42'
-    """
-        )
-    }
+    """)}
 
     open_url = OpenUrlProxy(
         [

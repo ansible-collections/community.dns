@@ -23,7 +23,6 @@ from ansible_collections.community.internal_test_tools.tests.unit.utils.trust im
 
 from ansible_collections.community.dns.plugins.plugin_utils.unsafe import make_unsafe
 
-
 TEST_MAKE_UNSAFE = [
     (
         _make_trusted("text"),
