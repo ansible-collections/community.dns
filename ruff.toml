@@ -20,7 +20,6 @@ ignore = [
     # To fix:
     "A004",
     "F811",
-    "SIM300",
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.
