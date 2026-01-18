@@ -69,7 +69,7 @@ class AdGuardHomeAPIHandler:
         but because we make the answer value optional, it's
         taken from previous `find_and_compare` function.
         """
-        if method == "add":
+        if method == "add":  # noqa: SIM108
             answer_value = answer
         else:
             answer_value = target["answer"] if answer is None else answer

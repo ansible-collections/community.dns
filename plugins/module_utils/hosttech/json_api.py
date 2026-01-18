@@ -58,9 +58,7 @@ def _create_record_from_json(source, record_type=None):
     elif result.type == 'SRV':
         name = source.pop('service')
         target = '{0} {1} {2} {3}'.format(source.pop('priority'), source.pop('weight'), source.pop('port'), source.pop('target'))
-    elif result.type == 'TXT':
-        target = source.pop('text')
-    elif result.type == 'TLSA':
+    elif result.type in ('TXT', 'TLSA'):
         target = source.pop('text')
     else:
         raise DNSAPIError('Cannot parse unknown record type: {0}'.format(result.type))
@@ -161,10 +159,7 @@ def _record_to_json(record, include_id=False, include_type=True):
             raise DNSAPIError(
                 'Cannot split {0} record "{1}" into integer priority, integer weight, integer port and target: {2}'.format(
                     record.type, record.target, e))
-    elif record.type == 'TXT':
-        result['name'] = record.prefix or ''
-        result['text'] = record.target
-    elif record.type == 'TLSA':
+    elif record.type in ('TXT', 'TLSA'):
         result['name'] = record.prefix or ''
         result['text'] = record.target
     else:
@@ -187,12 +182,11 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
             res = ''
             if result.get('message'):
                 res = '{0} with message "{1}"'.format(res, result['message'])
-            if 'errors' in result:
-                if isinstance(result['errors'], dict):
-                    for k, v in sorted(result['errors'].items()):
-                        if isinstance(v, list):
-                            v = '; '.join(v)
-                        res = '{0} (field "{1}": {2})'.format(res, k, v)
+            if 'errors' in result and isinstance(result['errors'], dict):
+                for k, v in sorted(result['errors'].items()):
+                    if isinstance(v, list):
+                        v = '; '.join(v)
+                    res = '{0} (field "{1}": {2})'.format(res, k, v)
             if res:
                 return res
         return ' with data: {0}'.format(result)

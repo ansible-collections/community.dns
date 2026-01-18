@@ -53,7 +53,7 @@ def test_assert_requirements_present():
             assert_requirements_present(module)
 
         assert 'dnspython' in exc.value.args[0]['msg']
-        assert 'asdf' == exc.value.args[0]['exception']
+        assert exc.value.args[0]['exception'] == 'asdf'
 
     finally:
         resolver.DNSPYTHON_IMPORTERROR = orig_importerror

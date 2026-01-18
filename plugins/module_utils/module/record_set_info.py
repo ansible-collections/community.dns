@@ -122,9 +122,8 @@ def _run_module_record_api(module, provider_information, record_converter, filte
         # Find matching records
         records = {}
         for record in zone.records:
-            if check_prefix:
-                if record.prefix != prefix:
-                    continue
+            if check_prefix and record.prefix != prefix:
+                continue
             key = ((record.prefix + '.' + zone_in) if record.prefix else zone_in, record.type)
             record_list = records.get(key)
             if record_list is None:

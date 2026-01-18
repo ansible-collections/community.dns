@@ -34,12 +34,14 @@ import sys as _sys
 
 if _sys.version_info[0] > 2:
     import builtins as _builtins
-    getattr(_builtins, "exec")("""def raise_from(value, from_value):
+    getattr(_builtins, "exec")(  # noqa: B009
+        """def raise_from(value, from_value):
     try:
         raise value from from_value
     finally:
         value = None
-""")
+"""
+    )
 else:
     def raise_from(value, from_value):
         raise value

@@ -239,8 +239,8 @@ def _run_module_record_api(option_provider, module, provider_information, record
     if module._diff:
         def sort_items(dictionary):
             items = [
-                (zone_in if prefix is None else (prefix + '.' + zone_in), type, prefix, record_set)
-                for (prefix, type), record_set in dictionary.items() if len(record_set) > 0
+                (zone_in if prefix is None else (prefix + '.' + zone_in), record_type, prefix, record_set)
+                for (prefix, record_type), record_set in dictionary.items() if len(record_set) > 0
             ]
             return sorted(items)
 
@@ -248,13 +248,13 @@ def _run_module_record_api(option_provider, module, provider_information, record
             'before': {
                 'record_sets': [
                     format_records_for_output(record_set, record_name, prefix, record_converter=record_converter)
-                    for record_name, type, prefix, record_set in sort_items(old_record_sets)
+                    for record_name, record_type, prefix, record_set in sort_items(old_record_sets)
                 ],
             },
             'after': {
                 'record_sets': [
                     format_records_for_output(record_set, record_name, prefix, record_converter=record_converter)
-                    for record_name, type, prefix, record_set in sort_items(new_record_sets)
+                    for record_name, record_type, prefix, record_set in sort_items(new_record_sets)
                 ],
             },
         }
@@ -411,8 +411,8 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
     if module._diff:
         def sort_items(dictionary):
             items = [
-                (_get_name(prefix), type, prefix, record_set)
-                for (prefix, type), record_set in dictionary.items()
+                (_get_name(prefix), record_type, prefix, record_set)
+                for (prefix, record_type), record_set in dictionary.items()
             ]
             return sorted(items)
 
@@ -420,13 +420,13 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
             'before': {
                 'record_sets': [
                     format_record_set_for_output(record_set, record_name, prefix, record_converter=record_converter)
-                    for record_name, type, prefix, record_set in sort_items(old_record_sets)
+                    for record_name, record_type, prefix, record_set in sort_items(old_record_sets)
                 ],
             },
             'after': {
                 'record_sets': [
                     format_record_set_for_output(record_set, record_name, prefix, record_converter=record_converter)
-                    for record_name, type, prefix, record_set in sort_items(new_record_sets)
+                    for record_name, record_type, prefix, record_set in sort_items(new_record_sets)
                 ],
             },
         }

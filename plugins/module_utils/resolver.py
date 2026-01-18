@@ -108,10 +108,11 @@ class SimpleResolver(_Resolve):
         )
 
     def resolve(self, target, nxdomain_is_empty=True, server_addresses=None, target_can_be_relative=False, **kwargs):
-        if target_can_be_relative:
-            dnsname = dns.name.from_unicode(to_text(target), origin=None)
-        else:
-            dnsname = dns.name.from_unicode(to_text(target))
+        dnsname = (
+            dns.name.from_unicode(to_text(target), origin=None)
+            if target_can_be_relative else
+            dns.name.from_unicode(to_text(target))
+        )
 
         resolver = self.default_resolver
         if server_addresses:

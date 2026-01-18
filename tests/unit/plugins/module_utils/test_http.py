@@ -10,7 +10,7 @@ __metaclass__ = type
 
 
 import pytest
-from ansible.module_utils.urls import ConnectionError, NoSSLError
+from ansible.module_utils.urls import ConnectionError, NoSSLError  # noqa: A004
 from ansible_collections.community.internal_test_tools.tests.unit.utils.open_url_framework import (
     OpenUrlCall,
     OpenUrlProxy,
