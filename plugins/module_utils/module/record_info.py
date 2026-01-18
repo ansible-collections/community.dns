@@ -93,9 +93,8 @@ def _run_module_record_api(module, provider_information, record_converter, filte
 
     # Find matching records
     for record in zone.records:
-        if check_prefix:
-            if record.prefix != prefix:
-                continue
+        if check_prefix and record.prefix != prefix:
+            continue
         records.append((
             (record.prefix + '.' + zone_in) if record.prefix else zone_in,
             record,
@@ -145,9 +144,8 @@ def _run_module_record_set_api(module, provider_information, record_converter, f
     # Find matching records
     records = []
     for record_set in zone.record_sets:
-        if check_prefix:
-            if record_set.prefix != prefix:
-                continue
+        if check_prefix and record_set.prefix != prefix:
+            continue
         records.extend([(
             (record.prefix + '.' + zone_in) if record.prefix else zone_in,
             record,

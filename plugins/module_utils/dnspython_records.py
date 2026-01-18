@@ -199,7 +199,7 @@ def convert_rdata_to_dict(
 
         result[f] = val
 
-    if add_synthetic:
+    if add_synthetic:  # noqa: SIM102
         if rdata.rdtype in (dns.rdatatype.TXT, dns.rdatatype.SPF):
             if to_unicode:
                 result['value'] = u''.join([to_text(value) for value in rdata.strings])  # type: ignore
