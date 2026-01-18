@@ -2,5 +2,6 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-# Reformat Python 3 only code with black.
+# Reformat code with black / ruff.
 ec72b414b27f275f8642dd96071bc1a8f6ba2c66
+d815a5e1e19e80555ba49619a62bb07600f88f5e
