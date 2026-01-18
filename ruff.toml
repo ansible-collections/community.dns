@@ -20,7 +20,6 @@ ignore = [
     # To fix:
     "A004",
     "F811",
-    "SIM110",
     "SIM114",
     "SIM300",
 ]
