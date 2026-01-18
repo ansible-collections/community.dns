@@ -17,8 +17,6 @@ ignore = [
     "FLY002",  # Use f-string
     "SIM105",  # suppressible-exception
     "SIM117",  # Combine multiple 'with' statements
-    # To fix:
-    "F811",
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.

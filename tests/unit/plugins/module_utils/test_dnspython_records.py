@@ -19,7 +19,7 @@ from ansible_collections.community.dns.plugins.module_utils.dnspython_records im
 # We need dnspython
 dns = pytest.importorskip('dns')
 
-import dns.version
+import dns.version  # noqa: F811
 
 TEST_CONVERT_RDATA_TO_DICT = [
     (
