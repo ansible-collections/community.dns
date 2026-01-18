@@ -6,7 +6,6 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
@@ -34,7 +33,6 @@ from ..module_utils.utils import (
     patch_dict,
     patch_dict_absent,
 )
-
 
 # We need dnspython
 dns = pytest.importorskip('dns')

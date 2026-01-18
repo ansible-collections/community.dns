@@ -6,7 +6,6 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
@@ -29,7 +28,6 @@ from .resolver_helper import (
     mock_query_udp,
     mock_resolver,
 )
-
 
 # We need dnspython
 dns = pytest.importorskip('dns')

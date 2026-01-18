@@ -6,13 +6,11 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 import sys
 
 from ansible.module_utils.common.text.converters import to_native
-
 
 if sys.version_info[0] == 2:
     string_types = (basestring,)  # noqa: F821, pylint: disable=undefined-variable

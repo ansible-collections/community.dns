@@ -7,7 +7,6 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
@@ -209,7 +208,6 @@ completed:
 
 import time
 
-
 try:
     from time import monotonic
 except ImportError:
@@ -217,12 +215,12 @@ except ImportError:
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.common.text.converters import to_text
+
 from ansible_collections.community.dns.plugins.module_utils.resolver import (
     ResolveDirectlyFromNameServers,
     assert_requirements_present,
     guarded_run,
 )
-
 
 try:
     import dns.rdatatype

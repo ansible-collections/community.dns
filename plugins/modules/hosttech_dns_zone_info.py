@@ -7,7 +7,6 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
@@ -154,6 +153,7 @@ zone_info:
 """
 
 from ansible.module_utils.basic import AnsibleModule
+
 from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ModuleOptionProvider,
 )

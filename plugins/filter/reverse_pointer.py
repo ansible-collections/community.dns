@@ -50,6 +50,7 @@ from collections.abc import Callable
 
 from ansible.errors import AnsibleFilterError
 from ansible.module_utils.common.text.converters import to_text
+
 from ansible_collections.community.dns.plugins.plugin_utils.ips import (
     assert_requirements_present,
 )

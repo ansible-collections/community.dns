@@ -28,11 +28,9 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 import sys as _sys
-
 
 if _sys.version_info[0] > 2:
     import builtins as _builtins

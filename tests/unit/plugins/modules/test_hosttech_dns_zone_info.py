@@ -5,7 +5,6 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 import pytest
@@ -28,7 +27,6 @@ from .hosttech import (
     expect_wsdl_value,
     validate_wsdl_call,
 )
-
 
 try:
     import lxml.etree

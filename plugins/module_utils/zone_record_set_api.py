@@ -6,7 +6,6 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
@@ -19,10 +18,10 @@ from ansible_collections.community.dns.plugins.module_utils.zone import (
     DNSZoneWithRecordSets,
 )
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (  # pylint: disable=unused-import
-    DNSAPIError,
-    DNSAPIAuthenticationError,
-    NotProvidedType,
     NOT_PROVIDED,
+    DNSAPIAuthenticationError,
+    DNSAPIError,
+    NotProvidedType,
 )
 
 

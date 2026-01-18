@@ -6,7 +6,6 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 import sys
@@ -14,7 +13,6 @@ import sys
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIError,
 )
-
 
 if sys.version_info >= (3, 6):
     import typing
