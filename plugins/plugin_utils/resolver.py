@@ -12,6 +12,7 @@ from collections.abc import Callable
 from ansible.errors import AnsibleError
 from ansible.module_utils.basic import missing_required_lib
 from ansible.module_utils.common.text.converters import to_native
+
 from ansible_collections.community.dns.plugins.module_utils.resolver import (
     ResolverError,
 )

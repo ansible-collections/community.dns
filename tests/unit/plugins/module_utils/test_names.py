@@ -6,7 +6,6 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
@@ -19,7 +18,6 @@ from ansible_collections.community.dns.plugins.module_utils.names import (
     normalize_label,
     split_into_labels,
 )
-
 
 TEST_IS_ASCII_LABEL = [
     ('asdf', True),

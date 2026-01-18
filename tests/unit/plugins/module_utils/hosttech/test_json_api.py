@@ -6,7 +6,6 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
@@ -27,7 +26,6 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 
 
 # The example JSONs for all record types are taken from https://api.ns1.hosttech.eu/api/documentation/
-
 def test_AAAA():
     data = {
         "id": 11,

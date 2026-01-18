@@ -6,7 +6,6 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
@@ -22,7 +21,6 @@ from ansible_collections.community.dns.plugins.module_utils.conversion.txt impor
     decode_txt_value,
     encode_txt_value,
 )
-
 
 TEST_DECODE = [
     (r'', 'decimal', u''),

@@ -6,7 +6,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
@@ -60,6 +59,7 @@ rules:
 """
 
 from ansible.module_utils.basic import AnsibleModule
+
 from ansible_collections.community.dns.plugins.module_utils.adguardhome.api import (
     AdGuardHomeAPIHandler,
     create_adguardhome_argument_spec,

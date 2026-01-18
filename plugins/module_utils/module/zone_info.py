@@ -8,13 +8,13 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
 import traceback
 
 from ansible.module_utils.common.text.converters import to_text
+
 from ansible_collections.community.dns.plugins.module_utils.argspec import ArgumentSpec
 from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
     DNSAPIAuthenticationError,

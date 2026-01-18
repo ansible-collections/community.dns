@@ -8,7 +8,6 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
@@ -16,7 +15,6 @@ import base64
 import sys
 
 from ansible.module_utils.common.text.converters import to_bytes, to_native, to_text
-
 
 if sys.version_info[0] == 2:
     binary_type = str

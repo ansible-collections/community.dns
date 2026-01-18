@@ -6,7 +6,6 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
@@ -15,8 +14,8 @@ import sys
 
 from ansible.module_utils.common.text.converters import to_native
 from ansible.module_utils.urls import ConnectionError, NoSSLError, fetch_url, open_url
-from ansible_collections.community.dns.plugins.module_utils._six import add_metaclass
 
+from ansible_collections.community.dns.plugins.module_utils._six import add_metaclass
 
 try:
     from urllib.error import HTTPError

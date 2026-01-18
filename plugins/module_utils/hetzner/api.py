@@ -9,7 +9,6 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
@@ -17,6 +16,7 @@ import json
 import time
 
 from ansible.module_utils.basic import env_fallback
+
 from ansible_collections.community.dns.plugins.module_utils.argspec import ArgumentSpec
 from ansible_collections.community.dns.plugins.module_utils.json_api_helper import (
     ERROR_CODES,
@@ -39,7 +39,6 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_set_api 
     ZoneRecordSetAPI,
     filter_record_sets,
 )
-
 
 try:
     from urllib.parse import quote

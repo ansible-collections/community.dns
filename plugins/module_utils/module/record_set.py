@@ -8,13 +8,13 @@
 
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
 import traceback
 
 from ansible.module_utils.common.text.converters import to_text
+
 from ansible_collections.community.dns.plugins.module_utils.argspec import (
     ArgumentSpec,
     ModuleOptionProvider,
@@ -44,11 +44,11 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
     ZoneRecordAPI,
     filter_records,
 )
-from ansible_collections.community.dns.plugins.module_utils.zone_record_set_api import (
-    filter_record_sets,
-)
 from ansible_collections.community.dns.plugins.module_utils.zone_record_helpers import (
     bulk_apply_changes,
+)
+from ansible_collections.community.dns.plugins.module_utils.zone_record_set_api import (
+    filter_record_sets,
 )
 
 from ._utils import get_prefix, normalize_dns_name

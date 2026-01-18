@@ -6,7 +6,6 @@
 # Make coding more python3-ish
 from __future__ import absolute_import, division, print_function
 
-
 __metaclass__ = type
 
 
@@ -17,12 +16,10 @@ from ansible_collections.community.dns.plugins.module_utils.dnspython_records im
     convert_rdata_to_dict,
 )
 
-
 # We need dnspython
 dns = pytest.importorskip('dns')
 
 import dns.version
-
 
 TEST_CONVERT_RDATA_TO_DICT = [
     (

@@ -11,6 +11,7 @@ from collections.abc import Callable
 
 from ansible.errors import AnsibleFilterError
 from ansible.module_utils.common.text.converters import to_text
+
 from ansible_collections.community.dns.plugins.module_utils.conversion.txt import (
     decode_txt_value,
     encode_txt_value,
