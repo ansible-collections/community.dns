@@ -1212,3 +1212,15 @@ releases:
       - 301-hetzner-dns.yml
       - 308-improvements.yml
     release_date: '2026-01-03'
+  3.5.1:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+        - converter module utils - add ``stacklevel=2`` to Python warnings. This affects
+          third-party users of the module utils outside this collection (https://github.com/ansible-collections/community.dns/pull/310).
+      release_summary: Maintenance release with updated PSL.
+    fragments:
+      - 3.5.1.yml
+      - 310-refactor.yml
+      - update-psl.yml
+    release_date: '2026-01-26'

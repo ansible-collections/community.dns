@@ -4,6 +4,20 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.5.1
+======
+
+Release Summary
+---------------
+
+Maintenance release with updated PSL.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- converter module utils - add ``stacklevel=2`` to Python warnings. This affects third-party users of the module utils outside this collection (https://github.com/ansible-collections/community.dns/pull/310).
+
 v3.5.0
 ======
 

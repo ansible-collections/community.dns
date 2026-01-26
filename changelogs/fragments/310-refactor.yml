@@ -1,3 +1,0 @@
-bugfixes:
-  - "converter module utils - add ``stacklevel=2`` to Python warnings. This affects third-party users of the module utils outside this collection
-     (https://github.com/ansible-collections/community.dns/pull/310)."
