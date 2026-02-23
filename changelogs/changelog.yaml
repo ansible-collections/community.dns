@@ -1224,3 +1224,12 @@ releases:
       - 310-refactor.yml
       - update-psl.yml
     release_date: '2026-01-26'
+  3.5.2:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+      release_summary: Regular maintenance release with updated PSL.
+    fragments:
+      - 3.5.2.yml
+      - update-psl.yml
+    release_date: '2026-02-23'
