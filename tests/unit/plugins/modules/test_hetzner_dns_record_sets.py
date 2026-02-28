@@ -6085,6 +6085,11 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                         ],
                     }),
                     # Here the second sleep(1) call happens
+                    FetchUrlCall('GET', -1)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/actions?id=4&id=5'),
+                    # Here the first sleep(0.5) call happens
                     FetchUrlCall('GET', 200)
                     .expect_header('accept', 'application/json')
                     .expect_header('Authorization', 'Bearer foo')
@@ -6147,10 +6152,11 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                         },
                     }),
                 ])
-        assert sleep.call_count == 2
+        assert sleep.call_count == 3
         sleep.assert_has_calls([
             call(1),
             call(1),
+            call(0.5),
         ])
 
         assert result['changed'] is True
