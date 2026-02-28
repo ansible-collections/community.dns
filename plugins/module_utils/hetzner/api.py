@@ -430,6 +430,10 @@ def _format_action_error(action_with_error):
     return "{1} ({0})".format(error["code"], error["message"])
 
 
+# Number of actions to query together at most
+_LIMIT_ACTION_QUERYING = 30
+
+
 class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
     def __init__(self, http_helper, token, api='https://api.hetzner.cloud/', debug=False):
         JSONAPIHelper.__init__(self, http_helper, token, api=api, debug=debug)
@@ -570,6 +574,9 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
     def _wait_for_actions(self, actions, what, fail_on_error=True, stop_on_first_error=False):
         errors = []
         other_actions = []
+        # Only do an initial wait if there have been at most _LIMIT_ACTION_QUERYING/2 calls.
+        # (This is a heuristic to avoid unnecessary waits when we can already clear the list.)
+        do_wait = 2 * len(actions) <= _LIMIT_ACTION_QUERYING
         while True:
             new_errors = [action for action in actions if action["status"] == "error"]
             if new_errors:
@@ -580,7 +587,9 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
             actions = [action for action in actions if action["status"] == "running"]
             if not actions:
                 break
-            time.sleep(1)
+            if do_wait:
+                time.sleep(1)
+            do_wait = True
             action_ids = [str(action["id"]) for action in actions]
             if len(action_ids) == 1:
                 url = "v1/actions/{0}".format(_q(action_ids[0]))
@@ -588,10 +597,18 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                 self._check_error('GET', url, result)
                 actions = [result["action"]]
             else:
+                remaining_actions = []
+                if len(action_ids) > _LIMIT_ACTION_QUERYING:
+                    action_ids = action_ids[:_LIMIT_ACTION_QUERYING]
+                    remaining_actions = actions[_LIMIT_ACTION_QUERYING:]
                 url = "v1/actions"
                 result, dummy = self._get(url, query=[("id", action_id) for action_id in sorted(action_ids)], expected=[200])
                 self._check_error('GET', url, result)
                 actions = result["actions"]
+                if all(action["status"] != "running" for action in actions):
+                    # If all actions queried by this request have stopped, don't wait before querying more
+                    do_wait = False
+                actions.extend(remaining_actions)
         if errors and fail_on_error:
             error_messages = [_format_action_error(error) for error in errors]
             raise DNSAPIError(

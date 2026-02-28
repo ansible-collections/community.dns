@@ -8,6 +8,8 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
+    MagicMock,
+    call,
     patch,
 )
 from ansible_collections.community.internal_test_tools.tests.unit.utils.fetch_url_module_framework import (
@@ -5755,7 +5757,7 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
             " something went wrong (server_error)",
         )
 
-    def test_wrong_tpye(self, mocker):
+    def test_wrong_type(self, mocker):
         result = self.run_module_failed(mocker, hetzner_dns_record_sets, {
             'hetzner_api_token': 'foo',
             'zone_name': 'example.com',
@@ -5789,3 +5791,451 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
         ])
 
         assert result['msg'] == "Found invalid record type DANE at index #0"
+
+    def test_removal_prune_wait_for_actions_batch(self, mocker):
+        sleep = MagicMock()
+        with patch('ansible_collections.community.dns.plugins.module_utils.hetzner.api._LIMIT_ACTION_QUERYING', 2):
+            with patch('time.sleep', sleep):
+                result = self.run_module_success(mocker, hetzner_dns_record_sets, {
+                    'hetzner_api_token': 'foo',
+                    'zone_name': 'example.com',
+                    'prune': 'true',
+                    'record_sets': [
+                        {
+                            'record': 'example.com',
+                            'type': 'NS',
+                            'ignore': True,
+                        },
+                        {
+                            'record': 'example.com',
+                            'type': 'SOA',
+                            'ignore': True,
+                        },
+                    ],
+                    '_ansible_diff': True,
+                    '_ansible_remote_tmp': '/tmp/tmp',
+                    '_ansible_keep_remote_files': True,
+                }, [
+                    FetchUrlCall('GET', 200)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/zones/example.com')
+                    .return_header('Content-Type', 'application/json')
+                    .result_json(HETZNER_ZONE_NEW_JSON),
+                    FetchUrlCall('GET', 200)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets', without_query=True)
+                    .expect_query_absent('name')
+                    .expect_query_absent('type')
+                    .expect_query_values('page', '1')
+                    .expect_query_values('per_page', '100')
+                    .return_header('Content-Type', 'application/json')
+                    .result_json(get_hetzner_new_json_records()),
+                    FetchUrlCall('DELETE', 201)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets/@/A')
+                    .return_header('Content-Type', 'application/json')
+                    .result_json({
+                        "action": {
+                            "id": 1,
+                            "command": "delete_rrset",
+                            "status": "running",
+                            "progress": 50,
+                            "started": "2016-01-30T23:55:00Z",
+                            "finished": None,
+                            "resources": [
+                                {
+                                    "id": 42,
+                                    "type": "zone",
+                                },
+                            ],
+                            "error": None,
+                        },
+                    }),
+                    FetchUrlCall('DELETE', 201)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets/*/A')
+                    .return_header('Content-Type', 'application/json')
+                    .result_json({
+                        "action": {
+                            "id": 2,
+                            "command": "delete_rrset",
+                            "status": "running",
+                            "progress": 50,
+                            "started": "2016-01-30T23:55:00Z",
+                            "finished": None,
+                            "resources": [
+                                {
+                                    "id": 42,
+                                    "type": "zone",
+                                },
+                            ],
+                            "error": None,
+                        },
+                    }),
+                    FetchUrlCall('DELETE', 201)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets/@/AAAA')
+                    .return_header('Content-Type', 'application/json')
+                    .result_json({
+                        "action": {
+                            "id": 3,
+                            "command": "delete_rrset",
+                            "status": "running",
+                            "progress": 50,
+                            "started": "2016-01-30T23:55:00Z",
+                            "finished": None,
+                            "resources": [
+                                {
+                                    "id": 42,
+                                    "type": "zone",
+                                },
+                            ],
+                            "error": None,
+                        },
+                    }),
+                    FetchUrlCall('DELETE', 201)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets/*/AAAA')
+                    .return_header('Content-Type', 'application/json')
+                    .result_json({
+                        "action": {
+                            "id": 4,
+                            "command": "delete_rrset",
+                            "status": "running",
+                            "progress": 50,
+                            "started": "2016-01-30T23:55:00Z",
+                            "finished": None,
+                            "resources": [
+                                {
+                                    "id": 42,
+                                    "type": "zone",
+                                },
+                            ],
+                            "error": None,
+                        },
+                    }),
+                    FetchUrlCall('DELETE', 201)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets/@/MX')
+                    .return_header('Content-Type', 'application/json')
+                    .result_json({
+                        "action": {
+                            "id": 5,
+                            "command": "delete_rrset",
+                            "status": "running",
+                            "progress": 50,
+                            "started": "2016-01-30T23:55:00Z",
+                            "finished": None,
+                            "resources": [
+                                {
+                                    "id": 42,
+                                    "type": "zone",
+                                },
+                            ],
+                            "error": None,
+                        },
+                    }),
+                    FetchUrlCall('DELETE', 201)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/zones/42/rrsets/foo/TXT')
+                    .return_header('Content-Type', 'application/json')
+                    .result_json({
+                        "action": {
+                            "id": 6,
+                            "command": "delete_rrset",
+                            "status": "running",
+                            "progress": 50,
+                            "started": "2016-01-30T23:55:00Z",
+                            "finished": None,
+                            "resources": [
+                                {
+                                    "id": 42,
+                                    "type": "zone",
+                                },
+                            ],
+                            "error": None,
+                        },
+                    }),
+                    # Here the first sleep(1) call would happen, if we didn't reduce _LIMIT_ACTION_QUERYING
+                    # so that how we have more than _LIMIT_ACTION_QUERYING/2 actions
+                    FetchUrlCall('GET', 200)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/actions?id=1&id=2')
+                    .return_header('Content-Type', 'application/json')
+                    .result_json({
+                        "actions": [
+                            {
+                                "id": 1,
+                                "command": "delete_rrset",
+                                "status": "running",
+                                "progress": 50,
+                                "started": "2016-01-30T23:55:00Z",
+                                "finished": None,
+                                "resources": [
+                                    {
+                                        "id": 42,
+                                        "type": "zone",
+                                    },
+                                ],
+                                "error": None,
+                            },
+                            {
+                                "id": 2,
+                                "command": "delete_rrset",
+                                "status": "running",
+                                "progress": 50,
+                                "started": "2016-01-30T23:55:00Z",
+                                "finished": None,
+                                "resources": [
+                                    {
+                                        "id": 42,
+                                        "type": "zone",
+                                    },
+                                ],
+                                "error": None,
+                            },
+                        ],
+                    }),
+                    # Here the first sleep(1) call happens
+                    FetchUrlCall('GET', 200)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/actions?id=1&id=2')
+                    .return_header('Content-Type', 'application/json')
+                    .result_json({
+                        "actions": [
+                            {
+                                "id": 1,
+                                "command": "delete_rrset",
+                                "status": "success",
+                                "progress": 100,
+                                "started": "2016-01-30T23:55:00Z",
+                                "finished": "2026-01-30T23:55:00Z",
+                                "resources": [
+                                    {
+                                        "id": 42,
+                                        "type": "zone",
+                                    },
+                                ],
+                                "error": None,
+                            },
+                            {
+                                "id": 2,
+                                "command": "delete_rrset",
+                                "status": "success",
+                                "progress": 100,
+                                "started": "2016-01-30T23:55:00Z",
+                                "finished": "2026-01-30T23:55:00Z",
+                                "resources": [
+                                    {
+                                        "id": 42,
+                                        "type": "zone",
+                                    },
+                                ],
+                                "error": None,
+                            },
+                        ],
+                    }),
+                    FetchUrlCall('GET', 200)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/actions?id=3&id=4')
+                    .return_header('Content-Type', 'application/json')
+                    .result_json({
+                        "actions": [
+                            {
+                                "id": 3,
+                                "command": "delete_rrset",
+                                "status": "success",
+                                "progress": 100,
+                                "started": "2016-01-30T23:55:00Z",
+                                "finished": "2026-01-30T23:55:00Z",
+                                "resources": [
+                                    {
+                                        "id": 42,
+                                        "type": "zone",
+                                    },
+                                ],
+                                "error": None,
+                            },
+                            {
+                                "id": 4,
+                                "command": "delete_rrset",
+                                "status": "running",
+                                "progress": 50,
+                                "started": "2016-01-30T23:55:00Z",
+                                "finished": None,
+                                "resources": [
+                                    {
+                                        "id": 42,
+                                        "type": "zone",
+                                    },
+                                ],
+                                "error": None,
+                            },
+                        ],
+                    }),
+                    # Here the second sleep(1) call happens
+                    FetchUrlCall('GET', -1)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/actions?id=4&id=5'),
+                    # Here the first sleep(0.5) call happens
+                    FetchUrlCall('GET', 200)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/actions?id=4&id=5')
+                    .return_header('Content-Type', 'application/json')
+                    .result_json({
+                        "actions": [
+                            {
+                                "id": 4,
+                                "command": "delete_rrset",
+                                "status": "success",
+                                "progress": 100,
+                                "started": "2016-01-30T23:55:00Z",
+                                "finished": "2026-01-30T23:55:00Z",
+                                "resources": [
+                                    {
+                                        "id": 42,
+                                        "type": "zone",
+                                    },
+                                ],
+                                "error": None,
+                            },
+                            {
+                                "id": 5,
+                                "command": "delete_rrset",
+                                "status": "success",
+                                "progress": 100,
+                                "started": "2016-01-30T23:55:00Z",
+                                "finished": "2026-01-30T23:55:00Z",
+                                "resources": [
+                                    {
+                                        "id": 42,
+                                        "type": "zone",
+                                    },
+                                ],
+                                "error": None,
+                            },
+                        ],
+                    }),
+                    FetchUrlCall('GET', 200)
+                    .expect_header('accept', 'application/json')
+                    .expect_header('Authorization', 'Bearer foo')
+                    .expect_url('https://api.hetzner.cloud/v1/actions/6')
+                    .return_header('Content-Type', 'application/json')
+                    .result_json({
+                        "action": {
+                            "id": 6,
+                            "command": "delete_rrset",
+                            "status": "success",
+                            "progress": 100,
+                            "started": "2016-01-30T23:55:00Z",
+                            "finished": "2026-01-30T23:55:00Z",
+                            "resources": [
+                                {
+                                    "id": 42,
+                                    "type": "zone",
+                                },
+                            ],
+                            "error": None,
+                        },
+                    }),
+                ])
+        assert sleep.call_count == 3
+        sleep.assert_has_calls([
+            call(1),
+            call(1),
+            call(0.5),
+        ])
+
+        assert result['changed'] is True
+        assert result['zone_id'] == '42'
+        assert result['diff']['before'] == {
+            'record_sets': [
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.5'],
+                },
+                {
+                    'record': '*.example.com',
+                    'prefix': '*',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'A',
+                    'value': ['1.2.3.4'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'AAAA',
+                    'value': ['2001:1:2::3'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': 3600,
+                    'type': 'MX',
+                    'value': ['10 example.com'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': None,
+                    'type': 'NS',
+                    'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': None,
+                    'type': 'SOA',
+                    'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
+                },
+                {
+                    'record': 'foo.example.com',
+                    'prefix': 'foo',
+                    'ttl': None,
+                    'type': 'TXT',
+                    'value': [u'bär "with quotes" (use \\ to escape)'],
+                },
+            ],
+        }
+        assert result['diff']['after'] == {
+            'record_sets': [
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'type': 'NS',
+                    'ttl': None,
+                    'value': ['helium.ns.hetzner.de.', 'hydrogen.ns.hetzner.com.', 'oxygen.ns.hetzner.com.'],
+                },
+                {
+                    'record': 'example.com',
+                    'prefix': '',
+                    'ttl': None,
+                    'type': 'SOA',
+                    'value': ['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600'],
+                },
+            ],
+        }
