@@ -181,6 +181,9 @@ class JSONAPIHelper(object):
         except (ValueError, TypeError):
             return 10
 
+    def _should_retry(self, content, info):
+        return info['status'] in (-1, 502, 503, 504)
+
     def _request(
         self,
         url,  # type: str
@@ -189,19 +192,26 @@ class JSONAPIHelper(object):
         """Execute a HTTP request and handle common things like rate limiting."""
         number_retries = 10
         countdown = number_retries + 1
+        cause = ""
         while True:
             content, info = self._http_helper.fetch_url(url, **kwargs)
             countdown -= 1
-            retry_after = self._is_rate_limiting_result(content, info)
-            if retry_after is not False:
+            retry_wait = None
+            if self._should_retry(content, info):
+                retry_wait = 0.5
+                cause = "a local HTTP request error" if info['status'] == -1 else "HTTP status {0}".format(info['status'])
+            else:
+                retry_after = self._is_rate_limiting_result(content, info)
+                if retry_after is not False:
+                    cause = "429 Too Many Attempts"
+                    retry_wait = 10 if retry_after is True else retry_after
+            if retry_wait is not None:
                 if countdown <= 0:
                     break
-                if retry_after is True:
-                    retry_after = 10
-                time.sleep(retry_after)
+                time.sleep(retry_wait)
                 continue
             return content, info
-        raise DNSAPIError('Stopping after {0} failed retries with 429 Too Many Attempts'.format(number_retries))
+        raise DNSAPIError('Stopping after {0} failed retries with {1}'.format(number_retries, cause))
 
     def _create_headers(self):  # type: (...) -> dict[str, str]
         return {
