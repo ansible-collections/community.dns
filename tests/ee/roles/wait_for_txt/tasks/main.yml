@@ -6,9 +6,9 @@
 - name: Wait for existing TXT entry
   community.dns.wait_for_txt:
     records:
-      - name: github.com
+      - name: ansible.com
         values: |
-          {{ query('community.dns.lookup_as_dict', 'github.com', type='TXT') | map(attribute='value') | list }}
+          {{ query('community.dns.lookup_as_dict', 'ansible.com', type='TXT') | map(attribute='value') | list }}
       - name: github.io
         values: []
     query_timeout: 20
@@ -22,7 +22,7 @@
       - success.msg == 'All checks passed'
       - success.completed == 2
       - success.records | length == 2
-      - success.records[0].name == 'github.com'
+      - success.records[0].name == 'ansible.com'
       - success.records[0].done == true
       - "'values' in success.records[0]"
       - success.records[0].check_count == 1
