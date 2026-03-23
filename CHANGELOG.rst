@@ -4,6 +4,22 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.5.3
+======
+
+Release Summary
+---------------
+
+Bugfix release with updated PSL.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- hetzner_* modules and hetzner_dns_records inventory plugin - retry on network problems and certain HTTP codes (502, 503, 504) (https://github.com/ansible-collections/community.dns/pull/313).
+- hetzner_dns_record_sets - when doing batch updates, do not request status updates for too many actions at once (https://github.com/ansible-collections/community.dns/issues/312, https://github.com/ansible-collections/community.dns/pull/313).
+- hosttech_* modules and hosttech_dns_records inventory plugin - when using the JSON API, retry on network problems and certain HTTP codes (502, 503, 504) (https://github.com/ansible-collections/community.dns/pull/313).
+
 v3.5.2
 ======
 
