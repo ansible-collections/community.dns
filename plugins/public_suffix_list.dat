@@ -13597,6 +13597,7 @@ fh-muenster.io
 
 // Figma : https://www.figma.com
 // Submitted by Nick Frost <psl@figma.com>
+payload.dev
 figma.site
 figma-gov.site
 preview.site
@@ -15085,6 +15086,10 @@ gl.srv.us
 // Peplink | Pepwave : http://peplink.com/
 // Submitted by Steve Leung <steveleung@peplink.com>
 mypep.link
+
+// Perplexity AI : https://www.perplexity.ai/
+// Submitted by Alec Xiang <security@perplexity.ai>
+pplx.app
 
 // Perspecta : https://perspecta.com/
 // Submitted by Kenneth Van Alstyne <kvanalstyne@perspecta.com>
