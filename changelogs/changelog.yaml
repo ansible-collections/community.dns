@@ -1251,3 +1251,12 @@ releases:
       - 313-api.yml
       - update-psl.yml
     release_date: '2026-03-23'
+  3.5.4:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+      release_summary: Regular maintenance release with updated PSL.
+    fragments:
+      - 3.5.4.yml
+      - update-psl.yml
+    release_date: '2026-04-19'
