@@ -19,7 +19,6 @@ from ansible_collections.community.dns.plugins.module_utils._conversion.txt impo
     encode_txt_value,
 )
 from ansible_collections.community.dns.plugins.module_utils._record import DNSRecord
-from ansible_collections.community.dns.plugins.module_utils._six import raise_from
 
 
 class RecordConverter(object):
@@ -109,12 +108,9 @@ class RecordConverter(object):
                 self._handle_txt_api(False, record)
             return record
         except DNSConversionError as e:
-            raise_from(
-                DNSConversionError(
-                    "While processing record from API: {0}".format(e.error_message)
-                ),
-                e,
-            )
+            raise DNSConversionError(
+                "While processing record from API: {0}".format(e.error_message)
+            ) from e
 
     def process_to_api(self, record):
         """
@@ -127,12 +123,9 @@ class RecordConverter(object):
             return record
         except DNSConversionError as e:  # pragma: no cover
             # This can never happen
-            raise_from(
-                DNSConversionError(
-                    "While processing record for the API: {0}".format(e.error_message)
-                ),
-                e,
-            )  # pragma: no cover
+            raise DNSConversionError(
+                "While processing record for the API: {0}".format(e.error_message)
+            ) from e  # pragma: no cover
 
     def process_from_user(self, record):
         """
@@ -145,12 +138,9 @@ class RecordConverter(object):
                 self._handle_txt_user(False, record)
             return record
         except DNSConversionError as e:
-            raise_from(
-                DNSConversionError(
-                    "While processing record from the user: {0}".format(e.error_message)
-                ),
-                e,
-            )
+            raise DNSConversionError(
+                "While processing record from the user: {0}".format(e.error_message)
+            ) from e
 
     def process_to_user(self, record):
         """
@@ -163,12 +153,9 @@ class RecordConverter(object):
             return record
         except DNSConversionError as e:  # pragma: no cover
             # This can never happen
-            raise_from(
-                DNSConversionError(
-                    "While processing record for the user: {0}".format(e.error_message)
-                ),
-                e,
-            )  # pragma: no cover
+            raise DNSConversionError(
+                "While processing record for the user: {0}".format(e.error_message)
+            ) from e  # pragma: no cover
 
     def clone_from_api(self, record):
         """

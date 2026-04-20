@@ -18,8 +18,6 @@ from ansible.module_utils.urls import (
     open_url,
 )
 
-from ansible_collections.community.dns.plugins.module_utils._six import add_metaclass
-
 try:
     from urllib.error import HTTPError
 except ImportError:
@@ -38,8 +36,7 @@ class NetworkError(Exception):
     pass
 
 
-@add_metaclass(abc.ABCMeta)
-class HTTPHelper(object):
+class HTTPHelper(object, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def fetch_url(
         self,

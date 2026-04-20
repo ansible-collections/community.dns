@@ -9,9 +9,6 @@ from __future__ import annotations
 
 import abc
 
-from ansible_collections.community.dns.plugins.module_utils._six import (
-    add_metaclass,
-)
 from ansible_collections.community.dns.plugins.module_utils._zone import (
     DNSZoneWithRecords,
 )
@@ -32,8 +29,7 @@ class NotProvidedType(object):
 NOT_PROVIDED = NotProvidedType()
 
 
-@add_metaclass(abc.ABCMeta)
-class ZoneRecordAPI(object):
+class ZoneRecordAPI(object, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_zone_by_name(self, name):
         """

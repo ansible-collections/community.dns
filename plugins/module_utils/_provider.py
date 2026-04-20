@@ -18,10 +18,6 @@ from ansible.module_utils.common.validation import (
     check_type_str,
 )
 
-from ansible_collections.community.dns.plugins.module_utils._six import (
-    add_metaclass,
-)
-
 
 def ensure_type(value, type_name):
     if type_name == "str":
@@ -39,8 +35,7 @@ def ensure_type(value, type_name):
     return value
 
 
-@add_metaclass(abc.ABCMeta)
-class ProviderInformation(object):
+class ProviderInformation(object, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_zone_id_type(self):
         """

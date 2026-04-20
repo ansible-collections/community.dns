@@ -10,7 +10,6 @@ from __future__ import annotations
 from ansible.module_utils.common.text.converters import to_native
 
 from ansible_collections.community.dns.plugins.module_utils._record import DNSRecord
-from ansible_collections.community.dns.plugins.module_utils._six import raise_from
 from ansible_collections.community.dns.plugins.module_utils._wsdl import (
     Composer,
     WSDLError,
@@ -186,16 +185,13 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         except WSDLError as exc:
             if exc.error_origin == "server" and exc.error_message == "zone not found":
                 return None
-            raise_from(
-                DNSAPIError("Error while getting zone: {0}".format(to_native(exc))), exc
-            )
+            raise DNSAPIError(
+                "Error while getting zone: {0}".format(to_native(exc))
+            ) from exc
         except WSDLNetworkError as exc:
-            raise_from(
-                DNSAPIError(
-                    "Network error while getting zone: {0}".format(to_native(exc))
-                ),
-                exc,
-            )
+            raise DNSAPIError(
+                "Network error while getting zone: {0}".format(to_native(exc))
+            ) from exc
 
     def get_zone_with_records_by_id(
         self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
@@ -268,17 +264,13 @@ class HostTechWSDLAPI(ZoneRecordAPI):
                 self._execute(command, "addRecordResponse", dict)
             )
         except WSDLError as exc:
-            raise_from(
-                DNSAPIError("Error while adding record: {0}".format(to_native(exc))),
-                exc,
-            )
+            raise DNSAPIError(
+                "Error while adding record: {0}".format(to_native(exc))
+            ) from exc
         except WSDLNetworkError as exc:
-            raise_from(
-                DNSAPIError(
-                    "Network error while adding record: {0}".format(to_native(exc))
-                ),
-                exc,
-            )
+            raise DNSAPIError(
+                "Network error while adding record: {0}".format(to_native(exc))
+            ) from exc
 
     def update_record(self, zone_id, record):
         """
@@ -302,17 +294,13 @@ class HostTechWSDLAPI(ZoneRecordAPI):
                 self._execute(command, "updateRecordResponse", dict)
             )
         except WSDLError as exc:
-            raise_from(
-                DNSAPIError("Error while updating record: {0}".format(to_native(exc))),
-                exc,
-            )
+            raise DNSAPIError(
+                "Error while updating record: {0}".format(to_native(exc))
+            ) from exc
         except WSDLNetworkError as exc:
-            raise_from(
-                DNSAPIError(
-                    "Network error while updating record: {0}".format(to_native(exc))
-                ),
-                exc,
-            )
+            raise DNSAPIError(
+                "Network error while updating record: {0}".format(to_native(exc))
+            ) from exc
 
     def delete_record(self, zone_id, record):
         """
@@ -330,14 +318,10 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         try:
             return self._execute(command, "deleteRecordResponse", bool)
         except WSDLError as exc:
-            raise_from(
-                DNSAPIError("Error while deleting record: {0}".format(to_native(exc))),
-                exc,
-            )
+            raise DNSAPIError(
+                "Error while deleting record: {0}".format(to_native(exc))
+            ) from exc
         except WSDLNetworkError as exc:
-            raise_from(
-                DNSAPIError(
-                    "Network error while deleting record: {0}".format(to_native(exc))
-                ),
-                exc,
-            )
+            raise DNSAPIError(
+                "Network error while deleting record: {0}".format(to_native(exc))
+            ) from exc
