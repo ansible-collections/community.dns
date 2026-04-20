@@ -101,14 +101,10 @@ include_devel = true
 include_devel = true
 
 [sessions.ansible_test_integration_w_default_container.core_python_versions]
-"2.14" = ["2.7", "3.5", "3.9"]
-"2.15" = ["3.7"]
-"2.16" = ["2.7", "3.6", "3.11"]
-"2.17" = ["3.7", "3.12"]
 "2.18" = ["3.8", "3.13"]
 "2.19" = ["3.9", "3.13"]
 "2.20" = ["3.10", "3.14"]
-"2.21" = ["3.10", "3.14"]
+"2.21" = ["3.11", "3.14"]
 
 [[sessions.ee_check.execution_environments]]
 name = "devel-ubi-9"
