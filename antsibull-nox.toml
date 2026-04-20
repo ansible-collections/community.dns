@@ -18,7 +18,6 @@ stable_branches = [ "stable-*" ]
 extra_code_files = ["tests/update-docs-fragments.py"]
 run_isort = false
 run_black = true
-run_black_modules = false  # modules still support Python 2
 black_config = "black.toml"
 run_ruff_autofix = true
 ruff_autofix_config = "ruff.toml"
