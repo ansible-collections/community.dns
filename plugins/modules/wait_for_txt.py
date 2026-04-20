@@ -238,29 +238,29 @@ def lookup(resolver, name):
                 line = []
                 for txtstring in data.strings:
                     line.append(to_text(txtstring))
-                res.append(u''.join(line))
+                res.append("".join(line))
         result[key] = res
         txts[key] = []
     return result
 
 
 def validate_check(record_values, expected_values, comparison_mode):
-    if comparison_mode == 'subset':
+    if comparison_mode == "subset":
         return set(expected_values) <= set(record_values)
 
-    if comparison_mode == 'superset':
+    if comparison_mode == "superset":
         return set(expected_values) >= set(record_values)
 
-    if comparison_mode == 'superset_not_empty':
+    if comparison_mode == "superset_not_empty":
         return bool(record_values) and set(expected_values) >= set(record_values)
 
-    if comparison_mode == 'equals':
+    if comparison_mode == "equals":
         return sorted(record_values) == sorted(expected_values)
 
-    if comparison_mode == 'equals_ordered':
+    if comparison_mode == "equals_ordered":
         return record_values == expected_values
 
-    raise AssertionError('Internal error!')  # pragma: no cover
+    raise AssertionError("Internal error!")  # pragma: no cover
 
 
 class Waiter(object):
@@ -268,22 +268,24 @@ class Waiter(object):
         self.module = module
 
         self.resolver = ResolveDirectlyFromNameServers(
-            timeout=self.module.params['query_timeout'],
-            timeout_retries=self.module.params['query_retry'],
-            servfail_retries=self.module.params['servfail_retries'],
-            always_ask_default_resolver=self.module.params['always_ask_default_resolver'],
-            server_addresses=self.module.params['server'],
+            timeout=self.module.params["query_timeout"],
+            timeout_retries=self.module.params["query_retry"],
+            servfail_retries=self.module.params["servfail_retries"],
+            always_ask_default_resolver=self.module.params[
+                "always_ask_default_resolver"
+            ],
+            server_addresses=self.module.params["server"],
         )
-        self.records = self.module.params['records']
-        self.timeout = self.module.params['timeout']
-        self.max_sleep = self.module.params['max_sleep']
+        self.records = self.module.params["records"]
+        self.timeout = self.module.params["timeout"]
+        self.max_sleep = self.module.params["max_sleep"]
 
         self.results = [None] * len(self.records)
         for index, record in enumerate(self.records):
             self.results[index] = {
-                'name': record['name'],
-                'done': False,
-                'check_count': 0,
+                "name": record["name"],
+                "done": False,
+                "check_count": 0,
             }
         self.finished_checks = 0
 
@@ -299,28 +301,32 @@ class Waiter(object):
 
             done = True
             for index, record in enumerate(self.records):
-                if self.results[index]['done']:
+                if self.results[index]["done"]:
                     continue
-                txts = lookup(self.resolver, record['name'])
-                self.results[index]['values'] = txts
-                self.results[index]['entries'] = txts
-                self.results[index]['check_count'] += 1
-                if txts and all(validate_check(txt, record['values'], record['mode']) for txt in txts.values()):
-                    self.results[index]['done'] = True
+                txts = lookup(self.resolver, record["name"])
+                self.results[index]["values"] = txts
+                self.results[index]["entries"] = txts
+                self.results[index]["check_count"] += 1
+                if txts and all(
+                    validate_check(txt, record["values"], record["mode"])
+                    for txt in txts.values()
+                ):
+                    self.results[index]["done"] = True
                     self.finished_checks += 1
                 else:
                     done = False
 
             if done:
                 self.module.exit_json(
-                    msg='All checks passed',
-                    **self._generate_additional_results()
+                    msg="All checks passed", **self._generate_additional_results()
                 )
 
             if has_timeout:
                 self.module.fail_json(
-                    msg='Timeout ({0} out of {1} check(s) passed).'.format(self.finished_checks, len(self.records)),
-                    **self._generate_additional_results()
+                    msg="Timeout ({0} out of {1} check(s) passed).".format(
+                        self.finished_checks, len(self.records)
+                    ),
+                    **self._generate_additional_results(),
                 )
 
             # Simple quadratic sleep with maximum wait of max_sleep seconds
@@ -335,29 +341,53 @@ class Waiter(object):
 
     def _generate_additional_results(self):
         return {
-            'records': self.results,
-            'completed': self.finished_checks,
+            "records": self.results,
+            "completed": self.finished_checks,
         }
 
     def run(self):
-        guarded_run(self._run, self.module, generate_additional_results=self._generate_additional_results)
+        guarded_run(
+            self._run,
+            self.module,
+            generate_additional_results=self._generate_additional_results,
+        )
 
 
 def main():
     module = AnsibleModule(
         argument_spec={
-            'records': {'required': True, 'type': 'list', 'elements': 'dict', 'options': {
-                'name': {'required': True, 'type': 'str'},
-                'values': {'required': True, 'type': 'list', 'elements': 'str', 'aliases': ['entries']},
-                'mode': {'type': 'str', 'default': 'subset', 'choices': ['subset', 'superset', 'superset_not_empty', 'equals', 'equals_ordered']},
-            }},
-            'query_retry': {'type': 'int', 'default': 3},
-            'query_timeout': {'type': 'float', 'default': 10},
-            'timeout': {'type': 'float'},
-            'max_sleep': {'type': 'float', 'default': 10},
-            'always_ask_default_resolver': {'type': 'bool', 'default': True},
-            'servfail_retries': {'type': 'int', 'default': 0},
-            'server': {'type': 'list', 'elements': 'str'},
+            "records": {
+                "required": True,
+                "type": "list",
+                "elements": "dict",
+                "options": {
+                    "name": {"required": True, "type": "str"},
+                    "values": {
+                        "required": True,
+                        "type": "list",
+                        "elements": "str",
+                        "aliases": ["entries"],
+                    },
+                    "mode": {
+                        "type": "str",
+                        "default": "subset",
+                        "choices": [
+                            "subset",
+                            "superset",
+                            "superset_not_empty",
+                            "equals",
+                            "equals_ordered",
+                        ],
+                    },
+                },
+            },
+            "query_retry": {"type": "int", "default": 3},
+            "query_timeout": {"type": "float", "default": 10},
+            "timeout": {"type": "float"},
+            "max_sleep": {"type": "float", "default": 10},
+            "always_ask_default_resolver": {"type": "bool", "default": True},
+            "servfail_retries": {"type": "int", "default": 0},
+            "server": {"type": "list", "elements": "str"},
         },
         supports_check_mode=True,
     )

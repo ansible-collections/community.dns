@@ -27,177 +27,226 @@ from ansible_collections.community.dns.plugins.module_utils.zone_record_api impo
 
 def test_list_pagination():
     def get_1(url, query=None, must_have_content=True, expected=None):
-        assert url == 'https://example.com'
+        assert url == "https://example.com"
         assert must_have_content == [200]
         assert expected == [200]
         assert query is not None
         assert len(query) == 2
-        assert query['per_page'] == 1
-        assert query['page'] in [1, 2, 3]
-        if query['page'] < 3:
+        assert query["per_page"] == 1
+        assert query["page"] in [1, 2, 3]
+        if query["page"] < 3:
             return {
-                'data': [query['page']],
-                'meta': {
-                    'pagination': {
-                        'page': query['page'],
-                        'per_page': 1,
-                        'last_page': 3,
-                        'total_entries': 2,
+                "data": [query["page"]],
+                "meta": {
+                    "pagination": {
+                        "page": query["page"],
+                        "per_page": 1,
+                        "last_page": 3,
+                        "total_entries": 2,
                     },
                 },
-            }, {'status': 200}
+            }, {"status": 200}
         return {
-            'data': [],
-            'meta': {
-                'pagination': {
-                    'page': query['page'],
-                    'per_page': 1,
-                    'last_page': 3,
-                    'total_entries': 2,
+            "data": [],
+            "meta": {
+                "pagination": {
+                    "page": query["page"],
+                    "per_page": 1,
+                    "last_page": 3,
+                    "total_entries": 2,
                 },
             },
-        }, {'status': 200}
+        }, {"status": 200}
 
     def get_2(url, query=None, must_have_content=True, expected=None):
-        assert url == 'https://example.com'
+        assert url == "https://example.com"
         assert must_have_content == [200]
-        assert expected == ([200, 404] if query['page'] == 1 else [200])
+        assert expected == ([200, 404] if query["page"] == 1 else [200])
         assert query is not None
         assert len(query) == 3
-        assert query['foo'] == 'bar'
-        assert query['per_page'] == 2
-        assert query['page'] in [1, 2]
-        if query['page'] < 2:
+        assert query["foo"] == "bar"
+        assert query["per_page"] == 2
+        assert query["page"] in [1, 2]
+        if query["page"] < 2:
             return {
-                'foobar': ['bar', 'baz'],
-                'meta': {
-                    'pagination': {
-                        'page': query['page'],
-                        'per_page': 2,
-                        'last_page': 2,
-                        'total_entries': 3,
+                "foobar": ["bar", "baz"],
+                "meta": {
+                    "pagination": {
+                        "page": query["page"],
+                        "per_page": 2,
+                        "last_page": 2,
+                        "total_entries": 3,
                     },
                 },
-            }, {'status': 200}
+            }, {"status": 200}
         return {
-            'foobar': ['foo'],
-            'meta': {
-                'pagination': {
-                    'page': query['page'],
-                    'per_page': 2,
-                    'last_page': 2,
-                    'total_entries': 3,
+            "foobar": ["foo"],
+            "meta": {
+                "pagination": {
+                    "page": query["page"],
+                    "per_page": 2,
+                    "last_page": 2,
+                    "total_entries": 3,
                 },
             },
-        }, {'status': 200}
+        }, {"status": 200}
 
     def get_3(url, query=None, must_have_content=True, expected=None):
-        assert url == 'https://example.com'
+        assert url == "https://example.com"
         assert must_have_content == [200]
         assert expected == [200, 404]
         assert query is not None
         assert len(query) == 2
-        assert query['per_page'] == 100
-        assert query['page'] == 1
-        return None, {'status': 404}
+        assert query["per_page"] == 100
+        assert query["page"] == 1
+        return None, {"status": 404}
 
-    api = HetznerAPI(MagicMock(), '123')
+    api = HetznerAPI(MagicMock(), "123")
 
     api._get = MagicMock(side_effect=get_1)
-    result = api._list_pagination('https://example.com', 'data', block_size=1, accept_404=False)
+    result = api._list_pagination(
+        "https://example.com", "data", block_size=1, accept_404=False
+    )
     assert result == [1, 2]
 
     api._get = MagicMock(side_effect=get_2)
-    result = api._list_pagination('https://example.com', 'foobar', query={'foo': 'bar'}, block_size=2, accept_404=True)
-    assert result == ['bar', 'baz', 'foo']
+    result = api._list_pagination(
+        "https://example.com",
+        "foobar",
+        query={"foo": "bar"},
+        block_size=2,
+        accept_404=True,
+    )
+    assert result == ["bar", "baz", "foo"]
 
     api._get = MagicMock(side_effect=get_3)
-    result = api._list_pagination('https://example.com', 'baz', accept_404=True)
+    result = api._list_pagination("https://example.com", "baz", accept_404=True)
     assert result is None
 
 
 def test_update_id_missing():
-    api = HetznerAPI(MagicMock(), '123')
+    api = HetznerAPI(MagicMock(), "123")
     with pytest.raises(DNSAPIError) as exc:
         api.update_record(1, DNSRecord())
-    assert exc.value.args[0] == 'Need record ID to update record!'
+    assert exc.value.args[0] == "Need record ID to update record!"
 
 
 def test_update_id_delete():
-    api = HetznerAPI(MagicMock(), '123')
+    api = HetznerAPI(MagicMock(), "123")
     with pytest.raises(DNSAPIError) as exc:
         api.delete_record(1, DNSRecord())
-    assert exc.value.args[0] == 'Need record ID to delete record!'
+    assert exc.value.args[0] == "Need record ID to delete record!"
 
 
 def test_extract_error_message():
-    api = HetznerAPI(MagicMock(), '123')
-    assert api._extract_error_message(None) == ''
-    assert api._extract_error_message('foo') == ' with data: foo'
-    assert api._extract_error_message({}) == ' with data: {}'
-    assert api._extract_error_message({'message': ''}) == " with data: {'message': ''}"
-    assert api._extract_error_message({'message': 'foo'}) == ' with message "foo"'
-    assert api._extract_error_message({'message': 'foo', 'error': ''}) == ' with message "foo"'
-    assert api._extract_error_message({'message': 'foo', 'error': {}}) == ' with message "foo"'
-    assert api._extract_error_message({'message': 'foo', 'error': {'code': 123}}) == ' (error code 123) with message "foo"'
-    assert api._extract_error_message({'message': 'foo', 'error': {'message': 'baz'}}) == ' with error message "baz" with message "foo"'
-    assert api._extract_error_message({'message': 'foo', 'error': {'message': 'baz', 'code': 123}}) == (
-        ' with error message "baz" (error code 123) with message "foo"'
+    api = HetznerAPI(MagicMock(), "123")
+    assert api._extract_error_message(None) == ""
+    assert api._extract_error_message("foo") == " with data: foo"
+    assert api._extract_error_message({}) == " with data: {}"
+    assert api._extract_error_message({"message": ""}) == " with data: {'message': ''}"
+    assert api._extract_error_message({"message": "foo"}) == ' with message "foo"'
+    assert (
+        api._extract_error_message({"message": "foo", "error": ""})
+        == ' with message "foo"'
     )
-    assert api._extract_error_message({'error': {'message': 'baz', 'code': 123}}) == ' with error message "baz" (error code 123)'
+    assert (
+        api._extract_error_message({"message": "foo", "error": {}})
+        == ' with message "foo"'
+    )
+    assert (
+        api._extract_error_message({"message": "foo", "error": {"code": 123}})
+        == ' (error code 123) with message "foo"'
+    )
+    assert (
+        api._extract_error_message({"message": "foo", "error": {"message": "baz"}})
+        == ' with error message "baz" with message "foo"'
+    )
+    assert api._extract_error_message(
+        {"message": "foo", "error": {"message": "baz", "code": 123}}
+    ) == (' with error message "baz" (error code 123) with message "foo"')
+    assert (
+        api._extract_error_message({"error": {"message": "baz", "code": 123}})
+        == ' with error message "baz" (error code 123)'
+    )
 
 
 def test__format_action_error():
     assert _format_action_error({}) is None
     assert _format_action_error({"error": False}) is None
     assert _format_action_error({"error": {}}) is None
-    assert _format_action_error({"error": {"code": "foo", "message": "bar"}}) == "bar (foo)"
+    assert (
+        _format_action_error({"error": {"code": "foo", "message": "bar"}})
+        == "bar (foo)"
+    )
 
 
 def test_new_api__extract_only_error_message():
-    api = _HetznerNewAPI(MagicMock(), '123')
-    assert api._extract_only_error_message({}) == ''
-    assert api._extract_only_error_message({"error": 123}) == ''
-    assert api._extract_only_error_message({"error": {"message": "foo", "code": "bar", "details": None}}) == (
-        ' with error message "foo" (error code bar)'
-    )
-    assert api._extract_only_error_message({"error": {"message": "foo", "code": "bar", "details": []}}) == (
-        ' with error message "foo" (error code bar)'
-    )
-    assert api._extract_only_error_message({"error": {"message": "foo", "code": "bar", "details": [{}]}}) == (
-        ' with error message "foo" (error code bar). Details: [{}]'
-    )
+    api = _HetznerNewAPI(MagicMock(), "123")
+    assert api._extract_only_error_message({}) == ""
+    assert api._extract_only_error_message({"error": 123}) == ""
+    assert api._extract_only_error_message(
+        {"error": {"message": "foo", "code": "bar", "details": None}}
+    ) == (' with error message "foo" (error code bar)')
+    assert api._extract_only_error_message(
+        {"error": {"message": "foo", "code": "bar", "details": []}}
+    ) == (' with error message "foo" (error code bar)')
+    assert api._extract_only_error_message(
+        {"error": {"message": "foo", "code": "bar", "details": [{}]}}
+    ) == (' with error message "foo" (error code bar). Details: [{}]')
 
 
 def test_new_api__extract_error_message():
-    api = _HetznerNewAPI(MagicMock(), '123')
-    assert api._extract_error_message(None) == ''
-    assert api._extract_error_message("foo") == ' with data: foo'
-    assert api._extract_error_message({}) == ' with data: {}'
-    assert api._extract_error_message({"error": {"message": "foo", "code": "bar", "details": None}}) == (
-        ' with error message "foo" (error code bar)'
-    )
+    api = _HetznerNewAPI(MagicMock(), "123")
+    assert api._extract_error_message(None) == ""
+    assert api._extract_error_message("foo") == " with data: foo"
+    assert api._extract_error_message({}) == " with data: {}"
+    assert api._extract_error_message(
+        {"error": {"message": "foo", "code": "bar", "details": None}}
+    ) == (' with error message "foo" (error code bar)')
 
 
 def test_new_api__is_rate_limiting_result():
-    api = _HetznerNewAPI(MagicMock(), '123')
-    assert api._is_rate_limiting_result(None, {'status': 1}) is False
-    assert api._is_rate_limiting_result(None, {'status': 429}) is False
-    assert api._is_rate_limiting_result(b"[]", {'status': 429}) is False
-    assert api._is_rate_limiting_result(b"{}", {'status': 429}) is False
-    assert api._is_rate_limiting_result(b'{"error": []}', {'status': 429}) is False
-    assert api._is_rate_limiting_result(b'{"error": {}}', {'status': 429}) is False
-    assert api._is_rate_limiting_result(b'{"error": {"code": "foo"}}', {'status': 429}) is False
-    assert api._is_rate_limiting_result(b'{"error": {"code": "rate_limit_exceeded"}}', {'status': 429}) == 5
+    api = _HetznerNewAPI(MagicMock(), "123")
+    assert api._is_rate_limiting_result(None, {"status": 1}) is False
+    assert api._is_rate_limiting_result(None, {"status": 429}) is False
+    assert api._is_rate_limiting_result(b"[]", {"status": 429}) is False
+    assert api._is_rate_limiting_result(b"{}", {"status": 429}) is False
+    assert api._is_rate_limiting_result(b'{"error": []}', {"status": 429}) is False
+    assert api._is_rate_limiting_result(b'{"error": {}}', {"status": 429}) is False
+    assert (
+        api._is_rate_limiting_result(b'{"error": {"code": "foo"}}', {"status": 429})
+        is False
+    )
+    assert (
+        api._is_rate_limiting_result(
+            b'{"error": {"code": "rate_limit_exceeded"}}', {"status": 429}
+        )
+        == 5
+    )
 
 
 def test_new_api__check_error():
-    api = _HetznerNewAPI(MagicMock(), '123')
+    api = _HetznerNewAPI(MagicMock(), "123")
     assert api._check_error("GET", "https://example.com", None) is None
     assert api._check_error("GET", "https://example.com", {}) is None
     assert api._check_error("GET", "https://example.com", {"error": 42}) is None
 
-    with pytest.raises(DNSAPIError, match='^GET https://example\\.com resulted in API error foo with error message "bar" \\(error code foo\\)$'):
-        api._check_error("GET", "https://example.com", {"error": {"code": "foo", "message": "bar", "details": None}})
+    with pytest.raises(
+        DNSAPIError,
+        match='^GET https://example\\.com resulted in API error foo with error message "bar" \\(error code foo\\)$',
+    ):
+        api._check_error(
+            "GET",
+            "https://example.com",
+            {"error": {"code": "foo", "message": "bar", "details": None}},
+        )
 
-    assert api._check_error("GET", "https://example.com", {"error": {"code": "foo", "message": "bar", "details": None}}, accepted=["foo"]) == "foo"
+    assert (
+        api._check_error(
+            "GET",
+            "https://example.com",
+            {"error": {"code": "foo", "message": "bar", "details": None}},
+            accepted=["foo"],
+        )
+        == "foo"
+    )

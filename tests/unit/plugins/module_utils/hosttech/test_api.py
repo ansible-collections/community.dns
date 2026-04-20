@@ -26,19 +26,24 @@ def test_internal_error():
     option_provider = CustomProvideOptions({})
     with pytest.raises(DNSAPIError) as exc:
         api.create_hosttech_api(option_provider, MagicMock())
-    assert exc.value.args[0] == 'One of hosttech_token or both hosttech_username and hosttech_password must be provided!'
+    assert (
+        exc.value.args[0]
+        == "One of hosttech_token or both hosttech_username and hosttech_password must be provided!"
+    )
 
 
 def test_wsdl_missing():
-    option_provider = CustomProvideOptions({
-        'hosttech_username': 'foo',
-        'hosttech_password': 'foo',
-    })
+    option_provider = CustomProvideOptions(
+        {
+            "hosttech_username": "foo",
+            "hosttech_password": "foo",
+        }
+    )
     old_value = api.HAS_LXML_ETREE
     try:
         api.HAS_LXML_ETREE = False
         with pytest.raises(DNSAPIError) as exc:
             api.create_hosttech_api(option_provider, MagicMock())
-        assert exc.value.args[0] == 'Needs lxml Python module (pip install lxml)'
+        assert exc.value.args[0] == "Needs lxml Python module (pip install lxml)"
     finally:
         api.HAS_LXML_ETREE = old_value

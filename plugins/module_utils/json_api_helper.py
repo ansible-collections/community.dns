@@ -86,103 +86,126 @@ class JSONAPIHelper(object):
         url,  # type: str
         query=None,  # type: dict[str, str] | None
     ):  # type: (...) -> str
-        return '{0}{1}{2}'.format(self._api, url, ('?' + urlencode(query)) if query else '')
+        return "{0}{1}{2}".format(
+            self._api, url, ("?" + urlencode(query)) if query else ""
+        )
 
     def _extract_error_message(
         self,
         result,  # type: bytes | None
     ):  # type: (...) -> str
         if result is None:
-            return ''
-        return ' with data: {0!r}'.format(result)
+            return ""
+        return " with data: {0!r}".format(result)
 
     def _validate(
         self,
         result=None,  # type: bytes | None
         info=None,  # type: dict[str, typing.Any] | None
         expected=None,  # type: Collection[int] | None
-        method='GET',  # type: str
+        method="GET",  # type: str
     ):  # type: (...) -> None
         if info is None:
-            raise DNSAPIError('Internal error: info needs to be provided')
-        status = info['status']
-        url = info.get('url')  # not present when using open_url
+            raise DNSAPIError("Internal error: info needs to be provided")
+        status = info["status"]
+        url = info.get("url")  # not present when using open_url
         # Check expected status
         error_code = ERROR_CODES.get(status, UNKNOWN_ERROR)
         if expected is not None:
             if status not in expected:
                 more = self._extract_error_message(result)
                 raise DNSAPIError(
-                    'Expected HTTP status {0} for {1} {2}, but got HTTP status {3} ({4}){5}'.format(
-                        ', '.join(['{0}'.format(e) for e in expected]), method, url, status, error_code, more))
+                    "Expected HTTP status {0} for {1} {2}, but got HTTP status {3} ({4}){5}".format(
+                        ", ".join(["{0}".format(e) for e in expected]),
+                        method,
+                        url,
+                        status,
+                        error_code,
+                        more,
+                    )
+                )
         else:
             if status < 200 or status >= 300:
                 more = self._extract_error_message(result)
                 raise DNSAPIError(
-                    'Expected successful HTTP status for {0} {1}, but got HTTP status {2} ({3}){4}'.format(
-                        method, url, status, error_code, more))
+                    "Expected successful HTTP status for {0} {1}, but got HTTP status {2} ({3}){4}".format(
+                        method, url, status, error_code, more
+                    )
+                )
 
     def _process_json_result(
         self,
         content,  # type: bytes | None
         info,  # type: dict[str, typing.Any]
         must_have_content=True,  # type: bool | list[int] | tuple[int, ...]
-        method='GET',  # type: str
+        method="GET",  # type: str
         expected=None,  # type: Collection[int] | None
     ):  # type: (...) -> tuple[dict[str, typing.Any] | list[typing.Any] | None, dict[str, typing.Any]]
         if isinstance(must_have_content, (list, tuple)):
-            must_have_content = info['status'] in must_have_content
+            must_have_content = info["status"] in must_have_content
         # Check for unauthenticated
-        if info['status'] == 401:
-            message = 'Unauthorized: the authentication parameters are incorrect (HTTP status 401)'
+        if info["status"] == 401:
+            message = "Unauthorized: the authentication parameters are incorrect (HTTP status 401)"
             try:
-                body = json.loads(content.decode('utf8'))  # type: ignore
-                if body['message']:
-                    message = '{0}: {1}'.format(message, body['message'])
+                body = json.loads(content.decode("utf8"))  # type: ignore
+                if body["message"]:
+                    message = "{0}: {1}".format(message, body["message"])
             except Exception:
                 pass
             raise DNSAPIAuthenticationError(message)
-        if info['status'] == 403:
-            message = 'Forbidden: you do not have access to this resource (HTTP status 403)'
+        if info["status"] == 403:
+            message = (
+                "Forbidden: you do not have access to this resource (HTTP status 403)"
+            )
             try:
-                body = json.loads(content.decode('utf8'))  # type: ignore
-                if body['message']:
-                    message = '{0}: {1}'.format(message, body['message'])
+                body = json.loads(content.decode("utf8"))  # type: ignore
+                if body["message"]:
+                    message = "{0}: {1}".format(message, body["message"])
             except Exception:
                 pass
             raise DNSAPIAuthenticationError(message)
         # Check Content-Type header
-        content_type = _get_header_value(info, 'content-type')
-        if content_type != 'application/json' and (content_type is None or not content_type.startswith('application/json;')):
+        content_type = _get_header_value(info, "content-type")
+        if content_type != "application/json" and (
+            content_type is None or not content_type.startswith("application/json;")
+        ):
             if must_have_content:
                 raise DNSAPIError(
                     '{0} {1} did not yield JSON data, but HTTP status code {2} with Content-Type "{3}" and data: {4}'.format(
-                        method, info['url'], info['status'], content_type, to_native(content)))
+                        method,
+                        info["url"],
+                        info["status"],
+                        content_type,
+                        to_native(content),
+                    )
+                )
             self._validate(result=content, info=info, expected=expected, method=method)
             return None, info
         # Decode content as JSON
         try:
-            result = json.loads(content.decode('utf8'))  # type: ignore
+            result = json.loads(content.decode("utf8"))  # type: ignore
         except Exception:
             if must_have_content:
                 raise DNSAPIError(
-                    '{0} {1} did not yield JSON data, but HTTP status code {2} with data: {3}'.format(
-                        method, info['url'], info['status'], to_native(content)))
+                    "{0} {1} did not yield JSON data, but HTTP status code {2} with data: {3}".format(
+                        method, info["url"], info["status"], to_native(content)
+                    )
+                )
             self._validate(result=content, info=info, expected=expected, method=method)
             return None, info
         self._validate(result=result, info=info, expected=expected, method=method)
         return result, info
 
     def _is_rate_limiting_result(self, content, info):
-        if info['status'] != 429:
+        if info["status"] != 429:
             return False
         try:
-            return max(min(float(_get_header_value(info, 'retry-after')), 60), 1)  # type: ignore
+            return max(min(float(_get_header_value(info, "retry-after")), 60), 1)  # type: ignore
         except (ValueError, TypeError):
             return 10
 
     def _should_retry(self, content, info):
-        return info['status'] in (-1, 502, 503, 504)
+        return info["status"] in (-1, 502, 503, 504)
 
     def _request(
         self,
@@ -199,7 +222,11 @@ class JSONAPIHelper(object):
             retry_wait = None
             if self._should_retry(content, info):
                 retry_wait = 0.5
-                cause = "a local HTTP request error" if info['status'] == -1 else "HTTP status {0}".format(info['status'])
+                cause = (
+                    "a local HTTP request error"
+                    if info["status"] == -1
+                    else "HTTP status {0}".format(info["status"])
+                )
             else:
                 retry_after = self._is_rate_limiting_result(content, info)
                 if retry_after is not False:
@@ -211,11 +238,13 @@ class JSONAPIHelper(object):
                 time.sleep(retry_wait)
                 continue
             return content, info
-        raise DNSAPIError('Stopping after {0} failed retries with {1}'.format(number_retries, cause))
+        raise DNSAPIError(
+            "Stopping after {0} failed retries with {1}".format(number_retries, cause)
+        )
 
     def _create_headers(self):  # type: (...) -> dict[str, str]
         return {
-            'accept': 'application/json',
+            "accept": "application/json",
         }
 
     def _create_post_headers(self):  # type: (...) -> dict[str, str]
@@ -236,8 +265,14 @@ class JSONAPIHelper(object):
             pass  # pragma: no cover
             # q.q('Request: GET {0}'.format(full_url))
         headers = self._create_headers()
-        content, info = self._request(full_url, headers=headers, method='GET')
-        return self._process_json_result(content, info, must_have_content=must_have_content, method='GET', expected=expected)
+        content, info = self._request(full_url, headers=headers, method="GET")
+        return self._process_json_result(
+            content,
+            info,
+            must_have_content=must_have_content,
+            method="GET",
+            expected=expected,
+        )
 
     def _post(
         self,
@@ -254,10 +289,18 @@ class JSONAPIHelper(object):
         headers = self._create_post_headers()
         encoded_data = None
         if data is not None:
-            headers['content-type'] = 'application/json'
-            encoded_data = json.dumps(data).encode('utf-8')
-        content, info = self._request(full_url, headers=headers, method='POST', data=encoded_data)
-        return self._process_json_result(content, info, must_have_content=must_have_content, method='POST', expected=expected)
+            headers["content-type"] = "application/json"
+            encoded_data = json.dumps(data).encode("utf-8")
+        content, info = self._request(
+            full_url, headers=headers, method="POST", data=encoded_data
+        )
+        return self._process_json_result(
+            content,
+            info,
+            must_have_content=must_have_content,
+            method="POST",
+            expected=expected,
+        )
 
     def _put(
         self,
@@ -274,10 +317,18 @@ class JSONAPIHelper(object):
         headers = self._create_put_headers()
         encoded_data = None
         if data is not None:
-            headers['content-type'] = 'application/json'
-            encoded_data = json.dumps(data).encode('utf-8')
-        content, info = self._request(full_url, headers=headers, method='PUT', data=encoded_data)
-        return self._process_json_result(content, info, must_have_content=must_have_content, method='PUT', expected=expected)
+            headers["content-type"] = "application/json"
+            encoded_data = json.dumps(data).encode("utf-8")
+        content, info = self._request(
+            full_url, headers=headers, method="PUT", data=encoded_data
+        )
+        return self._process_json_result(
+            content,
+            info,
+            must_have_content=must_have_content,
+            method="PUT",
+            expected=expected,
+        )
 
     def _delete(
         self,
@@ -291,5 +342,11 @@ class JSONAPIHelper(object):
             pass  # pragma: no cover
             # q.q('Request: DELETE {0}'.format(full_url))
         headers = self._create_headers()
-        content, info = self._request(full_url, headers=headers, method='DELETE')
-        return self._process_json_result(content, info, must_have_content=must_have_content, method='DELETE', expected=expected)
+        content, info = self._request(full_url, headers=headers, method="DELETE")
+        return self._process_json_result(
+            content,
+            info,
+            must_have_content=must_have_content,
+            method="DELETE",
+            expected=expected,
+        )

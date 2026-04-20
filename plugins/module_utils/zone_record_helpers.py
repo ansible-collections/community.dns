@@ -62,24 +62,26 @@ def bulk_apply_changes(
 
     bulk_threshold = 2
     if provider_information.supports_bulk_actions():
-        bulk_threshold = options.get_option('bulk_operation_threshold')
+        bulk_threshold = options.get_option("bulk_operation_threshold")
 
     success = {
-        'deleted': [],
-        'changed': [],
-        'created': [],
+        "deleted": [],
+        "changed": [],
+        "created": [],
     }  # type: dict[str, list[DNSRecord]]
 
     # Delete records
     if len(records_to_delete) >= bulk_threshold:
-        results = api.delete_records({zone_id: records_to_delete}, stop_early_on_errors=stop_early_on_errors)
+        results = api.delete_records(
+            {zone_id: records_to_delete}, stop_early_on_errors=stop_early_on_errors
+        )
         result = results.get(zone_id) or []
         for record, deleted, failed in result:
             has_change |= deleted
             if failed is not None:
                 errors.append(failed)
             if deleted:
-                success['deleted'].append(record)
+                success["deleted"].append(record)
         if errors and stop_early_on_errors:
             return has_change, errors, success
     else:
@@ -88,7 +90,7 @@ def bulk_apply_changes(
                 deleted = api.delete_record(zone_id, record)
                 has_change |= deleted
                 if deleted:
-                    success['deleted'].append(record)
+                    success["deleted"].append(record)
             except DNSAPIError as e:
                 errors.append(e)
                 if stop_early_on_errors:
@@ -96,14 +98,16 @@ def bulk_apply_changes(
 
     # Change records
     if len(records_to_change) >= bulk_threshold:
-        results = api.update_records({zone_id: records_to_change}, stop_early_on_errors=stop_early_on_errors)
+        results = api.update_records(
+            {zone_id: records_to_change}, stop_early_on_errors=stop_early_on_errors
+        )
         result = results.get(zone_id) or []
         for record, changed, failed in result:
             has_change |= changed
             if failed is not None:
                 errors.append(failed)
             if changed:
-                success['changed'].append(record)
+                success["changed"].append(record)
         if errors and stop_early_on_errors:
             return has_change, errors, success
     else:
@@ -111,7 +115,7 @@ def bulk_apply_changes(
             try:
                 record = api.update_record(zone_id, record)
                 has_change = True
-                success['changed'].append(record)
+                success["changed"].append(record)
             except DNSAPIError as e:
                 errors.append(e)
                 if stop_early_on_errors:
@@ -119,14 +123,16 @@ def bulk_apply_changes(
 
     # Create records
     if len(records_to_create) >= bulk_threshold:
-        results = api.add_records({zone_id: records_to_create}, stop_early_on_errors=stop_early_on_errors)
+        results = api.add_records(
+            {zone_id: records_to_create}, stop_early_on_errors=stop_early_on_errors
+        )
         result = results.get(zone_id) or []
         for record, created, failed in result:
             has_change |= created
             if failed is not None:
                 errors.append(failed)
             if created:
-                success['created'].append(record)
+                success["created"].append(record)
         if errors and stop_early_on_errors:
             return has_change, errors, success
     else:
@@ -134,7 +140,7 @@ def bulk_apply_changes(
             try:
                 record = api.add_record(zone_id, record)
                 has_change = True
-                success['created'].append(record)
+                success["created"].append(record)
             except DNSAPIError as e:
                 errors.append(e)
                 if stop_early_on_errors:

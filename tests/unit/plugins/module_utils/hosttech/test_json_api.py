@@ -37,12 +37,12 @@ def test_AAAA():
     }
     record = _create_record_from_json(data)
     assert record.id == 11
-    assert record.type == 'AAAA'
-    assert record.prefix == 'www'
-    assert record.target == '2001:db8:1234::1'
+    assert record.type == "AAAA"
+    assert record.prefix == "www"
+    assert record.target == "2001:db8:1234::1"
     assert record.ttl == 3600
     assert record.extra == {
-        'comment': 'my first record',
+        "comment": "my first record",
     }
     assert _record_to_json(record, include_id=True) == data
 
@@ -58,12 +58,12 @@ def test_A():
     }
     record = _create_record_from_json(data)
     assert record.id == 10
-    assert record.type == 'A'
-    assert record.prefix == 'www'
-    assert record.target == '1.2.3.4'
+    assert record.type == "A"
+    assert record.prefix == "www"
+    assert record.target == "1.2.3.4"
     assert record.ttl == 3600
     assert record.extra == {
-        'comment': 'my first record',
+        "comment": "my first record",
     }
     assert _record_to_json(record, include_id=True) == data
 
@@ -81,23 +81,25 @@ def test_CAA():
     }
     record = _create_record_from_json(data)
     assert record.id == 12
-    assert record.type == 'CAA'
+    assert record.type == "CAA"
     assert record.prefix is None
     assert record.target == '0 issue "letsencrypt.org"'
     assert record.ttl == 3600
     assert record.extra == {
-        'comment': 'my first record',
+        "comment": "my first record",
     }
     assert _record_to_json(record, include_id=True) == data
 
     # We also accept versions without quotes:
-    record.target = '0 issue letsencrypt.org'
+    record.target = "0 issue letsencrypt.org"
     assert _record_to_json(record, include_id=True) == data
 
     record.target = '0\tissue "letsencrypt.org"'
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
-    assert exc.value.args[0].startswith('Cannot split CAA record "0\tissue "letsencrypt.org"" into flag, tag and value: ')
+    assert exc.value.args[0].startswith(
+        'Cannot split CAA record "0\tissue "letsencrypt.org"" into flag, tag and value: '
+    )
 
 
 def test_CNAME():
@@ -111,12 +113,12 @@ def test_CNAME():
     }
     record = _create_record_from_json(data)
     assert record.id == 13
-    assert record.type == 'CNAME'
-    assert record.prefix == 'www'
-    assert record.target == 'site.example.com'
+    assert record.type == "CNAME"
+    assert record.prefix == "www"
+    assert record.target == "site.example.com"
     assert record.ttl == 3600
     assert record.extra == {
-        'comment': 'my first record',
+        "comment": "my first record",
     }
     assert _record_to_json(record, include_id=True) == data
 
@@ -133,24 +135,28 @@ def test_MX():
     }
     record = _create_record_from_json(data)
     assert record.id == 14
-    assert record.type == 'MX'
+    assert record.type == "MX"
     assert record.prefix is None
-    assert record.target == '10 mail.example.com'
+    assert record.target == "10 mail.example.com"
     assert record.ttl == 3600
     assert record.extra == {
-        'comment': 'my first record',
+        "comment": "my first record",
     }
     assert _record_to_json(record, include_id=True) == data
 
-    record.target = 'mail.example.com'
+    record.target = "mail.example.com"
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
-    assert exc.value.args[0].startswith('Cannot split MX record "mail.example.com" into integer preference and name: ')
+    assert exc.value.args[0].startswith(
+        'Cannot split MX record "mail.example.com" into integer preference and name: '
+    )
 
-    record.target = 'x mail.example.com'
+    record.target = "x mail.example.com"
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
-    assert exc.value.args[0].startswith('Cannot split MX record "x mail.example.com" into integer preference and name: ')
+    assert exc.value.args[0].startswith(
+        'Cannot split MX record "x mail.example.com" into integer preference and name: '
+    )
 
 
 def test_NS():
@@ -166,12 +172,12 @@ def test_NS():
     }
     record = _create_record_from_json(data)
     assert record.id == 14
-    assert record.type == 'NS'
-    assert record.prefix == 'sub'
-    assert record.target == 'ns1.example.com'
+    assert record.type == "NS"
+    assert record.prefix == "sub"
+    assert record.target == "ns1.example.com"
     assert record.ttl == 3600
     assert record.extra == {
-        'comment': 'my first record',
+        "comment": "my first record",
     }
     assert _record_to_json(record, include_id=True) == data
 
@@ -187,19 +193,21 @@ def test_PTR():
     }
     record = _create_record_from_json(data)
     assert record.id == 15
-    assert record.type == 'PTR'
+    assert record.type == "PTR"
     assert record.prefix is None
-    assert record.target == '4.3.2.1 smtp.example.com'
+    assert record.target == "4.3.2.1 smtp.example.com"
     assert record.ttl == 3600
     assert record.extra == {
-        'comment': 'my first record',
+        "comment": "my first record",
     }
     assert _record_to_json(record, include_id=True) == data
 
-    record.target = 'smtp.example.com'
+    record.target = "smtp.example.com"
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
-    assert exc.value.args[0].startswith('Cannot split PTR record "smtp.example.com" into origin and name: ')
+    assert exc.value.args[0].startswith(
+        'Cannot split PTR record "smtp.example.com" into origin and name: '
+    )
 
 
 def test_SRV():
@@ -216,38 +224,42 @@ def test_SRV():
     }
     record = _create_record_from_json(data)
     assert record.id == 16
-    assert record.type == 'SRV'
-    assert record.prefix == '_autodiscover._tcp'
-    assert record.target == '0 1 443 exchange.example.com'
+    assert record.type == "SRV"
+    assert record.prefix == "_autodiscover._tcp"
+    assert record.target == "0 1 443 exchange.example.com"
     assert record.ttl == 3600
     assert record.extra == {
-        'comment': 'my first record',
+        "comment": "my first record",
     }
     assert _record_to_json(record, include_id=True) == data
 
-    record.target = '1 443 exchange.example.com'
+    record.target = "1 443 exchange.example.com"
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
     assert exc.value.args[0].startswith(
-        'Cannot split SRV record "1 443 exchange.example.com" into integer priority, integer weight, integer port and target: ')
+        'Cannot split SRV record "1 443 exchange.example.com" into integer priority, integer weight, integer port and target: '
+    )
 
-    record.target = 'x 1 443 exchange.example.com'
+    record.target = "x 1 443 exchange.example.com"
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
     assert exc.value.args[0].startswith(
-        'Cannot split SRV record "x 1 443 exchange.example.com" into integer priority, integer weight, integer port and target: ')
+        'Cannot split SRV record "x 1 443 exchange.example.com" into integer priority, integer weight, integer port and target: '
+    )
 
-    record.target = '0 x 443 exchange.example.com'
+    record.target = "0 x 443 exchange.example.com"
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
     assert exc.value.args[0].startswith(
-        'Cannot split SRV record "0 x 443 exchange.example.com" into integer priority, integer weight, integer port and target: ')
+        'Cannot split SRV record "0 x 443 exchange.example.com" into integer priority, integer weight, integer port and target: '
+    )
 
-    record.target = '0 1 x exchange.example.com'
+    record.target = "0 1 x exchange.example.com"
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
     assert exc.value.args[0].startswith(
-        'Cannot split SRV record "0 1 x exchange.example.com" into integer priority, integer weight, integer port and target: ')
+        'Cannot split SRV record "0 1 x exchange.example.com" into integer priority, integer weight, integer port and target: '
+    )
 
 
 def test_TXT():
@@ -261,12 +273,12 @@ def test_TXT():
     }
     record = _create_record_from_json(data)
     assert record.id == 17
-    assert record.type == 'TXT'
+    assert record.type == "TXT"
     assert record.prefix is None
-    assert record.target == 'v=spf1 ip4:1.2.3.4/32 -all'
+    assert record.target == "v=spf1 ip4:1.2.3.4/32 -all"
     assert record.ttl == 3600
     assert record.extra == {
-        'comment': 'my first record',
+        "comment": "my first record",
     }
     assert _record_to_json(record, include_id=True) == data
 
@@ -282,12 +294,15 @@ def test_TLSA():
     }
     record = _create_record_from_json(data)
     assert record.id == 17
-    assert record.type == 'TLSA'
+    assert record.type == "TLSA"
     assert record.prefix is None
-    assert record.target == '0 0 1 d2abde240d7cd3ee6b4b28c54df034b97983a1d16e8a410e4561cb106618e971'
+    assert (
+        record.target
+        == "0 0 1 d2abde240d7cd3ee6b4b28c54df034b97983a1d16e8a410e4561cb106618e971"
+    )
     assert record.ttl == 3600
     assert record.extra == {
-        'comment': 'my first record',
+        "comment": "my first record",
     }
     assert _record_to_json(record, include_id=True) == data
 
@@ -302,74 +317,88 @@ def test_unknown_records():
     }
     with pytest.raises(DNSAPIError) as exc:
         _create_record_from_json(data)
-    assert exc.value.args[0] == 'Cannot parse unknown record type: unknown'
+    assert exc.value.args[0] == "Cannot parse unknown record type: unknown"
 
     record = DNSRecord()
-    record.type = 'unknown'
+    record.type = "unknown"
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
-    assert exc.value.args[0] == 'Cannot serialize unknown record type: unknown'
+    assert exc.value.args[0] == "Cannot serialize unknown record type: unknown"
 
 
 def test_list_pagination():
     def get_1(url, query=None, must_have_content=True, expected=None):
-        assert url == 'https://example.com'
+        assert url == "https://example.com"
         assert must_have_content is True
         assert expected == [200]
         assert query is not None
         assert len(query) == 2
-        assert query['limit'] == 1
-        assert query['offset'] in [0, 1, 2]
-        if query['offset'] < 2:
-            return {'data': [query['offset']]}, {}
-        return {'data': []}, {}
+        assert query["limit"] == 1
+        assert query["offset"] in [0, 1, 2]
+        if query["offset"] < 2:
+            return {"data": [query["offset"]]}, {}
+        return {"data": []}, {}
 
     def get_2(url, query=None, must_have_content=True, expected=None):
-        assert url == 'https://example.com'
+        assert url == "https://example.com"
         assert must_have_content is True
         assert expected == [200]
         assert query is not None
         assert len(query) == 3
-        assert query['foo'] == 'bar'
-        assert query['limit'] == 2
-        assert query['offset'] in [0, 2]
-        if query['offset'] < 2:
-            return {'data': ['bar', 'baz']}, {}
-        return {'data': ['foo']}, {}
+        assert query["foo"] == "bar"
+        assert query["limit"] == 2
+        assert query["offset"] in [0, 2]
+        if query["offset"] < 2:
+            return {"data": ["bar", "baz"]}, {}
+        return {"data": ["foo"]}, {}
 
-    api = HostTechJSONAPI(MagicMock(), '123')
+    api = HostTechJSONAPI(MagicMock(), "123")
 
     api._get = MagicMock(side_effect=get_1)
-    result = api._list_pagination('https://example.com', block_size=1)
+    result = api._list_pagination("https://example.com", block_size=1)
     assert result == [0, 1]
 
     api._get = MagicMock(side_effect=get_2)
-    result = api._list_pagination('https://example.com', query={'foo': 'bar'}, block_size=2)
-    assert result == ['bar', 'baz', 'foo']
+    result = api._list_pagination(
+        "https://example.com", query={"foo": "bar"}, block_size=2
+    )
+    assert result == ["bar", "baz", "foo"]
 
 
 def test_update_id_missing():
-    api = HostTechJSONAPI(MagicMock(), '123')
+    api = HostTechJSONAPI(MagicMock(), "123")
     with pytest.raises(DNSAPIError) as exc:
         api.update_record(1, DNSRecord())
-    assert exc.value.args[0] == 'Need record ID to update record!'
+    assert exc.value.args[0] == "Need record ID to update record!"
 
 
 def test_update_id_delete():
-    api = HostTechJSONAPI(MagicMock(), '123')
+    api = HostTechJSONAPI(MagicMock(), "123")
     with pytest.raises(DNSAPIError) as exc:
         api.delete_record(1, DNSRecord())
-    assert exc.value.args[0] == 'Need record ID to delete record!'
+    assert exc.value.args[0] == "Need record ID to delete record!"
 
 
 def test_extract_error_message():
-    api = HostTechJSONAPI(MagicMock(), '123')
-    assert api._extract_error_message(None) == ''
-    assert api._extract_error_message('foo') == ' with data: foo'
-    assert api._extract_error_message({}) == ' with data: {}'
-    assert api._extract_error_message({'message': ''}) == " with data: {'message': ''}"
-    assert api._extract_error_message({'message': 'foo'}) == ' with message "foo"'
-    assert api._extract_error_message({'message': 'foo', 'errors': ''}) == ' with message "foo"'
-    assert api._extract_error_message({'message': 'foo', 'errors': {}}) == ' with message "foo"'
-    assert api._extract_error_message({'message': 'foo', 'errors': {'bar': 'baz'}}) == ' with message "foo" (field "bar": baz)'
-    assert api._extract_error_message({'errors': {'bar': ['baz', 'bam'], 'arf': 'fra'}}) == ' (field "arf": fra) (field "bar": baz; bam)'
+    api = HostTechJSONAPI(MagicMock(), "123")
+    assert api._extract_error_message(None) == ""
+    assert api._extract_error_message("foo") == " with data: foo"
+    assert api._extract_error_message({}) == " with data: {}"
+    assert api._extract_error_message({"message": ""}) == " with data: {'message': ''}"
+    assert api._extract_error_message({"message": "foo"}) == ' with message "foo"'
+    assert (
+        api._extract_error_message({"message": "foo", "errors": ""})
+        == ' with message "foo"'
+    )
+    assert (
+        api._extract_error_message({"message": "foo", "errors": {}})
+        == ' with message "foo"'
+    )
+    assert (
+        api._extract_error_message({"message": "foo", "errors": {"bar": "baz"}})
+        == ' with message "foo" (field "bar": baz)'
+    )
+    assert (
+        api._extract_error_message({"errors": {"bar": ["baz", "bam"], "arf": "fra"}})
+        == ' (field "arf": fra) (field "bar": baz; bam)'
+    )

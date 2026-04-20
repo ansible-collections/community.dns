@@ -37,6 +37,7 @@ try:
     import dns.name
     import dns.rdata
     import dns.rdatatype
+
     try:
         import dns.rdtypes.ANY.NSEC3
     except ImportError:  # pragma: no cover
@@ -46,45 +47,104 @@ try:
     except ImportError:
         pass
 
-    _HTTPS = getattr(dns.rdatatype, 'HTTPS', None)
-    _SVCB = getattr(dns.rdatatype, 'SVCB', None)
+    _HTTPS = getattr(dns.rdatatype, "HTTPS", None)
+    _SVCB = getattr(dns.rdatatype, "SVCB", None)
 
     # The following data has been borrowed from community.general's dig lookup plugin.
     #
     # Note: adding support for RRSIG is hard work. :)
     for _name, _rdtype, _min_version, _fields in [
-        ('A', dns.rdatatype.A, None, ['address']),
-        ('AAAA', dns.rdatatype.AAAA, None, ['address']),
-        ('CAA', dns.rdatatype.CAA, None, ['flags', 'tag', 'value']),
-        ('CNAME', dns.rdatatype.CNAME, None, ['target']),
-        ('DNAME', dns.rdatatype.DNAME, None, ['target']),
-        ('DNSKEY', dns.rdatatype.DNSKEY, None, ['flags', 'algorithm', 'protocol', 'key']),
-        ('DS', dns.rdatatype.DS, None, ['algorithm', 'digest_type', 'key_tag', 'digest']),
-        ('HINFO', dns.rdatatype.HINFO, None, ['cpu', 'os']),
-        ('HTTPS', _HTTPS, '2.2.0', ['priority', 'target', 'params']),
-        ('LOC', dns.rdatatype.LOC, None, ['latitude', 'longitude', 'altitude', 'size', 'horizontal_precision', 'vertical_precision']),
-        ('MX', dns.rdatatype.MX, None, ['preference', 'exchange']),
-        ('NAPTR', dns.rdatatype.NAPTR, None, ['order', 'preference', 'flags', 'service', 'regexp', 'replacement']),
-        ('NS', dns.rdatatype.NS, None, ['target']),
-        ('NSEC', dns.rdatatype.NSEC, None, ['next', 'windows']),
-        ('NSEC3', dns.rdatatype.NSEC3, None, ['algorithm', 'flags', 'iterations', 'salt', 'next', 'windows']),
-        ('NSEC3PARAM', dns.rdatatype.NSEC3PARAM, None, ['algorithm', 'flags', 'iterations', 'salt']),
-        ('PTR', dns.rdatatype.PTR, None, ['target']),
-        ('RP', dns.rdatatype.RP, None, ['mbox', 'txt']),
-        ('RRSIG', dns.rdatatype.RRSIG, None, [
-            'type_covered', 'algorithm', 'labels', 'original_ttl', 'expiration', 'inception', 'key_tag', 'signer', 'signature'
-        ]),
-        ('SOA', dns.rdatatype.SOA, None, ['mname', 'rname', 'serial', 'refresh', 'retry', 'expire', 'minimum']),
-        ('SPF', dns.rdatatype.SPF, None, ['strings']),
-        ('SRV', dns.rdatatype.SRV, None, ['priority', 'weight', 'port', 'target']),
-        ('SSHFP', dns.rdatatype.SSHFP, None, ['algorithm', 'fp_type', 'fingerprint']),
-        ('SVCB', _SVCB, '2.2.0', ['priority', 'target', 'params']),
-        ('TLSA', dns.rdatatype.TLSA, None, ['usage', 'selector', 'mtype', 'cert']),
-        ('TXT', dns.rdatatype.TXT, None, ['strings']),
+        ("A", dns.rdatatype.A, None, ["address"]),
+        ("AAAA", dns.rdatatype.AAAA, None, ["address"]),
+        ("CAA", dns.rdatatype.CAA, None, ["flags", "tag", "value"]),
+        ("CNAME", dns.rdatatype.CNAME, None, ["target"]),
+        ("DNAME", dns.rdatatype.DNAME, None, ["target"]),
+        (
+            "DNSKEY",
+            dns.rdatatype.DNSKEY,
+            None,
+            ["flags", "algorithm", "protocol", "key"],
+        ),
+        (
+            "DS",
+            dns.rdatatype.DS,
+            None,
+            ["algorithm", "digest_type", "key_tag", "digest"],
+        ),
+        ("HINFO", dns.rdatatype.HINFO, None, ["cpu", "os"]),
+        ("HTTPS", _HTTPS, "2.2.0", ["priority", "target", "params"]),
+        (
+            "LOC",
+            dns.rdatatype.LOC,
+            None,
+            [
+                "latitude",
+                "longitude",
+                "altitude",
+                "size",
+                "horizontal_precision",
+                "vertical_precision",
+            ],
+        ),
+        ("MX", dns.rdatatype.MX, None, ["preference", "exchange"]),
+        (
+            "NAPTR",
+            dns.rdatatype.NAPTR,
+            None,
+            ["order", "preference", "flags", "service", "regexp", "replacement"],
+        ),
+        ("NS", dns.rdatatype.NS, None, ["target"]),
+        ("NSEC", dns.rdatatype.NSEC, None, ["next", "windows"]),
+        (
+            "NSEC3",
+            dns.rdatatype.NSEC3,
+            None,
+            ["algorithm", "flags", "iterations", "salt", "next", "windows"],
+        ),
+        (
+            "NSEC3PARAM",
+            dns.rdatatype.NSEC3PARAM,
+            None,
+            ["algorithm", "flags", "iterations", "salt"],
+        ),
+        ("PTR", dns.rdatatype.PTR, None, ["target"]),
+        ("RP", dns.rdatatype.RP, None, ["mbox", "txt"]),
+        (
+            "RRSIG",
+            dns.rdatatype.RRSIG,
+            None,
+            [
+                "type_covered",
+                "algorithm",
+                "labels",
+                "original_ttl",
+                "expiration",
+                "inception",
+                "key_tag",
+                "signer",
+                "signature",
+            ],
+        ),
+        (
+            "SOA",
+            dns.rdatatype.SOA,
+            None,
+            ["mname", "rname", "serial", "refresh", "retry", "expire", "minimum"],
+        ),
+        ("SPF", dns.rdatatype.SPF, None, ["strings"]),
+        ("SRV", dns.rdatatype.SRV, None, ["priority", "weight", "port", "target"]),
+        ("SSHFP", dns.rdatatype.SSHFP, None, ["algorithm", "fp_type", "fingerprint"]),
+        ("SVCB", _SVCB, "2.2.0", ["priority", "target", "params"]),
+        ("TLSA", dns.rdatatype.TLSA, None, ["usage", "selector", "mtype", "cert"]),
+        ("TXT", dns.rdatatype.TXT, None, ["strings"]),
     ]:
         if _rdtype is None:
             if _min_version is None:  # pragma: no cover
-                raise RuntimeError('Internal error: rdtype {name} is None, but min_version is also None!'.format(name=_name))  # pragma: no cover
+                raise RuntimeError(
+                    "Internal error: rdtype {name} is None, but min_version is also None!".format(
+                        name=_name
+                    )
+                )  # pragma: no cover
             NAME_TO_REQUIRED_VERSION[_name] = _min_version
         else:
             NAME_TO_RDTYPE[_name] = _rdtype
@@ -96,7 +156,7 @@ except ImportError:
 
 
 def _convert_dns_rdtypes_svcbbase_param(
-    value  # type: dns.rdtypes.svcbbase.Param
+    value,  # type: dns.rdtypes.svcbbase.Param
 ):  # type: (...) -> tuple[typing.Any, bool]
     if value is None:
         return None, False
@@ -105,7 +165,9 @@ def _convert_dns_rdtypes_svcbbase_param(
     if isinstance(value, dns.rdtypes.svcbbase.MandatoryParam):
         return [dns.rdtypes.svcbbase.key_to_text(k) for k in value.keys], False
     if isinstance(value, dns.rdtypes.svcbbase.ALPNParam):
-        return [to_native(base64.b64encode(identifier)) for identifier in value.ids], True
+        return [
+            to_native(base64.b64encode(identifier)) for identifier in value.ids
+        ], True
     if isinstance(value, dns.rdtypes.svcbbase.PortParam):
         return value.port, False
     if isinstance(value, dns.rdtypes.svcbbase.IPv4HintParam):
@@ -125,7 +187,7 @@ def convert_rdata_to_dict(
     to_unicode=True,  # type: bool
     add_synthetic=True,  # type: bool
 ):  # type: (...) -> dict[str, typing.Any]
-    '''
+    """
     Convert a DNSPython record data object to a Python dictionary.
 
     Code borrowed from community.general's dig looup plugin.
@@ -134,29 +196,29 @@ def convert_rdata_to_dict(
 
     If ``add_synthetic=True``, for some record types additional fields are added.
     For TXT and SPF records, ``value`` contains the concatenated strings, for example.
-    '''
+    """
     result = {}  # type: dict[str, typing.Any]
 
     fields = RDTYPE_TO_FIELDS.get(rdata.rdtype)
     if fields is None:
-        raise ValueError('Unsupported record type {rdtype}'.format(rdtype=rdata.rdtype))
+        raise ValueError("Unsupported record type {rdtype}".format(rdtype=rdata.rdtype))
     for f in fields:
         val = getattr(rdata, f)
 
         if isinstance(val, dns.name.Name):
             val = dns.name.Name.to_text(val)
 
-        if rdata.rdtype == dns.rdatatype.DS and f == 'digest':
-            val = dns.rdata._hexify(rdata.digest).replace(' ', '')  # type: ignore
-        if rdata.rdtype == dns.rdatatype.DNSKEY and f == 'algorithm':
+        if rdata.rdtype == dns.rdatatype.DS and f == "digest":
+            val = dns.rdata._hexify(rdata.digest).replace(" ", "")  # type: ignore
+        if rdata.rdtype == dns.rdatatype.DNSKEY and f == "algorithm":
             val = int(val)
-        if rdata.rdtype == dns.rdatatype.DNSKEY and f == 'key':
-            val = dns.rdata._base64ify(rdata.key).replace(' ', '')  # type: ignore
-        if rdata.rdtype == dns.rdatatype.NSEC3 and f == 'next':
+        if rdata.rdtype == dns.rdatatype.DNSKEY and f == "key":
+            val = dns.rdata._base64ify(rdata.key).replace(" ", "")  # type: ignore
+        if rdata.rdtype == dns.rdatatype.NSEC3 and f == "next":
             val = to_native(base64.b32encode(rdata.next).translate(dns.rdtypes.ANY.NSEC3.b32_normal_to_hex).lower())  # type: ignore
-        if rdata.rdtype in (dns.rdatatype.NSEC, dns.rdatatype.NSEC3) and f == 'windows':
+        if rdata.rdtype in (dns.rdatatype.NSEC, dns.rdatatype.NSEC3) and f == "windows":
             try:
-                val = dns.rdtypes.util.Bitmap(rdata.windows).to_text().lstrip(' ')  # type: ignore
+                val = dns.rdtypes.util.Bitmap(rdata.windows).to_text().lstrip(" ")  # type: ignore
             except AttributeError:
                 # dnspython < 2.0.0
                 val = []
@@ -164,21 +226,26 @@ def convert_rdata_to_dict(
                     for i, byte in enumerate(bitmap):
                         for j in range(8):
                             if (byte >> (7 - j)) & 1 != 0:
-                                val.append(dns.rdatatype.to_text(window * 256 + i * 8 + j))
-                val = ' '.join(val).lstrip(' ')
-        if rdata.rdtype in (dns.rdatatype.NSEC3, dns.rdatatype.NSEC3PARAM) and f == 'salt':
-            val = dns.rdata._hexify(rdata.salt).replace(' ', '')  # type: ignore
-        if rdata.rdtype == dns.rdatatype.RRSIG and f == 'type_covered':
+                                val.append(
+                                    dns.rdatatype.to_text(window * 256 + i * 8 + j)
+                                )
+                val = " ".join(val).lstrip(" ")
+        if (
+            rdata.rdtype in (dns.rdatatype.NSEC3, dns.rdatatype.NSEC3PARAM)
+            and f == "salt"
+        ):
+            val = dns.rdata._hexify(rdata.salt).replace(" ", "")  # type: ignore
+        if rdata.rdtype == dns.rdatatype.RRSIG and f == "type_covered":
             val = RDTYPE_TO_NAME.get(rdata.type_covered) or str(val)  # type: ignore
-        if rdata.rdtype == dns.rdatatype.RRSIG and f == 'algorithm':
+        if rdata.rdtype == dns.rdatatype.RRSIG and f == "algorithm":
             val = int(val)
-        if rdata.rdtype == dns.rdatatype.RRSIG and f == 'signature':
-            val = dns.rdata._base64ify(rdata.signature).replace(' ', '')  # type: ignore
-        if rdata.rdtype == dns.rdatatype.SSHFP and f == 'fingerprint':
-            val = dns.rdata._hexify(rdata.fingerprint).replace(' ', '')  # type: ignore
-        if rdata.rdtype == dns.rdatatype.TLSA and f == 'cert':
-            val = dns.rdata._hexify(rdata.cert).replace(' ', '')  # type: ignore
-        if rdata.rdtype in (_HTTPS, _SVCB) and f == 'params':
+        if rdata.rdtype == dns.rdatatype.RRSIG and f == "signature":
+            val = dns.rdata._base64ify(rdata.signature).replace(" ", "")  # type: ignore
+        if rdata.rdtype == dns.rdatatype.SSHFP and f == "fingerprint":
+            val = dns.rdata._hexify(rdata.fingerprint).replace(" ", "")  # type: ignore
+        if rdata.rdtype == dns.rdatatype.TLSA and f == "cert":
+            val = dns.rdata._hexify(rdata.cert).replace(" ", "")  # type: ignore
+        if rdata.rdtype in (_HTTPS, _SVCB) and f == "params":
             val_res = {}
             for k, v in val.items():
                 kk = dns.rdtypes.svcbbase.key_to_text(k)
@@ -190,7 +257,11 @@ def convert_rdata_to_dict(
             val = val_res
 
         if isinstance(val, (list, tuple)):
-            val = [to_text(v) if isinstance(v, binary_type) else v for v in val] if to_unicode else list(val)
+            val = (
+                [to_text(v) if isinstance(v, binary_type) else v for v in val]
+                if to_unicode
+                else list(val)
+            )
         elif to_unicode and isinstance(val, binary_type):
             val = to_text(val)
 
@@ -199,7 +270,7 @@ def convert_rdata_to_dict(
     if add_synthetic:  # noqa: SIM102
         if rdata.rdtype in (dns.rdatatype.TXT, dns.rdatatype.SPF):
             if to_unicode:
-                result['value'] = u''.join([to_text(value) for value in rdata.strings])  # type: ignore
+                result["value"] = "".join([to_text(value) for value in rdata.strings])  # type: ignore
             else:
-                result['value'] = b''.join([to_bytes(value) for value in rdata.strings])  # type: ignore
+                result["value"] = b"".join([to_bytes(value) for value in rdata.strings])  # type: ignore
     return result

@@ -13,7 +13,12 @@ import abc
 import sys
 
 from ansible.module_utils.common.text.converters import to_native
-from ansible.module_utils.urls import ConnectionError, NoSSLError, fetch_url, open_url  # noqa: A004
+from ansible.module_utils.urls import (
+    ConnectionError,
+    NoSSLError,
+    fetch_url,
+    open_url,
+)  # noqa: A004
 
 from ansible_collections.community.dns.plugins.module_utils._six import add_metaclass
 
@@ -41,7 +46,7 @@ class HTTPHelper(object):
     def fetch_url(
         self,
         url,  # type: str
-        method='GET',  # type: str
+        method="GET",  # type: str
         headers=None,  # type: dict[str, str] | None
         data=None,  # type: bytes | None
         timeout=None,  # type: int | None
@@ -63,12 +68,14 @@ class ModuleHTTPHelper(HTTPHelper):
     def fetch_url(
         self,
         url,  # type: str
-        method='GET',  # type: str
+        method="GET",  # type: str
         headers=None,  # type: dict[str, str] | None
         data=None,  # type: bytes | None
         timeout=None,  # type: int | None
     ):  # type: (...) -> tuple[bytes | None, dict[str, typing.Any]]
-        response, info = fetch_url(self.module, url, method=method, headers=headers, data=data, timeout=timeout)
+        response, info = fetch_url(
+            self.module, url, method=method, headers=headers, data=data, timeout=timeout
+        )
         try:
             # In Python 2, reading from a closed response yields a TypeError.
             # In Python 3, read() simply returns ''
@@ -76,7 +83,7 @@ class ModuleHTTPHelper(HTTPHelper):
                 raise TypeError
             content = response.read()
         except (AttributeError, TypeError):
-            content = info.pop('body', None)
+            content = info.pop("body", None)
         return content, info
 
 
@@ -84,32 +91,34 @@ class OpenURLHelper(HTTPHelper):
     def fetch_url(
         self,
         url,  # type: str
-        method='GET',  # type: str
+        method="GET",  # type: str
         headers=None,  # type: dict[str, str] | None
         data=None,  # type: bytes | None
         timeout=None,  # type: int | None
     ):  # type: (...) -> tuple[bytes | None, dict[str, typing.Any]]
         info = {}
         try:
-            req = open_url(url, method=method, headers=headers, data=data, timeout=timeout)
+            req = open_url(
+                url, method=method, headers=headers, data=data, timeout=timeout
+            )
             result = req.read()
             info.update({k.lower(): v for k, v in req.info().items()})
-            info['status'] = req.code
-            info['url'] = req.geturl()
+            info["status"] = req.code
+            info["url"] = req.geturl()
             req.close()
         except HTTPError as e:
             try:
                 result = e.read()
             except AttributeError:
-                result = ''
+                result = ""
             try:
                 info.update({k.lower(): v for k, v in e.info().items()})
             except Exception:  # pragma: no cover
                 pass  # pragma: no cover
-            info['status'] = e.code
+            info["status"] = e.code
         except NoSSLError as e:
-            raise NetworkError('Cannot connect via SSL: {0}'.format(to_native(e)))
+            raise NetworkError("Cannot connect via SSL: {0}".format(to_native(e)))
         except (ConnectionError, ValueError) as e:
-            raise NetworkError('Connection error: {0}'.format(to_native(e)))
+            raise NetworkError("Connection error: {0}".format(to_native(e)))
 
         return result, info

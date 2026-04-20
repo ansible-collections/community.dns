@@ -26,17 +26,17 @@ from ansible_collections.community.dns.plugins.module_utils._six import (
 
 
 def ensure_type(value, type_name):
-    if type_name == 'str':
+    if type_name == "str":
         return check_type_str(value)
-    if type_name == 'list':
+    if type_name == "list":
         return check_type_list(value)
-    if type_name == 'dict':
+    if type_name == "dict":
         return check_type_dict(value)
-    if type_name == 'bool':
+    if type_name == "bool":
         return check_type_bool(value)
-    if type_name == 'int':
+    if type_name == "int":
         return check_type_int(value)
-    if type_name == 'float':
+    if type_name == "float":
         return check_type_float(value)
     return value
 
@@ -109,7 +109,7 @@ class ProviderInformation(object):
 
         Note: the default return value changed from 'octal' to 'decimal' in community.dns 3.0.0.
         """
-        return 'decimal'
+        return "decimal"
 
     def txt_always_quote(self):
         """

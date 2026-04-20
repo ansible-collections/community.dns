@@ -30,19 +30,19 @@ class HosttechProviderInformation(ProviderInformation):
         """
         Return a list of supported record types.
         """
-        return ['A', 'CNAME', 'MX', 'AAAA', 'TXT', 'PTR', 'SRV', 'SPF', 'NS', 'CAA']
+        return ["A", "CNAME", "MX", "AAAA", "TXT", "PTR", "SRV", "SPF", "NS", "CAA"]
 
     def get_zone_id_type(self):
         """
         Return the (short) type for zone IDs, like ``'int'`` or ``'str'``.
         """
-        return 'int'
+        return "int"
 
     def get_record_id_type(self):
         """
         Return the (short) type for record IDs, like ``'int'`` or ``'str'``.
         """
-        return 'int'
+        return "int"
 
     def get_record_default_ttl(self):
         """
@@ -72,7 +72,7 @@ class HosttechProviderInformation(ProviderInformation):
         * 'encoded' - the API works with encoded values
         * 'encoded-no-char-encoding' - the API works with encoded values, but without character encoding
         """
-        return 'decoded'
+        return "decoded"
 
 
 def create_hosttech_provider_information():
@@ -82,26 +82,28 @@ def create_hosttech_provider_information():
 def create_hosttech_argument_spec():
     return ArgumentSpec(
         argument_spec={
-            'hosttech_username': {'type': 'str'},
-            'hosttech_password': {'type': 'str', 'no_log': True},
-            'hosttech_token': {'type': 'str', 'no_log': True, 'aliases': ['api_token']},
+            "hosttech_username": {"type": "str"},
+            "hosttech_password": {"type": "str", "no_log": True},
+            "hosttech_token": {"type": "str", "no_log": True, "aliases": ["api_token"]},
         },
-        required_together=[('hosttech_username', 'hosttech_password')],
-        mutually_exclusive=[('hosttech_username', 'hosttech_token')],
+        required_together=[("hosttech_username", "hosttech_password")],
+        mutually_exclusive=[("hosttech_username", "hosttech_token")],
     )
 
 
 def create_hosttech_api(option_provider, http_helper):
-    username = option_provider.get_option('hosttech_username')
-    password = option_provider.get_option('hosttech_password')
+    username = option_provider.get_option("hosttech_username")
+    password = option_provider.get_option("hosttech_password")
     if username is not None and password is not None:
         if not HAS_LXML_ETREE:
-            raise DNSAPIError('Needs lxml Python module (pip install lxml)')
+            raise DNSAPIError("Needs lxml Python module (pip install lxml)")
 
         return HostTechWSDLAPI(http_helper, username, password, debug=False)
 
-    token = option_provider.get_option('hosttech_token')
+    token = option_provider.get_option("hosttech_token")
     if token is not None:
         return HostTechJSONAPI(http_helper, token)
 
-    raise DNSAPIError('One of hosttech_token or both hosttech_username and hosttech_password must be provided!')
+    raise DNSAPIError(
+        "One of hosttech_token or both hosttech_username and hosttech_password must be provided!"
+    )

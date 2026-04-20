@@ -11,7 +11,7 @@ __metaclass__ = type
 
 def format_ttl(ttl):
     if ttl is None:
-        return 'default'
+        return "default"
     sec = ttl % 60
     ttl //= 60
     mins = ttl % 60
@@ -19,12 +19,12 @@ def format_ttl(ttl):
     h = ttl
     result = []
     if h:
-        result.append('{0}h'.format(h))
+        result.append("{0}h".format(h))
     if mins:
-        result.append('{0}m'.format(mins))
+        result.append("{0}m".format(mins))
     if sec:
-        result.append('{0}s'.format(sec))
-    return ' '.join(result)
+        result.append("{0}s".format(sec))
+    return " ".join(result)
 
 
 class DNSRecord(object):
@@ -49,17 +49,17 @@ class DNSRecord(object):
     def __str__(self):
         data = []
         if self.id:
-            data.append('id: {0}'.format(self.id))
-        data.append('type: {0}'.format(self.type))
+            data.append("id: {0}".format(self.id))
+        data.append("type: {0}".format(self.type))
         if self.prefix:
             data.append('prefix: "{0}"'.format(self.prefix))
         else:
-            data.append('prefix: (none)')
+            data.append("prefix: (none)")
         data.append('target: "{0}"'.format(self.target))
-        data.append('ttl: {0}'.format(format_ttl(self.ttl)))
+        data.append("ttl: {0}".format(format_ttl(self.ttl)))
         if self.extra:
-            data.append('extra: {0}'.format(self.extra))
-        return 'DNSRecord(' + ', '.join(data) + ')'
+            data.append("extra: {0}".format(self.extra))
+        return "DNSRecord(" + ", ".join(data) + ")"
 
     def __repr__(self):
         return self.__str__()
@@ -72,30 +72,34 @@ def sorted_ttls(ttls):
 def format_records_for_output(records, record_name, prefix=None, record_converter=None):
     ttls = sorted_ttls({record.ttl for record in records})
     entry = {
-        'prefix': prefix or '',
-        'type': min(record.type for record in records) if records else None,
-        'ttl': ttls[0] if len(ttls) > 0 else None,
-        'value': [record.target for record in records],
+        "prefix": prefix or "",
+        "type": min(record.type for record in records) if records else None,
+        "ttl": ttls[0] if len(ttls) > 0 else None,
+        "value": [record.target for record in records],
     }
     if record_converter:
-        entry['value'] = record_converter.process_values_to_user(entry['type'], entry['value'])
+        entry["value"] = record_converter.process_values_to_user(
+            entry["type"], entry["value"]
+        )
     if record_name is not None:
-        entry['record'] = record_name
+        entry["record"] = record_name
     if len(ttls) > 1:
-        entry['ttls'] = ttls
+        entry["ttls"] = ttls
     return entry
 
 
 def format_record_for_output(record, record_name, prefix=None, record_converter=None):
     entry = {
-        'prefix': prefix or '',
-        'type': record.type,
-        'ttl': record.ttl,
-        'value': record.target,
-        'extra': record.extra,
+        "prefix": prefix or "",
+        "type": record.type,
+        "ttl": record.ttl,
+        "value": record.target,
+        "extra": record.extra,
     }
     if record_converter:
-        entry['value'] = record_converter.process_value_to_user(entry['type'], entry['value'])
+        entry["value"] = record_converter.process_value_to_user(
+            entry["type"], entry["value"]
+        )
     if record_name is not None:
-        entry['record'] = record_name
+        entry["record"] = record_name
     return entry

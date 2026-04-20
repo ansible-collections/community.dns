@@ -15,19 +15,19 @@ from ansible_collections.community.dns.plugins.module_utils.provider import (
 
 
 class CustomProviderInformation(ProviderInformation):
-    def __init__(self, txt_record_handling='decoded', txt_character_encoding='decimal'):
+    def __init__(self, txt_record_handling="decoded", txt_character_encoding="decimal"):
         super(CustomProviderInformation, self).__init__()
         self._txt_record_handling = txt_record_handling
         self._txt_character_encoding = txt_character_encoding
 
     def get_supported_record_types(self):
-        return ['A']
+        return ["A"]
 
     def get_zone_id_type(self):
-        return 'str'  # pragma: no cover
+        return "str"  # pragma: no cover
 
     def get_record_id_type(self):
-        return 'str'  # pragma: no cover
+        return "str"  # pragma: no cover
 
     def get_record_default_ttl(self):
         return 300  # pragma: no cover

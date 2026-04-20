@@ -21,44 +21,38 @@ except ImportError:
 
 def create_adguardhome_argument_spec(required_if=None, additional_argument_specs=None):
     argument_spec = {
-        'username': {'type': 'str', 'required': True},
-        'password': {'type': 'str', 'required': True, 'no_log': True},
-        'host': {'type': 'str', 'required': True},
-        'validate_certs': {'type': 'bool', 'default': True},
+        "username": {"type": "str", "required": True},
+        "password": {"type": "str", "required": True, "no_log": True},
+        "host": {"type": "str", "required": True},
+        "validate_certs": {"type": "bool", "default": True},
     }
 
     if additional_argument_specs:
         argument_spec.update(additional_argument_specs)
 
-    return ArgumentSpec(
-        required_if=required_if,
-        argument_spec=argument_spec
-    )
+    return ArgumentSpec(required_if=required_if, argument_spec=argument_spec)
 
 
 class AdGuardHomeAPIHandler:
     def __init__(self, params, fail_json):
-        host = params.get('host')
+        host = params.get("host")
         self.url = host + "/control/rewrite"
 
-        self.validate_certs = params.get('validate_certs')
+        self.validate_certs = params.get("validate_certs")
         self.fail_json = fail_json
         self.r = Request(
-            validate_certs=params.get('validate_certs'),
-            url_username=params.get('username'),
-            url_password=params.get('password'),
+            validate_certs=params.get("validate_certs"),
+            url_username=params.get("username"),
+            url_password=params.get("password"),
             force_basic_auth=True,
-            headers={"Content-Type": "application/json"}
+            headers={"Content-Type": "application/json"},
         )
 
     def list(self):
         try:
-            response = self.r.open(
-                'GET',
-                self.url + "/list"
-            )
+            response = self.r.open("GET", self.url + "/list")
 
-            return json.loads(response.read().decode('utf-8'))
+            return json.loads(response.read().decode("utf-8"))
 
         except HTTPError as e:
             self.fail_json(msg=e.read())
@@ -74,13 +68,10 @@ class AdGuardHomeAPIHandler:
         else:
             answer_value = target["answer"] if answer is None else answer
 
-        data = json.dumps({
-            "domain": domain,
-            "answer": answer_value
-        }).encode('utf-8')
+        data = json.dumps({"domain": domain, "answer": answer_value}).encode("utf-8")
         try:
             self.r.open(
-                'POST',
+                "POST",
                 self.url + "/" + method,
                 data=data,
             )
@@ -90,13 +81,9 @@ class AdGuardHomeAPIHandler:
             self.fail_json(msg=e.read())
 
     def update(self, domain, answer, target):
-        data = json.dumps({
-            "target": target,
-            "update": {
-                "domain": domain,
-                "answer": answer
-            }
-        }).encode('utf-8')
+        data = json.dumps(
+            {"target": target, "update": {"domain": domain, "answer": answer}}
+        ).encode("utf-8")
         try:
             self.r.open(
                 "PUT",

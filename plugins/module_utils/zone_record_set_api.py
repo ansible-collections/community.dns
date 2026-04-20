@@ -45,7 +45,9 @@ class ZoneRecordSetAPI(object):
         @return The zone information (DNSZone), or None if not found
         """
 
-    def get_zone_with_record_sets_by_name(self, name, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
+    def get_zone_with_record_sets_by_name(
+        self, name, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
+    ):
         """
         Given a zone name, return the zone contents with records if found.
 
@@ -58,9 +60,14 @@ class ZoneRecordSetAPI(object):
         zone = self.get_zone_by_name(name)
         if zone is None:
             return None
-        return DNSZoneWithRecordSets(zone, self.get_zone_record_sets(zone.id, prefix=prefix, record_type=record_type))
+        return DNSZoneWithRecordSets(
+            zone,
+            self.get_zone_record_sets(zone.id, prefix=prefix, record_type=record_type),
+        )
 
-    def get_zone_with_record_sets_by_id(self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
+    def get_zone_with_record_sets_by_id(
+        self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
+    ):
         """
         Given a zone ID, return the zone contents with records if found.
 
@@ -73,10 +80,15 @@ class ZoneRecordSetAPI(object):
         zone = self.get_zone_by_id(zone_id)
         if zone is None:
             return None
-        return DNSZoneWithRecordSets(zone, self.get_zone_record_sets(zone.id, prefix=prefix, record_type=record_type))
+        return DNSZoneWithRecordSets(
+            zone,
+            self.get_zone_record_sets(zone.id, prefix=prefix, record_type=record_type),
+        )
 
     @abc.abstractmethod
-    def get_zone_record_sets(self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
+    def get_zone_record_sets(
+        self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
+    ):
         """
         Given a zone ID, return a list of record sets, optionally filtered by the provided criteria.
 
@@ -98,7 +110,9 @@ class ZoneRecordSetAPI(object):
         """
 
     @abc.abstractmethod
-    def update_record_set(self, zone_id, record_set, updated_records=True, updated_ttl=True):
+    def update_record_set(
+        self, zone_id, record_set, updated_records=True, updated_ttl=True
+    ):
         """
         Update a record set.
 
@@ -139,7 +153,9 @@ class ZoneRecordSetAPI(object):
             results_per_zone_id[zone_id] = result
             for record_set in record_sets:
                 try:
-                    result.append((self.add_record_set(zone_id, record_set), True, None))
+                    result.append(
+                        (self.add_record_set(zone_id, record_set), True, None)
+                    )
                 except DNSAPIError as e:
                     result.append((record_set, False, e))
                     if stop_early_on_errors:
@@ -168,7 +184,18 @@ class ZoneRecordSetAPI(object):
             results_per_zone_id[zone_id] = result
             for record_set, updated_records, updated_ttl in record_sets:
                 try:
-                    result.append((self.update_record_set(zone_id, record_set, updated_records=updated_records, updated_ttl=updated_ttl), True, None))
+                    result.append(
+                        (
+                            self.update_record_set(
+                                zone_id,
+                                record_set,
+                                updated_records=updated_records,
+                                updated_ttl=updated_ttl,
+                            ),
+                            True,
+                            None,
+                        )
+                    )
                 except DNSAPIError as e:
                     result.append((record_set, False, e))
                     if stop_early_on_errors:
@@ -194,7 +221,9 @@ class ZoneRecordSetAPI(object):
             results_per_zone_id[zone_id] = result
             for record_set in record_sets:
                 try:
-                    result.append((record_set, self.delete_record_set(zone_id, record_set), None))
+                    result.append(
+                        (record_set, self.delete_record_set(zone_id, record_set), None)
+                    )
                 except DNSAPIError as e:
                     result.append((record_set, False, e))
                     if stop_early_on_errors:
@@ -212,7 +241,11 @@ def filter_record_sets(record_sets, prefix=NOT_PROVIDED, record_type=NOT_PROVIDE
     @return The list of record sets matching the provided filters.
     """
     if prefix is not NOT_PROVIDED:
-        record_sets = [record_set for record_set in record_sets if record_set.prefix == prefix]
+        record_sets = [
+            record_set for record_set in record_sets if record_set.prefix == prefix
+        ]
     if record_type is not NOT_PROVIDED:
-        record_sets = [record_set for record_set in record_sets if record_set.type == record_type]
+        record_sets = [
+            record_set for record_set in record_sets if record_set.type == record_type
+        ]
     return record_sets

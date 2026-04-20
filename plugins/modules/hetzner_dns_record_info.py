@@ -128,15 +128,19 @@ from ansible_collections.community.dns.plugins.module_utils.module.record_info i
 def main():
     provider_information = create_hetzner_provider_information()
     argument_spec = create_hetzner_argument_spec()
-    argument_spec.merge(create_module_argument_spec(provider_information=provider_information))
+    argument_spec.merge(
+        create_module_argument_spec(provider_information=provider_information)
+    )
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
     option_provider = ModuleOptionProvider(module)
     run_module(
         module,
         lambda: create_hetzner_api(option_provider, ModuleHTTPHelper(module)),
-        provider_information=create_hetzner_provider_information(option_provider=option_provider),
+        provider_information=create_hetzner_provider_information(
+            option_provider=option_provider
+        ),
     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

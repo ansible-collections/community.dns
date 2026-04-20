@@ -22,7 +22,7 @@ def create_bulk_operations_argspec(provider_information):
 
     return ArgumentSpec(
         argument_spec={
-            'bulk_operation_threshold': {'type': 'int', 'default': 2},
+            "bulk_operation_threshold": {"type": "int", "default": 2},
         },
     )
 
@@ -30,7 +30,15 @@ def create_bulk_operations_argspec(provider_information):
 def create_record_transformation_argspec():
     return ArgumentSpec(
         argument_spec={
-            'txt_transformation': {'type': 'str', 'default': 'unquoted', 'choices': ['api', 'quoted', 'unquoted']},
-            'txt_character_encoding': {'type': 'str', 'default': 'decimal', 'choices': ['decimal', 'octal']},
+            "txt_transformation": {
+                "type": "str",
+                "default": "unquoted",
+                "choices": ["api", "quoted", "unquoted"],
+            },
+            "txt_character_encoding": {
+                "type": "str",
+                "default": "decimal",
+                "choices": ["decimal", "octal"],
+            },
         },
     )

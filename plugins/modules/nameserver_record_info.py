@@ -538,63 +538,63 @@ from ansible_collections.community.dns.plugins.module_utils.resolver import (
 def main():
     module = AnsibleModule(
         argument_spec={
-            'name': {'required': True, 'type': 'list', 'elements': 'str'},
-            'type': {
-                'required': True,
-                'type': 'str',
-                'choices': [
-                    'A',
-                    'AAAA',
-                    'CAA',
-                    'CNAME',
-                    'DNAME',
-                    'DNSKEY',
-                    'DS',
-                    'HINFO',
-                    'HTTPS',
-                    'LOC',
-                    'MX',
-                    'NAPTR',
-                    'NS',
-                    'NSEC',
-                    'NSEC3',
-                    'NSEC3PARAM',
-                    'PTR',
-                    'RP',
-                    'RRSIG',
-                    'SOA',
-                    'SPF',
-                    'SRV',
-                    'SSHFP',
-                    'SVCB',
-                    'TLSA',
-                    'TXT',
+            "name": {"required": True, "type": "list", "elements": "str"},
+            "type": {
+                "required": True,
+                "type": "str",
+                "choices": [
+                    "A",
+                    "AAAA",
+                    "CAA",
+                    "CNAME",
+                    "DNAME",
+                    "DNSKEY",
+                    "DS",
+                    "HINFO",
+                    "HTTPS",
+                    "LOC",
+                    "MX",
+                    "NAPTR",
+                    "NS",
+                    "NSEC",
+                    "NSEC3",
+                    "NSEC3PARAM",
+                    "PTR",
+                    "RP",
+                    "RRSIG",
+                    "SOA",
+                    "SPF",
+                    "SRV",
+                    "SSHFP",
+                    "SVCB",
+                    "TLSA",
+                    "TXT",
                 ],
             },
-            'query_retry': {'type': 'int', 'default': 3},
-            'query_timeout': {'type': 'float', 'default': 10},
-            'always_ask_default_resolver': {'type': 'bool', 'default': True},
-            'servfail_retries': {'type': 'int', 'default': 0},
-            'server': {'type': 'list', 'elements': 'str'},
+            "query_retry": {"type": "int", "default": 3},
+            "query_timeout": {"type": "float", "default": 10},
+            "always_ask_default_resolver": {"type": "bool", "default": True},
+            "servfail_retries": {"type": "int", "default": 0},
+            "server": {"type": "list", "elements": "str"},
         },
         supports_check_mode=True,
     )
     assert_requirements_present(module)
 
-    names = module.params['name']
-    record_type = module.params['type']
+    names = module.params["name"]
+    record_type = module.params["type"]
 
     resolver = ResolveDirectlyFromNameServers(
-        timeout=module.params['query_timeout'],
-        timeout_retries=module.params['query_retry'],
-        servfail_retries=module.params['servfail_retries'],
-        always_ask_default_resolver=module.params['always_ask_default_resolver'],
-        server_addresses=module.params['server'],
+        timeout=module.params["query_timeout"],
+        timeout_retries=module.params["query_retry"],
+        servfail_retries=module.params["servfail_retries"],
+        always_ask_default_resolver=module.params["always_ask_default_resolver"],
+        server_addresses=module.params["server"],
     )
     results = [None] * len(names)
     for index, name in enumerate(names):
         results[index] = {
-            'name': name,
+            "name": name,
         }
 
     if record_type not in NAME_TO_RDTYPE:
@@ -610,22 +610,22 @@ def main():
     def f():
         for index, name in enumerate(names):
             result = []
-            results[index]['result'] = result
+            results[index]["result"] = result
             records_for_nameservers = resolver.resolve(name, rdtype=rdtype)
             for nameserver, records in records_for_nameservers.items():
                 ns_result = {
-                    'nameserver': nameserver,
+                    "nameserver": nameserver,
                 }
                 result.append(ns_result)
                 values = []
                 if records is not None:
                     for data in records:
                         values.append(convert_rdata_to_dict(data))
-                ns_result['values'] = values
-                ns_result['entries'] = values
-            result.sort(key=lambda v: v['nameserver'])
+                ns_result["values"] = values
+                ns_result["entries"] = values
+            result.sort(key=lambda v: v["nameserver"])
 
-    guarded_run(f, module, generate_additional_results=lambda: {'results': results})
+    guarded_run(f, module, generate_additional_results=lambda: {"results": results})
     module.exit_json(results=results)
 
 

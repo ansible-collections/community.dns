@@ -15,11 +15,11 @@ from ansible_collections.community.dns.plugins.module_utils.argspec import Argum
 def test_argspec():
     empty = ArgumentSpec()
     non_empty = ArgumentSpec(
-        argument_spec={'test': {'type': 'str'}, 'foo': {}},
-        required_together=[('test', 'foo')],
-        required_if=[('test', 'bar', ['foo'])],
-        required_one_of=[('test', 'foo')],
-        mutually_exclusive=[('test', 'foo')]
+        argument_spec={"test": {"type": "str"}, "foo": {}},
+        required_together=[("test", "foo")],
+        required_if=[("test", "bar", ["foo"])],
+        required_one_of=[("test", "foo")],
+        mutually_exclusive=[("test", "foo")],
     )
     empty.merge(non_empty)
     assert empty.to_kwargs() == non_empty.to_kwargs()

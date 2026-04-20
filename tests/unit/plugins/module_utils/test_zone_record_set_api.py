@@ -41,7 +41,9 @@ class _TestZoneRecordSetAPI(ZoneRecordSetAPI):
     def get_zone_by_id(self, zone_id):
         raise NotImplementedError()  # pragma: no coverage
 
-    def get_zone_record_sets(self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
+    def get_zone_record_sets(
+        self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
+    ):
         raise NotImplementedError()  # pragma: no coverage
 
     def add_record_set(self, zone_id, record_set):
@@ -51,8 +53,12 @@ class _TestZoneRecordSetAPI(ZoneRecordSetAPI):
             raise res
         return res
 
-    def update_record_set(self, zone_id, record_set, updated_records=True, updated_ttl=True):
-        self.commands.append(("update_record_set", zone_id, record_set, updated_records, updated_ttl))
+    def update_record_set(
+        self, zone_id, record_set, updated_records=True, updated_ttl=True
+    ):
+        self.commands.append(
+            ("update_record_set", zone_id, record_set, updated_records, updated_ttl)
+        )
         res = self.update_record_set_return_values.pop(0)
         if isinstance(res, DNSAPIError):
             raise res
@@ -178,7 +184,9 @@ def test_update_record_sets():
     # Error with stopping early
     api = _TestZoneRecordSetAPI()
     api.update_record_set_return_values = [err1]
-    assert api.update_record_sets({1: [(a1, True, False), (a2, False, True)]}, stop_early_on_errors=True) == {
+    assert api.update_record_sets(
+        {1: [(a1, True, False), (a2, False, True)]}, stop_early_on_errors=True
+    ) == {
         1: [
             (a1, False, err1),
         ],
@@ -191,7 +199,9 @@ def test_update_record_sets():
     # Error without stopping early
     api = _TestZoneRecordSetAPI()
     api.update_record_set_return_values = [err1, a2res]
-    assert api.update_record_sets({1: [(a1, True, False), (a2, False, True)]}, stop_early_on_errors=False) == {
+    assert api.update_record_sets(
+        {1: [(a1, True, False), (a2, False, True)]}, stop_early_on_errors=False
+    ) == {
         1: [
             (a1, False, err1),
             (a2res, True, None),

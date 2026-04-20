@@ -14,14 +14,14 @@ import pytest
 from ansible_collections.community.dns.plugins.module_utils.provider import ensure_type
 
 CHECK_TYPE_DATA = [
-    ('asdf', 'str', 'asdf'),
-    (1, 'str', '1'),
-    ([], 'list', []),
-    ({}, 'dict', {}),
-    ('yes', 'bool', True),
-    ('5', 'int', 5),
-    ('5.10', 'float', 5.10),
-    ('foobar', 'raw', 'foobar'),
+    ("asdf", "str", "asdf"),
+    (1, "str", "1"),
+    ([], "list", []),
+    ({}, "dict", {}),
+    ("yes", "bool", True),
+    ("5", "int", 5),
+    ("5.10", "float", 5.10),
+    ("foobar", "raw", "foobar"),
 ]
 
 

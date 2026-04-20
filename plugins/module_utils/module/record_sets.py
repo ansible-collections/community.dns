@@ -55,61 +55,83 @@ from ._utils import get_prefix, normalize_dns_name
 
 
 def create_module_argument_spec(provider_information):
-    return ArgumentSpec(
-        argument_spec={
-            'zone_name': {'type': 'str', 'aliases': ['zone']},
-            'zone_id': {'type': provider_information.get_zone_id_type()},
-            'prune': {'type': 'bool', 'default': False},
-            'record_sets': {
-                'type': 'list',
-                'elements': 'dict',
-                'required': True,
-                'aliases': ['records'],
-                'options': {
-                    'record': {'type': 'str'},
-                    'prefix': {'type': 'str'},
-                    'ttl': {'type': 'int', 'default': provider_information.get_record_default_ttl()},
-                    'type': {'choices': provider_information.get_supported_record_types(), 'required': True},
-                    'value': {'type': 'list', 'elements': 'str'},
-                    'ignore': {'type': 'bool', 'default': False},
+    return (
+        ArgumentSpec(
+            argument_spec={
+                "zone_name": {"type": "str", "aliases": ["zone"]},
+                "zone_id": {"type": provider_information.get_zone_id_type()},
+                "prune": {"type": "bool", "default": False},
+                "record_sets": {
+                    "type": "list",
+                    "elements": "dict",
+                    "required": True,
+                    "aliases": ["records"],
+                    "options": {
+                        "record": {"type": "str"},
+                        "prefix": {"type": "str"},
+                        "ttl": {
+                            "type": "int",
+                            "default": provider_information.get_record_default_ttl(),
+                        },
+                        "type": {
+                            "choices": provider_information.get_supported_record_types(),
+                            "required": True,
+                        },
+                        "value": {"type": "list", "elements": "str"},
+                        "ignore": {"type": "bool", "default": False},
+                    },
+                    "required_if": [("ignore", False, ["value"])],
+                    "required_one_of": [("record", "prefix")],
+                    "mutually_exclusive": [("record", "prefix")],
                 },
-                'required_if': [('ignore', False, ['value'])],
-                'required_one_of': [('record', 'prefix')],
-                'mutually_exclusive': [('record', 'prefix')],
             },
-        },
-        required_one_of=[
-            ('zone_name', 'zone_id'),
-        ],
-        mutually_exclusive=[
-            ('zone_name', 'zone_id'),
-        ],
-    ).merge(create_bulk_operations_argspec(provider_information)).merge(create_record_transformation_argspec())
+            required_one_of=[
+                ("zone_name", "zone_id"),
+            ],
+            mutually_exclusive=[
+                ("zone_name", "zone_id"),
+            ],
+        )
+        .merge(create_bulk_operations_argspec(provider_information))
+        .merge(create_record_transformation_argspec())
+    )
 
 
 def _get_record_sets_dict(module, provider_information, record_converter, zone_in):
-    record_sets = module.params['record_sets']
+    record_sets = module.params["record_sets"]
     record_sets_dict = OrderedDict()
     for index, record_set in enumerate(record_sets):
         record_set = record_set.copy()
-        record_name = record_set['record']
-        prefix = record_set['prefix']
+        record_name = record_set["record"]
+        prefix = record_set["prefix"]
         record_name, prefix = get_prefix(
-            normalized_zone=zone_in, normalized_record=record_name, prefix=prefix, provider_information=provider_information)
-        record_set['record'] = record_name
-        record_set['prefix'] = prefix
-        if record_set['value']:
-            record_set['value'] = record_converter.process_values_from_user(record_set['type'], record_set['value'])
-        if record_set['type'] not in provider_information.get_supported_record_types():
-            module.fail_json(msg='Found invalid record type {type} at index #{i}'.format(type=record_set['type'], i=index))
-        key = (prefix, record_set['type'])
+            normalized_zone=zone_in,
+            normalized_record=record_name,
+            prefix=prefix,
+            provider_information=provider_information,
+        )
+        record_set["record"] = record_name
+        record_set["prefix"] = prefix
+        if record_set["value"]:
+            record_set["value"] = record_converter.process_values_from_user(
+                record_set["type"], record_set["value"]
+            )
+        if record_set["type"] not in provider_information.get_supported_record_types():
+            module.fail_json(
+                msg="Found invalid record type {type} at index #{i}".format(
+                    type=record_set["type"], i=index
+                )
+            )
+        key = (prefix, record_set["type"])
         if key in record_sets_dict:
-            module.fail_json(msg='Found multiple sets for record {record} and type {type}: index #{i1} and #{i2}'.format(
-                record=record_name,
-                type=record_set['type'],
-                i1=record_sets_dict[key][0],
-                i2=index,
-            ))
+            module.fail_json(
+                msg="Found multiple sets for record {record} and type {type}: index #{i1} and #{i2}".format(
+                    record=record_name,
+                    type=record_set["type"],
+                    i1=record_sets_dict[key][0],
+                    i2=index,
+                )
+            )
         record_sets_dict[key] = (index, record_set)
     result = OrderedDict()
     for k, (dummy, v) in record_sets_dict.items():
@@ -117,19 +139,21 @@ def _get_record_sets_dict(module, provider_information, record_converter, zone_i
     return result
 
 
-def _run_module_record_api(option_provider, module, provider_information, record_converter, api):
+def _run_module_record_api(
+    option_provider, module, provider_information, record_converter, api
+):
     # Get zone information
-    if module.params['zone_name'] is not None:
-        zone_in = normalize_dns_name(module.params['zone_name'])
+    if module.params["zone_name"] is not None:
+        zone_in = normalize_dns_name(module.params["zone_name"])
         zone = api.get_zone_with_records_by_name(zone_in)
         if zone is None:
-            module.fail_json(msg='Zone not found')
+            module.fail_json(msg="Zone not found")
         zone_id = zone.zone.id
         zone_records = zone.records
     else:
-        zone = api.get_zone_with_records_by_id(module.params['zone_id'])
+        zone = api.get_zone_with_records_by_id(module.params["zone_id"])
         if zone is None:
-            module.fail_json(msg='Zone not found')
+            module.fail_json(msg="Zone not found")
         zone_in = normalize_dns_name(zone.zone.name)
         zone_id = zone.zone.id
         zone_records = zone.records
@@ -137,8 +161,10 @@ def _run_module_record_api(option_provider, module, provider_information, record
     record_converter.process_multiple_from_api(zone_records)
 
     # Process parameters
-    prune = module.params['prune']
-    record_sets_dict = _get_record_sets_dict(module, provider_information, record_converter, zone_in)
+    prune = module.params["prune"]
+    record_sets_dict = _get_record_sets_dict(
+        module, provider_information, record_converter, zone_in
+    )
 
     # Group existing record sets
     existing_record_sets = {}
@@ -149,7 +175,9 @@ def _run_module_record_api(option_provider, module, provider_information, record
         existing_record_sets[key].append(record)
 
     # Data required for diff
-    old_record_sets = {k: [r.clone() for r in v] for k, v in existing_record_sets.items()}
+    old_record_sets = {
+        k: [r.clone() for r in v] for k, v in existing_record_sets.items()
+    }
     new_record_sets = {k: list(v) for k, v in existing_record_sets.items()}
 
     # Create action lists
@@ -164,14 +192,14 @@ def _run_module_record_api(option_provider, module, provider_information, record
         existing_record_sets[key] = []
         new_recs = new_record_sets[key]
 
-        if record_set['ignore']:
+        if record_set["ignore"]:
             continue
 
         mismatch_recs = []
         keep_record_sets = []
-        values = list(record_set['value'])
+        values = list(record_set["value"])
         for record in existing_recs:
-            if record.ttl != record_set['ttl']:
+            if record.ttl != record_set["ttl"]:
                 mismatch_recs.append(record)
                 new_recs.remove(record)
                 continue
@@ -192,7 +220,7 @@ def _run_module_record_api(option_provider, module, provider_information, record
                 to_create.append(record)
             record.prefix = prefix
             record.type = record_type
-            record.ttl = record_set['ttl']
+            record.ttl = record_set["ttl"]
             record.target = target
             new_recs.append(record)
 
@@ -207,8 +235,8 @@ def _run_module_record_api(option_provider, module, provider_information, record
 
     # Compose result
     result = {
-        'changed': False,
-        'zone_id': zone_id,
+        "changed": False,
+        "zone_id": zone_id,
     }
 
     # Apply changes
@@ -216,7 +244,7 @@ def _run_module_record_api(option_provider, module, provider_information, record
         records_to_delete = record_converter.clone_multiple_to_api(to_delete)
         records_to_change = record_converter.clone_multiple_to_api(to_change)
         records_to_create = record_converter.clone_multiple_to_api(to_create)
-        result['changed'] = True
+        result["changed"] = True
         if not module.check_mode:
             dummy, errors, dummy2 = bulk_apply_changes(
                 api,
@@ -231,30 +259,51 @@ def _run_module_record_api(option_provider, module, provider_information, record
                 if len(errors) == 1:
                     raise errors[0]
                 module.fail_json(
-                    msg='Errors: {0}'.format('; '.join([str(e) for e in errors])),
+                    msg="Errors: {0}".format("; ".join([str(e) for e in errors])),
                     errors=[str(e) for e in errors],
                 )
 
     # Include diff information
     if module._diff:
+
         def sort_items(dictionary):
             items = [
-                (zone_in if prefix is None else (prefix + '.' + zone_in), record_type, prefix, record_set)
-                for (prefix, record_type), record_set in dictionary.items() if len(record_set) > 0
+                (
+                    zone_in if prefix is None else (prefix + "." + zone_in),
+                    record_type,
+                    prefix,
+                    record_set,
+                )
+                for (prefix, record_type), record_set in dictionary.items()
+                if len(record_set) > 0
             ]
             return sorted(items)
 
-        result['diff'] = {
-            'before': {
-                'record_sets': [
-                    format_records_for_output(record_set, record_name, prefix, record_converter=record_converter)
-                    for record_name, record_type, prefix, record_set in sort_items(old_record_sets)
+        result["diff"] = {
+            "before": {
+                "record_sets": [
+                    format_records_for_output(
+                        record_set,
+                        record_name,
+                        prefix,
+                        record_converter=record_converter,
+                    )
+                    for record_name, record_type, prefix, record_set in sort_items(
+                        old_record_sets
+                    )
                 ],
             },
-            'after': {
-                'record_sets': [
-                    format_records_for_output(record_set, record_name, prefix, record_converter=record_converter)
-                    for record_name, record_type, prefix, record_set in sort_items(new_record_sets)
+            "after": {
+                "record_sets": [
+                    format_records_for_output(
+                        record_set,
+                        record_name,
+                        prefix,
+                        record_converter=record_converter,
+                    )
+                    for record_name, record_type, prefix, record_set in sort_items(
+                        new_record_sets
+                    )
                 ],
             },
         }
@@ -262,19 +311,21 @@ def _run_module_record_api(option_provider, module, provider_information, record
     module.exit_json(**result)
 
 
-def _run_module_record_set_api(option_provider, module, provider_information, record_converter, api):
+def _run_module_record_set_api(
+    option_provider, module, provider_information, record_converter, api
+):
     # Get zone information
-    if module.params['zone_name'] is not None:
-        zone_in = normalize_dns_name(module.params['zone_name'])
+    if module.params["zone_name"] is not None:
+        zone_in = normalize_dns_name(module.params["zone_name"])
         zone = api.get_zone_with_record_sets_by_name(zone_in)
         if zone is None:
-            module.fail_json(msg='Zone not found')
+            module.fail_json(msg="Zone not found")
         zone_id = zone.zone.id
         zone_record_sets = zone.record_sets
     else:
-        zone = api.get_zone_with_record_sets_by_id(module.params['zone_id'])
+        zone = api.get_zone_with_record_sets_by_id(module.params["zone_id"])
         if zone is None:
-            module.fail_json(msg='Zone not found')
+            module.fail_json(msg="Zone not found")
         zone_in = normalize_dns_name(zone.zone.name)
         zone_id = zone.zone.id
         zone_record_sets = zone.record_sets
@@ -283,8 +334,10 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
         record_converter.process_set_from_api(record_set)
 
     # Process parameters
-    prune = module.params['prune']
-    record_sets_dict = _get_record_sets_dict(module, provider_information, record_converter, zone_in)
+    prune = module.params["prune"]
+    record_sets_dict = _get_record_sets_dict(
+        module, provider_information, record_converter, zone_in
+    )
 
     # Group existing record sets
     existing_record_sets = OrderedDict()
@@ -303,13 +356,13 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
     for (prefix, record_type), record_set in record_sets_dict.items():
         key = (prefix, record_type)
         existing_record_sets.pop(key, None)
-        if record_set['ignore']:
+        if record_set["ignore"]:
             continue
 
         new_rrset = new_record_sets.get(key)
 
-        ttl = record_set['ttl']
-        values = sorted(record_set['value'])
+        ttl = record_set["ttl"]
+        values = sorted(record_set["value"])
         if not values:
             if new_rrset:
                 to_delete.append(new_rrset)
@@ -364,22 +417,26 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
 
     # Compose result
     result = {
-        'changed': False,
-        'zone_id': zone_id,
+        "changed": False,
+        "zone_id": zone_id,
     }
 
     def _get_name(prefix):
-        return zone_in if prefix is None else (prefix + '.' + zone_in)
+        return zone_in if prefix is None else (prefix + "." + zone_in)
 
     # Apply changes
     if to_create or to_delete or to_change:
-        record_sets_to_delete = [record_converter.clone_set_to_api(rrset) for rrset in to_delete]
+        record_sets_to_delete = [
+            record_converter.clone_set_to_api(rrset) for rrset in to_delete
+        ]
         record_sets_to_change = [
             (record_converter.clone_set_to_api(rrset), mismatch_values, mismatch_ttl)
             for rrset, mismatch_values, mismatch_ttl in to_change
         ]
-        record_sets_to_create = [record_converter.clone_set_to_api(rrset) for rrset in to_create]
-        result['changed'] = True
+        record_sets_to_create = [
+            record_converter.clone_set_to_api(rrset) for rrset in to_create
+        ]
+        result["changed"] = True
         if not module.check_mode:
             dummy, errors, dummy2 = rrset_bulk_apply_changes(
                 api,
@@ -397,18 +454,21 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
                         _get_name(record_set.prefix),
                         record_set.type,
                         format_ttl(record_set.ttl),
-                        record_converter.process_values_to_user(record_set.type, [rec.target for rec in record_set.records]),
+                        record_converter.process_values_to_user(
+                            record_set.type, [rec.target for rec in record_set.records]
+                        ),
                         e,
                     )
                     for what, record_set, e in errors
                 ]
                 module.fail_json(
-                    msg='Errors: {0}'.format('; '.join(messages)),
+                    msg="Errors: {0}".format("; ".join(messages)),
                     errors=[str(e) for dummy, dummy2, e in errors],
                 )
 
     # Include diff information
     if module._diff:
+
         def sort_items(dictionary):
             items = [
                 (_get_name(prefix), record_type, prefix, record_set)
@@ -416,17 +476,31 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
             ]
             return sorted(items)
 
-        result['diff'] = {
-            'before': {
-                'record_sets': [
-                    format_record_set_for_output(record_set, record_name, prefix, record_converter=record_converter)
-                    for record_name, record_type, prefix, record_set in sort_items(old_record_sets)
+        result["diff"] = {
+            "before": {
+                "record_sets": [
+                    format_record_set_for_output(
+                        record_set,
+                        record_name,
+                        prefix,
+                        record_converter=record_converter,
+                    )
+                    for record_name, record_type, prefix, record_set in sort_items(
+                        old_record_sets
+                    )
                 ],
             },
-            'after': {
-                'record_sets': [
-                    format_record_set_for_output(record_set, record_name, prefix, record_converter=record_converter)
-                    for record_name, record_type, prefix, record_set in sort_items(new_record_sets)
+            "after": {
+                "record_sets": [
+                    format_record_set_for_output(
+                        record_set,
+                        record_name,
+                        prefix,
+                        record_converter=record_converter,
+                    )
+                    for record_name, record_type, prefix, record_set in sort_items(
+                        new_record_sets
+                    )
                 ],
             },
         }
@@ -444,13 +518,29 @@ def run_module(module, create_api, provider_information):
         api = create_api()
 
         if isinstance(api, ZoneRecordAPI):
-            _run_module_record_api(option_provider, module, provider_information, record_converter, api)
+            _run_module_record_api(
+                option_provider, module, provider_information, record_converter, api
+            )
         else:
-            _run_module_record_set_api(option_provider, module, provider_information, record_converter, api)
+            _run_module_record_set_api(
+                option_provider, module, provider_information, record_converter, api
+            )
 
     except DNSConversionError as e:
-        module.fail_json(msg='Error while converting DNS values: {0}'.format(e.error_message), error=e.error_message, exception=traceback.format_exc())
+        module.fail_json(
+            msg="Error while converting DNS values: {0}".format(e.error_message),
+            error=e.error_message,
+            exception=traceback.format_exc(),
+        )
     except DNSAPIAuthenticationError as e:
-        module.fail_json(msg='Cannot authenticate: {0}'.format(e), error=to_text(e), exception=traceback.format_exc())
+        module.fail_json(
+            msg="Cannot authenticate: {0}".format(e),
+            error=to_text(e),
+            exception=traceback.format_exc(),
+        )
     except DNSAPIError as e:
-        module.fail_json(msg='Error: {0}'.format(e), error=to_text(e), exception=traceback.format_exc())
+        module.fail_json(
+            msg="Error: {0}".format(e),
+            error=to_text(e),
+            exception=traceback.format_exc(),
+        )

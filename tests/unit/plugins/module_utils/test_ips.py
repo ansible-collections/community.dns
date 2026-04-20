@@ -18,7 +18,7 @@ from ansible_collections.community.dns.plugins.module_utils.ips import (
 )
 
 # We need ipaddress
-ipaddress = pytest.importorskip('ipaddress')
+ipaddress = pytest.importorskip("ipaddress")
 
 
 def test_assert_requirements_present():
@@ -36,23 +36,23 @@ def test_assert_requirements_present():
         ips.IPADDRESS_IMPORT_EXC = None
         assert_requirements_present(module)
 
-        ips.IPADDRESS_IMPORT_EXC = 'asdf'
+        ips.IPADDRESS_IMPORT_EXC = "asdf"
         with pytest.raises(ModuleFailException) as exc:
             assert_requirements_present(module)
 
-        assert 'ipaddress' in exc.value.args[0]['msg']
-        assert exc.value.args[0]['exception'] == 'asdf'
+        assert "ipaddress" in exc.value.args[0]["msg"]
+        assert exc.value.args[0]["exception"] == "asdf"
 
     finally:
         ips.IPADDRESS_IMPORT_EXC = orig_importerror
 
 
 IS_IP_ADDRESS_DATA = [
-    ('foo.bar', False),
-    ('foo', False),
-    ('123', False),
-    ('1.2.3.4', True),
-    ('::', True),
+    ("foo.bar", False),
+    ("foo", False),
+    ("123", False),
+    ("1.2.3.4", True),
+    ("::", True),
 ]
 
 

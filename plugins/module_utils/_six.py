@@ -34,32 +34,34 @@ import sys as _sys
 
 if _sys.version_info[0] > 2:
     import builtins as _builtins
-    getattr(_builtins, "exec")(  # noqa: B009
-        """def raise_from(value, from_value):
+
+    getattr(_builtins, "exec")("""def raise_from(value, from_value):
     try:
         raise value from from_value
     finally:
         value = None
-"""
-    )
+""")  # noqa: B009
 else:
+
     def raise_from(value, from_value):
         raise value
 
 
 def add_metaclass(metaclass):
     """Class decorator for creating a class with a metaclass."""
+
     def wrapper(cls):
         orig_vars = cls.__dict__.copy()
-        slots = orig_vars.get('__slots__')
+        slots = orig_vars.get("__slots__")
         if slots is not None:  # pragma: no coverage
             if isinstance(slots, str):  # pragma: no coverage
                 slots = [slots]  # pragma: no coverage
             for slots_var in slots:  # pragma: no coverage
                 orig_vars.pop(slots_var)  # pragma: no coverage
-        orig_vars.pop('__dict__', None)
-        orig_vars.pop('__weakref__', None)
-        if hasattr(cls, '__qualname__'):
-            orig_vars['__qualname__'] = cls.__qualname__
+        orig_vars.pop("__dict__", None)
+        orig_vars.pop("__weakref__", None)
+        if hasattr(cls, "__qualname__"):
+            orig_vars["__qualname__"] = cls.__qualname__
         return metaclass(cls.__name__, cls.__bases__, orig_vars)
+
     return wrapper

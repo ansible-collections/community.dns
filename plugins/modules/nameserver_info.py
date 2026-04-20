@@ -128,39 +128,41 @@ from ansible_collections.community.dns.plugins.module_utils.resolver import (
 def main():
     module = AnsibleModule(
         argument_spec={
-            'name': {'required': True, 'type': 'list', 'elements': 'str'},
-            'resolve_addresses': {'type': 'bool', 'default': False},
-            'query_retry': {'type': 'int', 'default': 3},
-            'query_timeout': {'type': 'float', 'default': 10},
-            'always_ask_default_resolver': {'type': 'bool', 'default': True},
-            'servfail_retries': {'type': 'int', 'default': 0},
-            'server': {'type': 'list', 'elements': 'str'},
+            "name": {"required": True, "type": "list", "elements": "str"},
+            "resolve_addresses": {"type": "bool", "default": False},
+            "query_retry": {"type": "int", "default": 3},
+            "query_timeout": {"type": "float", "default": 10},
+            "always_ask_default_resolver": {"type": "bool", "default": True},
+            "servfail_retries": {"type": "int", "default": 0},
+            "server": {"type": "list", "elements": "str"},
         },
         supports_check_mode=True,
     )
     assert_requirements_present(module)
 
-    names = module.params['name']
-    resolve_addresses = module.params['resolve_addresses']
+    names = module.params["name"]
+    resolve_addresses = module.params["resolve_addresses"]
 
     resolver = ResolveDirectlyFromNameServers(
-        timeout=module.params['query_timeout'],
-        timeout_retries=module.params['query_retry'],
-        servfail_retries=module.params['servfail_retries'],
-        always_ask_default_resolver=module.params['always_ask_default_resolver'],
-        server_addresses=module.params['server'],
+        timeout=module.params["query_timeout"],
+        timeout_retries=module.params["query_retry"],
+        servfail_retries=module.params["servfail_retries"],
+        always_ask_default_resolver=module.params["always_ask_default_resolver"],
+        server_addresses=module.params["server"],
     )
     results = [None] * len(names)
     for index, name in enumerate(names):
         results[index] = {
-            'name': name,
+            "name": name,
         }
 
     def f():
         for index, name in enumerate(names):
-            results[index]['nameservers'] = sorted(resolver.resolve_nameservers(name, resolve_addresses=resolve_addresses))
+            results[index]["nameservers"] = sorted(
+                resolver.resolve_nameservers(name, resolve_addresses=resolve_addresses)
+            )
 
-    guarded_run(f, module, generate_additional_results=lambda: {'results': results})
+    guarded_run(f, module, generate_additional_results=lambda: {"results": results})
     module.exit_json(results=results)
 
 

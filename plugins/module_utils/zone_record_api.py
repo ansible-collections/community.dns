@@ -54,7 +54,9 @@ class ZoneRecordAPI(object):
         @return The zone information (DNSZone), or None if not found
         """
 
-    def get_zone_with_records_by_name(self, name, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
+    def get_zone_with_records_by_name(
+        self, name, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
+    ):
         """
         Given a zone name, return the zone contents with records if found.
 
@@ -67,9 +69,13 @@ class ZoneRecordAPI(object):
         zone = self.get_zone_by_name(name)
         if zone is None:
             return None
-        return DNSZoneWithRecords(zone, self.get_zone_records(zone.id, prefix=prefix, record_type=record_type))
+        return DNSZoneWithRecords(
+            zone, self.get_zone_records(zone.id, prefix=prefix, record_type=record_type)
+        )
 
-    def get_zone_with_records_by_id(self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
+    def get_zone_with_records_by_id(
+        self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
+    ):
         """
         Given a zone ID, return the zone contents with records if found.
 
@@ -82,7 +88,9 @@ class ZoneRecordAPI(object):
         zone = self.get_zone_by_id(zone_id)
         if zone is None:
             return None
-        return DNSZoneWithRecords(zone, self.get_zone_records(zone.id, prefix=prefix, record_type=record_type))
+        return DNSZoneWithRecords(
+            zone, self.get_zone_records(zone.id, prefix=prefix, record_type=record_type)
+        )
 
     @abc.abstractmethod
     def get_zone_records(self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):

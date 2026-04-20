@@ -34,17 +34,23 @@ class RecordConverter(object):
 
         # Valid values: 'decoded', 'encoded', 'encoded-no-octal' (deprecated), 'encoded-no-char-encoding'
         self._txt_api_handling = self._provider_information.txt_record_handling()
-        if self._txt_api_handling == 'encoded-no-octal':
+        if self._txt_api_handling == "encoded-no-octal":
             warnings.warn(
                 'provider_information.txt_record_handling() returned deprecated value "encoded-no-octal"',
                 stacklevel=2,
             )
-        self._txt_api_character_encoding = self._provider_information.txt_character_encoding()
+        self._txt_api_character_encoding = (
+            self._provider_information.txt_character_encoding()
+        )
         self._txt_always_quote = self._provider_information.txt_always_quote()
         # Valid values: 'api', 'quoted', 'unquoted'
-        self._txt_transformation = self._option_provider.get_option('txt_transformation')
+        self._txt_transformation = self._option_provider.get_option(
+            "txt_transformation"
+        )
         # Valid values: 'decimal', 'octal'
-        self._txt_character_encoding = self._option_provider.get_option('txt_character_encoding')
+        self._txt_character_encoding = self._option_provider.get_option(
+            "txt_character_encoding"
+        )
 
     def emit_deprecations(self, deprecator):
         pass
@@ -53,35 +59,46 @@ class RecordConverter(object):
         """
         Handle TXT records for sending to/from the API.
         """
-        if self._txt_transformation == 'api':
+        if self._txt_transformation == "api":
             # Do not touch record values
             return
 
         # We assume that records internally use decoded values
-        if self._txt_api_handling in ('encoded', 'encoded-no-octal', 'encoded-no-char-encoding'):
+        if self._txt_api_handling in (
+            "encoded",
+            "encoded-no-octal",
+            "encoded-no-char-encoding",
+        ):
             if to_api:
                 record.target = encode_txt_value(
                     record.target,
                     always_quote=self._txt_always_quote,
-                    use_character_encoding=self._txt_api_handling == 'encoded',
-                    character_encoding=self._txt_api_character_encoding)
+                    use_character_encoding=self._txt_api_handling == "encoded",
+                    character_encoding=self._txt_api_character_encoding,
+                )
             else:
-                record.target = decode_txt_value(record.target, character_encoding=self._txt_api_character_encoding)
+                record.target = decode_txt_value(
+                    record.target, character_encoding=self._txt_api_character_encoding
+                )
 
     def _handle_txt_user(self, to_user, record):
         """
         Handle TXT records for sending to/from the user.
         """
-        if self._txt_transformation == 'api':
+        if self._txt_transformation == "api":
             # Do not touch record values
             return
 
         # We assume that records internally use decoded values
-        if self._txt_transformation == 'quoted':
+        if self._txt_transformation == "quoted":
             if to_user:
-                record.target = encode_txt_value(record.target, character_encoding=self._txt_character_encoding)
+                record.target = encode_txt_value(
+                    record.target, character_encoding=self._txt_character_encoding
+                )
             else:
-                record.target = decode_txt_value(record.target, character_encoding=self._txt_character_encoding)
+                record.target = decode_txt_value(
+                    record.target, character_encoding=self._txt_character_encoding
+                )
 
     def process_from_api(self, record):
         """
@@ -90,11 +107,16 @@ class RecordConverter(object):
         """
         try:
             record.target = to_text(record.target)
-            if record.type == 'TXT':
+            if record.type == "TXT":
                 self._handle_txt_api(False, record)
             return record
         except DNSConversionError as e:
-            raise_from(DNSConversionError(u'While processing record from API: {0}'.format(e.error_message)), e)
+            raise_from(
+                DNSConversionError(
+                    "While processing record from API: {0}".format(e.error_message)
+                ),
+                e,
+            )
 
     def process_to_api(self, record):
         """
@@ -102,12 +124,17 @@ class RecordConverter(object):
         Modifies the record in-place.
         """
         try:
-            if record.type == 'TXT':
+            if record.type == "TXT":
                 self._handle_txt_api(True, record)
             return record
         except DNSConversionError as e:  # pragma: no cover
             # This can never happen
-            raise_from(DNSConversionError(u'While processing record for the API: {0}'.format(e.error_message)), e)  # pragma: no cover
+            raise_from(
+                DNSConversionError(
+                    "While processing record for the API: {0}".format(e.error_message)
+                ),
+                e,
+            )  # pragma: no cover
 
     def process_from_user(self, record):
         """
@@ -116,11 +143,16 @@ class RecordConverter(object):
         """
         try:
             record.target = to_text(record.target)
-            if record.type == 'TXT':
+            if record.type == "TXT":
                 self._handle_txt_user(False, record)
             return record
         except DNSConversionError as e:
-            raise_from(DNSConversionError(u'While processing record from the user: {0}'.format(e.error_message)), e)
+            raise_from(
+                DNSConversionError(
+                    "While processing record from the user: {0}".format(e.error_message)
+                ),
+                e,
+            )
 
     def process_to_user(self, record):
         """
@@ -128,12 +160,17 @@ class RecordConverter(object):
         Modifies the record in-place.
         """
         try:
-            if record.type == 'TXT':
+            if record.type == "TXT":
                 self._handle_txt_user(True, record)
             return record
         except DNSConversionError as e:  # pragma: no cover
             # This can never happen
-            raise_from(DNSConversionError(u'While processing record for the user: {0}'.format(e.error_message)), e)  # pragma: no cover
+            raise_from(
+                DNSConversionError(
+                    "While processing record for the user: {0}".format(e.error_message)
+                ),
+                e,
+            )  # pragma: no cover
 
     def clone_from_api(self, record):
         """
@@ -173,7 +210,9 @@ class RecordConverter(object):
         Return a modified clone of the record set; the original will not be modified.
         """
         record_set = record_set.clone()
-        record_set.records = [self.clone_to_api(record) for record in record_set.records]
+        record_set.records = [
+            self.clone_to_api(record) for record in record_set.records
+        ]
         return record_set
 
     def process_multiple_from_api(self, records):

@@ -20,11 +20,11 @@ from ansible_collections.community.dns.plugins.module_utils.names import (
 )
 
 TEST_IS_ASCII_LABEL = [
-    ('asdf', True),
-    ('', True),
-    ('ä', False),
-    ('☹', False),
-    ('_dmarc', True),
+    ("asdf", True),
+    ("", True),
+    ("ä", False),
+    ("☹", False),
+    ("_dmarc", True),
 ]
 
 
@@ -34,14 +34,14 @@ def test_is_ascii_label(domain, result):
 
 
 TEST_LABEL_SPLIT = [
-    ('', [], ''),
-    ('.', [], '.'),
-    ('com', ['com'], ''),
-    ('com.', ['com'], '.'),
-    ('foo.bar', ['bar', 'foo'], ''),
-    ('foo.bar.', ['bar', 'foo'], '.'),
-    ('*.bar.', ['bar', '*'], '.'),
-    (u'☺.A', ['A', u'☺'], ''),
+    ("", [], ""),
+    (".", [], "."),
+    ("com", ["com"], ""),
+    ("com.", ["com"], "."),
+    ("foo.bar", ["bar", "foo"], ""),
+    ("foo.bar.", ["bar", "foo"], "."),
+    ("*.bar.", ["bar", "*"], "."),
+    ("☺.A", ["A", "☺"], ""),
 ]
 
 
@@ -54,10 +54,10 @@ def test_split_into_labels(domain, labels, tail):
 
 
 TEST_LABEL_SPLIT_ERRORS = [
-    '.bar.',
-    '..bar',
-    '-bar',
-    'bar-',
+    ".bar.",
+    "..bar",
+    "-bar",
+    "bar-",
 ]
 
 
@@ -68,10 +68,10 @@ def test_split_into_labels_errors(domain):
 
 
 TEST_LABEL_JOIN = [
-    ([], '', ''),
-    ([], '.', '.'),
-    (['a', 'b', 'c'], '', 'c.b.a'),
-    (['a', 'b', 'c'], '.', 'c.b.a.'),
+    ([], "", ""),
+    ([], ".", "."),
+    (["a", "b", "c"], "", "c.b.a"),
+    (["a", "b", "c"], ".", "c.b.a."),
 ]
 
 
@@ -85,15 +85,15 @@ def test_join_labels(labels, tail, result):
 
 
 TEST_LABEL_NORMALIZE = [
-    ('', ''),
-    ('*', '*'),
-    ('foo', 'foo'),
-    ('Foo', 'foo'),
-    ('_dmarc', '_dmarc'),
-    (u'hëllö', 'xn--hll-jma1d'),
-    (u'食狮', 'xn--85x722f'),
-    (u'☺', 'xn--74h'),
-    (u'😉', 'xn--n28h'),
+    ("", ""),
+    ("*", "*"),
+    ("foo", "foo"),
+    ("Foo", "foo"),
+    ("_dmarc", "_dmarc"),
+    ("hëllö", "xn--hll-jma1d"),
+    ("食狮", "xn--85x722f"),
+    ("☺", "xn--74h"),
+    ("😉", "xn--n28h"),
 ]
 
 

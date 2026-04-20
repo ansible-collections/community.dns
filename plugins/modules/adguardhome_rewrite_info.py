@@ -68,20 +68,14 @@ from ansible_collections.community.dns.plugins.module_utils.adguardhome.api impo
 
 def main():
     argument_spec = create_adguardhome_argument_spec()
-    module = AnsibleModule(
-        supports_check_mode=True,
-        **argument_spec.to_kwargs()
-    )
+    module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
 
     adguardhome = AdGuardHomeAPIHandler(module.params, module.fail_json)
 
-    result = {
-        "changed": False,
-        "rules": adguardhome.list()
-    }
+    result = {"changed": False, "rules": adguardhome.list()}
 
     module.exit_json(**result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

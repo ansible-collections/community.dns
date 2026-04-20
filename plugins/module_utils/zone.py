@@ -31,10 +31,10 @@ class DNSZone(object):
     def __str__(self):  # type: (...) -> str
         data = []
         if self.id is not None:
-            data.append('id: {0}'.format(self.id))
-        data.append('name: {0}'.format(self.name))
-        data.append('info: {0}'.format(self.info))
-        return 'DNSZone(' + ', '.join(data) + ')'
+            data.append("id: {0}".format(self.id))
+        data.append("name: {0}".format(self.name))
+        data.append("info: {0}".format(self.info))
+        return "DNSZone(" + ", ".join(data) + ")"
 
     def __repr__(self):  # type: (...) -> str
         return self.__str__()
@@ -50,10 +50,10 @@ class DNSZoneWithRecords(object):
         self.records = records  # type: list[DNSRecord]
 
     def __str__(self):  # type: (...) -> str
-        return '({0}, {1})'.format(self.zone, self.records)
+        return "({0}, {1})".format(self.zone, self.records)
 
     def __repr__(self):  # type: (...) -> str
-        return 'DNSZoneWithRecords({0!r}, {1!r})'.format(self.zone, self.records)
+        return "DNSZoneWithRecords({0!r}, {1!r})".format(self.zone, self.records)
 
 
 class DNSZoneWithRecordSets(object):
@@ -66,7 +66,7 @@ class DNSZoneWithRecordSets(object):
         self.record_sets = record_sets  # type: list[DNSRecordSet]
 
     def __str__(self):  # type: (...) -> str
-        return '({0}, {1})'.format(self.zone, self.record_sets)
+        return "({0}, {1})".format(self.zone, self.record_sets)
 
     def __repr__(self):  # type: (...) -> str
-        return 'DNSZoneWithRecordSets({0!r}, {1!r})'.format(self.zone, self.record_sets)
+        return "DNSZoneWithRecordSets({0!r}, {1!r})".format(self.zone, self.record_sets)

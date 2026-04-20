@@ -10,7 +10,14 @@ __metaclass__ = type
 
 
 class ArgumentSpec(object):
-    def __init__(self, argument_spec=None, required_together=None, required_if=None, required_one_of=None, mutually_exclusive=None):
+    def __init__(
+        self,
+        argument_spec=None,
+        required_together=None,
+        required_if=None,
+        required_one_of=None,
+        mutually_exclusive=None,
+    ):
         self.argument_spec = {}
         self.required_together = []
         self.required_if = []
@@ -37,11 +44,11 @@ class ArgumentSpec(object):
 
     def to_kwargs(self):
         return {
-            'argument_spec': self.argument_spec,
-            'required_together': self.required_together,
-            'required_if': self.required_if,
-            'required_one_of': self.required_one_of,
-            'mutually_exclusive': self.mutually_exclusive,
+            "argument_spec": self.argument_spec,
+            "required_together": self.required_together,
+            "required_if": self.required_if,
+            "required_one_of": self.required_one_of,
+            "mutually_exclusive": self.mutually_exclusive,
         }
 
 

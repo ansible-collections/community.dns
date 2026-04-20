@@ -23,62 +23,78 @@ from ansible_collections.community.dns.plugins.module_utils.http import (
 
 
 def test_open_url_helper_1(mocker):
-    open_url = OpenUrlProxy([
-        OpenUrlCall('GET', 400)
-        .expect_url('https://dns.hetzner.com/api/v1/zones')
-        .result_error(body='foo'),
-    ])
-    mocker.patch('ansible_collections.community.dns.plugins.module_utils.http.open_url', open_url)
+    open_url = OpenUrlProxy(
+        [
+            OpenUrlCall("GET", 400)
+            .expect_url("https://dns.hetzner.com/api/v1/zones")
+            .result_error(body="foo"),
+        ]
+    )
+    mocker.patch(
+        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+    )
     helper = OpenURLHelper()
-    content, info = helper.fetch_url('https://dns.hetzner.com/api/v1/zones')
+    content, info = helper.fetch_url("https://dns.hetzner.com/api/v1/zones")
     open_url.assert_is_done()
-    assert content == 'foo'
+    assert content == "foo"
     assert info == {
-        'status': 400,
+        "status": 400,
     }
 
 
 def test_open_url_helper_2(mocker):
-    open_url = OpenUrlProxy([
-        OpenUrlCall('GET', 400)
-        .expect_url('https://dns.hetzner.com/api/v1/zones')
-        .result_error(),
-    ])
-    mocker.patch('ansible_collections.community.dns.plugins.module_utils.http.open_url', open_url)
+    open_url = OpenUrlProxy(
+        [
+            OpenUrlCall("GET", 400)
+            .expect_url("https://dns.hetzner.com/api/v1/zones")
+            .result_error(),
+        ]
+    )
+    mocker.patch(
+        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+    )
     helper = OpenURLHelper()
-    content, info = helper.fetch_url('https://dns.hetzner.com/api/v1/zones')
+    content, info = helper.fetch_url("https://dns.hetzner.com/api/v1/zones")
     open_url.assert_is_done()
-    assert content == ''
+    assert content == ""
     assert info == {
-        'status': 400,
+        "status": 400,
     }
 
 
 def test_open_url_helper_3(mocker):
-    open_url = OpenUrlProxy([
-        OpenUrlCall('GET', 400)
-        .expect_url('https://dns.hetzner.com/api/v1/zones')
-        .exception(lambda: NoSSLError('foo')),
-    ])
-    mocker.patch('ansible_collections.community.dns.plugins.module_utils.http.open_url', open_url)
+    open_url = OpenUrlProxy(
+        [
+            OpenUrlCall("GET", 400)
+            .expect_url("https://dns.hetzner.com/api/v1/zones")
+            .exception(lambda: NoSSLError("foo")),
+        ]
+    )
+    mocker.patch(
+        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+    )
     helper = OpenURLHelper()
     with pytest.raises(NetworkError) as exc:
-        helper.fetch_url('https://dns.hetzner.com/api/v1/zones')
+        helper.fetch_url("https://dns.hetzner.com/api/v1/zones")
     open_url.assert_is_done()
     print(exc.value.args[0])
-    assert exc.value.args[0] == 'Cannot connect via SSL: foo'
+    assert exc.value.args[0] == "Cannot connect via SSL: foo"
 
 
 def test_open_url_helper_4(mocker):
-    open_url = OpenUrlProxy([
-        OpenUrlCall('GET', 400)
-        .expect_url('https://dns.hetzner.com/api/v1/zones')
-        .exception(lambda: ConnectionError('foo')),
-    ])
-    mocker.patch('ansible_collections.community.dns.plugins.module_utils.http.open_url', open_url)
+    open_url = OpenUrlProxy(
+        [
+            OpenUrlCall("GET", 400)
+            .expect_url("https://dns.hetzner.com/api/v1/zones")
+            .exception(lambda: ConnectionError("foo")),
+        ]
+    )
+    mocker.patch(
+        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+    )
     helper = OpenURLHelper()
     with pytest.raises(NetworkError) as exc:
-        helper.fetch_url('https://dns.hetzner.com/api/v1/zones')
+        helper.fetch_url("https://dns.hetzner.com/api/v1/zones")
     open_url.assert_is_done()
     print(exc.value.args[0])
-    assert exc.value.args[0] == 'Connection error: foo'
+    assert exc.value.args[0] == "Connection error: foo"

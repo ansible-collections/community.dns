@@ -33,6 +33,6 @@ def is_ip_address(server):
 def assert_requirements_present(module):
     if IPADDRESS_IMPORT_EXC is not None:
         module.fail_json(
-            msg=missing_required_lib('ipaddress'),
+            msg=missing_required_lib("ipaddress"),
             exception=IPADDRESS_IMPORT_EXC,
         )
