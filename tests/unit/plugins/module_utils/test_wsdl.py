@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-import sys
-
 import pytest
 from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
     MagicMock,
@@ -70,10 +68,7 @@ def test_composer_generation():
         "</SOAP-ENV:Envelope>",
     ]
 
-    if sys.version_info < (3, 7):
-        assert sorted(command[1:]) == sorted(expected_lines)
-    else:
-        assert command[1:] == expected_lines
+    assert command[1:] == expected_lines
 
     for part in [
         "<SOAP-ENV:Envelope",
