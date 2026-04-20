@@ -31,12 +31,12 @@ class HTTPHelper(object, metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def fetch_url(
         self,
-        url,  # type: str
-        method="GET",  # type: str
-        headers=None,  # type: dict[str, str] | None
-        data=None,  # type: bytes | None
-        timeout=None,  # type: int | None
-    ):  # type: (...) -> tuple[bytes | None, dict[str, typing.Any]]
+        url: str,
+        method: str = "GET",
+        headers: dict[str, str] | None = None,
+        data: bytes | None = None,
+        timeout: int | None = None,
+    ) -> tuple[bytes | None, dict[str, typing.Any]]:
         """
         Execute a HTTP request and return a tuple (response_content, info).
 
@@ -47,18 +47,18 @@ class HTTPHelper(object, metaclass=abc.ABCMeta):
 class ModuleHTTPHelper(HTTPHelper):
     def __init__(
         self,
-        module,  # type: AnsibleModule
-    ):  # type: (...) -> None
-        self.module = module  # type: AnsibleModule
+        module: AnsibleModule,
+    ) -> None:
+        self.module: AnsibleModule = module
 
     def fetch_url(
         self,
-        url,  # type: str
-        method="GET",  # type: str
-        headers=None,  # type: dict[str, str] | None
-        data=None,  # type: bytes | None
-        timeout=None,  # type: int | None
-    ):  # type: (...) -> tuple[bytes | None, dict[str, typing.Any]]
+        url: str,
+        method: str = "GET",
+        headers: dict[str, str] | None = None,
+        data: bytes | None = None,
+        timeout: int | None = None,
+    ) -> tuple[bytes | None, dict[str, typing.Any]]:
         response, info = fetch_url(
             self.module, url, method=method, headers=headers, data=data, timeout=timeout
         )
@@ -75,12 +75,12 @@ class ModuleHTTPHelper(HTTPHelper):
 class OpenURLHelper(HTTPHelper):
     def fetch_url(
         self,
-        url,  # type: str
-        method="GET",  # type: str
-        headers=None,  # type: dict[str, str] | None
-        data=None,  # type: bytes | None
-        timeout=None,  # type: int | None
-    ):  # type: (...) -> tuple[bytes | None, dict[str, typing.Any]]
+        url: str,
+        method: str = "GET",
+        headers: dict[str, str] | None = None,
+        data: bytes | None = None,
+        timeout: int | None = None,
+    ) -> tuple[bytes | None, dict[str, typing.Any]]:
         info = {}
         try:
             req = open_url(

@@ -20,15 +20,21 @@ if typing.TYPE_CHECKING:
 
 
 def bulk_apply_changes(
-    api,  # type: ZoneRecordSetAPI
-    provider_information,  # type: ProviderInformation
+    api: ZoneRecordSetAPI,
+    provider_information: ProviderInformation,
     options,  # TODO type
-    zone_id,  # type: str
-    record_sets_to_delete=None,  # type: list[DNSRecordSet] | None
-    record_sets_to_change=None,  # type: list[tuple[DNSRecordSet, bool, bool]] | None
-    record_sets_to_create=None,  # type: list[DNSRecordSet] | None
-    stop_early_on_errors=True,  # type: bool
-):  # type: (...) -> tuple[bool, list[tuple[typing.Literal["delete", "change", "create"], DNSRecordSet, DNSAPIError]], dict[str, list[DNSRecordSet]]]
+    zone_id: str,
+    record_sets_to_delete: list[DNSRecordSet] | None = None,
+    record_sets_to_change: list[tuple[DNSRecordSet, bool, bool]] | None = None,
+    record_sets_to_create: list[DNSRecordSet] | None = None,
+    stop_early_on_errors: bool = True,
+) -> tuple[
+    bool,
+    list[
+        tuple[typing.Literal["delete", "change", "create"], DNSRecordSet, DNSAPIError]
+    ],
+    dict[str, list[DNSRecordSet]],
+]:
     """
     Update multiple records. If an operation failed, raise a DNSAPIException.
 
@@ -55,19 +61,19 @@ def bulk_apply_changes(
     record_sets_to_create = record_sets_to_create or []
 
     has_change = False
-    errors = (
-        []
-    )  # type: list[tuple[typing.Literal["delete", "change", "create"], DNSRecordSet, DNSAPIError]]
+    errors: list[
+        tuple[typing.Literal["delete", "change", "create"], DNSRecordSet, DNSAPIError]
+    ] = []
 
     bulk_threshold = 2
     if provider_information.supports_bulk_actions():
         bulk_threshold = options.get_option("bulk_operation_threshold")
 
-    success = {
+    success: dict[str, list[DNSRecordSet]] = {
         "deleted": [],
         "changed": [],
         "created": [],
-    }  # type: dict[str, list[DNSRecordSet]]
+    }
 
     # Delete record sets
     if len(record_sets_to_delete) >= bulk_threshold:

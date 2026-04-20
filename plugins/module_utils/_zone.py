@@ -17,14 +17,14 @@ if typing.TYPE_CHECKING:
 class DNSZone(object):
     def __init__(
         self,
-        name,  # type: str
-        info=None,  # type: dict[str, typing.Any] | None
-    ):  # type: (...) -> None
-        self.id = None  # type: str | None
-        self.name = name  # type: str
-        self.info = info or {}  # type: dict[str, typing.Any]
+        name: str,
+        info: dict[str, typing.Any] | None = None,
+    ) -> None:
+        self.id: str | None = None
+        self.name = name
+        self.info: dict[str, typing.Any] = info or {}
 
-    def __str__(self):  # type: (...) -> str
+    def __str__(self) -> str:
         data = []
         if self.id is not None:
             data.append("id: {0}".format(self.id))
@@ -32,37 +32,37 @@ class DNSZone(object):
         data.append("info: {0}".format(self.info))
         return "DNSZone(" + ", ".join(data) + ")"
 
-    def __repr__(self):  # type: (...) -> str
+    def __repr__(self) -> str:
         return self.__str__()
 
 
 class DNSZoneWithRecords(object):
     def __init__(
         self,
-        zone,  # type: DNSZone
-        records,  # type: list[DNSRecord]
-    ):  # type: (...) -> None
-        self.zone = zone  # type: DNSZone
-        self.records = records  # type: list[DNSRecord]
+        zone: DNSZone,
+        records: list[DNSRecord],
+    ) -> None:
+        self.zone = zone
+        self.records = records
 
-    def __str__(self):  # type: (...) -> str
+    def __str__(self) -> str:
         return "({0}, {1})".format(self.zone, self.records)
 
-    def __repr__(self):  # type: (...) -> str
+    def __repr__(self) -> str:
         return "DNSZoneWithRecords({0!r}, {1!r})".format(self.zone, self.records)
 
 
 class DNSZoneWithRecordSets(object):
     def __init__(
         self,
-        zone,  # type: DNSZone
-        record_sets,  # type: list[DNSRecordSet]
-    ):  # type: (...) -> None
-        self.zone = zone  # type: DNSZone
-        self.record_sets = record_sets  # type: list[DNSRecordSet]
+        zone: DNSZone,
+        record_sets: list[DNSRecordSet],
+    ) -> None:
+        self.zone = zone
+        self.record_sets = record_sets
 
-    def __str__(self):  # type: (...) -> str
+    def __str__(self) -> str:
         return "({0}, {1})".format(self.zone, self.record_sets)
 
-    def __repr__(self):  # type: (...) -> str
+    def __repr__(self) -> str:
         return "DNSZoneWithRecordSets({0!r}, {1!r})".format(self.zone, self.record_sets)

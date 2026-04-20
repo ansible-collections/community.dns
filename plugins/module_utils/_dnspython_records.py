@@ -18,10 +18,10 @@ if typing.TYPE_CHECKING:
     import dns.rdatatype  # pragma: no cover
 
 
-NAME_TO_RDTYPE = {}  # type: dict[str, dns.rdatatype.RdataType]
-NAME_TO_REQUIRED_VERSION = {}  # type: dict[str, str]
-RDTYPE_TO_NAME = {}  # type: dict[dns.rdatatype.RdataType, str]
-RDTYPE_TO_FIELDS = {}  # type: dict[dns.rdatatype.RdataType, list[str]]
+NAME_TO_RDTYPE: dict[str, dns.rdatatype.RdataType] = {}
+NAME_TO_REQUIRED_VERSION: dict[str, str] = {}
+RDTYPE_TO_NAME: dict[dns.rdatatype.RdataType, str] = {}
+RDTYPE_TO_FIELDS: dict[dns.rdatatype.RdataType, list[str]] = {}
 
 try:
     import dns.name
@@ -146,8 +146,8 @@ except ImportError:
 
 
 def _convert_dns_rdtypes_svcbbase_param(
-    value,  # type: dns.rdtypes.svcbbase.Param
-):  # type: (...) -> tuple[typing.Any, bool]
+    value: dns.rdtypes.svcbbase.Param,
+) -> tuple[typing.Any, bool]:
     if value is None:
         return None, False
     if isinstance(value, dns.rdtypes.svcbbase.GenericParam):
@@ -173,10 +173,10 @@ def _convert_dns_rdtypes_svcbbase_param(
 
 
 def convert_rdata_to_dict(
-    rdata,  # type: dns.rdata.Rdata
-    to_unicode=True,  # type: bool
-    add_synthetic=True,  # type: bool
-):  # type: (...) -> dict[str, typing.Any]
+    rdata: dns.rdata.Rdata,
+    to_unicode: bool = True,
+    add_synthetic: bool = True,
+) -> dict[str, typing.Any]:
     """
     Convert a DNSPython record data object to a Python dictionary.
 
@@ -187,7 +187,7 @@ def convert_rdata_to_dict(
     If ``add_synthetic=True``, for some record types additional fields are added.
     For TXT and SPF records, ``value`` contains the concatenated strings, for example.
     """
-    result = {}  # type: dict[str, typing.Any]
+    result: dict[str, typing.Any] = {}
 
     fields = RDTYPE_TO_FIELDS.get(rdata.rdtype)
     if fields is None:
