@@ -7,8 +7,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
 import sys
 
 from ansible_collections.community.dns.plugins.module_utils._zone_record_api import (

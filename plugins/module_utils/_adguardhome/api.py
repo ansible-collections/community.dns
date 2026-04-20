@@ -7,8 +7,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
 import json
 
 from ansible.module_utils.urls import Request

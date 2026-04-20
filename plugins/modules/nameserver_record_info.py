@@ -5,9 +5,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
-
 DOCUMENTATION = r"""
 module: nameserver_record_info
 short_description: Look up all records of a type from all nameservers for a DNS name

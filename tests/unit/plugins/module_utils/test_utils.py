@@ -4,9 +4,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
-
 from .utils import patch_dict, patch_dict_absent
 
 

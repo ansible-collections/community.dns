@@ -7,8 +7,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
 import sys
 
 if sys.version_info >= (3, 6):

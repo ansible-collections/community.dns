@@ -7,8 +7,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
 from ._record import format_ttl as _format_ttl
 
 

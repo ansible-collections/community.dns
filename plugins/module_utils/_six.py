@@ -31,8 +31,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
 import sys as _sys
 
 if _sys.version_info[0] > 2:

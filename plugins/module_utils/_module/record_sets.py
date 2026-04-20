@@ -7,9 +7,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
-
 import traceback
 from collections import OrderedDict, defaultdict
 

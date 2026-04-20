@@ -5,9 +5,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
-
 DOCUMENTATION = r"""
 module: wait_for_txt
 short_description: Wait for TXT entries to be available on all authoritative nameservers

@@ -7,8 +7,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
 
 class DNSConversionError(Exception):
     def __init__(self, message):

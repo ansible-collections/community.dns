@@ -9,9 +9,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
-
 import base64
 import sys
 

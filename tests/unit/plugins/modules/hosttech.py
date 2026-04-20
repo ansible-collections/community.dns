@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
 try:
     import lxml.etree
 except ImportError:  # pragma: no cover

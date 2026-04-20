@@ -7,8 +7,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
 
 def format_ttl(ttl):
     if ttl is None:

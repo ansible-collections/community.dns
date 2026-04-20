@@ -7,9 +7,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
-
 from ansible_collections.community.dns.plugins.module_utils._names import (
     join_labels,
     normalize_label,

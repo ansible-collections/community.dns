@@ -4,8 +4,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
 import pytest
 from ansible_collections.community.internal_test_tools.tests.unit.plugins.modules.utils import (
     extract_warnings_texts,

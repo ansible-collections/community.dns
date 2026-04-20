@@ -7,9 +7,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
-
 from ansible.module_utils.common.text.converters import to_native
 
 from ansible_collections.community.dns.plugins.module_utils._record import DNSRecord

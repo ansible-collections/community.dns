@@ -5,9 +5,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
-
 DOCUMENTATION = r"""
 module: hetzner_dns_record_set
 

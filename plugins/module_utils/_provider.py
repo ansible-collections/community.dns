@@ -7,9 +7,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
-
 import abc
 
 from ansible.module_utils.common.validation import (

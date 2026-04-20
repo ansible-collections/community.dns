@@ -7,8 +7,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
 import re
 
 from ansible.module_utils.common.text.converters import to_text

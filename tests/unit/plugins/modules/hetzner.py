@@ -4,9 +4,6 @@
 
 from __future__ import annotations
 
-__metaclass__ = type
-
-
 HETZNER_DEFAULT_ZONE = {
     "id": "42",
     "created": "2021-07-09T11:18:37Z",
