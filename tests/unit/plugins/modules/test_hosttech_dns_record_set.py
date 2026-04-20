@@ -1164,8 +1164,10 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result["changed"] is False
         assert result["zone_id"] == 42
         assert (
-            extract_warnings_texts(result) == []
-        )  # pylint: disable=use-implicit-booleaness-not-comparison
+            # pylint: disable-next=use-implicit-booleaness-not-comparison
+            extract_warnings_texts(result)
+            == []
+        )
 
     def test_idempotency_absent_record_warn(self, mocker):
         result = self.run_module_success(
@@ -1927,8 +1929,10 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         )
 
         assert (
-            extract_warnings_texts(result) == []
-        )  # pylint: disable=use-implicit-booleaness-not-comparison
+            # pylint: disable-next=use-implicit-booleaness-not-comparison
+            extract_warnings_texts(result)
+            == []
+        )
         assert result["changed"] is False
         assert result["zone_id"] == 42
         assert "diff" in result
