@@ -56,7 +56,7 @@ def _parse_quoted(value, index, use_octal):
     if v0 < 0 or (use_octal and v0 >= 8):
         seq_type = "octal" if use_octal else "decimal"
         raise DNSConversionError(
-            f'The third letter of the {seq_type} sequence at index {index} is not a {type} digit, but "{to_text(letter)}"'
+            f'The third letter of the {seq_type} sequence at index {index} is not a {seq_type} digit, but "{to_text(letter)}"'
         )
     if use_octal:
         return (
