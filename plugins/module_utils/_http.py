@@ -8,7 +8,7 @@
 from __future__ import annotations
 
 import abc
-import typing
+import typing as t
 from urllib.error import HTTPError
 
 from ansible.module_utils.common.text.converters import to_native
@@ -19,7 +19,7 @@ from ansible.module_utils.urls import (
     open_url,
 )
 
-if typing.TYPE_CHECKING:
+if t.TYPE_CHECKING:
     from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
 
 
@@ -36,7 +36,7 @@ class HTTPHelper(metaclass=abc.ABCMeta):
         headers: dict[str, str] | None = None,
         data: bytes | None = None,
         timeout: int | None = None,
-    ) -> tuple[bytes | None, dict[str, typing.Any]]:
+    ) -> tuple[bytes | None, dict[str, t.Any]]:
         """
         Execute a HTTP request and return a tuple (response_content, info).
 
@@ -58,7 +58,7 @@ class ModuleHTTPHelper(HTTPHelper):
         headers: dict[str, str] | None = None,
         data: bytes | None = None,
         timeout: int | None = None,
-    ) -> tuple[bytes | None, dict[str, typing.Any]]:
+    ) -> tuple[bytes | None, dict[str, t.Any]]:
         response, info = fetch_url(
             self.module, url, method=method, headers=headers, data=data, timeout=timeout
         )
@@ -80,7 +80,7 @@ class OpenURLHelper(HTTPHelper):
         headers: dict[str, str] | None = None,
         data: bytes | None = None,
         timeout: int | None = None,
-    ) -> tuple[bytes | None, dict[str, typing.Any]]:
+    ) -> tuple[bytes | None, dict[str, t.Any]]:
         info = {}
         try:
             req = open_url(

@@ -7,9 +7,9 @@
 
 from __future__ import annotations
 
-import typing
+import typing as t
 
-if typing.TYPE_CHECKING:
+if t.TYPE_CHECKING:
     from ._record import DNSRecord  # pragma: no cover
     from ._record_set import DNSRecordSet  # pragma: no cover
 
@@ -18,11 +18,11 @@ class DNSZone:
     def __init__(
         self,
         name: str,
-        info: dict[str, typing.Any] | None = None,
+        info: dict[str, t.Any] | None = None,
     ) -> None:
         self.id: str | None = None
         self.name = name
-        self.info: dict[str, typing.Any] = info or {}
+        self.info: dict[str, t.Any] = info or {}
 
     def __str__(self) -> str:
         data = []

@@ -7,13 +7,13 @@
 
 from __future__ import annotations
 
-import typing
+import typing as t
 
 from ansible_collections.community.dns.plugins.module_utils._zone_record_api import (
     DNSAPIError,
 )
 
-if typing.TYPE_CHECKING:
+if t.TYPE_CHECKING:
     from ._provider import ProviderInformation  # pragma: no cover
     from ._record_set import DNSRecordSet  # pragma: no cover
     from ._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
@@ -30,9 +30,7 @@ def bulk_apply_changes(
     stop_early_on_errors: bool = True,
 ) -> tuple[
     bool,
-    list[
-        tuple[typing.Literal["delete", "change", "create"], DNSRecordSet, DNSAPIError]
-    ],
+    list[tuple[t.Literal["delete", "change", "create"], DNSRecordSet, DNSAPIError]],
     dict[str, list[DNSRecordSet]],
 ]:
     """
@@ -62,7 +60,7 @@ def bulk_apply_changes(
 
     has_change = False
     errors: list[
-        tuple[typing.Literal["delete", "change", "create"], DNSRecordSet, DNSAPIError]
+        tuple[t.Literal["delete", "change", "create"], DNSRecordSet, DNSAPIError]
     ] = []
 
     bulk_threshold = 2

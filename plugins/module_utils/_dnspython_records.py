@@ -10,11 +10,11 @@
 from __future__ import annotations
 
 import base64
-import typing
+import typing as t
 
 from ansible.module_utils.common.text.converters import to_bytes, to_native, to_text
 
-if typing.TYPE_CHECKING:
+if t.TYPE_CHECKING:
     import dns.rdatatype  # pragma: no cover
 
 
@@ -147,7 +147,7 @@ except ImportError:
 
 def _convert_dns_rdtypes_svcbbase_param(
     value: dns.rdtypes.svcbbase.Param,
-) -> tuple[typing.Any, bool]:
+) -> tuple[t.Any, bool]:
     if value is None:
         return None, False
     if isinstance(value, dns.rdtypes.svcbbase.GenericParam):
@@ -176,7 +176,7 @@ def convert_rdata_to_dict(
     rdata: dns.rdata.Rdata,
     to_unicode: bool = True,
     add_synthetic: bool = True,
-) -> dict[str, typing.Any]:
+) -> dict[str, t.Any]:
     """
     Convert a DNSPython record data object to a Python dictionary.
 
@@ -187,7 +187,7 @@ def convert_rdata_to_dict(
     If ``add_synthetic=True``, for some record types additional fields are added.
     For TXT and SPF records, ``value`` contains the concatenated strings, for example.
     """
-    result: dict[str, typing.Any] = {}
+    result: dict[str, t.Any] = {}
 
     fields = RDTYPE_TO_FIELDS.get(rdata.rdtype)
     if fields is None:

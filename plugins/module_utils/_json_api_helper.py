@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import json
 import time
-import typing
+import typing as t
 from urllib.parse import urlencode
 
 from ansible.module_utils.common.text.converters import to_native
@@ -20,7 +20,7 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
     DNSAPIError,
 )
 
-if typing.TYPE_CHECKING:
+if t.TYPE_CHECKING:
     from collections.abc import Collection  # pragma: no cover
 
     from ._http import HTTPHelper  # pragma: no cover
@@ -43,7 +43,7 @@ UNKNOWN_ERROR = "Unknown Error"
 
 
 def _get_header_value(
-    info: dict[str, typing.Any],
+    info: dict[str, t.Any],
     header_name: str,
 ) -> str | None:
     header_name = header_name.lower()
@@ -90,7 +90,7 @@ class JSONAPIHelper:
     def _validate(
         self,
         result: bytes | None = None,
-        info: dict[str, typing.Any] | None = None,
+        info: dict[str, t.Any] | None = None,
         expected: Collection[int] | None = None,
         method: str = "GET",
     ) -> None:
@@ -125,11 +125,11 @@ class JSONAPIHelper:
     def _process_json_result(
         self,
         content: bytes | None,
-        info: dict[str, typing.Any],
+        info: dict[str, t.Any],
         must_have_content: bool | list[int] | tuple[int, ...] = True,
         method: str = "GET",
         expected: Collection[int] | None = None,
-    ) -> tuple[dict[str, typing.Any] | list[typing.Any] | None, dict[str, typing.Any]]:
+    ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]:
         if isinstance(must_have_content, (list, tuple)):
             must_have_content = info["status"] in must_have_content
         # Check for unauthenticated
@@ -196,9 +196,7 @@ class JSONAPIHelper:
     def _should_retry(self, content, info):
         return info["status"] in (-1, 502, 503, 504)
 
-    def _request(
-        self, url: str, **kwargs
-    ) -> tuple[bytes | None, dict[str, typing.Any]]:
+    def _request(self, url: str, **kwargs) -> tuple[bytes | None, dict[str, t.Any]]:
         """Execute a HTTP request and handle common things like rate limiting."""
         number_retries = 10
         countdown = number_retries + 1
@@ -246,7 +244,7 @@ class JSONAPIHelper:
         query: dict[str, str] | None = None,
         must_have_content: bool | list[int] | tuple[int, ...] = True,
         expected: Collection[int] | None = None,
-    ) -> tuple[dict[str, typing.Any] | list[typing.Any] | None, dict[str, typing.Any]]:
+    ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]:
         full_url = self._build_url(url, query)
         if self._debug:
             pass  # pragma: no cover
@@ -264,11 +262,11 @@ class JSONAPIHelper:
     def _post(
         self,
         url: str,
-        data: dict[str, typing.Any] | None = None,
+        data: dict[str, t.Any] | None = None,
         query: dict[str, str] | None = None,
         must_have_content: bool | list[int] | tuple[int, ...] = True,
         expected: Collection[int] | None = None,
-    ) -> tuple[dict[str, typing.Any] | list[typing.Any] | None, dict[str, typing.Any]]:
+    ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]:
         full_url = self._build_url(url, query)
         if self._debug:
             pass  # pragma: no cover
@@ -292,11 +290,11 @@ class JSONAPIHelper:
     def _put(
         self,
         url: str,
-        data: dict[str, typing.Any] | None = None,
+        data: dict[str, t.Any] | None = None,
         query: dict[str, str] | None = None,
         must_have_content: bool | list[int] | tuple[int, ...] = True,
         expected: Collection[int] | None = None,
-    ) -> tuple[dict[str, typing.Any] | list[typing.Any] | None, dict[str, typing.Any]]:
+    ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]:
         full_url = self._build_url(url, query)
         if self._debug:
             pass  # pragma: no cover
@@ -323,7 +321,7 @@ class JSONAPIHelper:
         query: dict[str, str] | None = None,
         must_have_content: bool | list[int] | tuple[int, ...] = True,
         expected: Collection[int] | None = None,
-    ) -> tuple[dict[str, typing.Any] | list[typing.Any] | None, dict[str, typing.Any]]:
+    ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]:
         full_url = self._build_url(url, query)
         if self._debug:
             pass  # pragma: no cover
