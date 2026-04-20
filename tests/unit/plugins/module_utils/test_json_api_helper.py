@@ -168,7 +168,8 @@ def test__request(mocker):
         ]
     )
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url",
+        open_url,
     )
     api_helper = JSONAPIHelper(OpenURLHelper(), "foo", "https://example.com")
     api_helper._is_rate_limiting_result = is_rate_limiting_result
@@ -199,7 +200,8 @@ def test__post__put_no_data(mocker):
         ]
     )
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url",
+        open_url,
     )
     api_helper = JSONAPIHelper(OpenURLHelper(), "foo", "https://example.com")
     api_helper._post("/foo")

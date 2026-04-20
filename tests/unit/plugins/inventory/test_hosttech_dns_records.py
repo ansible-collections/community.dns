@@ -250,7 +250,8 @@ def test_inventory_file_simple(mocker) -> None:
         ]
     )
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url",
+        open_url,
     )
     mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
     mocker.patch("os.path.exists", exists_mock(inventory_filename))
@@ -323,7 +324,8 @@ def test_inventory_file_simple_2(mocker) -> None:
         ]
     )
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url",
+        open_url,
     )
     mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
     mocker.patch("os.path.exists", exists_mock(inventory_filename))
@@ -396,7 +398,8 @@ def test_inventory_file_collision(mocker) -> None:
         ]
     )
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url",
+        open_url,
     )
     mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
     mocker.patch("os.path.exists", exists_mock(inventory_filename))
@@ -459,7 +462,8 @@ def test_inventory_file_no_filter(mocker) -> None:
         ]
     )
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url",
+        open_url,
     )
     mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
     mocker.patch("os.path.exists", exists_mock(inventory_filename))
@@ -521,7 +525,8 @@ def test_inventory_file_invalid_zone_id(mocker) -> None:
 
     open_url = OpenUrlProxy([])
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url",
+        open_url,
     )
     mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
     mocker.patch("os.path.exists", exists_mock(inventory_filename))
@@ -548,7 +553,8 @@ def test_inventory_file_missing_zone(mocker) -> None:
 
     open_url = OpenUrlProxy([])
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url",
+        open_url,
     )
     mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
     mocker.patch("os.path.exists", exists_mock(inventory_filename))
@@ -585,7 +591,8 @@ def test_inventory_file_zone_not_found(mocker) -> None:
         ]
     )
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url",
+        open_url,
     )
     mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
     mocker.patch("os.path.exists", exists_mock(inventory_filename))
@@ -621,7 +628,8 @@ def test_inventory_file_unauthorized(mocker) -> None:
         ]
     )
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url",
+        open_url,
     )
     mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
     mocker.patch("os.path.exists", exists_mock(inventory_filename))
@@ -657,7 +665,8 @@ def test_inventory_file_error(mocker) -> None:
         ]
     )
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url",
+        open_url,
     )
     mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
     mocker.patch("os.path.exists", exists_mock(inventory_filename))
@@ -684,7 +693,8 @@ def test_inventory_wrong_file(mocker) -> None:
 
     open_url = OpenUrlProxy([])
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url",
+        open_url,
     )
     mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
     mocker.patch("os.path.exists", exists_mock(inventory_filename))
@@ -706,7 +716,8 @@ def test_inventory_no_file(mocker) -> None:
 
     open_url = OpenUrlProxy([])
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url",
+        open_url,
     )
     mocker.patch("ansible.inventory.manager.unfrackpath", mock_unfrackpath_noop)
     mocker.patch("os.path.exists", exists_mock(inventory_filename, False))

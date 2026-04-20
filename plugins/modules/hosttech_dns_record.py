@@ -83,7 +83,9 @@ from ansible_collections.community.dns.plugins.module_utils._hosttech.api import
     create_hosttech_argument_spec,
     create_hosttech_provider_information,
 )
-from ansible_collections.community.dns.plugins.module_utils._http import ModuleHTTPHelper
+from ansible_collections.community.dns.plugins.module_utils._http import (
+    ModuleHTTPHelper,
+)
 from ansible_collections.community.dns.plugins.module_utils._module.record import (
     create_module_argument_spec,
     run_module,

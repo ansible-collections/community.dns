@@ -16,7 +16,6 @@ import warnings
 
 from ansible.module_utils.common.text.converters import to_text
 
-from ansible_collections.community.dns.plugins.module_utils._six import raise_from
 from ansible_collections.community.dns.plugins.module_utils._conversion.base import (
     DNSConversionError,
 )
@@ -25,6 +24,7 @@ from ansible_collections.community.dns.plugins.module_utils._conversion.txt impo
     encode_txt_value,
 )
 from ansible_collections.community.dns.plugins.module_utils._record import DNSRecord
+from ansible_collections.community.dns.plugins.module_utils._six import raise_from
 
 
 class RecordConverter(object):

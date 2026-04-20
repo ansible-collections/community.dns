@@ -118,7 +118,9 @@ from ansible_collections.community.dns.plugins.module_utils._hetzner.api import 
     create_hetzner_argument_spec,
     create_hetzner_provider_information,
 )
-from ansible_collections.community.dns.plugins.module_utils._http import ModuleHTTPHelper
+from ansible_collections.community.dns.plugins.module_utils._http import (
+    ModuleHTTPHelper,
+)
 from ansible_collections.community.dns.plugins.module_utils._module.record_info import (
     create_module_argument_spec,
     run_module,

@@ -20,7 +20,10 @@ lxmletree = pytest.importorskip("lxml.etree")
 
 from ansible.module_utils.common.text.converters import to_native
 
-from ansible_collections.community.dns.plugins.module_utils._wsdl import Composer, Parser
+from ansible_collections.community.dns.plugins.module_utils._wsdl import (
+    Composer,
+    Parser,
+)
 
 
 def test_composer_generation():
