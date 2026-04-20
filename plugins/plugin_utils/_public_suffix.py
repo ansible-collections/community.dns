@@ -71,7 +71,7 @@ class PublicSuffixList:
     Contains the Public Suffix List.
     """
 
-    def __init__(self, rules: t.List[PublicSuffixEntry]) -> None:
+    def __init__(self, rules: list[PublicSuffixEntry]) -> None:
         self._generic_rule = PublicSuffixEntry(("*",))
         self._rules = sorted(rules, key=lambda entry: entry.labels)
 

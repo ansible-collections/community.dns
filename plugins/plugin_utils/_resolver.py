@@ -39,7 +39,7 @@ _T = t.TypeVar("_T")
 
 def guarded_run(
     runner: Callable[[], _T],
-    error_class: t.Type[Exception] = AnsibleError,
+    error_class: type[Exception] = AnsibleError,
     server: str | None = None,
 ) -> _T:
     suffix = f" for {server}" if server is not None else ""
