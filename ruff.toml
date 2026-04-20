@@ -16,14 +16,13 @@ ignore = [
     "FLY002",  # Use f-string
     "SIM105",  # suppressible-exception
     "SIM117",  # Combine multiple 'with' statements
-    "UP010",
-    "UP012",
-    "UP015",
     "UP030",
-    "UP031",
     "UP032",
     "UP034",
     "UP036",
+    # Dubious:
+    "UP012",  # Unnecessary call to `encode` as UTF-8
+    "UP015",  # Unnecessary mode argument
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.

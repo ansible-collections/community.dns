@@ -56,11 +56,11 @@ class _Resolve:
             return True
         if rcode == dns.rcode.NXDOMAIN:
             raise dns.resolver.NXDOMAIN(qnames=[target], responses={target: response})
-        msg = "Error %s" % dns.rcode.to_text(rcode)
+        msg = f"Error {dns.rcode.to_text(rcode)}"
         if nameserver:
-            msg = "%s while querying %s" % (msg, nameserver)
+            msg = f"{msg} while querying {nameserver}"
         if query:
-            msg = "%s with query %s" % (msg, query)
+            msg = f"{msg} with query {query}"
         raise ResolverError(msg)
 
     def _handle_timeout(self, function, *args, **kwargs):
@@ -234,7 +234,7 @@ class ResolveDirectlyFromNameServers(_Resolve):
             target,
             response,
             nameserver=nameserver_ips[0],
-            query='get NS for "%s"' % target,
+            query=f'get NS for "{target}"',
             accept_errors=[dns.rcode.NXDOMAIN],
         )
 
