@@ -11,11 +11,11 @@ __metaclass__ = type
 
 import pytest
 
-from ansible_collections.community.dns.plugins.module_utils.module._utils import (
+from ansible_collections.community.dns.plugins.module_utils._module._utils import (
     get_prefix,
     normalize_dns_name,
 )
-from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
+from ansible_collections.community.dns.plugins.module_utils._zone_record_api import (
     DNSAPIError,
 )
 

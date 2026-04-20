@@ -118,7 +118,7 @@ results:
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.community.dns.plugins.module_utils.resolver import (
+from ansible_collections.community.dns.plugins.module_utils._resolver import (
     ResolveDirectlyFromNameServers,
     assert_requirements_present,
     guarded_run,

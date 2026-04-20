@@ -16,7 +16,7 @@ from ansible_collections.community.internal_test_tools.tests.unit.utils.open_url
     OpenUrlProxy,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.http import (
+from ansible_collections.community.dns.plugins.module_utils._http import (
     NetworkError,
     OpenURLHelper,
 )
@@ -31,7 +31,7 @@ def test_open_url_helper_1(mocker):
         ]
     )
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
     )
     helper = OpenURLHelper()
     content, info = helper.fetch_url("https://dns.hetzner.com/api/v1/zones")
@@ -51,7 +51,7 @@ def test_open_url_helper_2(mocker):
         ]
     )
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
     )
     helper = OpenURLHelper()
     content, info = helper.fetch_url("https://dns.hetzner.com/api/v1/zones")
@@ -71,7 +71,7 @@ def test_open_url_helper_3(mocker):
         ]
     )
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
     )
     helper = OpenURLHelper()
     with pytest.raises(NetworkError) as exc:
@@ -90,7 +90,7 @@ def test_open_url_helper_4(mocker):
         ]
     )
     mocker.patch(
-        "ansible_collections.community.dns.plugins.module_utils.http.open_url", open_url
+        "ansible_collections.community.dns.plugins.module_utils._http.open_url", open_url
     )
     helper = OpenURLHelper()
     with pytest.raises(NetworkError) as exc:

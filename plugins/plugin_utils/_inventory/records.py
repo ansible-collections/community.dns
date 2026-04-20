@@ -23,17 +23,17 @@ from ansible_collections.community.library_inventory_filtering_v1.plugins.plugin
     parse_filters,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
+from ansible_collections.community.dns.plugins.module_utils._conversion.base import (
     DNSConversionError,
 )
-from ansible_collections.community.dns.plugins.module_utils.conversion.converter import (
+from ansible_collections.community.dns.plugins.module_utils._conversion.converter import (
     RecordConverter,
 )
-from ansible_collections.community.dns.plugins.module_utils.provider import (
+from ansible_collections.community.dns.plugins.module_utils._provider import (
     ProviderInformation,
     ensure_type,
 )
-from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
+from ansible_collections.community.dns.plugins.module_utils._zone_record_api import (
     DNSAPIAuthenticationError,
     DNSAPIError,
     ZoneRecordAPI,

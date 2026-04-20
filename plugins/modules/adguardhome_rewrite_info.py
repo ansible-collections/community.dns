@@ -60,7 +60,7 @@ rules:
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.community.dns.plugins.module_utils.adguardhome.api import (
+from ansible_collections.community.dns.plugins.module_utils._adguardhome.api import (
     AdGuardHomeAPIHandler,
     create_adguardhome_argument_spec,
 )

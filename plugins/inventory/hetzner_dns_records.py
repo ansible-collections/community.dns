@@ -73,11 +73,11 @@ hetzner_token: >-
 """
 
 
-from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
+from ansible_collections.community.dns.plugins.module_utils._hetzner.api import (
     create_hetzner_api,
     create_hetzner_provider_information,
 )
-from ansible_collections.community.dns.plugins.module_utils.http import OpenURLHelper
+from ansible_collections.community.dns.plugins.module_utils._http import OpenURLHelper
 from ansible_collections.community.dns.plugins.plugin_utils._inventory.records import (
     RecordsInventoryModule,
 )

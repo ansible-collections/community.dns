@@ -18,7 +18,7 @@ from ansible_collections.community.internal_test_tools.tests.unit.utils.fetch_ur
 )
 
 # These imports are needed so patching below works
-import ansible_collections.community.dns.plugins.module_utils.http  # noqa: F401, pylint: disable=unused-import
+import ansible_collections.community.dns.plugins.module_utils._http  # noqa: F401, pylint: disable=unused-import
 from ansible_collections.community.dns.plugins.modules import hetzner_dns_record_sets
 
 from .hetzner import (
@@ -37,7 +37,7 @@ def mock_sleep(delay):
 class TestHetznerDNSRecordJSON(BaseTestModule):
     MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = "ansible_collections.community.dns.plugins.modules.hetzner_dns_record_sets.AnsibleModule"
     MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = (
-        "ansible_collections.community.dns.plugins.module_utils.http.fetch_url"
+        "ansible_collections.community.dns.plugins.module_utils._http.fetch_url"
     )
 
     def test_unknown_zone(self, mocker):
@@ -1440,7 +1440,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
 class TestHetznerDNSRecordNewJSON(BaseTestModule):
     MOCK_ANSIBLE_MODULEUTILS_BASIC_ANSIBLEMODULE = "ansible_collections.community.dns.plugins.modules.hetzner_dns_record_sets.AnsibleModule"
     MOCK_ANSIBLE_MODULEUTILS_URLS_FETCH_URL = (
-        "ansible_collections.community.dns.plugins.module_utils.http.fetch_url"
+        "ansible_collections.community.dns.plugins.module_utils._http.fetch_url"
     )
 
     def test_unknown_zone(self, mocker):
@@ -6574,7 +6574,7 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
     def test_removal_prune_wait_for_actions_batch(self, mocker):
         sleep = MagicMock()
         with patch(
-            "ansible_collections.community.dns.plugins.module_utils.hetzner.api._LIMIT_ACTION_QUERYING",
+            "ansible_collections.community.dns.plugins.module_utils._hetzner.api._LIMIT_ACTION_QUERYING",
             2,
         ):
             with patch("time.sleep", sleep):

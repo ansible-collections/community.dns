@@ -13,7 +13,7 @@ import os.path
 import re
 import typing as t
 
-from ansible_collections.community.dns.plugins.module_utils.names import (
+from ansible_collections.community.dns.plugins.module_utils._names import (
     InvalidDomainName,
     normalize_label,
     split_into_labels,

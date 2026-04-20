@@ -9,7 +9,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-from ansible_collections.community.dns.plugins.module_utils.record import (
+from ansible_collections.community.dns.plugins.module_utils._record import (
     DNSRecord,
     format_records_for_output,
     format_ttl,

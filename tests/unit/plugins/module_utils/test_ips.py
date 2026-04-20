@@ -11,8 +11,8 @@ __metaclass__ = type
 
 import pytest
 
-from ansible_collections.community.dns.plugins.module_utils import ips
-from ansible_collections.community.dns.plugins.module_utils.ips import (
+from ansible_collections.community.dns.plugins.module_utils import _ips as ips
+from ansible_collections.community.dns.plugins.module_utils._ips import (
     assert_requirements_present,
     is_ip_address,
 )

@@ -14,13 +14,13 @@ from ansible_collections.community.internal_test_tools.tests.unit.compat.mock im
     MagicMock,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
+from ansible_collections.community.dns.plugins.module_utils._hetzner.api import (
     HetznerAPI,
     _format_action_error,
     _HetznerNewAPI,
 )
-from ansible_collections.community.dns.plugins.module_utils.record import DNSRecord
-from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
+from ansible_collections.community.dns.plugins.module_utils._record import DNSRecord
+from ansible_collections.community.dns.plugins.module_utils._zone_record_api import (
     DNSAPIError,
 )
 

@@ -171,16 +171,16 @@ zone_info:
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.community.dns.plugins.module_utils.argspec import (
+from ansible_collections.community.dns.plugins.module_utils._argspec import (
     ModuleOptionProvider,
 )
-from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
+from ansible_collections.community.dns.plugins.module_utils._hetzner.api import (
     create_hetzner_api,
     create_hetzner_argument_spec,
     create_hetzner_provider_information,
 )
-from ansible_collections.community.dns.plugins.module_utils.http import ModuleHTTPHelper
-from ansible_collections.community.dns.plugins.module_utils.module.zone_info import (
+from ansible_collections.community.dns.plugins.module_utils._http import ModuleHTTPHelper
+from ansible_collections.community.dns.plugins.module_utils._module.zone_info import (
     create_module_argument_spec,
     run_module,
 )

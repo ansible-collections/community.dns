@@ -11,14 +11,14 @@ __metaclass__ = type
 
 import pytest
 
-from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
+from ansible_collections.community.dns.plugins.module_utils._conversion.base import (
     DNSConversionError,
 )
-from ansible_collections.community.dns.plugins.module_utils.conversion.converter import (
+from ansible_collections.community.dns.plugins.module_utils._conversion.converter import (
     RecordConverter,
 )
-from ansible_collections.community.dns.plugins.module_utils.record import DNSRecord
-from ansible_collections.community.dns.plugins.module_utils.record_set import (
+from ansible_collections.community.dns.plugins.module_utils._record import DNSRecord
+from ansible_collections.community.dns.plugins.module_utils._record_set import (
     DNSRecordSet,
 )
 

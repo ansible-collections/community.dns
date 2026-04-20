@@ -523,12 +523,12 @@ results:
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.community.dns.plugins.module_utils.dnspython_records import (
+from ansible_collections.community.dns.plugins.module_utils._dnspython_records import (
     NAME_TO_RDTYPE,
     NAME_TO_REQUIRED_VERSION,
     convert_rdata_to_dict,
 )
-from ansible_collections.community.dns.plugins.module_utils.resolver import (
+from ansible_collections.community.dns.plugins.module_utils._resolver import (
     ResolveDirectlyFromNameServers,
     assert_requirements_present,
     guarded_run,
