@@ -8,7 +8,7 @@
 from __future__ import annotations
 
 
-class ArgumentSpec(object):
+class ArgumentSpec:
     def __init__(
         self,
         argument_spec=None,
@@ -51,7 +51,7 @@ class ArgumentSpec(object):
         }
 
 
-class ModuleOptionProvider(object):
+class ModuleOptionProvider:
     def __init__(self, module):
         self.module = module
 

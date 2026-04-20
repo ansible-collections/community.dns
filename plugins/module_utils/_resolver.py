@@ -39,7 +39,7 @@ class InvalidInput(ResolverError):
     pass
 
 
-class _Resolve(object):
+class _Resolve:
     def __init__(self, timeout=10, timeout_retries=3, servfail_retries=0):
         self.timeout = timeout
         self.timeout_retries = timeout_retries

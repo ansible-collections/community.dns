@@ -21,7 +21,7 @@ from ansible_collections.community.dns.plugins.module_utils._conversion.txt impo
 from ansible_collections.community.dns.plugins.module_utils._record import DNSRecord
 
 
-class RecordConverter(object):
+class RecordConverter:
     def __init__(self, provider_information, option_provider):
         """
         Create a record converter.

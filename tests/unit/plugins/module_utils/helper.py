@@ -34,7 +34,7 @@ class CustomProviderInformation(ProviderInformation):
         return self._txt_character_encoding
 
 
-class CustomProvideOptions(object):
+class CustomProvideOptions:
     def __init__(self, option_dict):
         self._option_dict = option_dict
 

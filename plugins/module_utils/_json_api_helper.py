@@ -54,7 +54,7 @@ def _get_header_value(
     return header_value
 
 
-class JSONAPIHelper(object):
+class JSONAPIHelper:
     def __init__(
         self,
         http_helper: HTTPHelper,

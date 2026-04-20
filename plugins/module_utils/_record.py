@@ -26,7 +26,7 @@ def format_ttl(ttl):
     return " ".join(result)
 
 
-class DNSRecord(object):
+class DNSRecord:
     def __init__(self):
         self.id = None
         self.type = None

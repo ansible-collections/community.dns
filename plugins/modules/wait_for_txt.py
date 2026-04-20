@@ -258,7 +258,7 @@ def validate_check(record_values, expected_values, comparison_mode):
     raise AssertionError("Internal error!")  # pragma: no cover
 
 
-class Waiter(object):
+class Waiter:
     def __init__(self, module):
         self.module = module
 

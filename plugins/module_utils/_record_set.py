@@ -10,7 +10,7 @@ from __future__ import annotations
 from ._record import format_ttl as _format_ttl
 
 
-class DNSRecordSet(object):
+class DNSRecordSet:
     def __init__(self):
         self.id = None
         self.type = None

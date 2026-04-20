@@ -204,7 +204,7 @@ def decode_wsdl(node, root_ns, ids):
     return result
 
 
-class Parser(object):
+class Parser:
     def _parse(self, result, node, where):
         for child in node:
             tag = lxml.etree.QName(child.tag)
@@ -258,7 +258,7 @@ class Parser(object):
         )
 
 
-class Composer(object):
+class Composer:
     @staticmethod
     def _create(tag, namespace=None, **kwarg):
         if namespace:

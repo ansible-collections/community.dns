@@ -20,7 +20,7 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 )
 
 
-class ZoneRecordSetAPI(object, metaclass=abc.ABCMeta):
+class ZoneRecordSetAPI(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_zone_by_name(self, name):
         """

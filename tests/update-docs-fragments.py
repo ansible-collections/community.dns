@@ -197,7 +197,7 @@ class DocFragmentFile:
         for line in lines:
             if where == "prefix":
                 self.prefix.append(line)
-                if line == "class ModuleDocFragment(object):":
+                if line == "class ModuleDocFragment:":
                     where = "body"
                     body_prefix = []
                     body_name = None

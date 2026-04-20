@@ -27,7 +27,7 @@ class NetworkError(Exception):
     pass
 
 
-class HTTPHelper(object, metaclass=abc.ABCMeta):
+class HTTPHelper(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def fetch_url(
         self,

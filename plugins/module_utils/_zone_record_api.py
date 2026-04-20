@@ -22,14 +22,14 @@ class DNSAPIAuthenticationError(DNSAPIError):
     pass
 
 
-class NotProvidedType(object):
+class NotProvidedType:
     pass
 
 
 NOT_PROVIDED = NotProvidedType()
 
 
-class ZoneRecordAPI(object, metaclass=abc.ABCMeta):
+class ZoneRecordAPI(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_zone_by_name(self, name):
         """

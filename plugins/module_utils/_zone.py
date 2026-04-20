@@ -14,7 +14,7 @@ if typing.TYPE_CHECKING:
     from ._record_set import DNSRecordSet  # pragma: no cover
 
 
-class DNSZone(object):
+class DNSZone:
     def __init__(
         self,
         name: str,
@@ -36,7 +36,7 @@ class DNSZone(object):
         return self.__str__()
 
 
-class DNSZoneWithRecords(object):
+class DNSZoneWithRecords:
     def __init__(
         self,
         zone: DNSZone,
@@ -52,7 +52,7 @@ class DNSZoneWithRecords(object):
         return "DNSZoneWithRecords({0!r}, {1!r})".format(self.zone, self.records)
 
 
-class DNSZoneWithRecordSets(object):
+class DNSZoneWithRecordSets:
     def __init__(
         self,
         zone: DNSZone,

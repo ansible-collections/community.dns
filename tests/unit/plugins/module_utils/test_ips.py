@@ -20,7 +20,7 @@ def test_assert_requirements_present():
     class ModuleFailException(Exception):
         pass
 
-    class FakeModule(object):
+    class FakeModule:
         def fail_json(self, **kwargs):
             raise ModuleFailException(kwargs)
 

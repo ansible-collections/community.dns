@@ -35,7 +35,7 @@ def ensure_type(value, type_name):
     return value
 
 
-class ProviderInformation(object, metaclass=abc.ABCMeta):
+class ProviderInformation(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def get_zone_id_type(self):
         """
