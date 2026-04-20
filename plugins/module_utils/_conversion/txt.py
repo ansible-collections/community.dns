@@ -69,15 +69,11 @@ def _parse_quoted(value, index, use_octal):
         )
     if use_octal:
         return (
-            bytes(
-                (v2 * 64 + v1 * 8 + v0),
-            ),
+            bytes((v2 * 64 + v1 * 8 + v0,)),
             index,
         )
     return (
-        bytes(
-            (v2 * 100 + v1 * 10 + v0),
-        ),
+        bytes((v2 * 100 + v1 * 10 + v0,)),
         index,
     )
 
