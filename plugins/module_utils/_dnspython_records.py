@@ -10,20 +10,12 @@
 from __future__ import annotations
 
 import base64
-import sys
+import typing
 
 from ansible.module_utils.common.text.converters import to_bytes, to_native, to_text
 
-if sys.version_info[0] == 2:
-    binary_type = str
-else:
-    binary_type = bytes
-
-if sys.version_info >= (3, 6):
-    import typing
-
-    if typing.TYPE_CHECKING:
-        import dns.rdatatype  # pragma: no cover
+if typing.TYPE_CHECKING:
+    import dns.rdatatype  # pragma: no cover
 
 
 NAME_TO_RDTYPE = {}  # type: dict[str, dns.rdatatype.RdataType]
@@ -256,11 +248,11 @@ def convert_rdata_to_dict(
 
         if isinstance(val, (list, tuple)):
             val = (
-                [to_text(v) if isinstance(v, binary_type) else v for v in val]
+                [to_text(v) if isinstance(v, bytes) else v for v in val]
                 if to_unicode
                 else list(val)
             )
-        elif to_unicode and isinstance(val, binary_type):
+        elif to_unicode and isinstance(val, bytes):
             val = to_text(val)
 
         result[f] = val

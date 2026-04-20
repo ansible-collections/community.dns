@@ -9,8 +9,9 @@
 from __future__ import annotations
 
 import json
-import sys
 import time
+import typing
+from urllib.parse import urlencode
 
 from ansible.module_utils.common.text.converters import to_native
 
@@ -19,23 +20,13 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
     DNSAPIError,
 )
 
-try:
-    from urllib.parse import urlencode
-except ImportError:
-    # Python 2.x fallback:
-    from urllib import urlencode  # type: ignore
+if typing.TYPE_CHECKING:
+    from collections.abc import Collection  # pragma: no cover
 
-
-if sys.version_info >= (3, 6):
-    import typing
-
-    if typing.TYPE_CHECKING:
-        from collections.abc import Collection  # pragma: no cover
-
-        from ._http import HTTPHelper  # pragma: no cover
-        from ._provider import ProviderInformation  # pragma: no cover
-        from ._record import DNSRecord  # pragma: no cover
-        from ._zone_record_api import ZoneRecordAPI  # pragma: no cover
+    from ._http import HTTPHelper  # pragma: no cover
+    from ._provider import ProviderInformation  # pragma: no cover
+    from ._record import DNSRecord  # pragma: no cover
+    from ._zone_record_api import ZoneRecordAPI  # pragma: no cover
 
 
 ERROR_CODES = {

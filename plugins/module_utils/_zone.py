@@ -7,14 +7,11 @@
 
 from __future__ import annotations
 
-import sys
+import typing
 
-if sys.version_info >= (3, 6):
-    import typing
-
-    if typing.TYPE_CHECKING:
-        from ._record import DNSRecord  # pragma: no cover
-        from ._record_set import DNSRecordSet  # pragma: no cover
+if typing.TYPE_CHECKING:
+    from ._record import DNSRecord  # pragma: no cover
+    from ._record_set import DNSRecordSet  # pragma: no cover
 
 
 class DNSZone(object):

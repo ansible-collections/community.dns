@@ -7,7 +7,6 @@
 
 from __future__ import annotations
 
-import sys
 import warnings
 
 from ansible.module_utils.common.text.converters import to_bytes, to_text
@@ -21,14 +20,6 @@ _DECIMAL_DIGITS = b"0123456789"
 _STATE_OUTSIDE = 0
 _STATE_QUOTED_STRING = 1
 _STATE_UNQUOTED_STRING = 3
-
-
-if sys.version_info[0] < 3:
-    _int_to_byte = chr
-else:
-
-    def _int_to_byte(value):
-        return bytes((value,))
 
 
 def _parse_quoted(value, index, use_octal):
@@ -77,8 +68,18 @@ def _parse_quoted(value, index, use_octal):
             )
         )
     if use_octal:
-        return _int_to_byte(v2 * 64 + v1 * 8 + v0), index
-    return _int_to_byte(v2 * 100 + v1 * 10 + v0), index
+        return (
+            bytes(
+                (v2 * 64 + v1 * 8 + v0),
+            ),
+            index,
+        )
+    return (
+        bytes(
+            (v2 * 100 + v1 * 10 + v0),
+        ),
+        index,
+    )
 
 
 _SENTINEL = object()

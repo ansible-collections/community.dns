@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import time
+from urllib.parse import quote
 
 from ansible.module_utils.basic import env_fallback
 
@@ -39,12 +40,6 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_set_api
     ZoneRecordSetAPI,
     filter_record_sets,
 )
-
-try:
-    from urllib.parse import quote
-except ImportError:
-    # Python 2.x fallback:
-    from urllib import quote  # type: ignore
 
 
 def _create_zone_from_json(source):

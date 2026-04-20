@@ -8,7 +8,8 @@
 from __future__ import annotations
 
 import abc
-import sys
+import typing
+from urllib.error import HTTPError
 
 from ansible.module_utils.common.text.converters import to_native
 from ansible.module_utils.urls import (
@@ -18,18 +19,8 @@ from ansible.module_utils.urls import (
     open_url,
 )
 
-try:
-    from urllib.error import HTTPError
-except ImportError:
-    # Python 2.x fallback:
-    from urllib2 import HTTPError  # type: ignore
-
-
-if sys.version_info >= (3, 6):
-    import typing
-
-    if typing.TYPE_CHECKING:
-        from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
+if typing.TYPE_CHECKING:
+    from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
 
 
 class NetworkError(Exception):
@@ -72,9 +63,8 @@ class ModuleHTTPHelper(HTTPHelper):
             self.module, url, method=method, headers=headers, data=data, timeout=timeout
         )
         try:
-            # In Python 2, reading from a closed response yields a TypeError.
-            # In Python 3, read() simply returns ''
-            if sys.version_info[0] > 2 and response.closed:
+            # read() from a closed response returns ''
+            if response.closed:
                 raise TypeError
             content = response.read()
         except (AttributeError, TypeError):

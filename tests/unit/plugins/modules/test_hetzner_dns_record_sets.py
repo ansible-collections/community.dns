@@ -2462,10 +2462,8 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                 ],
             )
 
-        assert result["msg"] in (
-            "Errors: Delete record set AAAA *.example.com with TTL=1h and value=['2001:1:2::4']: something went wrong (server_error)",
-            # Python 2 compat:
-            "Errors: Delete record set AAAA *.example.com with TTL=1h and value=[u'2001:1:2::4']: something went wrong (server_error)",
+        assert result["msg"] == (
+            "Errors: Delete record set AAAA *.example.com with TTL=1h and value=['2001:1:2::4']: something went wrong (server_error)"
         )
 
     def test_removal_prune_fail_2(self, mocker):
@@ -2583,14 +2581,10 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                 ],
             )
 
-        assert result["msg"] in (
+        assert result["msg"] == (
             "Errors: Delete record set AAAA *.example.com with TTL=1h and value=['2001:1:2::4']: Expected HTTP status 201, 404"
             " for DELETE https://api.hetzner.cloud/v1/zones/42/rrsets/*/AAAA, but got HTTP status 500 (Internal Server Error)"
-            ' with error message "something went wrong" (error code server_error)',
-            # Python 2 compat:
-            "Errors: Delete record set AAAA *.example.com with TTL=1h and value=[u'2001:1:2::4']: Expected HTTP status 201, 404"
-            " for DELETE https://api.hetzner.cloud/v1/zones/42/rrsets/*/AAAA, but got HTTP status 500 (Internal Server Error)"
-            ' with error message "something went wrong" (error code server_error)',
+            ' with error message "something went wrong" (error code server_error)'
         )
 
     def test_delete(self, mocker):
@@ -3136,12 +3130,9 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                 ],
             )
 
-        assert result["msg"] in (
+        assert result["msg"] == (
             "Errors: Delete record set AAAA example.com with TTL=1h and value=['2001:1:2::3']:"
-            " Error while deleting record set: something went wrong (server_error)",
-            # Python 2 compat:
-            "Errors: Delete record set AAAA example.com with TTL=1h and value=[u'2001:1:2::3']:"
-            " Error while deleting record set: something went wrong (server_error)",
+            " Error while deleting record set: something went wrong (server_error)"
         )
 
     def test_change_add_one_check_mode(self, mocker):
@@ -3662,14 +3653,10 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                 ],
             )
 
-        assert result["msg"] in (
+        assert result["msg"] == (
             "Errors: Create record set CAA example.com with TTL=1h and value=['128 issue \"letsencrypt.org xxx\"']:"
             " Expected HTTP status 201 for POST https://api.hetzner.cloud/v1/zones/42/rrsets,"
-            ' but got HTTP status 500 (Internal Server Error) with error message "something went wrong" (error code server_error)',
-            # Python 2 compat:
-            "Errors: Create record set CAA example.com with TTL=1h and value=[u'128 issue \"letsencrypt.org xxx\"']:"
-            " Expected HTTP status 201 for POST https://api.hetzner.cloud/v1/zones/42/rrsets,"
-            ' but got HTTP status 500 (Internal Server Error) with error message "something went wrong" (error code server_error)',
+            ' but got HTTP status 500 (Internal Server Error) with error message "something went wrong" (error code server_error)'
         )
 
     def test_change_add_one_failed_post(self, mocker):
@@ -3792,12 +3779,9 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                 ],
             )
 
-        assert result["msg"] in (
+        assert result["msg"] == (
             "Errors: Create record set CAA example.com with TTL=1h and value=['128 issue \"letsencrypt.org xxx\"']:"
-            " Error while adding record set: something went wrong (server_error)",
-            # Python 2 compat:
-            "Errors: Create record set CAA example.com with TTL=1h and value=[u'128 issue \"letsencrypt.org xxx\"']:"
-            " Error while adding record set: something went wrong (server_error)",
+            " Error while adding record set: something went wrong (server_error)"
         )
 
     def test_change_add_two(self, mocker):
@@ -4066,14 +4050,10 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                 ],
             )
 
-        assert result["msg"] in (
+        assert result["msg"] == (
             "Errors: Create record set CAA example.com with TTL=1h and value=['128 issue \"letsencrypt.org\"']:"
             " Expected HTTP status 201 for POST https://api.hetzner.cloud/v1/zones/42/rrsets, but got HTTP status"
-            ' 500 (Internal Server Error) with error message "something went wrong" (error code server_error)',
-            # Python 2 compat:
-            "Errors: Create record set CAA example.com with TTL=1h and value=[u'128 issue \"letsencrypt.org\"']:"
-            " Expected HTTP status 201 for POST https://api.hetzner.cloud/v1/zones/42/rrsets, but got HTTP status"
-            ' 500 (Internal Server Error) with error message "something went wrong" (error code server_error)',
+            ' 500 (Internal Server Error) with error message "something went wrong" (error code server_error)'
         )
 
     def test_change_add_two_fail_2(self, mocker):
@@ -4268,10 +4248,8 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                 ],
             )
 
-        assert result["msg"] in (
-            "Errors: Create record set CAA example.com with TTL=1h and value=['128 issue \"letsencrypt.org\"']: something went wrong (server_error)",
-            # Python 2 compat:
-            "Errors: Create record set CAA example.com with TTL=1h and value=[u'128 issue \"letsencrypt.org\"']: something went wrong (server_error)",
+        assert result["msg"] == (
+            "Errors: Create record set CAA example.com with TTL=1h and value=['128 issue \"letsencrypt.org\"']: something went wrong (server_error)"
         )
 
     def test_change_modify_list(self, mocker):
@@ -4610,14 +4588,10 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                 ],
             )
 
-        assert result["msg"] in (
+        assert result["msg"] == (
             "Errors: Change record set NS example.com with TTL=default and value=['helium.ns.hetzner.de.', 'ytterbium.ns.hetzner.com.']:"
             " Expected HTTP status 201 for POST https://api.hetzner.cloud/v1/zones/42/rrsets/@/NS/actions/set_records, but got HTTP status 500"
-            ' (Internal Server Error) with error message "something went wrong" (error code server_error)',
-            # Python 2 compat:
-            "Errors: Change record set NS example.com with TTL=default and value=[u'helium.ns.hetzner.de.', u'ytterbium.ns.hetzner.com.']:"
-            " Expected HTTP status 201 for POST https://api.hetzner.cloud/v1/zones/42/rrsets/@/NS/actions/set_records, but got HTTP status 500"
-            ' (Internal Server Error) with error message "something went wrong" (error code server_error)',
+            ' (Internal Server Error) with error message "something went wrong" (error code server_error)'
         )
 
     def test_change_modify_list_and_ttl(self, mocker):
@@ -6121,16 +6095,11 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                 ],
             )
 
-        assert result["msg"] in (
+        assert result["msg"] == (
             "Errors: Change record set SOA example.com with TTL=1h and value=['hydrogen.ns.hetzner.com."
             " dns.hetzner.com. 2021070900 86400 10800 3600000 3600']: Expected HTTP status 201 for POST"
             " https://api.hetzner.cloud/v1/zones/42/rrsets/@/SOA/actions/change_ttl, but got HTTP status"
-            ' 500 (Internal Server Error) with error message "something went wrong" (error code server_error)',
-            # Python 2 compat:
-            "Errors: Change record set SOA example.com with TTL=1h and value=[u'hydrogen.ns.hetzner.com."
-            " dns.hetzner.com. 2021070900 86400 10800 3600000 3600']: Expected HTTP status 201 for POST"
-            " https://api.hetzner.cloud/v1/zones/42/rrsets/@/SOA/actions/change_ttl, but got HTTP status"
-            ' 500 (Internal Server Error) with error message "something went wrong" (error code server_error)',
+            ' 500 (Internal Server Error) with error message "something went wrong" (error code server_error)'
         )
 
     def test_change_modify_list_and_ttl_multiple_fail_2(self, mocker):
@@ -6343,12 +6312,9 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                 ],
             )
 
-        assert result["msg"] in (
+        assert result["msg"] == (
             "Errors: Change record set NS example.com with TTL=default and value=['helium.ns.hetzner.de.',"
-            " 'ytterbium.ns.hetzner.com.']: something went wrong (server_error)",
-            # Python 2 compat:
-            "Errors: Change record set NS example.com with TTL=default and value=[u'helium.ns.hetzner.de.',"
-            " u'ytterbium.ns.hetzner.com.']: something went wrong (server_error)",
+            " 'ytterbium.ns.hetzner.com.']: something went wrong (server_error)"
         )
 
     def test_change_modify_list_and_ttl_multiple_fail_3(self, mocker):
@@ -6514,16 +6480,11 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                 ],
             )
 
-        assert result["msg"] in (
+        assert result["msg"] == (
             "Errors: Change record set NS example.com with TTL=default and value=['helium.ns.hetzner.de.',"
             " 'ytterbium.ns.hetzner.com.']: something went wrong (server_error); Change record set SOA example.com"
             " with TTL=1h and value=['hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600']:"
-            " something went wrong (server_error)",
-            # Python 2 compat:
-            "Errors: Change record set NS example.com with TTL=default and value=[u'helium.ns.hetzner.de.',"
-            " u'ytterbium.ns.hetzner.com.']: something went wrong (server_error); Change record set SOA example.com"
-            " with TTL=1h and value=[u'hydrogen.ns.hetzner.com. dns.hetzner.com. 2021070900 86400 10800 3600000 3600']:"
-            " something went wrong (server_error)",
+            " something went wrong (server_error)"
         )
 
     def test_wrong_type(self, mocker):

@@ -7,14 +7,7 @@
 
 from __future__ import annotations
 
-import sys
-
 from ansible.module_utils.common.text.converters import to_native
-
-if sys.version_info[0] == 2:
-    string_types = (basestring,)  # noqa: F821, pylint: disable=undefined-variable
-else:
-    string_types = (str,)
 
 try:
     import lxml.etree
@@ -73,7 +66,7 @@ def _set_type(node, type_value, namespace=None):
 def encode_wsdl(node, value):
     if value is None:
         node.set(lxml.etree.QName(_NAMESPACE_XSI, "nil").text, "true")
-    elif isinstance(value, string_types):
+    elif isinstance(value, str):
         _set_type(node, "xsd:string")
         node.text = value
     elif isinstance(value, int):

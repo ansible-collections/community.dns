@@ -7,19 +7,16 @@
 
 from __future__ import annotations
 
-import sys
+import typing
 
 from ansible_collections.community.dns.plugins.module_utils._zone_record_api import (
     DNSAPIError,
 )
 
-if sys.version_info >= (3, 6):
-    import typing
-
-    if typing.TYPE_CHECKING:
-        from ._provider import ProviderInformation  # pragma: no cover
-        from ._record import DNSRecord  # pragma: no cover
-        from ._zone_record_api import ZoneRecordAPI  # pragma: no cover
+if typing.TYPE_CHECKING:
+    from ._provider import ProviderInformation  # pragma: no cover
+    from ._record import DNSRecord  # pragma: no cover
+    from ._zone_record_api import ZoneRecordAPI  # pragma: no cover
 
 
 def bulk_apply_changes(
