@@ -18,9 +18,9 @@ description:
   - Given a DNS name and a record type, will retrieve all nameservers that are responsible for this DNS name, and from them
     all records for this name of the given type.
 extends_documentation_fragment:
-  - community.dns.attributes
-  - community.dns.attributes.info_module
-  - community.dns.attributes.idempotent_not_modify_state
+  - community.dns._attributes
+  - community.dns._attributes.info_module
+  - community.dns._attributes.idempotent_not_modify_state
 author:
   - Felix Fontein (@felixfontein)
 options:
@@ -523,12 +523,12 @@ results:
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.community.dns.plugins.module_utils.dnspython_records import (
+from ansible_collections.community.dns.plugins.module_utils._dnspython_records import (
     NAME_TO_RDTYPE,
     NAME_TO_REQUIRED_VERSION,
     convert_rdata_to_dict,
 )
-from ansible_collections.community.dns.plugins.module_utils.resolver import (
+from ansible_collections.community.dns.plugins.module_utils._resolver import (
     ResolveDirectlyFromNameServers,
     assert_requirements_present,
     guarded_run,

@@ -13,10 +13,10 @@ import warnings
 
 import pytest
 
-from ansible_collections.community.dns.plugins.module_utils.conversion.base import (
+from ansible_collections.community.dns.plugins.module_utils._conversion.base import (
     DNSConversionError,
 )
-from ansible_collections.community.dns.plugins.module_utils.conversion.txt import (
+from ansible_collections.community.dns.plugins.module_utils._conversion.txt import (
     _get_utf8_length,
     decode_txt_value,
     encode_txt_value,

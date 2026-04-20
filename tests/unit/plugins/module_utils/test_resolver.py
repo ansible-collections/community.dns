@@ -15,8 +15,8 @@ from ansible_collections.community.internal_test_tools.tests.unit.compat.mock im
     patch,
 )
 
-from ansible_collections.community.dns.plugins.module_utils import resolver
-from ansible_collections.community.dns.plugins.module_utils.resolver import (
+from ansible_collections.community.dns.plugins.module_utils import _resolver as resolver
+from ansible_collections.community.dns.plugins.module_utils._resolver import (
     ResolveDirectlyFromNameServers,
     ResolverError,
     assert_requirements_present,

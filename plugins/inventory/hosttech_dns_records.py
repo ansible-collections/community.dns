@@ -39,13 +39,13 @@ options:
     version_added: 3.0.0
 
 extends_documentation_fragment:
-  - community.dns.hosttech
-  - community.dns.hosttech.plugin
-  - community.dns.hosttech.record_type_choices_records_inventory
-  - community.dns.hosttech.record_type_seealso
-  - community.dns.hosttech.zone_id_type
-  - community.dns.inventory_records
-  - community.dns.options.record_transformation
+  - community.dns._hosttech
+  - community.dns._hosttech.plugin
+  - community.dns._hosttech.record_type_choices_records_inventory
+  - community.dns._hosttech.record_type_seealso
+  - community.dns._hosttech.zone_id_type
+  - community.dns._inventory_records
+  - community.dns._options.record_transformation
   - community.library_inventory_filtering_v1.inventory_filter
 
 notes:
@@ -79,15 +79,15 @@ hosttech_token: >-
   {{ (lookup('community.sops.sops', 'keys/hosttech.sops.yml') | from_yaml).hosttech_dns_token }}
 """
 
-from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
+from ansible_collections.community.dns.plugins.module_utils._hosttech.api import (
     create_hosttech_api,
     create_hosttech_provider_information,
 )
-from ansible_collections.community.dns.plugins.module_utils.http import OpenURLHelper
-from ansible_collections.community.dns.plugins.plugin_utils.inventory.records import (
+from ansible_collections.community.dns.plugins.module_utils._http import OpenURLHelper
+from ansible_collections.community.dns.plugins.plugin_utils._inventory.records import (
     RecordsInventoryModule,
 )
-from ansible_collections.community.dns.plugins.plugin_utils.templated_options import (
+from ansible_collections.community.dns.plugins.plugin_utils._templated_options import (
     TemplatedOptionProvider,
 )
 

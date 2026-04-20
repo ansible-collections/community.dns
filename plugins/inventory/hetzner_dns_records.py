@@ -31,13 +31,13 @@ options:
     version_added: 3.0.0
 
 extends_documentation_fragment:
-  - community.dns.hetzner
-  - community.dns.hetzner.plugin
-  - community.dns.hetzner.record_type_choices_records_inventory
-  - community.dns.hetzner.record_type_seealso
-  - community.dns.hetzner.zone_id_type
-  - community.dns.inventory_records
-  - community.dns.options.record_transformation
+  - community.dns._hetzner
+  - community.dns._hetzner.plugin
+  - community.dns._hetzner.record_type_choices_records_inventory
+  - community.dns._hetzner.record_type_seealso
+  - community.dns._hetzner.zone_id_type
+  - community.dns._inventory_records
+  - community.dns._options.record_transformation
   - community.library_inventory_filtering_v1.inventory_filter
 
 notes:
@@ -73,15 +73,15 @@ hetzner_token: >-
 """
 
 
-from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
+from ansible_collections.community.dns.plugins.module_utils._hetzner.api import (
     create_hetzner_api,
     create_hetzner_provider_information,
 )
-from ansible_collections.community.dns.plugins.module_utils.http import OpenURLHelper
-from ansible_collections.community.dns.plugins.plugin_utils.inventory.records import (
+from ansible_collections.community.dns.plugins.module_utils._http import OpenURLHelper
+from ansible_collections.community.dns.plugins.plugin_utils._inventory.records import (
     RecordsInventoryModule,
 )
-from ansible_collections.community.dns.plugins.plugin_utils.templated_options import (
+from ansible_collections.community.dns.plugins.plugin_utils._templated_options import (
     TemplatedOptionProvider,
 )
 

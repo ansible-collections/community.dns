@@ -11,7 +11,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible_collections.community.dns.plugins.module_utils.names import (
+from ansible_collections.community.dns.plugins.module_utils._names import (
     InvalidDomainName,
     is_ascii_label,
     join_labels,

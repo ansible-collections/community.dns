@@ -21,7 +21,7 @@ from ansible_collections.community.internal_test_tools.tests.unit.utils.trust im
     make_untrusted as _make_untrusted,
 )
 
-from ansible_collections.community.dns.plugins.plugin_utils.unsafe import make_unsafe
+from ansible_collections.community.dns.plugins.plugin_utils._unsafe import make_unsafe
 
 TEST_MAKE_UNSAFE = [
     (

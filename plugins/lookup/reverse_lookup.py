@@ -78,17 +78,17 @@ from ansible.errors import AnsibleLookupError
 from ansible.module_utils.common.text.converters import to_text
 from ansible.plugins.lookup import LookupBase
 
-from ansible_collections.community.dns.plugins.module_utils.ips import is_ip_address
-from ansible_collections.community.dns.plugins.module_utils.resolver import (
+from ansible_collections.community.dns.plugins.module_utils._ips import is_ip_address
+from ansible_collections.community.dns.plugins.module_utils._resolver import (
     SimpleResolver,
 )
-from ansible_collections.community.dns.plugins.plugin_utils.ips import (
+from ansible_collections.community.dns.plugins.plugin_utils._ips import (
     assert_requirements_present as assert_requirements_present_ipaddress,
 )
-from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
+from ansible_collections.community.dns.plugins.plugin_utils._resolver import (
     assert_requirements_present as assert_requirements_present_dnspython,
 )
-from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
+from ansible_collections.community.dns.plugins.plugin_utils._resolver import (
     guarded_run,
 )
 

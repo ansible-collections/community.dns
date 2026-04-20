@@ -16,9 +16,9 @@ DOCUMENTATION:
       type: string
       required: true
   extends_documentation_fragment:
-    - community.dns.filters
-    - community.dns.filters.registerable_domain
-    - community.dns.filters.get
+    - community.dns._filters
+    - community.dns._filters.registerable_domain
+    - community.dns._filters.get
   author:
     - Felix Fontein (@felixfontein)
 

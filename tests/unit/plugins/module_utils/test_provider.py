@@ -11,7 +11,7 @@ __metaclass__ = type
 
 import pytest
 
-from ansible_collections.community.dns.plugins.module_utils.provider import ensure_type
+from ansible_collections.community.dns.plugins.module_utils._provider import ensure_type
 
 CHECK_TYPE_DATA = [
     ("asdf", "str", "asdf"),

@@ -19,8 +19,8 @@ version_added: 3.3.0
 description:
   - Add, update or delete DNS rewrite rules from AdGuardHome.
 extends_documentation_fragment:
-  - community.dns.adguardhome.connectivity
-  - community.dns.attributes
+  - community.dns._adguardhome.connectivity
+  - community.dns._attributes
 options:
   state:
     description:
@@ -90,7 +90,7 @@ rules:
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.community.dns.plugins.module_utils.adguardhome.api import (
+from ansible_collections.community.dns.plugins.module_utils._adguardhome.api import (
     AdGuardHomeAPIHandler,
     create_adguardhome_argument_spec,
 )

@@ -9,11 +9,11 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-from ansible_collections.community.dns.plugins.module_utils.record import DNSRecord
-from ansible_collections.community.dns.plugins.module_utils.record_set import (
+from ansible_collections.community.dns.plugins.module_utils._record import DNSRecord
+from ansible_collections.community.dns.plugins.module_utils._record_set import (
     DNSRecordSet,
 )
-from ansible_collections.community.dns.plugins.module_utils.zone import (
+from ansible_collections.community.dns.plugins.module_utils._zone import (
     DNSZone,
     DNSZoneWithRecords,
     DNSZoneWithRecordSets,

@@ -106,7 +106,7 @@ def get_provider_informations(providers):
 
     for provider in providers:
         full_py_path = (
-            f"ansible_collections.community.dns.plugins.module_utils.{provider}.api"
+            f"ansible_collections.community.dns.plugins.module_utils._{provider}.api"
         )
         try:
             the_module = importlib.import_module(full_py_path)
@@ -232,7 +232,7 @@ class DocFragmentFile:
 
 
 def doc_fragment_fn(name):
-    return os.path.join("plugins", "doc_fragments", f"{name}.py")
+    return os.path.join("plugins", "doc_fragments", f"_{name}.py")
 
 
 def load_doc_fragment(name):

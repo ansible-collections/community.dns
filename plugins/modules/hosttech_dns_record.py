@@ -24,16 +24,16 @@ description:
     a single record. This is in particular important when working with C(CNAME) and C(SOA) records. Use the M(community.dns.hosttech_dns_record_set)
     module for working with record sets.
 extends_documentation_fragment:
-  - community.dns.hosttech
-  - community.dns.hosttech.record_default_ttl
-  - community.dns.hosttech.record_notes
-  - community.dns.hosttech.record_type_choices
-  - community.dns.hosttech.record_type_seealso
-  - community.dns.hosttech.zone_id_type
-  - community.dns.module_record
-  - community.dns.options.record_transformation
-  - community.dns.attributes
-  - community.dns.attributes.actiongroup_hosttech
+  - community.dns._hosttech
+  - community.dns._hosttech.record_default_ttl
+  - community.dns._hosttech.record_notes
+  - community.dns._hosttech.record_type_choices
+  - community.dns._hosttech.record_type_seealso
+  - community.dns._hosttech.zone_id_type
+  - community.dns._module_record
+  - community.dns._options.record_transformation
+  - community.dns._attributes
+  - community.dns._attributes.actiongroup_hosttech
 
 attributes:
   action_group:
@@ -75,16 +75,18 @@ zone_id:
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.community.dns.plugins.module_utils.argspec import (
+from ansible_collections.community.dns.plugins.module_utils._argspec import (
     ModuleOptionProvider,
 )
-from ansible_collections.community.dns.plugins.module_utils.hosttech.api import (
+from ansible_collections.community.dns.plugins.module_utils._hosttech.api import (
     create_hosttech_api,
     create_hosttech_argument_spec,
     create_hosttech_provider_information,
 )
-from ansible_collections.community.dns.plugins.module_utils.http import ModuleHTTPHelper
-from ansible_collections.community.dns.plugins.module_utils.module.record import (
+from ansible_collections.community.dns.plugins.module_utils._http import (
+    ModuleHTTPHelper,
+)
+from ansible_collections.community.dns.plugins.module_utils._module.record import (
     create_module_argument_spec,
     run_module,
 )

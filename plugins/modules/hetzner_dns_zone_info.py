@@ -20,13 +20,13 @@ version_added: 2.0.0
 description:
   - Retrieves zone information in Hetzner DNS service.
 extends_documentation_fragment:
-  - community.dns.hetzner
-  - community.dns.hetzner.zone_id_type
-  - community.dns.module_zone_info
-  - community.dns.attributes
-  - community.dns.attributes.actiongroup_hetzner
-  - community.dns.attributes.info_module
-  - community.dns.attributes.idempotent_not_modify_state
+  - community.dns._hetzner
+  - community.dns._hetzner.zone_id_type
+  - community.dns._module_zone_info
+  - community.dns._attributes
+  - community.dns._attributes.actiongroup_hetzner
+  - community.dns._attributes.info_module
+  - community.dns._attributes.idempotent_not_modify_state
 
 attributes:
   action_group:
@@ -171,16 +171,18 @@ zone_info:
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.community.dns.plugins.module_utils.argspec import (
+from ansible_collections.community.dns.plugins.module_utils._argspec import (
     ModuleOptionProvider,
 )
-from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
+from ansible_collections.community.dns.plugins.module_utils._hetzner.api import (
     create_hetzner_api,
     create_hetzner_argument_spec,
     create_hetzner_provider_information,
 )
-from ansible_collections.community.dns.plugins.module_utils.http import ModuleHTTPHelper
-from ansible_collections.community.dns.plugins.module_utils.module.zone_info import (
+from ansible_collections.community.dns.plugins.module_utils._http import (
+    ModuleHTTPHelper,
+)
+from ansible_collections.community.dns.plugins.module_utils._module.zone_info import (
     create_module_argument_spec,
     run_module,
 )

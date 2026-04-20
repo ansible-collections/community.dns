@@ -26,6 +26,9 @@
 # Extracted from https://github.com/benjaminp/six/blob/7d2a0e96602b83cd082896c8c224a87f1efe2111/six.py
 # SPDX-License-Identifier: MIT
 
+# Note that this module util is **PRIVATE** to the collection. It can have breaking changes at any time.
+# Do not use this from other collections or standalone plugins/modules!
+
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type

@@ -17,8 +17,8 @@ version_added: 0.1.0
 description:
   - Wait for TXT entries with specific values to show up on B(all) authoritative nameservers for the DNS name.
 extends_documentation_fragment:
-  - community.dns.attributes
-  - community.dns.attributes.idempotent_not_modify_state
+  - community.dns._attributes
+  - community.dns._attributes.idempotent_not_modify_state
 attributes:
   check_mode:
     support: full
@@ -216,7 +216,7 @@ except ImportError:
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.common.text.converters import to_text
 
-from ansible_collections.community.dns.plugins.module_utils.resolver import (
+from ansible_collections.community.dns.plugins.module_utils._resolver import (
     ResolveDirectlyFromNameServers,
     assert_requirements_present,
     guarded_run,

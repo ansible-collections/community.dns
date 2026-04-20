@@ -14,8 +14,8 @@ from ansible_collections.community.internal_test_tools.tests.unit.compat.mock im
     MagicMock,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.hosttech import api
-from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
+from ansible_collections.community.dns.plugins.module_utils._hosttech import api
+from ansible_collections.community.dns.plugins.module_utils._zone_record_api import (
     DNSAPIError,
 )
 

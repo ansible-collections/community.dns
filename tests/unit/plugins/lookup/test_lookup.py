@@ -16,7 +16,7 @@ from ansible_collections.community.internal_test_tools.tests.unit.compat.unittes
     TestCase,
 )
 
-from ansible_collections.community.dns.plugins.module_utils.dnspython_records import (
+from ansible_collections.community.dns.plugins.module_utils._dnspython_records import (
     NAME_TO_RDTYPE,
     NAME_TO_REQUIRED_VERSION,
 )

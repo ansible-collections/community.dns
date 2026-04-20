@@ -20,16 +20,16 @@ version_added: 2.0.0
 description:
   - Bulk synchronize DNS record sets in Hetzner DNS service.
 extends_documentation_fragment:
-  - community.dns.hetzner
-  - community.dns.hetzner.record_notes
-  - community.dns.hetzner.record_type_choices_record_sets_module
-  - community.dns.hetzner.record_type_seealso
-  - community.dns.hetzner.zone_id_type
-  - community.dns.module_record_sets
-  - community.dns.options.bulk_operations
-  - community.dns.options.record_transformation
-  - community.dns.attributes
-  - community.dns.attributes.actiongroup_hetzner
+  - community.dns._hetzner
+  - community.dns._hetzner.record_notes
+  - community.dns._hetzner.record_type_choices_record_sets_module
+  - community.dns._hetzner.record_type_seealso
+  - community.dns._hetzner.zone_id_type
+  - community.dns._module_record_sets
+  - community.dns._options.bulk_operations
+  - community.dns._options.record_transformation
+  - community.dns._attributes
+  - community.dns._attributes.actiongroup_hetzner
 
 attributes:
   action_group:
@@ -93,16 +93,18 @@ zone_id:
 
 from ansible.module_utils.basic import AnsibleModule
 
-from ansible_collections.community.dns.plugins.module_utils.argspec import (
+from ansible_collections.community.dns.plugins.module_utils._argspec import (
     ModuleOptionProvider,
 )
-from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
+from ansible_collections.community.dns.plugins.module_utils._hetzner.api import (
     create_hetzner_api,
     create_hetzner_argument_spec,
     create_hetzner_provider_information,
 )
-from ansible_collections.community.dns.plugins.module_utils.http import ModuleHTTPHelper
-from ansible_collections.community.dns.plugins.module_utils.module.record_sets import (
+from ansible_collections.community.dns.plugins.module_utils._http import (
+    ModuleHTTPHelper,
+)
+from ansible_collections.community.dns.plugins.module_utils._module.record_sets import (
     create_module_argument_spec,
     run_module,
 )

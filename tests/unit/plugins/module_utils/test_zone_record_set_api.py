@@ -11,14 +11,14 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
-from ansible_collections.community.dns.plugins.module_utils.record_set import (
+from ansible_collections.community.dns.plugins.module_utils._record_set import (
     DNSRecordSet,
 )
-from ansible_collections.community.dns.plugins.module_utils.zone_record_api import (
+from ansible_collections.community.dns.plugins.module_utils._zone_record_api import (
     NOT_PROVIDED,
     DNSAPIError,
 )
-from ansible_collections.community.dns.plugins.module_utils.zone_record_set_api import (
+from ansible_collections.community.dns.plugins.module_utils._zone_record_set_api import (
     ZoneRecordSetAPI,
 )
 
