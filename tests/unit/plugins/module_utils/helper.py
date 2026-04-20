@@ -11,7 +11,7 @@ from ansible_collections.community.dns.plugins.module_utils._provider import (
 
 class CustomProviderInformation(ProviderInformation):
     def __init__(self, txt_record_handling="decoded", txt_character_encoding="decimal"):
-        super(CustomProviderInformation, self).__init__()
+        super().__init__()
         self._txt_record_handling = txt_record_handling
         self._txt_character_encoding = txt_character_encoding
 

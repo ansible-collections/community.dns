@@ -29,9 +29,7 @@ class WSDLNetworkError(WSDLException):
 
 class WSDLError(WSDLException):
     def __init__(self, origin, error_code, message):
-        super(WSDLError, self).__init__(
-            "{0} ({1}): {2}".format(origin, error_code, message)
-        )
+        super().__init__("{0} ({1}): {2}".format(origin, error_code, message))
         self.error_origin = origin
         self.error_code = error_code
         self.error_message = message

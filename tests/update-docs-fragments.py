@@ -134,9 +134,7 @@ class DocFragmentParseError(Exception):
     def __init__(self, path, error_message):
         self.path = path
         self.error_message = error_message
-        super(DocFragmentParseError, self).__init__(
-            f"Error while parsing {path}: {error_message}"
-        )
+        super().__init__(f"Error while parsing {path}: {error_message}")
 
 
 DOC_FRAGMENT_START_MATCHER = re.compile(r'^    ([A-Z_]+) = r"""$')

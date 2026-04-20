@@ -119,9 +119,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         return " with data: {0}".format(result)
 
     def _validate(self, result=None, info=None, expected=None, method="GET"):
-        super(HetznerAPI, self)._validate(
-            result=result, info=info, expected=expected, method=method
-        )
+        super()._validate(result=result, info=info, expected=expected, method=method)
         if isinstance(result, dict):
             error = result.get("error")
             if isinstance(error, dict):
@@ -357,7 +355,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         # "An invalid response was received from the upstream server". That's why for now, we always
         # fall back to the default implementation.
         if True:  # pylint: disable=using-constant-test
-            return super(HetznerAPI, self).update_records(
+            return super().update_records(
                 records_per_zone_id, stop_early_on_errors=stop_early_on_errors
             )
 

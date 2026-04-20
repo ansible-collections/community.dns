@@ -111,7 +111,7 @@ class SimpleResolver(_Resolve):
         timeout_retries=3,
         servfail_retries=0,
     ):
-        super(SimpleResolver, self).__init__(
+        super().__init__(
             timeout=timeout,
             timeout_retries=timeout_retries,
             servfail_retries=servfail_retries,
@@ -188,7 +188,7 @@ class ResolveDirectlyFromNameServers(_Resolve):
         always_ask_default_resolver=True,
         server_addresses=None,
     ):
-        super(ResolveDirectlyFromNameServers, self).__init__(
+        super().__init__(
             timeout=timeout,
             timeout_retries=timeout_retries,
             servfail_retries=servfail_retries,
