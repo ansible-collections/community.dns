@@ -383,7 +383,7 @@ def _run_module_record_set_api(
             continue
 
         mismatch_ttl = ttl != new_rrset.ttl
-        mismatch_values = values != sorted((rec.target for rec in new_rrset.records))
+        mismatch_values = values != sorted(rec.target for rec in new_rrset.records)
         if not mismatch_ttl and not mismatch_values:
             continue
 

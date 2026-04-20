@@ -57,7 +57,7 @@ def format_record_set_for_output(
         "prefix": prefix or "",
         "type": record_set.type,
         "ttl": record_set.ttl,
-        "value": sorted((record.target for record in record_set.records)),
+        "value": sorted(record.target for record in record_set.records),
     }
     if record_converter:
         entry["value"] = record_converter.process_values_to_user(

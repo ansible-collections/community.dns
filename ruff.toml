@@ -18,7 +18,6 @@ ignore = [
     "SIM117",  # Combine multiple 'with' statements
     "UP030",
     "UP032",
-    "UP034",
     "UP036",
     # Dubious:
     "UP012",  # Unnecessary call to `encode` as UTF-8

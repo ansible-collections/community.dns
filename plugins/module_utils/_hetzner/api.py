@@ -658,7 +658,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                 if stop_on_first_error:
                     break
             other_actions.extend(
-                (action for action in actions if action["status"] != "running")
+                action for action in actions if action["status"] != "running"
             )
             actions = [action for action in actions if action["status"] == "running"]
             if not actions:
@@ -693,7 +693,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
             error_messages = [_format_action_error(error) for error in errors]
             raise DNSAPIError(
                 "Error while {0}: {1}".format(
-                    what, ", ".join((msg for msg in error_messages if msg)) or "unknown"
+                    what, ", ".join(msg for msg in error_messages if msg) or "unknown"
                 )
             )
         return errors, other_actions + actions
