@@ -7,7 +7,7 @@
 
 # The API documentation can be found here: https://api.ns1.hosttech.eu/api/documentation/
 
-from __future__ import absolute_import, division, print_function
+from __future__ import annotations
 
 __metaclass__ = type
 
