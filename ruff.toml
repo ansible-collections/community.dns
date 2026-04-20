@@ -9,13 +9,14 @@ line-length = 160
 
 select = ["A", "B", "E", "F", "FA", "FLY", "UP", "SIM"]
 ignore = [
-    # TODO:
-    "B904",  # Use 'raise ... from'
+    # Needed:
     "E402",  # Module level import not at top of file
     "F401",  # Unused import (ruff check doesn't notice type comments apparently)
-    "SIM105",  # suppressible-exception
+    # TODO:
+    "B904",  # Use 'raise ... from'
     "SIM117",  # Combine multiple 'with' statements
     # Dubious:
+    "SIM105",  # suppressible-exception
     "UP012",  # Unnecessary call to `encode` as UTF-8
     "UP015",  # Unnecessary mode argument
 ]
