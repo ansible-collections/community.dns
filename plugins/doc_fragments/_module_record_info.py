@@ -4,6 +4,9 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# Note that this doc fragment is **PRIVATE** to the collection. It can have breaking changes at any time.
+# Do not use this from other collections or standalone plugins/modules!
+
 from __future__ import absolute_import, division, print_function
 
 __metaclass__ = type
@@ -16,21 +19,17 @@ class ModuleDocFragment(object):
     # NOTE: This document fragment needs to be augmented by ZONE_ID_TYPE in a provider document fragment.
     #       The ZONE_ID_TYPE fragment will provide `choices` for the options.type entry.
     DOCUMENTATION = r"""
-description:
-  - Records are matched by prefix / record name and value.
 attributes:
-  check_mode:
-    support: full
-  diff_mode:
-    support: full
   idempotent:
     support: full
 options:
-  state:
+  what:
     description:
-      - Specifies the state of the resource record.
-    required: true
-    choices: ['present', 'absent']
+      - Describes whether to fetch a single record and type combination, all types for a record, or all records. By default,
+        a single record and type combination is fetched.
+      - Note that the return value structure depends on this option.
+    choices: ['single_record', 'all_types_for_record', 'all_records']
+    default: single_record
     type: str
   zone_name:
     description:
@@ -45,8 +44,8 @@ options:
       - Exactly one of O(zone_name) and O(zone_id) must be specified.
   record:
     description:
-      - The full DNS record to create or delete.
-      - Exactly one of O(record) and O(prefix) must be specified.
+      - The full DNS record to retrieve.
+      - If O(what) is V(single_record) or V(all_types_for_record), exactly one of O(record) and O(prefix) is required.
     type: str
   prefix:
     description:
@@ -54,22 +53,11 @@ options:
       - This is the part of O(record) before O(zone_name). For example, if the record to be modified is C(www.example.com)
         for the zone C(example.com), the prefix is V(www). If the record in this example would be C(example.com), the prefix
         would be V('') (empty string).
-      - Exactly one of O(record) and O(prefix) must be specified.
+      - If O(what) is V(single_record) or V(all_types_for_record), exactly one of O(record) and O(prefix) is required.
     type: str
-  ttl:
-    description:
-      - The TTL to give the new record, in seconds.
-      - This is not used for record deletion.
-    type: int
   type:
     description:
-      - The type of DNS record to create or delete.
-    required: true
-    type: str
-  value:
-    description:
-      - The new value when creating a DNS record.
-      - When deleting a record all values for the record must be specified or it will not be deleted.
-    required: true
+      - The type of DNS record to retrieve.
+      - Required if O(what) is V(single_record).
     type: str
 """

@@ -22,8 +22,8 @@ DOCUMENTATION:
       type: boolean
       default: false
   extends_documentation_fragment:
-    - community.dns.filters
-    - community.dns.filters.registerable_domain
+    - community.dns._filters
+    - community.dns._filters.registerable_domain
   author:
     - Felix Fontein (@felixfontein)
 

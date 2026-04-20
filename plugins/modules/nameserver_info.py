@@ -17,9 +17,9 @@ version_added: 2.6.0
 description:
   - Retrieve all nameservers that are responsible for a DNS name.
 extends_documentation_fragment:
-  - community.dns.attributes
-  - community.dns.attributes.info_module
-  - community.dns.attributes.idempotent_not_modify_state
+  - community.dns._attributes
+  - community.dns._attributes.info_module
+  - community.dns._attributes.idempotent_not_modify_state
 author:
   - Felix Fontein (@felixfontein)
 options:

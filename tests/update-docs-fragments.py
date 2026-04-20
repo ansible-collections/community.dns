@@ -232,7 +232,7 @@ class DocFragmentFile:
 
 
 def doc_fragment_fn(name):
-    return os.path.join("plugins", "doc_fragments", f"{name}.py")
+    return os.path.join("plugins", "doc_fragments", f"_{name}.py")
 
 
 def load_doc_fragment(name):

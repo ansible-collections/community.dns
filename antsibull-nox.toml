@@ -75,13 +75,13 @@ run_avoid_characters = true
 name = "hetzner"
 pattern = "^hetzner_.*$"
 exclusions = []
-doc_fragment = "community.dns.attributes.actiongroup_hetzner"
+doc_fragment = "community.dns._attributes.actiongroup_hetzner"
 
 [[sessions.extra_checks.action_groups_config]]
 name = "hosttech"
 pattern = "^hosttech_.*$"
 exclusions = []
-doc_fragment = "community.dns.attributes.actiongroup_hosttech"
+doc_fragment = "community.dns._attributes.actiongroup_hosttech"
 
 [[sessions.extra_checks.avoid_character_group]]
 name = "tab"

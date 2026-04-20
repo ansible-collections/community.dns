@@ -20,16 +20,16 @@ version_added: 2.0.0
 description:
   - Retrieves DNS record sets in Hetzner DNS service.
 extends_documentation_fragment:
-  - community.dns.hetzner
-  - community.dns.hetzner.record_type_choices
-  - community.dns.hetzner.record_type_seealso
-  - community.dns.hetzner.zone_id_type
-  - community.dns.module_record_set_info
-  - community.dns.options.record_transformation
-  - community.dns.attributes
-  - community.dns.attributes.actiongroup_hetzner
-  - community.dns.attributes.info_module
-  - community.dns.attributes.idempotent_not_modify_state
+  - community.dns._hetzner
+  - community.dns._hetzner.record_type_choices
+  - community.dns._hetzner.record_type_seealso
+  - community.dns._hetzner.zone_id_type
+  - community.dns._module_record_set_info
+  - community.dns._options.record_transformation
+  - community.dns._attributes
+  - community.dns._attributes.actiongroup_hetzner
+  - community.dns._attributes.info_module
+  - community.dns._attributes.idempotent_not_modify_state
 
 attributes:
   action_group:

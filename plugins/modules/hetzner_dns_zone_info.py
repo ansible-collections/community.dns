@@ -20,13 +20,13 @@ version_added: 2.0.0
 description:
   - Retrieves zone information in Hetzner DNS service.
 extends_documentation_fragment:
-  - community.dns.hetzner
-  - community.dns.hetzner.zone_id_type
-  - community.dns.module_zone_info
-  - community.dns.attributes
-  - community.dns.attributes.actiongroup_hetzner
-  - community.dns.attributes.info_module
-  - community.dns.attributes.idempotent_not_modify_state
+  - community.dns._hetzner
+  - community.dns._hetzner.zone_id_type
+  - community.dns._module_zone_info
+  - community.dns._attributes
+  - community.dns._attributes.actiongroup_hetzner
+  - community.dns._attributes.info_module
+  - community.dns._attributes.idempotent_not_modify_state
 
 attributes:
   action_group:

@@ -20,17 +20,17 @@ version_added: 2.0.0
 description:
   - Creates and deletes DNS record sets in Hetzner DNS service.
 extends_documentation_fragment:
-  - community.dns.hetzner
-  - community.dns.hetzner.record_default_ttl
-  - community.dns.hetzner.record_notes
-  - community.dns.hetzner.record_type_choices
-  - community.dns.hetzner.record_type_seealso
-  - community.dns.hetzner.zone_id_type
-  - community.dns.module_record_set
-  - community.dns.options.bulk_operations
-  - community.dns.options.record_transformation
-  - community.dns.attributes
-  - community.dns.attributes.actiongroup_hetzner
+  - community.dns._hetzner
+  - community.dns._hetzner.record_default_ttl
+  - community.dns._hetzner.record_notes
+  - community.dns._hetzner.record_type_choices
+  - community.dns._hetzner.record_type_seealso
+  - community.dns._hetzner.zone_id_type
+  - community.dns._module_record_set
+  - community.dns._options.bulk_operations
+  - community.dns._options.record_transformation
+  - community.dns._attributes
+  - community.dns._attributes.actiongroup_hetzner
 
 attributes:
   action_group:

@@ -21,16 +21,16 @@ description:
   - Creates and deletes DNS record sets in Hosttech DNS service.
   - This module replaces C(hosttech_dns_record) from community.dns before 2.0.0.
 extends_documentation_fragment:
-  - community.dns.hosttech
-  - community.dns.hosttech.record_default_ttl
-  - community.dns.hosttech.record_notes
-  - community.dns.hosttech.record_type_choices
-  - community.dns.hosttech.record_type_seealso
-  - community.dns.hosttech.zone_id_type
-  - community.dns.module_record_set
-  - community.dns.options.record_transformation
-  - community.dns.attributes
-  - community.dns.attributes.actiongroup_hosttech
+  - community.dns._hosttech
+  - community.dns._hosttech.record_default_ttl
+  - community.dns._hosttech.record_notes
+  - community.dns._hosttech.record_type_choices
+  - community.dns._hosttech.record_type_seealso
+  - community.dns._hosttech.zone_id_type
+  - community.dns._module_record_set
+  - community.dns._options.record_transformation
+  - community.dns._attributes
+  - community.dns._attributes.actiongroup_hosttech
 
 attributes:
   action_group:

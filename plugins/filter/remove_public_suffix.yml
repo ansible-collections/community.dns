@@ -22,8 +22,8 @@ DOCUMENTATION:
       type: boolean
       default: false
   extends_documentation_fragment:
-    - community.dns.filters
-    - community.dns.filters.public_suffix
+    - community.dns._filters
+    - community.dns._filters.public_suffix
   author:
     - Felix Fontein (@felixfontein)
 

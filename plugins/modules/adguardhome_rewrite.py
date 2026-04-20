@@ -19,8 +19,8 @@ version_added: 3.3.0
 description:
   - Add, update or delete DNS rewrite rules from AdGuardHome.
 extends_documentation_fragment:
-  - community.dns.adguardhome.connectivity
-  - community.dns.attributes
+  - community.dns._adguardhome.connectivity
+  - community.dns._attributes
 options:
   state:
     description:
