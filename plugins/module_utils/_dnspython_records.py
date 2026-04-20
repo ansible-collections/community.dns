@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2015, Jan-Piet Mens <jpmens(at)gmail.com>
 # Copyright (c) 2017 Ansible Project
 # Copyright (c) 2022, Felix Fontein <felix@fontein.de>
