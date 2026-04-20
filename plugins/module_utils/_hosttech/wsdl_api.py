@@ -39,7 +39,7 @@ def _create_record_from_encoding(source, record_type=None):
     priority = source.pop("priority")
     target = source.pop("target")
     if result.type in ("PTR", "MX"):
-        result.target = "{0} {1}".format(priority, target)
+        result.target = f"{priority} {target}"
     else:
         result.target = target
     source.pop("zone", None)
@@ -79,9 +79,7 @@ def _encode_record(record, include_id=False):
             result["target"] = target
         except Exception as e:
             raise DNSAPIError(
-                'Cannot split {0} record "{1}" into integer priority and target: {2}'.format(
-                    record.type, record.target, e
-                )
+                f'Cannot split {record.type} record "{record.target}" into integer priority and target: {e}'
             )
     else:
         result["priority"] = None
@@ -143,7 +141,7 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         except WSDLError as e:
             if e.error_code == "998":
                 raise DNSAPIAuthenticationError(
-                    "Error on authentication ({0})".format(e.error_message)
+                    f"Error on authentication ({e.error_message})"
                 )
             raise
         res = result.get_result(result_name)
@@ -156,9 +154,7 @@ class HostTechWSDLAPI(ZoneRecordAPI):
             pass  # pragma: no cover
             # q.q('Result: {0}; extracted type {1}'.format(result, type(res)))
         raise DNSAPIError(
-            "Result has unexpected type {0} (expecting {1})!".format(
-                type(res), acceptable_types
-            )
+            f"Result has unexpected type {type(res)} (expecting {acceptable_types})!"
         )
 
     def get_zone_with_records_by_name(
@@ -185,12 +181,10 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         except WSDLError as exc:
             if exc.error_origin == "server" and exc.error_message == "zone not found":
                 return None
-            raise DNSAPIError(
-                "Error while getting zone: {0}".format(to_native(exc))
-            ) from exc
+            raise DNSAPIError(f"Error while getting zone: {to_native(exc)}") from exc
         except WSDLNetworkError as exc:
             raise DNSAPIError(
-                "Network error while getting zone: {0}".format(to_native(exc))
+                f"Network error while getting zone: {to_native(exc)}"
             ) from exc
 
     def get_zone_with_records_by_id(
@@ -264,12 +258,10 @@ class HostTechWSDLAPI(ZoneRecordAPI):
                 self._execute(command, "addRecordResponse", dict)
             )
         except WSDLError as exc:
-            raise DNSAPIError(
-                "Error while adding record: {0}".format(to_native(exc))
-            ) from exc
+            raise DNSAPIError(f"Error while adding record: {to_native(exc)}") from exc
         except WSDLNetworkError as exc:
             raise DNSAPIError(
-                "Network error while adding record: {0}".format(to_native(exc))
+                f"Network error while adding record: {to_native(exc)}"
             ) from exc
 
     def update_record(self, zone_id, record):
@@ -294,12 +286,10 @@ class HostTechWSDLAPI(ZoneRecordAPI):
                 self._execute(command, "updateRecordResponse", dict)
             )
         except WSDLError as exc:
-            raise DNSAPIError(
-                "Error while updating record: {0}".format(to_native(exc))
-            ) from exc
+            raise DNSAPIError(f"Error while updating record: {to_native(exc)}") from exc
         except WSDLNetworkError as exc:
             raise DNSAPIError(
-                "Network error while updating record: {0}".format(to_native(exc))
+                f"Network error while updating record: {to_native(exc)}"
             ) from exc
 
     def delete_record(self, zone_id, record):
@@ -318,10 +308,8 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         try:
             return self._execute(command, "deleteRecordResponse", bool)
         except WSDLError as exc:
-            raise DNSAPIError(
-                "Error while deleting record: {0}".format(to_native(exc))
-            ) from exc
+            raise DNSAPIError(f"Error while deleting record: {to_native(exc)}") from exc
         except WSDLNetworkError as exc:
             raise DNSAPIError(
-                "Network error while deleting record: {0}".format(to_native(exc))
+                f"Network error while deleting record: {to_native(exc)}"
             ) from exc

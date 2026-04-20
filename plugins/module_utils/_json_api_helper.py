@@ -75,9 +75,7 @@ class JSONAPIHelper:
         url: str,
         query: dict[str, str] | None = None,
     ) -> str:
-        return "{0}{1}{2}".format(
-            self._api, url, ("?" + urlencode(query)) if query else ""
-        )
+        return f"{self._api}{url}{'?' + urlencode(query) if query else ''}"
 
     def _extract_error_message(
         self,
@@ -85,7 +83,7 @@ class JSONAPIHelper:
     ) -> str:
         if result is None:
             return ""
-        return " with data: {0!r}".format(result)
+        return f" with data: {result!r}"
 
     def _validate(
         self,
@@ -103,23 +101,15 @@ class JSONAPIHelper:
         if expected is not None:
             if status not in expected:
                 more = self._extract_error_message(result)
+                statuses = ", ".join([f"{e}" for e in expected])
                 raise DNSAPIError(
-                    "Expected HTTP status {0} for {1} {2}, but got HTTP status {3} ({4}){5}".format(
-                        ", ".join(["{0}".format(e) for e in expected]),
-                        method,
-                        url,
-                        status,
-                        error_code,
-                        more,
-                    )
+                    f"Expected HTTP status {statuses} for {method} {url}, but got HTTP status {status} ({error_code}){more}"
                 )
         else:
             if status < 200 or status >= 300:
                 more = self._extract_error_message(result)
                 raise DNSAPIError(
-                    "Expected successful HTTP status for {0} {1}, but got HTTP status {2} ({3}){4}".format(
-                        method, url, status, error_code, more
-                    )
+                    f"Expected successful HTTP status for {method} {url}, but got HTTP status {status} ({error_code}){more}"
                 )
 
     def _process_json_result(
@@ -138,7 +128,7 @@ class JSONAPIHelper:
             try:
                 body = json.loads(content.decode("utf8"))  # type: ignore
                 if body["message"]:
-                    message = "{0}: {1}".format(message, body["message"])
+                    message = f"{message}: {body['message']}"
             except Exception:
                 pass
             raise DNSAPIAuthenticationError(message)
@@ -149,7 +139,7 @@ class JSONAPIHelper:
             try:
                 body = json.loads(content.decode("utf8"))  # type: ignore
                 if body["message"]:
-                    message = "{0}: {1}".format(message, body["message"])
+                    message = f"{message}: {body['message']}"
             except Exception:
                 pass
             raise DNSAPIAuthenticationError(message)
@@ -160,13 +150,8 @@ class JSONAPIHelper:
         ):
             if must_have_content:
                 raise DNSAPIError(
-                    '{0} {1} did not yield JSON data, but HTTP status code {2} with Content-Type "{3}" and data: {4}'.format(
-                        method,
-                        info["url"],
-                        info["status"],
-                        content_type,
-                        to_native(content),
-                    )
+                    f"{method} {info['url']} did not yield JSON data, but HTTP status code {info['status']}"
+                    f' with Content-Type "{content_type}" and data: {to_native(content)}'
                 )
             self._validate(result=content, info=info, expected=expected, method=method)
             return None, info
@@ -176,9 +161,7 @@ class JSONAPIHelper:
         except Exception:
             if must_have_content:
                 raise DNSAPIError(
-                    "{0} {1} did not yield JSON data, but HTTP status code {2} with data: {3}".format(
-                        method, info["url"], info["status"], to_native(content)
-                    )
+                    f"{method} {info['url']} did not yield JSON data, but HTTP status code {info['status']} with data: {to_native(content)}"
                 )
             self._validate(result=content, info=info, expected=expected, method=method)
             return None, info
@@ -210,7 +193,7 @@ class JSONAPIHelper:
                 cause = (
                     "a local HTTP request error"
                     if info["status"] == -1
-                    else "HTTP status {0}".format(info["status"])
+                    else f"HTTP status {info['status']}"
                 )
             else:
                 retry_after = self._is_rate_limiting_result(content, info)
@@ -224,7 +207,7 @@ class JSONAPIHelper:
                 continue
             return content, info
         raise DNSAPIError(
-            "Stopping after {0} failed retries with {1}".format(number_retries, cause)
+            f"Stopping after {number_retries} failed retries with {cause}"
         )
 
     def _create_headers(self) -> dict[str, str]:

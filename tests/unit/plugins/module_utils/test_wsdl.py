@@ -83,22 +83,18 @@ def test_composer_generation():
 
 
 def test_parsing():
-    input_string = "\n".join(
+    input_string = "\n".join(  # noqa: FLY002
         [
             '<?xml version="1.0" encoding="UTF-8"?>',
-            "".join(
-                [
-                    "<SOAP-ENV:Envelope",
-                    ' xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"',
-                    ' xmlns:ns1="https://example.com/api"',
-                    ' xmlns:xsd="http://www.w3.org/2001/XMLSchema"',
-                    ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
-                    ' xmlns:ns2="http://xml.apache.org/xml-soap"',
-                    ' xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"',
-                    ' SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"',
-                    ">",
-                ]
-            ),
+            "<SOAP-ENV:Envelope"
+            ' xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"'
+            ' xmlns:ns1="https://example.com/api"'
+            ' xmlns:xsd="http://www.w3.org/2001/XMLSchema"'
+            ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
+            ' xmlns:ns2="http://xml.apache.org/xml-soap"'
+            ' xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"'
+            ' SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"'
+            ">",
             "  <SOAP-ENV:Header>",
             "    <ns1:authenticateResponse>",
             '      <return xsi:type="xsd:boolean">true</return>',

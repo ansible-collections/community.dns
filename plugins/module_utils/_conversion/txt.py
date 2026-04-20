@@ -34,38 +34,29 @@ def _parse_quoted(value, index, use_octal):
     if v2 < 0 or (use_octal and v2 >= 8):
         # It is apparently not - error out
         raise DNSConversionError(
-            'A backslash must not be followed by "{letter}" (index {index})'.format(
-                letter=to_text(letter), index=index
-            )
+            f'A backslash must not be followed by "{to_text(letter)}" (index {index})'
         )
     if index + 1 >= len(value):
         # We need more letters for a three-digit decimal sequence
+        seq_type = "octal" if use_octal else "decimal"
         raise DNSConversionError(
-            "The {type} sequence at the end requires {missing} more digit(s)".format(
-                type="octal" if use_octal else "decimal", missing=index + 2 - len(value)
-            )
+            f"The {seq_type} sequence at the end requires {index + 2 - len(value)} more digit(s)"
         )
     letter = value[index : index + 1]
     index += 1
     v1 = _DECIMAL_DIGITS.find(letter)
     if v1 < 0 or (use_octal and v1 >= 8):
+        seq_type = "octal" if use_octal else "decimal"
         raise DNSConversionError(
-            'The second letter of the {type} sequence at index {index} is not a {type} digit, but "{letter}"'.format(
-                type="octal" if use_octal else "decimal",
-                letter=to_text(letter),
-                index=index,
-            )
+            f'The second letter of the {seq_type} sequence at index {index} is not a {seq_type} digit, but "{to_text(letter)}"'
         )
     letter = value[index : index + 1]
     index += 1
     v0 = _DECIMAL_DIGITS.find(letter)
     if v0 < 0 or (use_octal and v0 >= 8):
+        seq_type = "octal" if use_octal else "decimal"
         raise DNSConversionError(
-            'The third letter of the {type} sequence at index {index} is not a {type} digit, but "{letter}"'.format(
-                type="octal" if use_octal else "decimal",
-                letter=to_text(letter),
-                index=index,
-            )
+            f'The third letter of the {seq_type} sequence at index {index} is not a {type} digit, but "{to_text(letter)}"'
         )
     if use_octal:
         return (
@@ -122,9 +113,7 @@ def decode_txt_value(value, character_encoding=_SENTINEL):
                 state = _STATE_QUOTED_STRING
             else:
                 raise DNSConversionError(
-                    "Unexpected double quotation mark inside an unquoted block at position {index}".format(
-                        index=index
-                    )
+                    f"Unexpected double quotation mark inside an unquoted block at position {index}"
                 )
         else:
             if state != _STATE_QUOTED_STRING:

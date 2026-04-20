@@ -414,12 +414,12 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                 FetchUrlCall("DELETE", 200)
                 .expect_header("accept", "application/json")
                 .expect_header("auth-api-token", "foo")
-                .expect_url("https://dns.hetzner.com/api/v1/records/{0}".format(127))
+                .expect_url(f"https://dns.hetzner.com/api/v1/records/{127}")
                 .result_str(""),
                 FetchUrlCall("DELETE", 200)
                 .expect_header("accept", "application/json")
                 .expect_header("auth-api-token", "foo")
-                .expect_url("https://dns.hetzner.com/api/v1/records/{0}".format(128))
+                .expect_url(f"https://dns.hetzner.com/api/v1/records/{128}")
                 .result_str(""),
             ],
         )

@@ -109,7 +109,7 @@ class RecordConverter:
             return record
         except DNSConversionError as e:
             raise DNSConversionError(
-                "While processing record from API: {0}".format(e.error_message)
+                f"While processing record from API: {e.error_message}"
             ) from e
 
     def process_to_api(self, record):
@@ -124,7 +124,7 @@ class RecordConverter:
         except DNSConversionError as e:  # pragma: no cover
             # This can never happen
             raise DNSConversionError(
-                "While processing record for the API: {0}".format(e.error_message)
+                f"While processing record for the API: {e.error_message}"
             ) from e  # pragma: no cover
 
     def process_from_user(self, record):
@@ -139,7 +139,7 @@ class RecordConverter:
             return record
         except DNSConversionError as e:
             raise DNSConversionError(
-                "While processing record from the user: {0}".format(e.error_message)
+                f"While processing record from the user: {e.error_message}"
             ) from e
 
     def process_to_user(self, record):
@@ -154,7 +154,7 @@ class RecordConverter:
         except DNSConversionError as e:  # pragma: no cover
             # This can never happen
             raise DNSConversionError(
-                "While processing record for the user: {0}".format(e.error_message)
+                f"While processing record for the user: {e.error_message}"
             ) from e  # pragma: no cover
 
     def clone_from_api(self, record):

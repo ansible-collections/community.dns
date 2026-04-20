@@ -61,9 +61,7 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
         if super().verify_file(path):
             if path.endswith(self.VALID_ENDINGS):
                 return True
-            endings = " or ".join(
-                ["'{0}'".format(ending) for ending in self.VALID_ENDINGS]
-            )
+            endings = " or ".join([f"'{ending}'" for ending in self.VALID_ENDINGS])
             display.debug(f"{self.NAME} inventory filename must end with {endings}")
         return False
 

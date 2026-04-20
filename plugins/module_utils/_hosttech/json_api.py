@@ -41,32 +41,25 @@ def _create_record_from_json(source, record_type=None):
     elif result.type == "AAAA":
         target = source.pop("ipv6")
     elif result.type == "CAA":
-        target = '{0} {1} "{2}"'.format(
-            source.pop("flag"), source.pop("tag"), source.pop("value")
-        )
+        target = f"{source.pop('flag')} {source.pop('tag')} \"{source.pop('value')}\""
     elif result.type == "CNAME":
         target = source.pop("cname")
     elif result.type == "MX":
         mx_name, name = name, source.pop("ownername")
-        target = "{0} {1}".format(source.pop("pref"), mx_name)
+        target = f"{source.pop('pref')} {mx_name}"
     elif result.type == "NS":
         name = source.pop("ownername")
         target = source.pop("targetname")
     elif result.type == "PTR":
         ptr_name, name = name, ""
-        target = "{0} {1}".format(source.pop("origin"), ptr_name)
+        target = f"{source.pop('origin')} {ptr_name}"
     elif result.type == "SRV":
         name = source.pop("service")
-        target = "{0} {1} {2} {3}".format(
-            source.pop("priority"),
-            source.pop("weight"),
-            source.pop("port"),
-            source.pop("target"),
-        )
+        target = f"{source.pop('priority')} {source.pop('weight')} {source.pop('port')} {source.pop('target')}"
     elif result.type in ("TXT", "TLSA"):
         target = source.pop("text")
     else:
-        raise DNSAPIError("Cannot parse unknown record type: {0}".format(result.type))
+        raise DNSAPIError(f"Cannot parse unknown record type: {result.type}")
 
     result.prefix = name or None  # API returns '', we want None
     result.target = target
@@ -127,9 +120,7 @@ def _record_to_json(record, include_id=False, include_type=True):
             result["value"] = value
         except Exception as e:
             raise DNSAPIError(
-                'Cannot split {0} record "{1}" into flag, tag and value: {2}'.format(
-                    record.type, record.target, e
-                )
+                f'Cannot split {record.type} record "{record.target}" into flag, tag and value: {e}'
             )
     elif record.type == "CNAME":
         result["name"] = record.prefix or ""
@@ -142,9 +133,7 @@ def _record_to_json(record, include_id=False, include_type=True):
             result["name"] = name
         except Exception as e:
             raise DNSAPIError(
-                'Cannot split {0} record "{1}" into integer preference and name: {2}'.format(
-                    record.type, record.target, e
-                )
+                f'Cannot split {record.type} record "{record.target}" into integer preference and name: {e}'
             )
     elif record.type == "NS":
         result["ownername"] = record.prefix or ""
@@ -156,9 +145,7 @@ def _record_to_json(record, include_id=False, include_type=True):
             result["name"] = name
         except Exception as e:
             raise DNSAPIError(
-                'Cannot split {0} record "{1}" into origin and name: {2}'.format(
-                    record.type, record.target, e
-                )
+                f'Cannot split {record.type} record "{record.target}" into origin and name: {e}'
             )
     elif record.type == "SRV":
         result["service"] = record.prefix or ""
@@ -170,17 +157,13 @@ def _record_to_json(record, include_id=False, include_type=True):
             result["target"] = target
         except Exception as e:
             raise DNSAPIError(
-                'Cannot split {0} record "{1}" into integer priority, integer weight, integer port and target: {2}'.format(
-                    record.type, record.target, e
-                )
+                f'Cannot split {record.type} record "{record.target}" into integer priority, integer weight, integer port and target: {e}'
             )
     elif record.type in ("TXT", "TLSA"):
         result["name"] = record.prefix or ""
         result["text"] = record.target
     else:
-        raise DNSAPIError(
-            "Cannot serialize unknown record type: {0}".format(record.type)
-        )
+        raise DNSAPIError(f"Cannot serialize unknown record type: {record.type}")
 
     return result
 
@@ -200,20 +183,20 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         if isinstance(result, dict):
             res = ""
             if result.get("message"):
-                res = '{0} with message "{1}"'.format(res, result["message"])
+                res = f"{res} with message \"{result['message']}\""
             if "errors" in result and isinstance(result["errors"], dict):
                 for k, v in sorted(result["errors"].items()):
                     if isinstance(v, list):
                         v = "; ".join(v)
-                    res = '{0} (field "{1}": {2})'.format(res, k, v)
+                    res = f'{res} (field "{k}": {v})'
             if res:
                 return res
-        return " with data: {0}".format(result)
+        return f" with data: {result}"
 
     def _create_headers(self):
         return {
             "accept": "application/json",
-            "authorization": "Bearer {token}".format(token=self._token),
+            "authorization": f"Bearer {self._token}",
         }
 
     def _list_pagination(self, url, query=None, block_size=100):
@@ -242,7 +225,7 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         @return The zone information with records (DNSZoneWithRecords), or None if not found
         """
         result, info = self._get(
-            "user/v1/zones/{0}".format(zone_id),
+            f"user/v1/zones/{zone_id}",
             expected=[200, 404],
             must_have_content=[200],
         )
@@ -267,9 +250,7 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         result = self._list_pagination("user/v1/zones", query={"query": name})
         for zone in result:
             if zone["name"] == name:
-                result, dummy = self._get(
-                    "user/v1/zones/{0}".format(zone["id"]), expected=[200]
-                )
+                result, dummy = self._get(f"user/v1/zones/{zone['id']}", expected=[200])
                 return _create_zone_with_records_from_json(
                     result["data"], prefix=prefix, record_type=record_type
                 )
@@ -289,7 +270,7 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         if record_type is not NOT_PROVIDED:
             query["type"] = record_type.upper()
         result, info = self._get(
-            "user/v1/zones/{0}/records".format(zone_id),
+            f"user/v1/zones/{zone_id}/records",
             query=query,
             expected=[200, 404],
             must_have_content=[200],
@@ -324,7 +305,7 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         @return The zone information (DNSZone), or None if not found
         """
         result, info = self._get(
-            "user/v1/zones/{0}".format(zone_id),
+            f"user/v1/zones/{zone_id}",
             expected=[200, 404],
             must_have_content=[200],
         )
@@ -342,7 +323,7 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         """
         data = _record_to_json(record, include_id=False, include_type=True)
         result, dummy = self._post(
-            "user/v1/zones/{0}/records".format(zone_id), data=data, expected=[201]
+            f"user/v1/zones/{zone_id}/records", data=data, expected=[201]
         )
         return _create_record_from_json(result["data"])
 
@@ -358,7 +339,7 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
             raise DNSAPIError("Need record ID to update record!")
         data = _record_to_json(record, include_id=False, include_type=False)
         result, dummy = self._put(
-            "user/v1/zones/{0}/records/{1}".format(zone_id, record.id),
+            f"user/v1/zones/{zone_id}/records/{record.id}",
             data=data,
             expected=[200],
         )
@@ -375,7 +356,7 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         if record.id is None:
             raise DNSAPIError("Need record ID to delete record!")
         dummy, info = self._delete(
-            "user/v1/zones/{0}/records/{1}".format(zone_id, record.id),
+            f"user/v1/zones/{zone_id}/records/{record.id}",
             must_have_content=False,
             expected=[204, 404],
         )

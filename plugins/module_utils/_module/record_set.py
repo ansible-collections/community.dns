@@ -280,7 +280,7 @@ def _run_module_record_api(
                 if len(errors) == 1:
                     raise errors[0]
                 module.fail_json(
-                    msg="Errors: {0}".format("; ".join([str(e) for e in errors])),
+                    msg=f"Errors: {'; '.join([str(e) for e in errors])}",
                     errors=[str(e) for e in errors],
                 )
 
@@ -376,9 +376,7 @@ def _run_module_record_set_api(
     record_sets = filter_record_sets(record_sets, prefix=prefix)
     if len(record_sets) > 1:
         module.fail_json(
-            msg="Internal error: should have at most one record set, but got {0}".format(
-                len(record_sets)
-            )
+            msg=f"Internal error: should have at most one record set, but got {len(record_sets)}"
         )  # pragma: no cover
     record_set = None
     if record_sets:
@@ -529,7 +527,7 @@ def run_module(module, create_api, provider_information):
     prefix_in = module.params.get("prefix")
     type_in = module.params.get("type")
     if type_in and type_in not in provider_information.get_supported_record_types():
-        module.fail_json(msg="Invalid record type {type}".format(type=type_in))
+        module.fail_json(msg=f"Invalid record type {type_in}")
 
     try:
         # Create API
@@ -560,19 +558,19 @@ def run_module(module, create_api, provider_information):
 
     except DNSConversionError as e:
         module.fail_json(
-            msg="Error while converting DNS values: {0}".format(e.error_message),
+            msg=f"Error while converting DNS values: {e.error_message}",
             error=e.error_message,
             exception=traceback.format_exc(),
         )
     except DNSAPIAuthenticationError as e:
         module.fail_json(
-            msg="Cannot authenticate: {0}".format(e),
+            msg=f"Cannot authenticate: {e}",
             error=to_text(e),
             exception=traceback.format_exc(),
         )
     except DNSAPIError as e:
         module.fail_json(
-            msg="Error: {0}".format(e),
+            msg=f"Error: {e}",
             error=to_text(e),
             exception=traceback.format_exc(),
         )

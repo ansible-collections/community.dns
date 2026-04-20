@@ -114,19 +114,12 @@ def _get_record_sets_dict(module, provider_information, record_converter, zone_i
             )
         if record_set["type"] not in provider_information.get_supported_record_types():
             module.fail_json(
-                msg="Found invalid record type {type} at index #{i}".format(
-                    type=record_set["type"], i=index
-                )
+                msg=f"Found invalid record type {record_set['type']} at index #{index}"
             )
         key = (prefix, record_set["type"])
         if key in record_sets_dict:
             module.fail_json(
-                msg="Found multiple sets for record {record} and type {type}: index #{i1} and #{i2}".format(
-                    record=record_name,
-                    type=record_set["type"],
-                    i1=record_sets_dict[key][0],
-                    i2=index,
-                )
+                msg=f"Found multiple sets for record {record_name} and type {record_set['type']}: index #{record_sets_dict[key][0]} and #{index}"
             )
         record_sets_dict[key] = (index, record_set)
     result = OrderedDict()
@@ -255,7 +248,7 @@ def _run_module_record_api(
                 if len(errors) == 1:
                     raise errors[0]
                 module.fail_json(
-                    msg="Errors: {0}".format("; ".join([str(e) for e in errors])),
+                    msg=f"Errors: {'; '.join([str(e) for e in errors])}",
                     errors=[str(e) for e in errors],
                 )
 
@@ -445,20 +438,14 @@ def _run_module_record_set_api(
             )
             if errors:
                 messages = [
-                    "{0} record set {2} {1} with TTL={3} and value={4}: {5}".format(
-                        what.title(),
-                        _get_name(record_set.prefix),
-                        record_set.type,
-                        format_ttl(record_set.ttl),
-                        record_converter.process_values_to_user(
-                            record_set.type, [rec.target for rec in record_set.records]
-                        ),
-                        e,
+                    (
+                        f"{what.title()} record set {record_set.type} {_get_name(record_set.prefix)} with TTL={format_ttl(record_set.ttl)} and"
+                        f" value={record_converter.process_values_to_user(record_set.type, [rec.target for rec in record_set.records])}: {e}"
                     )
                     for what, record_set, e in errors
                 ]
                 module.fail_json(
-                    msg="Errors: {0}".format("; ".join(messages)),
+                    msg=f"Errors: {'; '.join(messages)}",
                     errors=[str(e) for dummy, dummy2, e in errors],
                 )
 
@@ -524,19 +511,19 @@ def run_module(module, create_api, provider_information):
 
     except DNSConversionError as e:
         module.fail_json(
-            msg="Error while converting DNS values: {0}".format(e.error_message),
+            msg=f"Error while converting DNS values: {e.error_message}",
             error=e.error_message,
             exception=traceback.format_exc(),
         )
     except DNSAPIAuthenticationError as e:
         module.fail_json(
-            msg="Cannot authenticate: {0}".format(e),
+            msg=f"Cannot authenticate: {e}",
             error=to_text(e),
             exception=traceback.format_exc(),
         )
     except DNSAPIError as e:
         module.fail_json(
-            msg="Error: {0}".format(e),
+            msg=f"Error: {e}",
             error=to_text(e),
             exception=traceback.format_exc(),
         )

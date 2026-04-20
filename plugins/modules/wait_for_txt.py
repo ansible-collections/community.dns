@@ -318,9 +318,7 @@ class Waiter:
 
             if has_timeout:
                 self.module.fail_json(
-                    msg="Timeout ({0} out of {1} check(s) passed).".format(
-                        self.finished_checks, len(self.records)
-                    ),
+                    msg=f"Timeout ({self.finished_checks} out of {len(self.records)} check(s) passed).",
                     **self._generate_additional_results(),
                 )
 

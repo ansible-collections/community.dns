@@ -32,18 +32,16 @@ class DNSRecordSet:
     def __str__(self):
         data = []
         if self.id:
-            data.append("id: {0}".format(self.id))
-        data.append("type: {0}".format(self.type))
+            data.append(f"id: {self.id}")
+        data.append(f"type: {self.type}")
         if self.prefix:
-            data.append('prefix: "{0}"'.format(self.prefix))
+            data.append(f'prefix: "{self.prefix}"')
         else:
             data.append("prefix: (none)")
-        data.append("ttl: {0}".format(_format_ttl(self.ttl)))
-        data.append(
-            "records: [{0}]".format(", ".join([str(record) for record in self.records]))
-        )
+        data.append(f"ttl: {_format_ttl(self.ttl)}")
+        data.append(f"records: [{', '.join([str(record) for record in self.records])}]")
         if self.extra:
-            data.append("extra: {0}".format(self.extra))
+            data.append(f"extra: {self.extra}")
         return "DNSRecordSet(" + ", ".join(data) + ")"
 
     def __repr__(self):

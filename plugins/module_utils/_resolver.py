@@ -216,9 +216,7 @@ class ResolveDirectlyFromNameServers(_Resolve):
         try:
             dns.inet.af_for_address(nameserver_ips[0])
         except ValueError:
-            raise InvalidInput(
-                "Invalid nameserver IP address {0}".format(nameserver_ips[0])
-            )
+            raise InvalidInput(f"Invalid nameserver IP address {nameserver_ips[0]}")
 
         query = dns.message.make_query(target, dns.rdatatype.NS)
         retry = 0
@@ -340,7 +338,7 @@ class ResolveDirectlyFromNameServers(_Resolve):
                 break
             dnsname = cname
             if dnsname in loop_catcher:
-                raise ResolverError("Found CNAME loop starting at {0}".format(target))
+                raise ResolverError(f"Found CNAME loop starting at {target}")
             loop_catcher.add(dnsname)
 
         results = {}
@@ -362,7 +360,7 @@ class ResolveDirectlyFromNameServers(_Resolve):
 
 
 def guarded_run(runner, module, server=None, generate_additional_results=None):
-    suffix = " for {0}".format(server) if server is not None else ""
+    suffix = f" for {server}" if server is not None else ""
     kwargs = {}
     try:
         return runner()
@@ -370,7 +368,7 @@ def guarded_run(runner, module, server=None, generate_additional_results=None):
         if generate_additional_results is not None:
             kwargs = generate_additional_results()
         module.fail_json(
-            msg="Invalid input{0}: {1}".format(suffix, to_native(e)),
+            msg=f"Invalid input{suffix}: {to_native(e)}",
             exception=traceback.format_exc(),
             **kwargs,
         )
@@ -378,7 +376,7 @@ def guarded_run(runner, module, server=None, generate_additional_results=None):
         if generate_additional_results is not None:
             kwargs = generate_additional_results()
         module.fail_json(
-            msg="Unexpected resolving error{0}: {1}".format(suffix, to_native(e)),
+            msg=f"Unexpected resolving error{suffix}: {to_native(e)}",
             exception=traceback.format_exc(),
             **kwargs,
         )
@@ -386,7 +384,7 @@ def guarded_run(runner, module, server=None, generate_additional_results=None):
         if generate_additional_results is not None:
             kwargs = generate_additional_results()
         module.fail_json(
-            msg="Unexpected DNS error{0}: {1}".format(suffix, to_native(e)),
+            msg=f"Unexpected DNS error{suffix}: {to_native(e)}",
             exception=traceback.format_exc(),
             **kwargs,
         )

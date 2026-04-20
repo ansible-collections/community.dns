@@ -18,11 +18,11 @@ def format_ttl(ttl):
     h = ttl
     result = []
     if h:
-        result.append("{0}h".format(h))
+        result.append(f"{h}h")
     if mins:
-        result.append("{0}m".format(mins))
+        result.append(f"{mins}m")
     if sec:
-        result.append("{0}s".format(sec))
+        result.append(f"{sec}s")
     return " ".join(result)
 
 
@@ -48,16 +48,16 @@ class DNSRecord:
     def __str__(self):
         data = []
         if self.id:
-            data.append("id: {0}".format(self.id))
-        data.append("type: {0}".format(self.type))
+            data.append(f"id: {self.id}")
+        data.append(f"type: {self.type}")
         if self.prefix:
-            data.append('prefix: "{0}"'.format(self.prefix))
+            data.append(f'prefix: "{self.prefix}"')
         else:
             data.append("prefix: (none)")
-        data.append('target: "{0}"'.format(self.target))
-        data.append("ttl: {0}".format(format_ttl(self.ttl)))
+        data.append(f'target: "{self.target}"')
+        data.append(f"ttl: {format_ttl(self.ttl)}")
         if self.extra:
-            data.append("extra: {0}".format(self.extra))
+            data.append(f"extra: {self.extra}")
         return "DNSRecord(" + ", ".join(data) + ")"
 
     def __repr__(self):

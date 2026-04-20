@@ -1289,9 +1289,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
                 .expect_header("accept", "application/json")
                 .expect_header("authorization", "Bearer foo")
                 .expect_url(
-                    "https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/{0}".format(
-                        record["id"]
-                    )
+                    f"https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/{record['id']}"
                 )
                 .result_str(""),
             ],
@@ -1446,9 +1444,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
                 .expect_header("accept", "application/json")
                 .expect_header("authorization", "Bearer foo")
                 .expect_url(
-                    "https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/{0}".format(
-                        record["id"]
-                    )
+                    f"https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/{record['id']}"
                 )
                 .result_str(""),
             ],

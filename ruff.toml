@@ -13,11 +13,8 @@ ignore = [
     "B904",  # Use 'raise ... from'
     "E402",  # Module level import not at top of file
     "F401",  # Unused import (ruff check doesn't notice type comments apparently)
-    "FLY002",  # Use f-string
     "SIM105",  # suppressible-exception
     "SIM117",  # Combine multiple 'with' statements
-    "UP030",
-    "UP032",
     # Dubious:
     "UP012",  # Unnecessary call to `encode` as UTF-8
     "UP015",  # Unnecessary mode argument

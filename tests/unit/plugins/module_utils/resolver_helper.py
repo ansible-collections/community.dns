@@ -23,26 +23,26 @@ def mock_resolver(default_nameservers, nameserver_resolve_sequence):
             resolver_index = tuple(sorted(resolver.nameservers))
             assert (
                 resolver_index in nameserver_resolve_sequence
-            ), "No resolver sequence for {0}".format(resolver_index)
+            ), f"No resolver sequence for {resolver_index}"
             resolve_sequence = nameserver_resolve_sequence[resolver_index]
             assert (
                 len(resolve_sequence) > 0
-            ), "Resolver sequence for {0} is empty".format(resolver_index)
+            ), f"Resolver sequence for {resolver_index} is empty"
             resolve_data = resolve_sequence[0]
             del resolve_sequence[0]
 
-            assert target == resolve_data["target"], "target: {0!r} vs {1!r}".format(
-                target, resolve_data["target"]
-            )
+            assert (
+                target == resolve_data["target"]
+            ), f"target: {target!r} vs {resolve_data['target']!r}"
             assert rdtype == resolve_data.get(
                 "rdtype"
-            ), "rdtype: {0!r} vs {1!r}".format(rdtype, resolve_data.get("rdtype"))
+            ), f"rdtype: {rdtype!r} vs {resolve_data.get('rdtype')!r}"
             assert (
                 lifetime == resolve_data["lifetime"]
-            ), "lifetime: {0!r} vs {1!r}".format(lifetime, resolve_data["lifetime"])
+            ), f"lifetime: {lifetime!r} vs {resolve_data['lifetime']!r}"
             assert search == resolve_data.get(
                 "search"
-            ), "search: {0!r} vs {1!r}".format(search, resolve_data.get("search"))
+            ), f"search: {search!r} vs {resolve_data.get('search')!r}"
 
             if "raise" in resolve_data:
                 raise resolve_data["raise"]
@@ -63,20 +63,14 @@ def mock_query_udp(call_sequence):
 
         assert (
             query.question[0].name == call["query_target"]
-        ), "query_target: {0!r} vs {1!r}".format(
-            query.question[0].name, call["query_target"]
-        )
+        ), f"query_target: {query.question[0].name!r} vs {call['query_target']!r}"
         assert (
             query.question[0].rdtype == call["query_type"]
-        ), "query_type: {0!r} vs {1!r}".format(
-            query.question[0].rdtype, call["query_type"]
-        )
-        assert nameserver == call["nameserver"], "nameserver: {0!r} vs {1!r}".format(
-            nameserver, call["nameserver"]
-        )
-        assert kwargs == call["kwargs"], "kwargs: {0!r} vs {1!r}".format(
-            kwargs, call["kwargs"]
-        )
+        ), f"query_type: {query.question[0].rdtype!r} vs {call['query_type']!r}"
+        assert (
+            nameserver == call["nameserver"]
+        ), f"nameserver: {nameserver!r} vs {call['nameserver']!r}"
+        assert kwargs == call["kwargs"], f"kwargs: {kwargs!r} vs {call['kwargs']!r}"
 
         if "raise" in call:
             raise call["raise"]

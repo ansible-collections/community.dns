@@ -125,9 +125,7 @@ def get_wsdl_value(root, name):
     for auth in root.iter(name):
         return auth
     raise AssertionError(
-        'Cannot find child "{0}" in node {1}: {2}'.format(
-            name, root, lxml.etree.tostring(root)
-        )
+        f'Cannot find child "{name}" in node {root}: {lxml.etree.tostring(root)}'
     )  # pragma: no cover
 
 
@@ -155,9 +153,9 @@ def check_wsdl_value(node, value, wsdl_type=None):
         type_text = node.get(
             lxml.etree.QName("http://www.w3.org/2001/XMLSchema-instance", "type")
         )
-        assert type_text is not None, "Cannot find type in {0}: {1}".format(
-            node, lxml.etree.tostring(node)
-        )
+        assert (
+            type_text is not None
+        ), f"Cannot find type in {node}: {lxml.etree.tostring(node)}"
         i = type_text.find(":")
         if i < 0:
             ns = None  # pragma: no cover
@@ -186,9 +184,7 @@ def find_xml_map_entry(map_root, key_name, allow_non_existing=False):
     if allow_non_existing:
         return None
     raise AssertionError(  # pragma: no cover
-        'Cannot find map entry with key "{0}" in node {1}: {2}'.format(
-            key_name, map_root, lxml.etree.tostring(map_root)
-        )
+        f'Cannot find map entry with key "{key_name}" in node {map_root}: {lxml.etree.tostring(map_root)}'
     )
 
 
@@ -231,25 +227,13 @@ def add_wsdl_answer_end_lines(lines):
 def add_wsdl_dns_record_lines(lines, entry, tag_name):
     lines.extend(
         [
-            '<{tag_name} xsi:type="ns2:Map">'.format(tag_name=tag_name),
-            '<item><key xsi:type="xsd:string">id</key><value xsi:type="xsd:int">{value}</value></item>'.format(
-                value=entry[0]
-            ),
-            '<item><key xsi:type="xsd:string">zone</key><value xsi:type="xsd:int">{value}</value></item>'.format(
-                value=entry[1]
-            ),
-            '<item><key xsi:type="xsd:string">type</key><value xsi:type="xsd:string">{value}</value></item>'.format(
-                value=entry[2]
-            ),
-            '<item><key xsi:type="xsd:string">prefix</key><value xsi:type="xsd:string">{value}</value></item>'.format(
-                value=entry[3]
-            ),
-            '<item><key xsi:type="xsd:string">target</key><value xsi:type="xsd:string">{value}</value></item>'.format(
-                value=entry[4]
-            ),
-            '<item><key xsi:type="xsd:string">ttl</key><value xsi:type="xsd:int">{value}</value></item>'.format(
-                value=entry[5]
-            ),
+            f'<{tag_name} xsi:type="ns2:Map">',
+            f'<item><key xsi:type="xsd:string">id</key><value xsi:type="xsd:int">{entry[0]}</value></item>',
+            f'<item><key xsi:type="xsd:string">zone</key><value xsi:type="xsd:int">{entry[1]}</value></item>',
+            f'<item><key xsi:type="xsd:string">type</key><value xsi:type="xsd:string">{entry[2]}</value></item>',
+            f'<item><key xsi:type="xsd:string">prefix</key><value xsi:type="xsd:string">{entry[3]}</value></item>',
+            f'<item><key xsi:type="xsd:string">target</key><value xsi:type="xsd:string">{entry[4]}</value></item>',
+            f'<item><key xsi:type="xsd:string">ttl</key><value xsi:type="xsd:int">{entry[5]}</value></item>',
         ]
     )
     if entry[6] is None:
@@ -258,9 +242,7 @@ def add_wsdl_dns_record_lines(lines, entry, tag_name):
         )
     else:
         lines.append(  # pragma: no cover
-            '<item><key xsi:type="xsd:string">comment</key><value xsi:type="xsd:string">{value}</value></item>'.format(
-                value=entry[6]
-            )
+            f'<item><key xsi:type="xsd:string">comment</key><value xsi:type="xsd:string">{entry[6]}</value></item>'
         )
     if entry[7] is None:
         lines.append(
@@ -268,11 +250,9 @@ def add_wsdl_dns_record_lines(lines, entry, tag_name):
         )
     else:
         lines.append(
-            '<item><key xsi:type="xsd:string">priority</key><value xsi:type="xsd:int">{value}</value></item>'.format(
-                value=entry[7]
-            )
+            f'<item><key xsi:type="xsd:string">priority</key><value xsi:type="xsd:int">{entry[7]}</value></item>'
         )
-    lines.append("</{tag_name}>".format(tag_name=tag_name))
+    lines.append(f"</{tag_name}>")
 
 
 def create_wsdl_zones_answer(zone_id, zone_name, entries):
@@ -282,13 +262,9 @@ def create_wsdl_zones_answer(zone_id, zone_name, entries):
         [
             "<ns1:getZoneResponse>",
             '<return xsi:type="ns2:Map">',
-            '<item><key xsi:type="xsd:string">id</key><value xsi:type="xsd:int">{zone_id}</value></item>'.format(
-                zone_id=zone_id
-            ),
+            f'<item><key xsi:type="xsd:string">id</key><value xsi:type="xsd:int">{zone_id}</value></item>',
             '<item><key xsi:type="xsd:string">user</key><value xsi:type="xsd:int">23</value></item>',
-            '<item><key xsi:type="xsd:string">name</key><value xsi:type="xsd:string">{zone_name}</value></item>'.format(
-                zone_name=zone_name
-            ),
+            f'<item><key xsi:type="xsd:string">name</key><value xsi:type="xsd:string">{zone_name}</value></item>',
             '<item><key xsi:type="xsd:string">email</key><value xsi:type="xsd:string">dns@hosttech.eu</value></item>',
             '<item><key xsi:type="xsd:string">ttl</key><value xsi:type="xsd:int">10800</value></item>',
             '<item><key xsi:type="xsd:string">nameserver</key><value xsi:type="xsd:string">ns1.hostserv.eu</value></item>',
@@ -302,9 +278,7 @@ def create_wsdl_zones_answer(zone_id, zone_name, entries):
         ]
     )
     lines.append(
-        '<item><key xsi:type="xsd:string">records</key><value SOAP-ENC:arrayType="ns2:Map[{count}]" xsi:type="SOAP-ENC:Array">'.format(
-            count=len(entries)
-        )
+        f'<item><key xsi:type="xsd:string">records</key><value SOAP-ENC:arrayType="ns2:Map[{len(entries)}]" xsi:type="SOAP-ENC:Array">'
     )
     for entry in entries:
         add_wsdl_dns_record_lines(lines, entry, "item")
@@ -461,12 +435,11 @@ def create_wsdl_update_result(entry):
 def create_wsdl_del_result(success):
     lines = []
     add_wsdl_answer_start_lines(lines)
+    sxs = "true" if success else "false"
     lines.extend(
         [
             "<ns1:deleteRecordResponse>",
-            '<return xsi:type="xsd:boolean">{success}</return>'.format(
-                success="true" if success else "false"
-            ),
+            f'<return xsi:type="xsd:boolean">{sxs}</return>',
             "</ns1:deleteRecordResponse>",
         ]
     )

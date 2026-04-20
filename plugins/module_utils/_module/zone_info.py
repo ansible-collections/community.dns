@@ -59,13 +59,13 @@ def run_module(module, create_api, provider_information):
         )
     except DNSAPIAuthenticationError as e:
         module.fail_json(
-            msg="Cannot authenticate: {0}".format(e),
+            msg=f"Cannot authenticate: {e}",
             error=to_text(e),
             exception=traceback.format_exc(),
         )
     except DNSAPIError as e:
         module.fail_json(
-            msg="Error: {0}".format(e),
+            msg=f"Error: {e}",
             error=to_text(e),
             exception=traceback.format_exc(),
         )

@@ -131,9 +131,7 @@ try:
         if _rdtype is None:
             if _min_version is None:  # pragma: no cover
                 raise RuntimeError(
-                    "Internal error: rdtype {name} is None, but min_version is also None!".format(
-                        name=_name
-                    )
+                    f"Internal error: rdtype {_name} is None, but min_version is also None!"
                 )  # pragma: no cover
             NAME_TO_REQUIRED_VERSION[_name] = _min_version
         else:
@@ -191,7 +189,7 @@ def convert_rdata_to_dict(
 
     fields = RDTYPE_TO_FIELDS.get(rdata.rdtype)
     if fields is None:
-        raise ValueError("Unsupported record type {rdtype}".format(rdtype=rdata.rdtype))
+        raise ValueError(f"Unsupported record type {rdata.rdtype}")
     for f in fields:
         val = getattr(rdata, f)
 

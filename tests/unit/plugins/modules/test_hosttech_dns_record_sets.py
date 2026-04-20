@@ -749,18 +749,14 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
                 .expect_header("accept", "application/json")
                 .expect_header("authorization", "Bearer foo")
                 .expect_url(
-                    "https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/{0}".format(
-                        127
-                    )
+                    f"https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/{127}"
                 )
                 .result_str(""),
                 FetchUrlCall("DELETE", 204)
                 .expect_header("accept", "application/json")
                 .expect_header("authorization", "Bearer foo")
                 .expect_url(
-                    "https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/{0}".format(
-                        128
-                    )
+                    f"https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/{128}"
                 )
                 .result_str(""),
             ],

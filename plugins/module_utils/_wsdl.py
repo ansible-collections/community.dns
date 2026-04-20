@@ -29,7 +29,7 @@ class WSDLNetworkError(WSDLException):
 
 class WSDLError(WSDLException):
     def __init__(self, origin, error_code, message):
-        super().__init__("{0} ({1}): {2}".format(origin, error_code, message))
+        super().__init__(f"{origin} ({error_code}): {message}")
         self.error_origin = origin
         self.error_code = error_code
         self.error_message = message
@@ -91,15 +91,13 @@ def encode_wsdl(node, value):
             encode_wsdl(child, elt)
             node.append(child)
     else:
-        raise WSDLCodingException("Do not know how to encode {0}!".format(type(value)))
+        raise WSDLCodingException(f"Do not know how to encode {type(value)}!")
 
 
 def _decode_wsdl_array(result, node, root_ns, ids):
     for item in node:
         if item.tag != "item":
-            raise WSDLCodingException(
-                'Invalid child tag "{0}" in map!'.format(item.tag)
-            )
+            raise WSDLCodingException(f'Invalid child tag "{item.tag}" in map!')
         result.append(decode_wsdl(item, root_ns, ids))
 
 
@@ -109,26 +107,20 @@ def decode_wsdl(node, root_ns, ids):
     nid = node.get("id")
     if href is not None:
         if not href.startswith("#"):
-            raise WSDLCodingException(
-                'Global reference "{0}" not supported!'.format(href)
-            )
+            raise WSDLCodingException(f'Global reference "{href}" not supported!')
         href = href[1:]
         if href not in ids:
-            raise WSDLCodingException('ID "{0}" not yet defined!'.format(href))
+            raise WSDLCodingException(f'ID "{href}" not yet defined!')
         result = ids[href]
     elif nil == "true":
         result = None
     else:
         type_with_ns = node.get(lxml.etree.QName(_NAMESPACE_XSI, "type"))
         if type_with_ns is None:
-            raise WSDLCodingException(
-                'Element "{0}" has no "xsi:type" tag!'.format(node)
-            )
+            raise WSDLCodingException(f'Element "{node}" has no "xsi:type" tag!')
         ntype, ns = _split_text_namespace(node, type_with_ns)
         if ns is None:
-            raise WSDLCodingException(
-                'Cannot find namespace for "{0}"!'.format(type_with_ns)
-            )
+            raise WSDLCodingException(f'Cannot find namespace for "{type_with_ns}"!')
         if ns == _NAMESPACE_XSD:
             if ntype == "boolean":
                 if node.text == "true":
@@ -137,14 +129,14 @@ def decode_wsdl(node, root_ns, ids):
                     result = False
                 else:
                     raise WSDLCodingException(
-                        'Invalid value for boolean: "{0}"'.format(node.text)
+                        f'Invalid value for boolean: "{node.text}"'
                     )
             elif ntype == "int":
                 result = int(node.text)
             elif ntype == "string":
                 result = node.text
             else:
-                raise WSDLCodingException('Unknown XSD type "{0}"!'.format(ntype))
+                raise WSDLCodingException(f'Unknown XSD type "{ntype}"!')
         elif ns == _NAMESPACE_XML_SOAP:
             if ntype == "Map":
                 result = {}
@@ -153,23 +145,19 @@ def decode_wsdl(node, root_ns, ids):
                 for item in node:
                     if item.tag != "item":
                         raise WSDLCodingException(
-                            'Invalid child tag "{0}" in map!'.format(item.tag)
+                            f'Invalid child tag "{item.tag}" in map!'
                         )
                     key = item.find("key")
                     if key is None:
-                        raise WSDLCodingException(
-                            'Cannot find key for "{0}"!'.format(item)
-                        )
+                        raise WSDLCodingException(f'Cannot find key for "{item}"!')
                     key = decode_wsdl(key, root_ns, ids)
                     value = item.find("value")
                     if value is None:
-                        raise WSDLCodingException(
-                            'Cannot find value for "{0}"!'.format(item)
-                        )
+                        raise WSDLCodingException(f'Cannot find value for "{item}"!')
                     value = decode_wsdl(value, root_ns, ids)
                     result[key] = value
                 return result
-            raise WSDLCodingException('Unknown XSD type "{0}"!'.format(ntype))
+            raise WSDLCodingException(f'Unknown XSD type "{ntype}"!')
         elif ns == _NAMESPACE_XML_SOAP_ENCODING:
             if ntype == "Array":
                 result = []
@@ -177,7 +165,7 @@ def decode_wsdl(node, root_ns, ids):
                     ids[nid] = result
                 _decode_wsdl_array(result, node, root_ns, ids)
             else:
-                raise WSDLCodingException('Unknown XSD type "{0}"!'.format(ntype))
+                raise WSDLCodingException(f'Unknown XSD type "{ntype}"!')
         elif ns == root_ns:
             array_type = node.get(
                 lxml.etree.QName(_NAMESPACE_XML_SOAP_ENCODING, "arrayType")
@@ -195,7 +183,7 @@ def decode_wsdl(node, root_ns, ids):
                     result[item.tag] = decode_wsdl(item, root_ns, ids)
         else:
             raise WSDLCodingException(
-                'Unknown type namespace "{0}" (with type "{1}")!'.format(ns, ntype)
+                f'Unknown type namespace "{ns}" (with type "{ntype}")!'
             )
     if nid is not None:
         ids[nid] = result
@@ -208,7 +196,7 @@ class Parser:
             tag = lxml.etree.QName(child.tag)
             if tag.namespace != self._api:
                 raise WSDLCodingException(
-                    'Cannot interpret {0} item of type "{1}"!'.format(where, tag)
+                    f'Cannot interpret {where} item of type "{tag}"!'
                 )
             for res in child.iter("return"):
                 result[tag.localname] = decode_wsdl(res, self._api, {})
@@ -246,7 +234,7 @@ class Parser:
         return self._body[body]
 
     def __str__(self):
-        return "header={0}, body={1}".format(self._header, self._body)
+        return f"header={self._header}, body={self._body}"
 
     def __repr__(self):
         return (
@@ -330,7 +318,7 @@ class Composer:
                 "Content-Length": str(len(payload)),
             }
             if self._command:
-                headers["SOAPAction"] = '"{0}#{1}"'.format(self._api, self._command)
+                headers["SOAPAction"] = f'"{self._api}#{self._command}"'
             result, info = self._http_helper.fetch_url(
                 self._api, data=payload, method="POST", timeout=300, headers=headers
             )
@@ -344,8 +332,6 @@ class Composer:
             raise WSDLError(
                 "server",
                 "",
-                "Error {0} while executing WSDL command:\n{1}".format(
-                    code, result.decode("utf-8")
-                ),
+                f"Error {code} while executing WSDL command:\n{result.decode('utf-8')}",
             )
         return Parser(self._api, lxml.etree.fromstring(result))

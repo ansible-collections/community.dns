@@ -27,9 +27,9 @@ class DNSZone:
     def __str__(self) -> str:
         data = []
         if self.id is not None:
-            data.append("id: {0}".format(self.id))
-        data.append("name: {0}".format(self.name))
-        data.append("info: {0}".format(self.info))
+            data.append(f"id: {self.id}")
+        data.append(f"name: {self.name}")
+        data.append(f"info: {self.info}")
         return "DNSZone(" + ", ".join(data) + ")"
 
     def __repr__(self) -> str:
@@ -46,10 +46,10 @@ class DNSZoneWithRecords:
         self.records = records
 
     def __str__(self) -> str:
-        return "({0}, {1})".format(self.zone, self.records)
+        return f"({self.zone}, {self.records})"
 
     def __repr__(self) -> str:
-        return "DNSZoneWithRecords({0!r}, {1!r})".format(self.zone, self.records)
+        return f"DNSZoneWithRecords({self.zone!r}, {self.records!r})"
 
 
 class DNSZoneWithRecordSets:
@@ -62,7 +62,7 @@ class DNSZoneWithRecordSets:
         self.record_sets = record_sets
 
     def __str__(self) -> str:
-        return "({0}, {1})".format(self.zone, self.record_sets)
+        return f"({self.zone}, {self.record_sets})"
 
     def __repr__(self) -> str:
-        return "DNSZoneWithRecordSets({0!r}, {1!r})".format(self.zone, self.record_sets)
+        return f"DNSZoneWithRecordSets({self.zone!r}, {self.record_sets!r})"

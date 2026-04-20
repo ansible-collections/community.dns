@@ -527,9 +527,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                 FetchUrlCall("DELETE", 200)
                 .expect_header("accept", "application/json")
                 .expect_header("auth-api-token", "foo")
-                .expect_url(
-                    "https://dns.hetzner.com/api/v1/records/{0}".format(record["id"])
-                )
+                .expect_url(f"https://dns.hetzner.com/api/v1/records/{record['id']}")
                 .result_str(""),
             ],
         )
@@ -1544,9 +1542,7 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                     .expect_header("accept", "application/json")
                     .expect_header("Authorization", "Bearer foo")
                     .expect_url(
-                        "https://api.hetzner.cloud/v1/zones/42/rrsets/{0}/{1}".format(
-                            record["name"], record["type"]
-                        )
+                        f"https://api.hetzner.cloud/v1/zones/42/rrsets/{record['name']}/{record['type']}"
                     )
                     .return_header("Content-Type", "application/json")
                     .result_json(
