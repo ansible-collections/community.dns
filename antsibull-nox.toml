@@ -31,7 +31,6 @@ run_flake8 = true
 flake8_config = ".flake8"
 run_pylint = true
 pylint_rcfile = ".pylintrc"
-pylint_modules_rcfile = ".pylintrc-py2"
 run_yamllint = true
 yamllint_config = ".yamllint"
 yamllint_config_plugins = ".yamllint-docs"
