@@ -8,8 +8,8 @@ from __future__ import annotations
 import pytest
 from ansible.errors import AnsibleError
 
-from ansible_collections.community.dns.plugins.plugin_utils import resolver
-from ansible_collections.community.dns.plugins.plugin_utils.resolver import (
+from ansible_collections.community.dns.plugins.plugin_utils import _resolver as resolver
+from ansible_collections.community.dns.plugins.plugin_utils._resolver import (
     assert_requirements_present,
 )
 

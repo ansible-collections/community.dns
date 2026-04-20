@@ -78,10 +78,10 @@ from ansible_collections.community.dns.plugins.module_utils.hetzner.api import (
     create_hetzner_provider_information,
 )
 from ansible_collections.community.dns.plugins.module_utils.http import OpenURLHelper
-from ansible_collections.community.dns.plugins.plugin_utils.inventory.records import (
+from ansible_collections.community.dns.plugins.plugin_utils._inventory.records import (
     RecordsInventoryModule,
 )
-from ansible_collections.community.dns.plugins.plugin_utils.templated_options import (
+from ansible_collections.community.dns.plugins.plugin_utils._templated_options import (
     TemplatedOptionProvider,
 )
 

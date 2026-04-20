@@ -8,8 +8,8 @@ from __future__ import annotations
 import pytest
 from ansible.errors import AnsibleError
 
-from ansible_collections.community.dns.plugins.plugin_utils import ips
-from ansible_collections.community.dns.plugins.plugin_utils.ips import (
+from ansible_collections.community.dns.plugins.plugin_utils import _ips as ips
+from ansible_collections.community.dns.plugins.plugin_utils._ips import (
     assert_requirements_present,
 )
 
