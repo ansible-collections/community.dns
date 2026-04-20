@@ -339,7 +339,8 @@ def create_wsdl_zone_not_found_answer():
         "</ns1:authenticateResponse>",
         "</SOAP-ENV:Header>",
         "<SOAP-ENV:Fault>",
-        "<faultstring>zone not found</faultstring>" "</SOAP-ENV:Fault>",
+        "<faultstring>zone not found</faultstring>",
+        "</SOAP-ENV:Fault>",
         "</SOAP-ENV:Envelope>",
     ]
     return "".join(lines)
