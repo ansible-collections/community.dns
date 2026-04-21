@@ -24,9 +24,6 @@ if t.TYPE_CHECKING:
     from collections.abc import Collection  # pragma: no cover
 
     from ._http import HTTPHelper  # pragma: no cover
-    from ._provider import ProviderInformation  # pragma: no cover
-    from ._record import DNSRecord  # pragma: no cover
-    from ._zone_record_api import ZoneRecordAPI  # pragma: no cover
 
 
 ERROR_CODES = {

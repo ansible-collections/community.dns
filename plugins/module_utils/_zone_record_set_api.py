@@ -14,9 +14,9 @@ from ansible_collections.community.dns.plugins.module_utils._zone import (
 )
 from ansible_collections.community.dns.plugins.module_utils._zone_record_api import (  # pylint: disable=unused-import
     NOT_PROVIDED,
-    DNSAPIAuthenticationError,
+    DNSAPIAuthenticationError,  # noqa: F401
     DNSAPIError,
-    NotProvidedType,
+    NotProvidedType,  # noqa: F401
 )
 
 
