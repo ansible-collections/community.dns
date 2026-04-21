@@ -215,8 +215,10 @@ class ResolveDirectlyFromNameServers(_Resolve):
         # Sanity check: do we have a valid nameserver IP?
         try:
             dns.inet.af_for_address(nameserver_ips[0])
-        except ValueError:
-            raise InvalidInput(f"Invalid nameserver IP address {nameserver_ips[0]}")
+        except ValueError as exc:
+            raise InvalidInput(
+                f"Invalid nameserver IP address {nameserver_ips[0]}"
+            ) from exc
 
         query = dns.message.make_query(target, dns.rdatatype.NS)
         retry = 0

@@ -121,7 +121,7 @@ def _record_to_json(record, include_id=False, include_type=True):
         except Exception as e:
             raise DNSAPIError(
                 f'Cannot split {record.type} record "{record.target}" into flag, tag and value: {e}'
-            )
+            ) from e
     elif record.type == "CNAME":
         result["name"] = record.prefix or ""
         result["cname"] = record.target
@@ -134,7 +134,7 @@ def _record_to_json(record, include_id=False, include_type=True):
         except Exception as e:
             raise DNSAPIError(
                 f'Cannot split {record.type} record "{record.target}" into integer preference and name: {e}'
-            )
+            ) from e
     elif record.type == "NS":
         result["ownername"] = record.prefix or ""
         result["targetname"] = record.target
@@ -146,7 +146,7 @@ def _record_to_json(record, include_id=False, include_type=True):
         except Exception as e:
             raise DNSAPIError(
                 f'Cannot split {record.type} record "{record.target}" into origin and name: {e}'
-            )
+            ) from e
     elif record.type == "SRV":
         result["service"] = record.prefix or ""
         try:
@@ -158,7 +158,7 @@ def _record_to_json(record, include_id=False, include_type=True):
         except Exception as e:
             raise DNSAPIError(
                 f'Cannot split {record.type} record "{record.target}" into integer priority, integer weight, integer port and target: {e}'
-            )
+            ) from e
     elif record.type in ("TXT", "TLSA"):
         result["name"] = record.prefix or ""
         result["text"] = record.target

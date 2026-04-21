@@ -158,11 +158,11 @@ class JSONAPIHelper:
         # Decode content as JSON
         try:
             result = json.loads(content.decode("utf8"))  # type: ignore
-        except Exception:
+        except Exception as exc:
             if must_have_content:
                 raise DNSAPIError(
                     f"{method} {info['url']} did not yield JSON data, but HTTP status code {info['status']} with data: {to_native(content)}"
-                )
+                ) from exc
             self._validate(result=content, info=info, expected=expected, method=method)
             return None, info
         self._validate(result=result, info=info, expected=expected, method=method)

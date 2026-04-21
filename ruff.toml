@@ -13,7 +13,6 @@ ignore = [
     "E402",  # Module level import not at top of file
     "F401",  # Unused import (ruff check doesn't notice type comments apparently)
     # TODO:
-    "B904",  # Use 'raise ... from'
     "SIM117",  # Combine multiple 'with' statements
     # Dubious:
     "SIM105",  # suppressible-exception

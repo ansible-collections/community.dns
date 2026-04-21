@@ -69,7 +69,7 @@ def reverse_pointer(ip: t.Any) -> str:
     try:
         ipaddr = ipaddress.ip_address(to_text(ip))
     except Exception as e:
-        raise AnsibleFilterError(f"Cannot parse IP address: {e}")
+        raise AnsibleFilterError(f"Cannot parse IP address: {e}") from e
     res = ipaddr.reverse_pointer
     if not res.endswith("."):
         res += "."

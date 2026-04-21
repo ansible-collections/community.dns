@@ -288,7 +288,7 @@ class LookupModule(LookupBase):
                     response_msg, name, int(rdtype)
                 )
             except dns.resolver.NXDOMAIN:
-                raise AnsibleLookupError(f"Got NXDOMAIN when querying {name}")
+                raise AnsibleLookupError(f"Got NXDOMAIN when querying {name}") from None
 
         return guarded_run(
             callback,
@@ -304,7 +304,9 @@ class LookupModule(LookupBase):
             try:
                 return resolver.resolve_addresses(server)
             except NXDOMAIN as exc:
-                raise AnsibleLookupError(f"Nameserver {server} does not exist ({exc})")
+                raise AnsibleLookupError(
+                    f"Nameserver {server} does not exist ({exc})"
+                ) from None
 
         return f
 

@@ -102,8 +102,8 @@ class OpenURLHelper(HTTPHelper):
                 pass  # pragma: no cover
             info["status"] = e.code
         except NoSSLError as e:
-            raise NetworkError(f"Cannot connect via SSL: {to_native(e)}")
+            raise NetworkError(f"Cannot connect via SSL: {to_native(e)}") from e
         except (ConnectionError, ValueError) as e:
-            raise NetworkError(f"Connection error: {to_native(e)}")
+            raise NetworkError(f"Connection error: {to_native(e)}") from e
 
         return result, info

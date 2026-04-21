@@ -97,7 +97,7 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
                 except TypeError as exc:
                     raise AnsibleError(
                         f"Error while ensuring that zone_id is of type {zone_id_type}: {exc}"
-                    )
+                    ) from exc
 
             if isinstance(self.api, ZoneRecordAPI):
                 if zone_name is not None:
@@ -142,11 +142,13 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
             record_converter.process_multiple_to_user(records)
 
         except DNSConversionError as e:
-            raise AnsibleError(f"Error while converting DNS values: {e.error_message}")
+            raise AnsibleError(
+                f"Error while converting DNS values: {e.error_message}"
+            ) from e
         except DNSAPIAuthenticationError as e:
-            raise AnsibleError(f"Cannot authenticate: {e}")
+            raise AnsibleError(f"Cannot authenticate: {e}") from e
         except DNSAPIError as e:
-            raise AnsibleError(f"Error: {e}")
+            raise AnsibleError(f"Error: {e}") from e
 
         simple_filters = self.get_option("simple_filters")
         filters = parse_filters(self.get_option("filters"))

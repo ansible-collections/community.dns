@@ -140,7 +140,9 @@ class LookupModule(LookupBase):
             try:
                 return resolver.resolve_addresses(server)
             except NXDOMAIN as exc:
-                raise AnsibleLookupError(f"Nameserver {server} does not exist ({exc})")
+                raise AnsibleLookupError(
+                    f"Nameserver {server} does not exist ({exc})"
+                ) from None
 
         return f
 
@@ -185,7 +187,9 @@ class LookupModule(LookupBase):
                     pass  # pragma: no cover
                 ip_adresses.append(name)
             except Exception as e:
-                raise AnsibleLookupError(f"Cannot parse IP address {ip_address!r}: {e}")
+                raise AnsibleLookupError(
+                    f"Cannot parse IP address {ip_address!r}: {e}"
+                ) from e
 
         result = []
         for name in ip_adresses:

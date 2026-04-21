@@ -163,7 +163,9 @@ class DocFragment:
         try:
             self.data = yaml.safe_load("\n".join(self.lines))
         except Exception as e:
-            raise DocFragmentParseError(path, f"Error while parsing part {name}: {e}")
+            raise DocFragmentParseError(
+                path, f"Error while parsing part {name}: {e}"
+            ) from e
 
     def recreate_lines(self):
         data = yaml.dump(

@@ -80,7 +80,7 @@ def _encode_record(record, include_id=False):
         except Exception as e:
             raise DNSAPIError(
                 f'Cannot split {record.type} record "{record.target}" into integer priority and target: {e}'
-            )
+            ) from e
     else:
         result["priority"] = None
     if include_id:
@@ -142,7 +142,7 @@ class HostTechWSDLAPI(ZoneRecordAPI):
             if e.error_code == "998":
                 raise DNSAPIAuthenticationError(
                     f"Error on authentication ({e.error_message})"
-                )
+                ) from e
             raise
         res = result.get_result(result_name)
         if isinstance(res, acceptable_types):

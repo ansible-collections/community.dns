@@ -324,7 +324,7 @@ class Composer:
             )
             code = info["status"]
         except NetworkError as e:
-            raise WSDLNetworkError(to_native(e))
+            raise WSDLNetworkError(to_native(e)) from e
         # if debug:
         #     q.q('Result: {0}, content: {1}'.format(code, result.decode('utf-8')))
         if code < 200 or code >= 300:
