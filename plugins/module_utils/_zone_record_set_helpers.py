@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright (c) 2021 Felix Fontein
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -7,35 +5,34 @@
 # Note that this module util is **PRIVATE** to the collection. It can have breaking changes at any time.
 # Do not use this from other collections or standalone plugins/modules!
 
-from __future__ import absolute_import, division, print_function
+from __future__ import annotations
 
-__metaclass__ = type
-
-import sys
+import typing as t
 
 from ansible_collections.community.dns.plugins.module_utils._zone_record_api import (
     DNSAPIError,
 )
 
-if sys.version_info >= (3, 6):
-    import typing
-
-    if typing.TYPE_CHECKING:
-        from ._provider import ProviderInformation  # pragma: no cover
-        from ._record_set import DNSRecordSet  # pragma: no cover
-        from ._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
+if t.TYPE_CHECKING:
+    from ._provider import ProviderInformation  # pragma: no cover
+    from ._record_set import DNSRecordSet  # pragma: no cover
+    from ._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
 
 
 def bulk_apply_changes(
-    api,  # type: ZoneRecordSetAPI
-    provider_information,  # type: ProviderInformation
+    api: ZoneRecordSetAPI,
+    provider_information: ProviderInformation,
     options,  # TODO type
-    zone_id,  # type: str
-    record_sets_to_delete=None,  # type: list[DNSRecordSet] | None
-    record_sets_to_change=None,  # type: list[tuple[DNSRecordSet, bool, bool]] | None
-    record_sets_to_create=None,  # type: list[DNSRecordSet] | None
-    stop_early_on_errors=True,  # type: bool
-):  # type: (...) -> tuple[bool, list[tuple[typing.Literal["delete", "change", "create"], DNSRecordSet, DNSAPIError]], dict[str, list[DNSRecordSet]]]
+    zone_id: str,
+    record_sets_to_delete: list[DNSRecordSet] | None = None,
+    record_sets_to_change: list[tuple[DNSRecordSet, bool, bool]] | None = None,
+    record_sets_to_create: list[DNSRecordSet] | None = None,
+    stop_early_on_errors: bool = True,
+) -> tuple[
+    bool,
+    list[tuple[t.Literal["delete", "change", "create"], DNSRecordSet, DNSAPIError]],
+    dict[str, list[DNSRecordSet]],
+]:
     """
     Update multiple records. If an operation failed, raise a DNSAPIException.
 
@@ -62,19 +59,19 @@ def bulk_apply_changes(
     record_sets_to_create = record_sets_to_create or []
 
     has_change = False
-    errors = (
-        []
-    )  # type: list[tuple[typing.Literal["delete", "change", "create"], DNSRecordSet, DNSAPIError]]
+    errors: list[
+        tuple[t.Literal["delete", "change", "create"], DNSRecordSet, DNSAPIError]
+    ] = []
 
     bulk_threshold = 2
     if provider_information.supports_bulk_actions():
         bulk_threshold = options.get_option("bulk_operation_threshold")
 
-    success = {
+    success: dict[str, list[DNSRecordSet]] = {
         "deleted": [],
         "changed": [],
         "created": [],
-    }  # type: dict[str, list[DNSRecordSet]]
+    }
 
     # Delete record sets
     if len(record_sets_to_delete) >= bulk_threshold:

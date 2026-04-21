@@ -1,14 +1,9 @@
 #!/usr/bin/python
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2022, Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
+from __future__ import annotations
 
 DOCUMENTATION = r"""
 module: nameserver_record_info
@@ -600,10 +595,7 @@ def main():
     if record_type not in NAME_TO_RDTYPE:
         min_version = NAME_TO_REQUIRED_VERSION[record_type]
         module.fail_json(
-            msg="Your dnspython version does not support {record_type} records. You need version {min_version} or newer.".format(
-                record_type=record_type,
-                min_version=min_version,
-            )
+            msg=f"Your dnspython version does not support {record_type} records. You need version {min_version} or newer."
         )
     rdtype = NAME_TO_RDTYPE[record_type]
 

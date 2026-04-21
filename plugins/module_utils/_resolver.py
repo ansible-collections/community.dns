@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2021, Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -7,9 +5,7 @@
 # Note that this module util is **PRIVATE** to the collection. It can have breaking changes at any time.
 # Do not use this from other collections or standalone plugins/modules!
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
+from __future__ import annotations
 
 import traceback
 
@@ -43,7 +39,7 @@ class InvalidInput(ResolverError):
     pass
 
 
-class _Resolve(object):
+class _Resolve:
     def __init__(self, timeout=10, timeout_retries=3, servfail_retries=0):
         self.timeout = timeout
         self.timeout_retries = timeout_retries
@@ -60,11 +56,11 @@ class _Resolve(object):
             return True
         if rcode == dns.rcode.NXDOMAIN:
             raise dns.resolver.NXDOMAIN(qnames=[target], responses={target: response})
-        msg = "Error %s" % dns.rcode.to_text(rcode)
+        msg = f"Error {dns.rcode.to_text(rcode)}"
         if nameserver:
-            msg = "%s while querying %s" % (msg, nameserver)
+            msg = f"{msg} while querying {nameserver}"
         if query:
-            msg = "%s with query %s" % (msg, query)
+            msg = f"{msg} with query {query}"
         raise ResolverError(msg)
 
     def _handle_timeout(self, function, *args, **kwargs):
@@ -115,7 +111,7 @@ class SimpleResolver(_Resolve):
         timeout_retries=3,
         servfail_retries=0,
     ):
-        super(SimpleResolver, self).__init__(
+        super().__init__(
             timeout=timeout,
             timeout_retries=timeout_retries,
             servfail_retries=servfail_retries,
@@ -192,7 +188,7 @@ class ResolveDirectlyFromNameServers(_Resolve):
         always_ask_default_resolver=True,
         server_addresses=None,
     ):
-        super(ResolveDirectlyFromNameServers, self).__init__(
+        super().__init__(
             timeout=timeout,
             timeout_retries=timeout_retries,
             servfail_retries=servfail_retries,
@@ -219,10 +215,10 @@ class ResolveDirectlyFromNameServers(_Resolve):
         # Sanity check: do we have a valid nameserver IP?
         try:
             dns.inet.af_for_address(nameserver_ips[0])
-        except ValueError:
+        except ValueError as exc:
             raise InvalidInput(
-                "Invalid nameserver IP address {0}".format(nameserver_ips[0])
-            )
+                f"Invalid nameserver IP address {nameserver_ips[0]}"
+            ) from exc
 
         query = dns.message.make_query(target, dns.rdatatype.NS)
         retry = 0
@@ -238,7 +234,7 @@ class ResolveDirectlyFromNameServers(_Resolve):
             target,
             response,
             nameserver=nameserver_ips[0],
-            query='get NS for "%s"' % target,
+            query=f'get NS for "{target}"',
             accept_errors=[dns.rcode.NXDOMAIN],
         )
 
@@ -344,7 +340,7 @@ class ResolveDirectlyFromNameServers(_Resolve):
                 break
             dnsname = cname
             if dnsname in loop_catcher:
-                raise ResolverError("Found CNAME loop starting at {0}".format(target))
+                raise ResolverError(f"Found CNAME loop starting at {target}")
             loop_catcher.add(dnsname)
 
         results = {}
@@ -366,7 +362,7 @@ class ResolveDirectlyFromNameServers(_Resolve):
 
 
 def guarded_run(runner, module, server=None, generate_additional_results=None):
-    suffix = " for {0}".format(server) if server is not None else ""
+    suffix = f" for {server}" if server is not None else ""
     kwargs = {}
     try:
         return runner()
@@ -374,7 +370,7 @@ def guarded_run(runner, module, server=None, generate_additional_results=None):
         if generate_additional_results is not None:
             kwargs = generate_additional_results()
         module.fail_json(
-            msg="Invalid input{0}: {1}".format(suffix, to_native(e)),
+            msg=f"Invalid input{suffix}: {to_native(e)}",
             exception=traceback.format_exc(),
             **kwargs,
         )
@@ -382,7 +378,7 @@ def guarded_run(runner, module, server=None, generate_additional_results=None):
         if generate_additional_results is not None:
             kwargs = generate_additional_results()
         module.fail_json(
-            msg="Unexpected resolving error{0}: {1}".format(suffix, to_native(e)),
+            msg=f"Unexpected resolving error{suffix}: {to_native(e)}",
             exception=traceback.format_exc(),
             **kwargs,
         )
@@ -390,7 +386,7 @@ def guarded_run(runner, module, server=None, generate_additional_results=None):
         if generate_additional_results is not None:
             kwargs = generate_additional_results()
         module.fail_json(
-            msg="Unexpected DNS error{0}: {1}".format(suffix, to_native(e)),
+            msg=f"Unexpected DNS error{suffix}: {to_native(e)}",
             exception=traceback.format_exc(),
             **kwargs,
         )

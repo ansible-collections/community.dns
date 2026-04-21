@@ -7,16 +7,16 @@ line-length = 160
 [lint]
 # https://docs.astral.sh/ruff/rules/
 
-# Add "UP" once we drop Python 2 support
-select = ["A", "B", "E", "F", "FA", "FLY", "SIM"]
+select = ["A", "B", "E", "F", "FA", "FLY", "UP", "SIM"]
 ignore = [
-    # Better keep ignored (for now)
-    "B904",  # Use 'raise ... from'
+    # Needed:
     "E402",  # Module level import not at top of file
-    "F401",  # Unused import (ruff check doesn't notice type comments apparently)
-    "FLY002",  # Use f-string
-    "SIM105",  # suppressible-exception
+    # Wait for Python 3.10:
     "SIM117",  # Combine multiple 'with' statements
+    # Dubious:
+    "SIM105",  # suppressible-exception
+    "UP012",  # Unnecessary call to `encode` as UTF-8
+    "UP015",  # Unnecessary mode argument
 ]
 
 # Allow fix for all enabled rules (when `--fix`) is provided.

@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021 Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
+from __future__ import annotations
 
 import pytest
 from ansible_collections.community.internal_test_tools.tests.unit.plugins.modules.utils import (
@@ -1292,9 +1289,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
                 .expect_header("accept", "application/json")
                 .expect_header("authorization", "Bearer foo")
                 .expect_url(
-                    "https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/{0}".format(
-                        record["id"]
-                    )
+                    f"https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/{record['id']}"
                 )
                 .result_str(""),
             ],
@@ -1449,9 +1444,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
                 .expect_header("accept", "application/json")
                 .expect_header("authorization", "Bearer foo")
                 .expect_url(
-                    "https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/{0}".format(
-                        record["id"]
-                    )
+                    f"https://api.ns1.hosttech.eu/api/user/v1/zones/42/records/{record['id']}"
                 )
                 .result_str(""),
             ],

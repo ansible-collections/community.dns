@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021 Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
+from __future__ import annotations
 
 from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
     patch,
@@ -530,9 +527,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                 FetchUrlCall("DELETE", 200)
                 .expect_header("accept", "application/json")
                 .expect_header("auth-api-token", "foo")
-                .expect_url(
-                    "https://dns.hetzner.com/api/v1/records/{0}".format(record["id"])
-                )
+                .expect_url(f"https://dns.hetzner.com/api/v1/records/{record['id']}")
                 .result_str(""),
             ],
         )
@@ -1547,9 +1542,7 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                     .expect_header("accept", "application/json")
                     .expect_header("Authorization", "Bearer foo")
                     .expect_url(
-                        "https://api.hetzner.cloud/v1/zones/42/rrsets/{0}/{1}".format(
-                            record["name"], record["type"]
-                        )
+                        f"https://api.hetzner.cloud/v1/zones/42/rrsets/{record['name']}/{record['type']}"
                     )
                     .return_header("Content-Type", "application/json")
                     .result_json(

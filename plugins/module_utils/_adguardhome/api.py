@@ -5,21 +5,14 @@
 # Note that this module util is **PRIVATE** to the collection. It can have breaking changes at any time.
 # Do not use this from other collections or standalone plugins/modules!
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
+from __future__ import annotations
 
 import json
+from urllib.error import HTTPError
 
 from ansible.module_utils.urls import Request
 
 from ansible_collections.community.dns.plugins.module_utils._argspec import ArgumentSpec
-
-try:
-    from urllib.error import HTTPError
-except ImportError:
-    # Python 2.x fallback:
-    from urllib2 import HTTPError  # type: ignore
 
 
 def create_adguardhome_argument_spec(required_if=None, additional_argument_specs=None):

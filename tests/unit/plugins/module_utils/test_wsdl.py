@@ -1,15 +1,8 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright (c) 2017-2021 Felix Fontein
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
-
-import sys
+from __future__ import annotations
 
 import pytest
 from ansible_collections.community.internal_test_tools.tests.unit.compat.mock import (
@@ -75,10 +68,7 @@ def test_composer_generation():
         "</SOAP-ENV:Envelope>",
     ]
 
-    if sys.version_info < (3, 7):
-        assert sorted(command[1:]) == sorted(expected_lines)
-    else:
-        assert command[1:] == expected_lines
+    assert command[1:] == expected_lines
 
     for part in [
         "<SOAP-ENV:Envelope",
@@ -93,22 +83,18 @@ def test_composer_generation():
 
 
 def test_parsing():
-    input_string = "\n".join(
+    input_string = "\n".join(  # noqa: FLY002
         [
             '<?xml version="1.0" encoding="UTF-8"?>',
-            "".join(
-                [
-                    "<SOAP-ENV:Envelope",
-                    ' xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"',
-                    ' xmlns:ns1="https://example.com/api"',
-                    ' xmlns:xsd="http://www.w3.org/2001/XMLSchema"',
-                    ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
-                    ' xmlns:ns2="http://xml.apache.org/xml-soap"',
-                    ' xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"',
-                    ' SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"',
-                    ">",
-                ]
-            ),
+            "<SOAP-ENV:Envelope"
+            ' xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"'
+            ' xmlns:ns1="https://example.com/api"'
+            ' xmlns:xsd="http://www.w3.org/2001/XMLSchema"'
+            ' xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
+            ' xmlns:ns2="http://xml.apache.org/xml-soap"'
+            ' xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"'
+            ' SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"'
+            ">",
             "  <SOAP-ENV:Header>",
             "    <ns1:authenticateResponse>",
             '      <return xsi:type="xsd:boolean">true</return>',

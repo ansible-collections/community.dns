@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2023, Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -14,7 +12,7 @@ from ansible.module_utils.basic import missing_required_lib
 
 IPADDRESS_IMPORT_EXC: ImportError | None
 try:
-    import ipaddress  # pylint: disable=unused-import
+    import ipaddress  # noqa: F401 # pylint: disable=unused-import
 except ImportError as exc:  # pragma: no cover
     IPADDRESS_IMPORT_EXC = exc  # pragma: no cover
 else:

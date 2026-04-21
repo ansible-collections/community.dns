@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2020-2021, Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -71,7 +69,7 @@ def reverse_pointer(ip: t.Any) -> str:
     try:
         ipaddr = ipaddress.ip_address(to_text(ip))
     except Exception as e:
-        raise AnsibleFilterError(f"Cannot parse IP address: {e}")
+        raise AnsibleFilterError(f"Cannot parse IP address: {e}") from e
     res = ipaddr.reverse_pointer
     if not res.endswith("."):
         res += "."

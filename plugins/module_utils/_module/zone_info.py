@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright (c) 2021 Felix Fontein
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -7,10 +5,7 @@
 # Note that this module util is **PRIVATE** to the collection. It can have breaking changes at any time.
 # Do not use this from other collections or standalone plugins/modules!
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
+from __future__ import annotations
 
 import traceback
 
@@ -64,13 +59,13 @@ def run_module(module, create_api, provider_information):
         )
     except DNSAPIAuthenticationError as e:
         module.fail_json(
-            msg="Cannot authenticate: {0}".format(e),
+            msg=f"Cannot authenticate: {e}",
             error=to_text(e),
             exception=traceback.format_exc(),
         )
     except DNSAPIError as e:
         module.fail_json(
-            msg="Error: {0}".format(e),
+            msg=f"Error: {e}",
             error=to_text(e),
             exception=traceback.format_exc(),
         )

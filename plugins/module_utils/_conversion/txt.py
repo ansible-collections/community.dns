@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright (c) 2021 Felix Fontein
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -7,12 +5,8 @@
 # Note that this module util is **PRIVATE** to the collection. It can have breaking changes at any time.
 # Do not use this from other collections or standalone plugins/modules!
 
-from __future__ import absolute_import, division, print_function
+from __future__ import annotations
 
-__metaclass__ = type
-
-
-import sys
 import warnings
 
 from ansible.module_utils.common.text.converters import to_bytes, to_text
@@ -28,14 +22,6 @@ _STATE_QUOTED_STRING = 1
 _STATE_UNQUOTED_STRING = 3
 
 
-if sys.version_info[0] < 3:
-    _int_to_byte = chr
-else:
-
-    def _int_to_byte(value):
-        return bytes((value,))
-
-
 def _parse_quoted(value, index, use_octal):
     if index == len(value):
         raise DNSConversionError("Unexpected backslash at end of string")
@@ -48,42 +34,39 @@ def _parse_quoted(value, index, use_octal):
     if v2 < 0 or (use_octal and v2 >= 8):
         # It is apparently not - error out
         raise DNSConversionError(
-            'A backslash must not be followed by "{letter}" (index {index})'.format(
-                letter=to_text(letter), index=index
-            )
+            f'A backslash must not be followed by "{to_text(letter)}" (index {index})'
         )
     if index + 1 >= len(value):
         # We need more letters for a three-digit decimal sequence
+        seq_type = "octal" if use_octal else "decimal"
         raise DNSConversionError(
-            "The {type} sequence at the end requires {missing} more digit(s)".format(
-                type="octal" if use_octal else "decimal", missing=index + 2 - len(value)
-            )
+            f"The {seq_type} sequence at the end requires {index + 2 - len(value)} more digit(s)"
         )
     letter = value[index : index + 1]
     index += 1
     v1 = _DECIMAL_DIGITS.find(letter)
     if v1 < 0 or (use_octal and v1 >= 8):
+        seq_type = "octal" if use_octal else "decimal"
         raise DNSConversionError(
-            'The second letter of the {type} sequence at index {index} is not a {type} digit, but "{letter}"'.format(
-                type="octal" if use_octal else "decimal",
-                letter=to_text(letter),
-                index=index,
-            )
+            f'The second letter of the {seq_type} sequence at index {index} is not a {seq_type} digit, but "{to_text(letter)}"'
         )
     letter = value[index : index + 1]
     index += 1
     v0 = _DECIMAL_DIGITS.find(letter)
     if v0 < 0 or (use_octal and v0 >= 8):
+        seq_type = "octal" if use_octal else "decimal"
         raise DNSConversionError(
-            'The third letter of the {type} sequence at index {index} is not a {type} digit, but "{letter}"'.format(
-                type="octal" if use_octal else "decimal",
-                letter=to_text(letter),
-                index=index,
-            )
+            f'The third letter of the {seq_type} sequence at index {index} is not a {seq_type} digit, but "{to_text(letter)}"'
         )
     if use_octal:
-        return _int_to_byte(v2 * 64 + v1 * 8 + v0), index
-    return _int_to_byte(v2 * 100 + v1 * 10 + v0), index
+        return (
+            bytes((v2 * 64 + v1 * 8 + v0,)),
+            index,
+        )
+    return (
+        bytes((v2 * 100 + v1 * 10 + v0,)),
+        index,
+    )
 
 
 _SENTINEL = object()
@@ -130,9 +113,7 @@ def decode_txt_value(value, character_encoding=_SENTINEL):
                 state = _STATE_QUOTED_STRING
             else:
                 raise DNSConversionError(
-                    "Unexpected double quotation mark inside an unquoted block at position {index}".format(
-                        index=index
-                    )
+                    f"Unexpected double quotation mark inside an unquoted block at position {index}"
                 )
         else:
             if state != _STATE_QUOTED_STRING:

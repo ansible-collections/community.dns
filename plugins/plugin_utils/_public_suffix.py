@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2021, Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -73,7 +71,7 @@ class PublicSuffixList:
     Contains the Public Suffix List.
     """
 
-    def __init__(self, rules: t.List[PublicSuffixEntry]) -> None:
+    def __init__(self, rules: list[PublicSuffixEntry]) -> None:
         self._generic_rule = PublicSuffixEntry(("*",))
         self._rules = sorted(rules, key=lambda entry: entry.labels)
 

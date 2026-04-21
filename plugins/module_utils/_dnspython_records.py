@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2015, Jan-Piet Mens <jpmens(at)gmail.com>
 # Copyright (c) 2017 Ansible Project
 # Copyright (c) 2022, Felix Fontein <felix@fontein.de>
@@ -9,32 +7,21 @@
 # Note that this module util is **PRIVATE** to the collection. It can have breaking changes at any time.
 # Do not use this from other collections or standalone plugins/modules!
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
+from __future__ import annotations
 
 import base64
-import sys
+import typing as t
 
 from ansible.module_utils.common.text.converters import to_bytes, to_native, to_text
 
-if sys.version_info[0] == 2:
-    binary_type = str
-else:
-    binary_type = bytes
-
-if sys.version_info >= (3, 6):
-    import typing
-
-    if typing.TYPE_CHECKING:
-        import dns.rdatatype  # pragma: no cover
+if t.TYPE_CHECKING:
+    import dns.rdatatype  # pragma: no cover
 
 
-NAME_TO_RDTYPE = {}  # type: dict[str, dns.rdatatype.RdataType]
-NAME_TO_REQUIRED_VERSION = {}  # type: dict[str, str]
-RDTYPE_TO_NAME = {}  # type: dict[dns.rdatatype.RdataType, str]
-RDTYPE_TO_FIELDS = {}  # type: dict[dns.rdatatype.RdataType, list[str]]
+NAME_TO_RDTYPE: dict[str, dns.rdatatype.RdataType] = {}
+NAME_TO_REQUIRED_VERSION: dict[str, str] = {}
+RDTYPE_TO_NAME: dict[dns.rdatatype.RdataType, str] = {}
+RDTYPE_TO_FIELDS: dict[dns.rdatatype.RdataType, list[str]] = {}
 
 try:
     import dns.name
@@ -144,9 +131,7 @@ try:
         if _rdtype is None:
             if _min_version is None:  # pragma: no cover
                 raise RuntimeError(
-                    "Internal error: rdtype {name} is None, but min_version is also None!".format(
-                        name=_name
-                    )
+                    f"Internal error: rdtype {_name} is None, but min_version is also None!"
                 )  # pragma: no cover
             NAME_TO_REQUIRED_VERSION[_name] = _min_version
         else:
@@ -159,8 +144,8 @@ except ImportError:
 
 
 def _convert_dns_rdtypes_svcbbase_param(
-    value,  # type: dns.rdtypes.svcbbase.Param
-):  # type: (...) -> tuple[typing.Any, bool]
+    value: dns.rdtypes.svcbbase.Param,
+) -> tuple[t.Any, bool]:
     if value is None:
         return None, False
     if isinstance(value, dns.rdtypes.svcbbase.GenericParam):
@@ -186,10 +171,10 @@ def _convert_dns_rdtypes_svcbbase_param(
 
 
 def convert_rdata_to_dict(
-    rdata,  # type: dns.rdata.Rdata
-    to_unicode=True,  # type: bool
-    add_synthetic=True,  # type: bool
-):  # type: (...) -> dict[str, typing.Any]
+    rdata: dns.rdata.Rdata,
+    to_unicode: bool = True,
+    add_synthetic: bool = True,
+) -> dict[str, t.Any]:
     """
     Convert a DNSPython record data object to a Python dictionary.
 
@@ -200,11 +185,11 @@ def convert_rdata_to_dict(
     If ``add_synthetic=True``, for some record types additional fields are added.
     For TXT and SPF records, ``value`` contains the concatenated strings, for example.
     """
-    result = {}  # type: dict[str, typing.Any]
+    result: dict[str, t.Any] = {}
 
     fields = RDTYPE_TO_FIELDS.get(rdata.rdtype)
     if fields is None:
-        raise ValueError("Unsupported record type {rdtype}".format(rdtype=rdata.rdtype))
+        raise ValueError(f"Unsupported record type {rdata.rdtype}")
     for f in fields:
         val = getattr(rdata, f)
 
@@ -261,11 +246,11 @@ def convert_rdata_to_dict(
 
         if isinstance(val, (list, tuple)):
             val = (
-                [to_text(v) if isinstance(v, binary_type) else v for v in val]
+                [to_text(v) if isinstance(v, bytes) else v for v in val]
                 if to_unicode
                 else list(val)
             )
-        elif to_unicode and isinstance(val, binary_type):
+        elif to_unicode and isinstance(val, bytes):
             val = to_text(val)
 
         result[f] = val

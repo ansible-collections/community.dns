@@ -6,6 +6,8 @@
 # dependencies = ["nox>=2025.02.09", "antsibull-nox"]
 # ///
 
+from __future__ import annotations
+
 import os
 import sys
 import urllib.request

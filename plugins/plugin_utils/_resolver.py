@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2023, Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -41,7 +39,7 @@ _T = t.TypeVar("_T")
 
 def guarded_run(
     runner: Callable[[], _T],
-    error_class: t.Type[Exception] = AnsibleError,
+    error_class: type[Exception] = AnsibleError,
     server: str | None = None,
 ) -> _T:
     suffix = f" for {server}" if server is not None else ""

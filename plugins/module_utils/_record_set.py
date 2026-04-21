@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright (c) 2025 Felix Fontein
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -7,14 +5,12 @@
 # Note that this module util is **PRIVATE** to the collection. It can have breaking changes at any time.
 # Do not use this from other collections or standalone plugins/modules!
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
+from __future__ import annotations
 
 from ._record import format_ttl as _format_ttl
 
 
-class DNSRecordSet(object):
+class DNSRecordSet:
     def __init__(self):
         self.id = None
         self.type = None
@@ -36,18 +32,16 @@ class DNSRecordSet(object):
     def __str__(self):
         data = []
         if self.id:
-            data.append("id: {0}".format(self.id))
-        data.append("type: {0}".format(self.type))
+            data.append(f"id: {self.id}")
+        data.append(f"type: {self.type}")
         if self.prefix:
-            data.append('prefix: "{0}"'.format(self.prefix))
+            data.append(f'prefix: "{self.prefix}"')
         else:
             data.append("prefix: (none)")
-        data.append("ttl: {0}".format(_format_ttl(self.ttl)))
-        data.append(
-            "records: [{0}]".format(", ".join([str(record) for record in self.records]))
-        )
+        data.append(f"ttl: {_format_ttl(self.ttl)}")
+        data.append(f"records: [{', '.join([str(record) for record in self.records])}]")
         if self.extra:
-            data.append("extra: {0}".format(self.extra))
+            data.append(f"extra: {self.extra}")
         return "DNSRecordSet(" + ", ".join(data) + ")"
 
     def __repr__(self):
@@ -61,7 +55,7 @@ def format_record_set_for_output(
         "prefix": prefix or "",
         "type": record_set.type,
         "ttl": record_set.ttl,
-        "value": sorted((record.target for record in record_set.records)),
+        "value": sorted(record.target for record in record_set.records),
     }
     if record_converter:
         entry["value"] = record_converter.process_values_to_user(

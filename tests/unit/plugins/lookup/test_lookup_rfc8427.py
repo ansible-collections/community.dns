@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2023-2025, Felix Fontein <felix@fontein.de>
 # SPDX-License-Identifier: GPL-3.0-or-later
 

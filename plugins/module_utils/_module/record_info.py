@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright (c) 2021 Felix Fontein
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -7,10 +5,7 @@
 # Note that this module util is **PRIVATE** to the collection. It can have breaking changes at any time.
 # Do not use this from other collections or standalone plugins/modules!
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
+from __future__ import annotations
 
 import traceback
 
@@ -232,9 +227,7 @@ def run_module(module, create_api, provider_information):
             and filter_record_type
             not in provider_information.get_supported_record_types()
         ):
-            module.fail_json(
-                msg="Invalid record type {type}".format(type=filter_record_type)
-            )
+            module.fail_json(msg=f"Invalid record type {filter_record_type}")
         if module.params.get("prefix") is not None:
             filter_prefix = provider_information.normalize_prefix(
                 module.params.get("prefix")
@@ -269,19 +262,19 @@ def run_module(module, create_api, provider_information):
             )
     except DNSConversionError as e:
         module.fail_json(
-            msg="Error while converting DNS values: {0}".format(e.error_message),
+            msg=f"Error while converting DNS values: {e.error_message}",
             error=e.error_message,
             exception=traceback.format_exc(),
         )
     except DNSAPIAuthenticationError as e:
         module.fail_json(
-            msg="Cannot authenticate: {0}".format(e),
+            msg=f"Cannot authenticate: {e}",
             error=to_text(e),
             exception=traceback.format_exc(),
         )
     except DNSAPIError as e:
         module.fail_json(
-            msg="Error: {0}".format(e),
+            msg=f"Error: {e}",
             error=to_text(e),
             exception=traceback.format_exc(),
         )

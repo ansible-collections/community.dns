@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright (c) 2021 Felix Fontein
 # Copyright (c) 2020 Markus Bergholz <markuman+spambelongstogoogle@gmail.com>
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -10,13 +8,11 @@
 
 # https://dns.hetzner.com/api-docs
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
+from __future__ import annotations
 
 import json
 import time
+from urllib.parse import quote
 
 from ansible.module_utils.basic import env_fallback
 
@@ -44,12 +40,6 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_set_api
     ZoneRecordSetAPI,
     filter_record_sets,
 )
-
-try:
-    from urllib.parse import quote
-except ImportError:
-    # Python 2.x fallback:
-    from urllib import quote  # type: ignore
 
 
 def _create_zone_from_json(source):
@@ -110,13 +100,14 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         res = ""
         if isinstance(result.get("error"), dict):
             if "message" in result["error"]:
-                res = '{0} with error message "{1}"'.format(
-                    res, result["error"]["message"]
-                )
+                msg = result["error"]["message"]
+                res = f'{res} with error message "{msg}"'
             if "code" in result["error"]:
-                res = "{0} (error code {1})".format(res, result["error"]["code"])
+                code = result["error"]["code"]
+                res = f"{res} (error code {code})"
         if result.get("message"):
-            res = '{0} with message "{1}"'.format(res, result["message"])
+            msg = result["message"]
+            res = f'{res} with message "{msg}"'
         return res
 
     def _extract_error_message(self, result):
@@ -126,12 +117,10 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
             res = self._extract_only_error_message(result)
             if res:
                 return res
-        return " with data: {0}".format(result)
+        return f" with data: {result}"
 
     def _validate(self, result=None, info=None, expected=None, method="GET"):
-        super(HetznerAPI, self)._validate(
-            result=result, info=info, expected=expected, method=method
-        )
+        super()._validate(result=result, info=info, expected=expected, method=method)
         if isinstance(result, dict):
             error = result.get("error")
             if isinstance(error, dict):
@@ -144,9 +133,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
                 error_code = ERROR_CODES.get(status, UNKNOWN_ERROR)
                 more = self._extract_error_message(result)
                 raise DNSAPIError(
-                    "{0} {1} resulted in API error {2} ({3}){4}".format(
-                        method, url, status, error_code, more
-                    )
+                    f"{method} {url} resulted in API error {status} ({error_code}){more}"
                 )
 
     def _list_pagination(
@@ -194,7 +181,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         @return The zone information (DNSZone), or None if not found
         """
         result, info = self._get(
-            "v1/zones/{zone_id}".format(zone_id=zone_id),
+            f"v1/zones/{zone_id}",
             expected=[200, 404],
             must_have_content=[200],
         )
@@ -238,12 +225,8 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         result, info = self._post("v1/records", data=data, expected=[200, 422])
         if info["status"] == 422:
             raise DNSAPIError(
-                'The new {type} record with value "{target}" and TTL {ttl} has not been accepted by the server{message}'.format(
-                    type=record.type,
-                    target=record.target,
-                    ttl=record.ttl,
-                    message=self._extract_only_error_message(result),
-                )
+                f'The new {record.type} record with value "{record.target}" and TTL {record.ttl}'
+                f" has not been accepted by the server{self._extract_only_error_message(result)}"
             )
         return _create_record_from_json(result["record"])
 
@@ -259,16 +242,12 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
             raise DNSAPIError("Need record ID to update record!")
         data = _record_to_json(record, zone_id=zone_id)
         result, info = self._put(
-            "v1/records/{id}".format(id=record.id), data=data, expected=[200, 422]
+            f"v1/records/{record.id}", data=data, expected=[200, 422]
         )
         if info["status"] == 422:
             raise DNSAPIError(
-                'The updated {type} record with value "{target}" and TTL {ttl} has not been accepted by the server{message}'.format(
-                    type=record.type,
-                    target=record.target,
-                    ttl=record.ttl,
-                    message=self._extract_only_error_message(result),
-                )
+                f'The updated {record.type} record with value "{record.target}" and TTL {record.ttl}'
+                f" has not been accepted by the server{self._extract_only_error_message(result)}"
             )
         return _create_record_from_json(result["record"])
 
@@ -283,7 +262,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         if record.id is None:
             raise DNSAPIError("Need record ID to delete record!")
         dummy, info = self._delete(
-            "v1/records/{id}".format(id=record.id),
+            f"v1/records/{record.id}",
             must_have_content=False,
             expected=[200, 404],
         )
@@ -328,12 +307,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
                     record,
                     False,
                     DNSAPIError(
-                        'Creating {type} record "{target}" with TTL {ttl} for zone {zoneID} failed with unknown reason'.format(
-                            type=record.type,
-                            target=record.target,
-                            ttl=record.ttl,
-                            zoneID=zone_id,
-                        )
+                        f'Creating {record.type} record "{record.target}" with TTL {record.ttl} for zone {zone_id} failed with unknown reason'
                     ),
                 ),
             )
@@ -367,7 +341,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
         # "An invalid response was received from the upstream server". That's why for now, we always
         # fall back to the default implementation.
         if True:  # pylint: disable=using-constant-test
-            return super(HetznerAPI, self).update_records(
+            return super().update_records(
                 records_per_zone_id, stop_early_on_errors=stop_early_on_errors
             )
 
@@ -388,13 +362,7 @@ class HetznerAPI(ZoneRecordAPI, JSONAPIHelper):
                     record,
                     False,
                     DNSAPIError(
-                        'Updating {type} record #{id} "{target}" with TTL {ttl} for zone {zoneID} failed with unknown reason'.format(
-                            type=record.type,
-                            id=record.id,
-                            target=record.target,
-                            ttl=record.ttl,
-                            zoneID=zone_id,
-                        )
+                        f'Updating {record.type} record #{record.id} "{record.target}" with TTL {record.ttl} for zone {zone_id} failed with unknown reason'
                     ),
                 ),
             )
@@ -478,16 +446,14 @@ def _q(value):
 
 
 def _get_rrset_url(zone_id, prefix, record_type):
-    return "v1/zones/{0}/rrsets/{1}/{2}".format(
-        _q(zone_id), _q(prefix or "@"), _q(record_type)
-    )
+    return f"v1/zones/{_q(zone_id)}/rrsets/{_q(prefix or '@')}/{_q(record_type)}"
 
 
 def _format_action_error(action_with_error):
     error = action_with_error.get("error")
     if not error:
         return None
-    return "{1} ({0})".format(error["code"], error["message"])
+    return f"{error['message']} ({error['code']})"
 
 
 # Number of actions to query together at most
@@ -503,24 +469,24 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
     def _create_headers(self):
         return {
             "Accept": "application/json",
-            "Authorization": "Bearer {token}".format(token=self._token),
+            "Authorization": f"Bearer {self._token}",
         }
 
     def _create_post_headers(self):
         return {
             "Accept": "application/json",
-            "Authorization": "Bearer {token}".format(token=self._token),
+            "Authorization": f"Bearer {self._token}",
             "Content-Type": "application/json",
         }
 
     def _extract_only_error_message(self, result):
         res = ""
         if isinstance(result.get("error"), dict):
-            res = '{0} with error message "{1}" (error code {2})'.format(
-                res, result["error"]["message"], result["error"]["code"]
-            )
+            msg = result["error"]["message"]
+            code = result["error"]["code"]
+            res = f'{res} with error message "{msg}" (error code {code})'
             if result["error"]["details"]:
-                res = "{0}. Details: {1}".format(res, result["error"]["details"])
+                res = f"{res}. Details: {result['error']['details']}"
         return res
 
     def _extract_error_message(self, result):
@@ -530,7 +496,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
             res = self._extract_only_error_message(result)
             if res:
                 return res
-        return " with data: {0}".format(result)
+        return f" with data: {result}"
 
     def _is_rate_limiting_result(self, content, info):
         if info["status"] != 429:
@@ -561,9 +527,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
         if accepted is not None and status in accepted:
             return status
         more = self._extract_error_message(result)
-        raise DNSAPIError(
-            "{0} {1} resulted in API error {2}{3}".format(method, url, status, more)
-        )
+        raise DNSAPIError(f"{method} {url} resulted in API error {status}{more}")
 
     def _list_pagination(
         self, url, data_key, query=None, block_size=100, accept_404=False
@@ -602,7 +566,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
         @param name: The zone name (string)
         @return The zone information (DNSZone), or None if not found
         """
-        url = "v1/zones/{0}".format(_q(name))
+        url = f"v1/zones/{_q(name)}"
         result, _info = self._get(url, expected=[200, 404])
         if self._check_error("GET", url, result, accepted=["not_found"]) == "not_found":
             return None
@@ -642,7 +606,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
         if record_type is not NOT_PROVIDED:
             query["type"] = record_type
         rrsets = self._list_pagination(
-            "v1/zones/{0}/rrsets".format(_q(zone_id)),
+            f"v1/zones/{_q(zone_id)}/rrsets",
             "rrsets",
             query=query,
             accept_404=True,
@@ -670,7 +634,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                 if stop_on_first_error:
                     break
             other_actions.extend(
-                (action for action in actions if action["status"] != "running")
+                action for action in actions if action["status"] != "running"
             )
             actions = [action for action in actions if action["status"] == "running"]
             if not actions:
@@ -680,7 +644,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
             do_wait = True
             action_ids = [str(action["id"]) for action in actions]
             if len(action_ids) == 1:
-                url = "v1/actions/{0}".format(_q(action_ids[0]))
+                url = f"v1/actions/{_q(action_ids[0])}"
                 result, dummy = self._get(url, expected=[200])
                 self._check_error("GET", url, result)
                 actions = [result["action"]]
@@ -703,11 +667,8 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                 actions.extend(remaining_actions)
         if errors and fail_on_error:
             error_messages = [_format_action_error(error) for error in errors]
-            raise DNSAPIError(
-                "Error while {0}: {1}".format(
-                    what, ", ".join((msg for msg in error_messages if msg)) or "unknown"
-                )
-            )
+            joined_msgs = ", ".join(msg for msg in error_messages if msg) or "unknown"
+            raise DNSAPIError(f"Error while {what}: {joined_msgs}")
         return errors, other_actions + actions
 
     def add_record_set(self, zone_id, record_set):
@@ -719,7 +680,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
         @return The created DNS record set (DNSRecordSet)
         """
         data = _get_creation_json_data(record_set)
-        url = "v1/zones/{0}/rrsets".format(_q(zone_id))
+        url = f"v1/zones/{_q(zone_id)}/rrsets"
         result, dummy = self._post(url, data=data, expected=[201])
         self._check_error("POST", url, result)
         self._wait_for_actions([result["action"]], "adding record set")
@@ -741,13 +702,13 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
         base_url = _get_rrset_url(zone_id, record_set.prefix, record_set.type)
         if updated_ttl:
             data = _get_update_json_data_ttl(record_set)
-            url = "{0}/actions/change_ttl".format(base_url)
+            url = f"{base_url}/actions/change_ttl"
             ttl_result, dummy = self._post(url, data=data, expected=[201])
             self._check_error("POST", url, ttl_result)
             actions.append(ttl_result["action"])
         if updated_records:
             data = _get_update_json_data_value(record_set)
-            url = "{0}/actions/set_records".format(base_url)
+            url = f"{base_url}/actions/set_records"
             set_result, dummy = self._post(url, data=data, expected=[201])
             self._check_error("POST", url, set_result)
             actions.append(set_result["action"])
@@ -859,7 +820,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
             for record_set in record_sets:
                 creation_data = _get_creation_json_data(record_set)
                 try:
-                    url = "v1/zones/{0}/rrsets".format(_q(zone_id))
+                    url = f"v1/zones/{_q(zone_id)}/rrsets"
                     res, dummy = self._post(url, data=creation_data, expected=[201])
                     self._check_error("POST", url, res)
                     action = res["action"]
@@ -915,7 +876,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                     action_ids = []
                     if updated_ttl:
                         ttl_data = _get_update_json_data_ttl(record_set)
-                        ttl_url = "{0}/actions/change_ttl".format(base_url)
+                        ttl_url = f"{base_url}/actions/change_ttl"
                         ttl_result, dummy = self._post(
                             ttl_url, data=ttl_data, expected=[201]
                         )
@@ -926,7 +887,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI, JSONAPIHelper):
                         action_ids.append(action_id)
                     if updated_records:
                         set_data = _get_update_json_data_value(record_set)
-                        set_url = "{0}/actions/set_records".format(base_url)
+                        set_url = f"{base_url}/actions/set_records"
                         set_result, dummy = self._post(
                             set_url, data=set_data, expected=[201]
                         )

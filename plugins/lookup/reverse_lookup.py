@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright (c) 2023, Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -142,7 +140,9 @@ class LookupModule(LookupBase):
             try:
                 return resolver.resolve_addresses(server)
             except NXDOMAIN as exc:
-                raise AnsibleLookupError(f"Nameserver {server} does not exist ({exc})")
+                raise AnsibleLookupError(
+                    f"Nameserver {server} does not exist ({exc})"
+                ) from None
 
         return f
 
@@ -187,7 +187,9 @@ class LookupModule(LookupBase):
                     pass  # pragma: no cover
                 ip_adresses.append(name)
             except Exception as e:
-                raise AnsibleLookupError(f"Cannot parse IP address {ip_address!r}: {e}")
+                raise AnsibleLookupError(
+                    f"Cannot parse IP address {ip_address!r}: {e}"
+                ) from e
 
         result = []
         for name in ip_adresses:

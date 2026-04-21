@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright (c) 2021 Felix Fontein
 # Copyright (c) 2020 Markus Bergholz <markuman+spambelongstogoogle@gmail.com>
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
@@ -63,9 +61,7 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
         if super().verify_file(path):
             if path.endswith(self.VALID_ENDINGS):
                 return True
-            endings = " or ".join(
-                ["'{0}'".format(ending) for ending in self.VALID_ENDINGS]
-            )
+            endings = " or ".join([f"'{ending}'" for ending in self.VALID_ENDINGS])
             display.debug(f"{self.NAME} inventory filename must end with {endings}")
         return False
 
@@ -101,7 +97,7 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
                 except TypeError as exc:
                     raise AnsibleError(
                         f"Error while ensuring that zone_id is of type {zone_id_type}: {exc}"
-                    )
+                    ) from exc
 
             if isinstance(self.api, ZoneRecordAPI):
                 if zone_name is not None:
@@ -146,11 +142,13 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
             record_converter.process_multiple_to_user(records)
 
         except DNSConversionError as e:
-            raise AnsibleError(f"Error while converting DNS values: {e.error_message}")
+            raise AnsibleError(
+                f"Error while converting DNS values: {e.error_message}"
+            ) from e
         except DNSAPIAuthenticationError as e:
-            raise AnsibleError(f"Cannot authenticate: {e}")
+            raise AnsibleError(f"Cannot authenticate: {e}") from e
         except DNSAPIError as e:
-            raise AnsibleError(f"Error: {e}")
+            raise AnsibleError(f"Error: {e}") from e
 
         simple_filters = self.get_option("simple_filters")
         filters = parse_filters(self.get_option("filters"))

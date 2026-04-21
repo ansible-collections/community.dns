@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright (c) 2017-2021 Felix Fontein
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -7,15 +5,11 @@
 # Note that this module util is **PRIVATE** to the collection. It can have breaking changes at any time.
 # Do not use this from other collections or standalone plugins/modules!
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
+from __future__ import annotations
 
 from ansible.module_utils.common.text.converters import to_native
 
 from ansible_collections.community.dns.plugins.module_utils._record import DNSRecord
-from ansible_collections.community.dns.plugins.module_utils._six import raise_from
 from ansible_collections.community.dns.plugins.module_utils._wsdl import (
     Composer,
     WSDLError,
@@ -45,7 +39,7 @@ def _create_record_from_encoding(source, record_type=None):
     priority = source.pop("priority")
     target = source.pop("target")
     if result.type in ("PTR", "MX"):
-        result.target = "{0} {1}".format(priority, target)
+        result.target = f"{priority} {target}"
     else:
         result.target = target
     source.pop("zone", None)
@@ -85,10 +79,8 @@ def _encode_record(record, include_id=False):
             result["target"] = target
         except Exception as e:
             raise DNSAPIError(
-                'Cannot split {0} record "{1}" into integer priority and target: {2}'.format(
-                    record.type, record.target, e
-                )
-            )
+                f'Cannot split {record.type} record "{record.target}" into integer priority and target: {e}'
+            ) from e
     else:
         result["priority"] = None
     if include_id:
@@ -149,8 +141,8 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         except WSDLError as e:
             if e.error_code == "998":
                 raise DNSAPIAuthenticationError(
-                    "Error on authentication ({0})".format(e.error_message)
-                )
+                    f"Error on authentication ({e.error_message})"
+                ) from e
             raise
         res = result.get_result(result_name)
         if isinstance(res, acceptable_types):
@@ -162,9 +154,7 @@ class HostTechWSDLAPI(ZoneRecordAPI):
             pass  # pragma: no cover
             # q.q('Result: {0}; extracted type {1}'.format(result, type(res)))
         raise DNSAPIError(
-            "Result has unexpected type {0} (expecting {1})!".format(
-                type(res), acceptable_types
-            )
+            f"Result has unexpected type {type(res)} (expecting {acceptable_types})!"
         )
 
     def get_zone_with_records_by_name(
@@ -191,16 +181,11 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         except WSDLError as exc:
             if exc.error_origin == "server" and exc.error_message == "zone not found":
                 return None
-            raise_from(
-                DNSAPIError("Error while getting zone: {0}".format(to_native(exc))), exc
-            )
+            raise DNSAPIError(f"Error while getting zone: {to_native(exc)}") from exc
         except WSDLNetworkError as exc:
-            raise_from(
-                DNSAPIError(
-                    "Network error while getting zone: {0}".format(to_native(exc))
-                ),
-                exc,
-            )
+            raise DNSAPIError(
+                f"Network error while getting zone: {to_native(exc)}"
+            ) from exc
 
     def get_zone_with_records_by_id(
         self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
@@ -273,17 +258,11 @@ class HostTechWSDLAPI(ZoneRecordAPI):
                 self._execute(command, "addRecordResponse", dict)
             )
         except WSDLError as exc:
-            raise_from(
-                DNSAPIError("Error while adding record: {0}".format(to_native(exc))),
-                exc,
-            )
+            raise DNSAPIError(f"Error while adding record: {to_native(exc)}") from exc
         except WSDLNetworkError as exc:
-            raise_from(
-                DNSAPIError(
-                    "Network error while adding record: {0}".format(to_native(exc))
-                ),
-                exc,
-            )
+            raise DNSAPIError(
+                f"Network error while adding record: {to_native(exc)}"
+            ) from exc
 
     def update_record(self, zone_id, record):
         """
@@ -307,17 +286,11 @@ class HostTechWSDLAPI(ZoneRecordAPI):
                 self._execute(command, "updateRecordResponse", dict)
             )
         except WSDLError as exc:
-            raise_from(
-                DNSAPIError("Error while updating record: {0}".format(to_native(exc))),
-                exc,
-            )
+            raise DNSAPIError(f"Error while updating record: {to_native(exc)}") from exc
         except WSDLNetworkError as exc:
-            raise_from(
-                DNSAPIError(
-                    "Network error while updating record: {0}".format(to_native(exc))
-                ),
-                exc,
-            )
+            raise DNSAPIError(
+                f"Network error while updating record: {to_native(exc)}"
+            ) from exc
 
     def delete_record(self, zone_id, record):
         """
@@ -335,14 +308,8 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         try:
             return self._execute(command, "deleteRecordResponse", bool)
         except WSDLError as exc:
-            raise_from(
-                DNSAPIError("Error while deleting record: {0}".format(to_native(exc))),
-                exc,
-            )
+            raise DNSAPIError(f"Error while deleting record: {to_native(exc)}") from exc
         except WSDLNetworkError as exc:
-            raise_from(
-                DNSAPIError(
-                    "Network error while deleting record: {0}".format(to_native(exc))
-                ),
-                exc,
-            )
+            raise DNSAPIError(
+                f"Network error while deleting record: {to_native(exc)}"
+            ) from exc

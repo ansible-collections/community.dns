@@ -1,15 +1,10 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Felix Fontein <felix@fontein.de>
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # pylint: disable=use-implicit-booleaness-not-comparison
 
-# Make coding more python3-ish
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
+from __future__ import annotations
 
 from ansible_collections.community.dns.plugins.module_utils._record_set import (
     DNSRecordSet,

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright (c) 2021 Felix Fontein
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
@@ -7,13 +5,11 @@
 # Note that this module util is **PRIVATE** to the collection. It can have breaking changes at any time.
 # Do not use this from other collections or standalone plugins/modules!
 
-from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
+from __future__ import annotations
 
 import abc
-import sys
+import typing as t
+from urllib.error import HTTPError
 
 from ansible.module_utils.common.text.converters import to_native
 from ansible.module_utils.urls import (
@@ -23,37 +19,24 @@ from ansible.module_utils.urls import (
     open_url,
 )
 
-from ansible_collections.community.dns.plugins.module_utils._six import add_metaclass
-
-try:
-    from urllib.error import HTTPError
-except ImportError:
-    # Python 2.x fallback:
-    from urllib2 import HTTPError  # type: ignore
-
-
-if sys.version_info >= (3, 6):
-    import typing
-
-    if typing.TYPE_CHECKING:
-        from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
+if t.TYPE_CHECKING:
+    from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
 
 
 class NetworkError(Exception):
     pass
 
 
-@add_metaclass(abc.ABCMeta)
-class HTTPHelper(object):
+class HTTPHelper(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def fetch_url(
         self,
-        url,  # type: str
-        method="GET",  # type: str
-        headers=None,  # type: dict[str, str] | None
-        data=None,  # type: bytes | None
-        timeout=None,  # type: int | None
-    ):  # type: (...) -> tuple[bytes | None, dict[str, typing.Any]]
+        url: str,
+        method: str = "GET",
+        headers: dict[str, str] | None = None,
+        data: bytes | None = None,
+        timeout: int | None = None,
+    ) -> tuple[bytes | None, dict[str, t.Any]]:
         """
         Execute a HTTP request and return a tuple (response_content, info).
 
@@ -64,25 +47,24 @@ class HTTPHelper(object):
 class ModuleHTTPHelper(HTTPHelper):
     def __init__(
         self,
-        module,  # type: AnsibleModule
-    ):  # type: (...) -> None
-        self.module = module  # type: AnsibleModule
+        module: AnsibleModule,
+    ) -> None:
+        self.module: AnsibleModule = module
 
     def fetch_url(
         self,
-        url,  # type: str
-        method="GET",  # type: str
-        headers=None,  # type: dict[str, str] | None
-        data=None,  # type: bytes | None
-        timeout=None,  # type: int | None
-    ):  # type: (...) -> tuple[bytes | None, dict[str, typing.Any]]
+        url: str,
+        method: str = "GET",
+        headers: dict[str, str] | None = None,
+        data: bytes | None = None,
+        timeout: int | None = None,
+    ) -> tuple[bytes | None, dict[str, t.Any]]:
         response, info = fetch_url(
             self.module, url, method=method, headers=headers, data=data, timeout=timeout
         )
         try:
-            # In Python 2, reading from a closed response yields a TypeError.
-            # In Python 3, read() simply returns ''
-            if sys.version_info[0] > 2 and response.closed:
+            # read() from a closed response returns ''
+            if response.closed:
                 raise TypeError
             content = response.read()
         except (AttributeError, TypeError):
@@ -93,12 +75,12 @@ class ModuleHTTPHelper(HTTPHelper):
 class OpenURLHelper(HTTPHelper):
     def fetch_url(
         self,
-        url,  # type: str
-        method="GET",  # type: str
-        headers=None,  # type: dict[str, str] | None
-        data=None,  # type: bytes | None
-        timeout=None,  # type: int | None
-    ):  # type: (...) -> tuple[bytes | None, dict[str, typing.Any]]
+        url: str,
+        method: str = "GET",
+        headers: dict[str, str] | None = None,
+        data: bytes | None = None,
+        timeout: int | None = None,
+    ) -> tuple[bytes | None, dict[str, t.Any]]:
         info = {}
         try:
             req = open_url(
@@ -120,8 +102,8 @@ class OpenURLHelper(HTTPHelper):
                 pass  # pragma: no cover
             info["status"] = e.code
         except NoSSLError as e:
-            raise NetworkError("Cannot connect via SSL: {0}".format(to_native(e)))
+            raise NetworkError(f"Cannot connect via SSL: {to_native(e)}") from e
         except (ConnectionError, ValueError) as e:
-            raise NetworkError("Connection error: {0}".format(to_native(e)))
+            raise NetworkError(f"Connection error: {to_native(e)}") from e
 
         return result, info
