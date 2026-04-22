@@ -7,8 +7,6 @@
 
 from __future__ import annotations
 
-import warnings
-
 from ansible.module_utils.common.text.converters import to_bytes, to_text
 
 from ansible_collections.community.dns.plugins.module_utils._conversion.base import (
@@ -69,23 +67,12 @@ def _parse_quoted(value, index, use_octal):
     )
 
 
-_SENTINEL = object()
-
-
-def decode_txt_value(value, character_encoding=_SENTINEL):
+def decode_txt_value(value, character_encoding):
     """
     Given an encoded TXT value, decodes it.
 
     Raises DNSConversionError in case of errors.
     """
-    if character_encoding is _SENTINEL:
-        warnings.warn(
-            "The default value of the decode_txt_value parameter character_encoding is deprecated."
-            ' Set explicitly to "octal" for the old behavior, or set to "decimal" for the new and correct behavior.',
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        character_encoding = "octal"
     if character_encoding not in ("octal", "decimal"):
         raise ValueError('character_encoding must be set to "octal" or "decimal"')
     value = to_bytes(value)
@@ -142,10 +129,10 @@ def _get_utf8_length(first_byte_value):
 
 def encode_txt_value(
     value,
+    *,
     always_quote=False,
-    use_character_encoding=_SENTINEL,
-    use_octal=_SENTINEL,
-    character_encoding=_SENTINEL,
+    use_character_encoding=True,
+    character_encoding,
 ):
     """
     Given a decoded TXT value, encodes it.
@@ -153,27 +140,6 @@ def encode_txt_value(
     If always_quote is set to True, always use double quotes for all strings.
     If use_character_encoding (default: True) is set to False, do not use octal encoding.
     """
-    if use_octal is not _SENTINEL:
-        warnings.warn(
-            "The encode_txt_value parameter use_octal is deprecated. Use use_character_encoding instead.",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        if use_character_encoding is not _SENTINEL:
-            raise ValueError(
-                "Cannot use both use_character_encoding and use_octal. Use only use_character_encoding!"
-            )
-        use_character_encoding = use_octal
-    if use_character_encoding is _SENTINEL:
-        use_character_encoding = True
-    if character_encoding is _SENTINEL:
-        warnings.warn(
-            "The default value of the encode_txt_value parameter character_encoding is deprecated."
-            ' Set explicitly to "octal" for the old behavior, or set to "decimal" for the new and correct behavior.',
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        character_encoding = "octal"
     if character_encoding not in ("octal", "decimal"):
         raise ValueError('character_encoding must be set to "octal" or "decimal"')
 
