@@ -263,10 +263,11 @@ def test_api_encoded():
     )
 
 
-def test_api_encoded_no_octal():
+def test_api_encoded_no_char_encoding():
     converter = RecordConverter(
         CustomProviderInformation(
-            txt_record_handling="encoded-no-octal", txt_character_encoding="decimal"
+            txt_record_handling="encoded-no-char-encoding",
+            txt_character_encoding="decimal",
         ),
         CustomProvideOptions(
             {"txt_transformation": "unquoted", "txt_character_encoding": "decimal"}
