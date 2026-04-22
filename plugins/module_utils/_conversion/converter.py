@@ -7,8 +7,6 @@
 
 from __future__ import annotations
 
-import warnings
-
 from ansible.module_utils.common.text.converters import to_text
 
 from ansible_collections.community.dns.plugins.module_utils._conversion.base import (
@@ -29,13 +27,8 @@ class RecordConverter:
         self._provider_information = provider_information
         self._option_provider = option_provider
 
-        # Valid values: 'decoded', 'encoded', 'encoded-no-octal' (deprecated), 'encoded-no-char-encoding'
+        # Valid values: 'decoded', 'encoded', 'encoded-no-char-encoding'
         self._txt_api_handling = self._provider_information.txt_record_handling()
-        if self._txt_api_handling == "encoded-no-octal":
-            warnings.warn(
-                'provider_information.txt_record_handling() returned deprecated value "encoded-no-octal"',
-                stacklevel=2,
-            )
         self._txt_api_character_encoding = (
             self._provider_information.txt_character_encoding()
         )
@@ -63,7 +56,6 @@ class RecordConverter:
         # We assume that records internally use decoded values
         if self._txt_api_handling in (
             "encoded",
-            "encoded-no-octal",
             "encoded-no-char-encoding",
         ):
             if to_api:
