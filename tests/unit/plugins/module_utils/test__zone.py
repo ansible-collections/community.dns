@@ -16,74 +16,61 @@ from ansible_collections.community.dns.plugins.module_utils._zone import (
 
 
 def test_zone_str_repr():
-    Z1 = DNSZone("foo")
+    Z1 = DNSZone(zone_id=None, name="foo")
     assert str(Z1) == "DNSZone(name: foo, info: {})"
     assert repr(Z1) == "DNSZone(name: foo, info: {})"
-    Z2 = DNSZone("foo")
-    Z2.id = 42
+    Z2 = DNSZone(zone_id=42, name="foo")
     Z2.info["foo"] = "bar"
     assert str(Z2) == "DNSZone(id: 42, name: foo, info: {'foo': 'bar'})"
     assert repr(Z2) == "DNSZone(id: 42, name: foo, info: {'foo': 'bar'})"
 
 
 def test_zone_with_records_str_repr():
-    Z1 = DNSZone("foo")
-    Z2 = DNSZone("foo")
-    Z2.id = 42
-    A1 = DNSRecord()
+    Z1 = DNSZone(zone_id=None, name="foo")
+    Z2 = DNSZone(zone_id=42, name="foo")
+    A1 = DNSRecord(record_id=None, record_type="A", target="1.2.3.4")
     A1.prefix = None
-    A1.type = "A"
     A1.ttl = 300
-    A1.target = "1.2.3.4"
-    A2 = DNSRecord()
-    A2.id = 23
+    A2 = DNSRecord(record_id=23, record_type="A", target="")
     A2.prefix = "bar"
-    A2.type = "A"
     A2.ttl = 1
-    A2.target = ""
     A2.extra["foo"] = 23
     ZZ1 = DNSZoneWithRecords(Z1, [A1])
     ZZ2 = DNSZoneWithRecords(Z2, [A1, A2])
     assert (
         str(ZZ1)
-        == '(DNSZone(name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)])'
+        == "(DNSZone(name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: '1.2.3.4', ttl: 5m)])"
     )
     assert (
         repr(ZZ1)
-        == 'DNSZoneWithRecords(DNSZone(name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)])'
+        == "DNSZoneWithRecords(DNSZone(name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: '1.2.3.4', ttl: 5m)])"
     )
     assert str(ZZ2) == (
-        '(DNSZone(id: 42, name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m),'
-        ' DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, extra: {\'foo\': 23})])'
+        "(DNSZone(id: 42, name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: '1.2.3.4', ttl: 5m),"
+        " DNSRecord(id: 23, type: A, prefix: 'bar', target: '', ttl: 1s, extra: {'foo': 23})])"
     )
     assert repr(ZZ2) == (
-        'DNSZoneWithRecords(DNSZone(id: 42, name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m),'
-        ' DNSRecord(id: 23, type: A, prefix: "bar", target: "", ttl: 1s, extra: {\'foo\': 23})])'
+        "DNSZoneWithRecords(DNSZone(id: 42, name: foo, info: {}), [DNSRecord(type: A, prefix: (none), target: '1.2.3.4', ttl: 5m),"
+        " DNSRecord(id: 23, type: A, prefix: 'bar', target: '', ttl: 1s, extra: {'foo': 23})])"
     )
 
 
 def test_zone_with_record_sets_str_repr():
-    Z1 = DNSZone("foo")
-    Z2 = DNSZone("foo")
-    Z2.id = 42
-    A1 = DNSRecord()
+    Z1 = DNSZone(zone_id=None, name="foo")
+    Z2 = DNSZone(zone_id=42, name="foo")
+    A1 = DNSRecord(record_id=None, record_type="A", target="1.2.3.4")
     A1.prefix = None
-    A1.type = "A"
     A1.ttl = 300
-    A1.target = "1.2.3.4"
-    A2 = DNSRecord()
-    A2.id = 23
+    A2 = DNSRecord(record_id=23, record_type="A", target="")
     A2.prefix = "bar"
-    A2.type = "A"
     A2.ttl = 1
-    A2.target = ""
     A2.extra["foo"] = 23
-    a1 = DNSRecordSet()
+    a1 = DNSRecordSet(record_set_id=None, record_type="A")
     a1.prefix = None
     a1.type = "A"
     a1.ttl = 300
     a1.records = [A1]
-    a2 = DNSRecordSet()
+    a2 = DNSRecordSet(record_set_id=None, record_type="A")
     a2.prefix = "bar"
     a2.type = "A"
     a2.ttl = 1
@@ -96,19 +83,19 @@ def test_zone_with_record_sets_str_repr():
     print(repr(ZZ2))
     assert str(ZZ1) == (
         "(DNSZone(name: foo, info: {}), [DNSRecordSet(type: A, prefix: (none), ttl: 5m, records:"
-        ' [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)])])'
+        " [DNSRecord(type: A, prefix: (none), target: '1.2.3.4', ttl: 5m)])])"
     )
     assert repr(ZZ1) == (
         "DNSZoneWithRecordSets(DNSZone(name: foo, info: {}), [DNSRecordSet(type: A, prefix: (none),"
-        ' ttl: 5m, records: [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)])])'
+        " ttl: 5m, records: [DNSRecord(type: A, prefix: (none), target: '1.2.3.4', ttl: 5m)])])"
     )
     assert str(ZZ2) == (
         "(DNSZone(id: 42, name: foo, info: {}), [DNSRecordSet(type: A, prefix: (none), ttl: 5m, records:"
-        ' [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)]), DNSRecordSet(type: A, prefix: "bar", ttl: 1s,'
-        " records: [DNSRecord(id: 23, type: A, prefix: \"bar\", target: \"\", ttl: 1s, extra: {'foo': 23})], extra: {'baz': 'bam'})])"
+        " [DNSRecord(type: A, prefix: (none), target: '1.2.3.4', ttl: 5m)]), DNSRecordSet(type: A, prefix: 'bar', ttl: 1s,"
+        " records: [DNSRecord(id: 23, type: A, prefix: 'bar', target: '', ttl: 1s, extra: {'foo': 23})], extra: {'baz': 'bam'})])"
     )
     assert repr(ZZ2) == (
         "DNSZoneWithRecordSets(DNSZone(id: 42, name: foo, info: {}), [DNSRecordSet(type: A, prefix: (none),"
-        ' ttl: 5m, records: [DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)]), DNSRecordSet(type: A, prefix:'
-        " \"bar\", ttl: 1s, records: [DNSRecord(id: 23, type: A, prefix: \"bar\", target: \"\", ttl: 1s, extra: {'foo': 23})], extra: {'baz': 'bam'})])"
+        " ttl: 5m, records: [DNSRecord(type: A, prefix: (none), target: '1.2.3.4', ttl: 5m)]), DNSRecordSet(type: A, prefix:"
+        " 'bar', ttl: 1s, records: [DNSRecord(id: 23, type: A, prefix: 'bar', target: '', ttl: 1s, extra: {'foo': 23})], extra: {'baz': 'bam'})])"
     )

@@ -7,8 +7,15 @@
 
 from __future__ import annotations
 
+import typing as t
 
-def format_ttl(ttl):
+if t.TYPE_CHECKING:
+    from collections.abc import Collection, Mapping, Sequence  # pragma: no cover
+
+    from ._conversion.converter import RecordConverter  # pragma: no cover
+
+
+def format_ttl(ttl: int | None) -> str:
     if ttl is None:
         return "default"
     sec = ttl % 60
@@ -26,51 +33,85 @@ def format_ttl(ttl):
     return " ".join(result)
 
 
-class DNSRecord:
-    def __init__(self):
-        self.id = None
-        self.type = None
-        self.prefix = None
-        self.target = None
-        self.ttl = 86400  # 24 * 60 * 60
-        self.extra = {}
+RecordIDT = t.TypeVar("RecordIDT")
+RecordIDT_co = t.TypeVar("RecordIDT_co", covariant=True)
 
-    def clone(self):
-        result = DNSRecord()
-        result.id = self.id
-        result.type = self.type
+
+class IDNSRecord(t.Protocol, t.Generic[RecordIDT_co]):
+    @property
+    def id(self) -> RecordIDT_co: ...
+
+    @property
+    def type(self) -> str: ...
+
+    @property
+    def prefix(self) -> str | None: ...
+
+    @property
+    def target(self) -> str: ...
+
+    @property
+    def ttl(self) -> int | None: ...
+
+    @property
+    def extra(self) -> Mapping[str, str]: ...
+
+
+class DNSRecord(t.Generic[RecordIDT]):
+    def __init__(self, *, record_id: RecordIDT, record_type: str, target: str) -> None:
+        self.id = record_id
+        self.type = record_type
+        self.prefix: str | None = None
+        self.target = target
+        self.ttl: int | None = 86400  # 24 * 60 * 60
+        self.extra: dict[str, str] = {}
+
+    def clone(self) -> DNSRecord[RecordIDT]:
+        result = DNSRecord(record_id=self.id, record_type=self.type, target=self.target)
         result.prefix = self.prefix
-        result.target = self.target
         result.ttl = self.ttl
         result.extra = dict(self.extra)
         return result
 
-    def __str__(self):
+    def __str__(self) -> str:
         data = []
-        if self.id:
+        if self.id is not None:
             data.append(f"id: {self.id}")
         data.append(f"type: {self.type}")
-        if self.prefix:
-            data.append(f'prefix: "{self.prefix}"')
+        if self.prefix is not None:
+            data.append(f"prefix: {self.prefix!r}")
         else:
             data.append("prefix: (none)")
-        data.append(f'target: "{self.target}"')
+        data.append(f"target: {self.target!r}")
         data.append(f"ttl: {format_ttl(self.ttl)}")
         if self.extra:
             data.append(f"extra: {self.extra}")
         return "DNSRecord(" + ", ".join(data) + ")"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()
 
 
-def sorted_ttls(ttls):
+@t.overload
+def sorted_ttls(ttls: Collection[int]) -> list[int]: ...
+
+
+@t.overload
+def sorted_ttls(ttls: Collection[int | None]) -> list[int | None]: ...
+
+
+def sorted_ttls(ttls: Collection[int | None]) -> list[int | None] | list[int]:
     return sorted(ttls, key=lambda ttl: 0 if ttl is None else ttl)
 
 
-def format_records_for_output(records, record_name, prefix=None, record_converter=None):
+def format_records_for_output(
+    records: Sequence[IDNSRecord[RecordIDT_co]],
+    record_name: str | None,
+    prefix: str | None = None,
+    record_converter: RecordConverter | None = None,
+) -> dict[str, t.Any]:
     ttls = sorted_ttls({record.ttl for record in records})
-    entry = {
+    entry: dict[str, t.Any] = {
         "prefix": prefix or "",
         "type": min(record.type for record in records) if records else None,
         "ttl": ttls[0] if len(ttls) > 0 else None,
@@ -87,8 +128,13 @@ def format_records_for_output(records, record_name, prefix=None, record_converte
     return entry
 
 
-def format_record_for_output(record, record_name, prefix=None, record_converter=None):
-    entry = {
+def format_record_for_output(
+    record: IDNSRecord[RecordIDT_co],
+    record_name: str | None,
+    prefix: str | None = None,
+    record_converter: RecordConverter | None = None,
+) -> dict[str, t.Any]:
+    entry: dict[str, t.Any] = {
         "prefix": prefix or "",
         "type": record.type,
         "ttl": record.ttl,

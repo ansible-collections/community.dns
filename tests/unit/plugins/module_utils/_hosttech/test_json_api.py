@@ -314,36 +314,51 @@ def test_unknown_records():
         _create_record_from_json(data)
     assert exc.value.args[0] == "Cannot parse unknown record type: unknown"
 
-    record = DNSRecord()
-    record.type = "unknown"
+    record = DNSRecord(record_id=None, record_type="unknown", target="")
     with pytest.raises(DNSAPIError) as exc:
         _record_to_json(record)
     assert exc.value.args[0] == "Cannot serialize unknown record type: unknown"
 
 
 def test_list_pagination():
-    def get_1(url, query=None, must_have_content=True, expected=None):
+    def get_1(
+        url,
+        query=None,
+        must_have_content=True,
+        expected=None,
+        require_json_object=False,
+    ):
         assert url == "https://example.com"
         assert must_have_content is True
         assert expected == [200]
+        assert require_json_object is True
         assert query is not None
         assert len(query) == 2
-        assert query["limit"] == 1
-        assert query["offset"] in [0, 1, 2]
-        if query["offset"] < 2:
-            return {"data": [query["offset"]]}, {}
+        assert query[0] == ("limit", "1")
+        assert query[1] in [("offset", "0"), ("offset", "1"), ("offset", "2")]
+        offset = int(query[1][1])
+        if offset < 2:
+            return {"data": [offset]}, {}
         return {"data": []}, {}
 
-    def get_2(url, query=None, must_have_content=True, expected=None):
+    def get_2(
+        url,
+        query=None,
+        must_have_content=True,
+        expected=None,
+        require_json_object=False,
+    ):
         assert url == "https://example.com"
         assert must_have_content is True
         assert expected == [200]
+        assert require_json_object is True
         assert query is not None
         assert len(query) == 3
         assert query["foo"] == "bar"
-        assert query["limit"] == 2
-        assert query["offset"] in [0, 2]
-        if query["offset"] < 2:
+        assert query["limit"] == "2"
+        assert query["offset"] in ["0", "2"]
+        offset = int(query["offset"])
+        if offset < 2:
             return {"data": ["bar", "baz"]}, {}
         return {"data": ["foo"]}, {}
 
@@ -363,14 +378,14 @@ def test_list_pagination():
 def test_update_id_missing():
     api = HostTechJSONAPI(MagicMock(), "123")
     with pytest.raises(DNSAPIError) as exc:
-        api.update_record(1, DNSRecord())
+        api.update_record(1, DNSRecord(record_id=None, record_type="TXT", target=""))
     assert exc.value.args[0] == "Need record ID to update record!"
 
 
 def test_update_id_delete():
     api = HostTechJSONAPI(MagicMock(), "123")
     with pytest.raises(DNSAPIError) as exc:
-        api.delete_record(1, DNSRecord())
+        api.delete_record(1, DNSRecord(record_id=None, record_type="TXT", target=""))
     assert exc.value.args[0] == "Need record ID to delete record!"
 
 

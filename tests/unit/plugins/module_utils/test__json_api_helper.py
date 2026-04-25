@@ -42,14 +42,6 @@ def test_extract_error_message():
     )
 
 
-def test_validate():
-    module = MagicMock()
-    api = JSONAPIHelper(module, "123", "https://example.com")
-    with pytest.raises(DNSAPIError) as exc:
-        api._validate()
-    assert exc.value.args[0] == "Internal error: info needs to be provided"
-
-
 def test_process_json_result():
     http_helper = MagicMock()
     api = JSONAPIHelper(http_helper, "123", "https://example.com")

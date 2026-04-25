@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import traceback
+import typing as t
 
 from ansible.module_utils.common.text.converters import to_text
 
@@ -36,8 +37,20 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 
 from ._utils import get_prefix, normalize_dns_name
 
+if t.TYPE_CHECKING:
+    from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
 
-def create_module_argument_spec(provider_information):
+    from .._provider import ProviderInformation  # pragma: no cover
+    from .._record import RecordIDT  # pragma: no cover
+    from .._record_set import RecordSetIDT  # pragma: no cover
+    from .._zone import ZoneIDT  # pragma: no cover
+    from .._zone_record_api import NotProvidedType  # pragma: no cover
+    from .._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
+
+
+def create_module_argument_spec(
+    provider_information: ProviderInformation,
+) -> ArgumentSpec:
     return ArgumentSpec(
         argument_spec={
             "what": {
@@ -71,13 +84,13 @@ def create_module_argument_spec(provider_information):
 
 
 def _run_module_record_api(
-    module,
-    provider_information,
-    record_converter,
-    filter_record_type,
-    filter_prefix,
-    api,
-):
+    module: AnsibleModule,
+    provider_information: ProviderInformation,
+    record_converter: RecordConverter,
+    filter_record_type: str | NotProvidedType,
+    filter_prefix: str | None | NotProvidedType,
+    api: ZoneRecordAPI[ZoneIDT, RecordIDT],
+) -> t.NoReturn:
     # Get zone information
     if module.params.get("zone_name") is not None:
         zone_in = normalize_dns_name(module.params.get("zone_name"))
@@ -141,13 +154,13 @@ def _run_module_record_api(
 
 
 def _run_module_record_set_api(
-    module,
-    provider_information,
-    record_converter,
-    filter_record_type,
-    filter_prefix,
-    api,
-):
+    module: AnsibleModule,
+    provider_information: ProviderInformation,
+    record_converter: RecordConverter,
+    filter_record_type: str | NotProvidedType,
+    filter_prefix: str | None | NotProvidedType,
+    api: ZoneRecordSetAPI[ZoneIDT, RecordSetIDT, RecordIDT],
+) -> t.NoReturn:
     # Get zone information
     if module.params.get("zone_name") is not None:
         zone_in = normalize_dns_name(module.params.get("zone_name"))
@@ -213,13 +226,17 @@ def _run_module_record_set_api(
     )
 
 
-def run_module(module, create_api, provider_information):
+def run_module(
+    module: AnsibleModule,
+    create_api: t.Callable[[], ZoneRecordAPI | ZoneRecordSetAPI],
+    provider_information: ProviderInformation,
+) -> t.NoReturn:
     option_provider = ModuleOptionProvider(module)
     record_converter = RecordConverter(provider_information, option_provider)
     record_converter.emit_deprecations(module.deprecate)
 
-    filter_record_type = NOT_PROVIDED
-    filter_prefix = NOT_PROVIDED
+    filter_record_type: str | NotProvidedType = NOT_PROVIDED
+    filter_prefix: str | None | NotProvidedType = NOT_PROVIDED
     if module.params.get("what") == "single_record":
         filter_record_type = module.params.get("type")
         if (

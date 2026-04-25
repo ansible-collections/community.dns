@@ -9,6 +9,8 @@
 
 from __future__ import annotations
 
+import typing as t
+
 from ansible_collections.community.dns.plugins.module_utils._json_api_helper import (
     JSONAPIHelper,
 )
@@ -24,52 +26,62 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
     filter_records,
 )
 
+if t.TYPE_CHECKING:
+    from collections.abc import Sequence  # pragma: no cover
 
-def _create_record_from_json(source, record_type=None):
+    from .._http import HTTPHelper  # pragma: no cover
+    from .._record import IDNSRecord  # pragma: no cover
+    from .._zone_record_api import NotProvidedType  # pragma: no cover
+
+
+def _create_record_from_json(
+    source: dict[str, t.Any], record_type: str | None = None
+) -> DNSRecord[int]:
     source = dict(source)
-    result = DNSRecord()
-    result.id = source.pop("id")
-    result.type = source.pop("type", record_type)
+    record_type = source.pop("type", record_type)
+    if record_type is None:
+        raise DNSAPIError("Record from API has no type")
+
+    name: str | None = source.pop("name", None)
+    target: str
+    if record_type == "A":
+        target = source.pop("ipv4")
+    elif record_type == "AAAA":
+        target = source.pop("ipv6")
+    elif record_type == "CAA":
+        target = f"{source.pop('flag')} {source.pop('tag')} \"{source.pop('value')}\""
+    elif record_type == "CNAME":
+        target = source.pop("cname")
+    elif record_type == "MX":
+        mx_name, name = name, source.pop("ownername")
+        target = f"{source.pop('pref')} {mx_name}"
+    elif record_type == "NS":
+        name = source.pop("ownername")
+        target = source.pop("targetname")
+    elif record_type == "PTR":
+        ptr_name, name = name, ""
+        target = f"{source.pop('origin')} {ptr_name}"
+    elif record_type == "SRV":
+        name = source.pop("service")
+        target = f"{source.pop('priority')} {source.pop('weight')} {source.pop('port')} {source.pop('target')}"
+    elif record_type in ("TXT", "TLSA"):
+        target = source.pop("text")
+    else:
+        raise DNSAPIError(f"Cannot parse unknown record type: {record_type}")
+
+    result = DNSRecord(
+        record_id=source.pop("id"), record_type=record_type, target=target
+    )
     ttl = source.pop("ttl")
     result.ttl = int(ttl) if ttl is not None else None
     result.extra["comment"] = source.pop("comment")
-
-    name = source.pop("name", None)
-    target = None
-    if result.type == "A":
-        target = source.pop("ipv4")
-    elif result.type == "AAAA":
-        target = source.pop("ipv6")
-    elif result.type == "CAA":
-        target = f"{source.pop('flag')} {source.pop('tag')} \"{source.pop('value')}\""
-    elif result.type == "CNAME":
-        target = source.pop("cname")
-    elif result.type == "MX":
-        mx_name, name = name, source.pop("ownername")
-        target = f"{source.pop('pref')} {mx_name}"
-    elif result.type == "NS":
-        name = source.pop("ownername")
-        target = source.pop("targetname")
-    elif result.type == "PTR":
-        ptr_name, name = name, ""
-        target = f"{source.pop('origin')} {ptr_name}"
-    elif result.type == "SRV":
-        name = source.pop("service")
-        target = f"{source.pop('priority')} {source.pop('weight')} {source.pop('port')} {source.pop('target')}"
-    elif result.type in ("TXT", "TLSA"):
-        target = source.pop("text")
-    else:
-        raise DNSAPIError(f"Cannot parse unknown record type: {result.type}")
-
     result.prefix = name or None  # API returns '', we want None
-    result.target = target
     result.extra.update(source)
     return result
 
 
-def _create_zone_from_json(source):
-    zone = DNSZone(source["name"])
-    zone.id = source["id"]
+def _create_zone_from_json(source: dict[str, t.Any]) -> DNSZone[int]:
+    zone = DNSZone(zone_id=source["id"], name=source["name"])
     zone.info = {
         "dnssec": source["dnssec"],
         "dnssec_email": source.get("dnssec_email"),
@@ -81,8 +93,10 @@ def _create_zone_from_json(source):
 
 
 def _create_zone_with_records_from_json(
-    source, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
-):
+    source: dict[str, t.Any],
+    prefix: str | None | NotProvidedType = NOT_PROVIDED,
+    record_type: str | NotProvidedType = NOT_PROVIDED,
+) -> DNSZoneWithRecords[int, int]:
     return DNSZoneWithRecords(
         _create_zone_from_json(source),
         filter_records(
@@ -93,8 +107,10 @@ def _create_zone_with_records_from_json(
     )
 
 
-def _record_to_json(record, include_id=False, include_type=True):
-    result = {
+def _record_to_json(
+    record: IDNSRecord[int | None], include_id: bool = False, include_type: bool = True
+) -> dict[str, t.Any]:
+    result: dict[str, t.Any] = {
         "ttl": record.ttl,
         "comment": record.extra.get("comment") or "",
     }
@@ -168,16 +184,37 @@ def _record_to_json(record, include_id=False, include_type=True):
     return result
 
 
-class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
+def _pagination_query(
+    query: dict[str, str] | Sequence[tuple[str, str]] | None,
+    *,
+    block_size: int,
+    offset: int,
+) -> dict[str, str] | Sequence[tuple[str, str]]:
+    if isinstance(query, dict):
+        query_map = query.copy()
+        query_map["limit"] = str(block_size)
+        query_map["offset"] = str(offset)
+        return query_map
+    query_list = list(query) if query else []
+    query_list.append(("limit", str(block_size)))
+    query_list.append(("offset", str(offset)))
+    return query_list
+
+
+class HostTechJSONAPI(ZoneRecordAPI[int, int], JSONAPIHelper):
     def __init__(
-        self, http_helper, token, api="https://api.ns1.hosttech.eu/api/", debug=False
-    ):
+        self,
+        http_helper: HTTPHelper,
+        token: str,
+        api="https://api.ns1.hosttech.eu/api/",
+        debug: bool = False,
+    ) -> None:
         """
         Create a new HostTech API instance with given API token.
         """
         JSONAPIHelper.__init__(self, http_helper, token, api=api, debug=debug)
 
-    def _extract_error_message(self, result):
+    def _extract_error_message(self, result: t.Any | None) -> str:
         if result is None:
             return ""
         if isinstance(result, dict):
@@ -193,28 +230,40 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
                 return res
         return f" with data: {result}"
 
-    def _create_headers(self):
+    def _create_headers(self) -> dict[str, str]:
         return {
             "accept": "application/json",
             "authorization": f"Bearer {self._token}",
         }
 
-    def _list_pagination(self, url, query=None, block_size=100):
+    def _list_pagination(
+        self,
+        url: str,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        block_size: int = 100,
+    ) -> list[t.Any]:
         result = []
         offset = 0
         while True:
-            query_ = query.copy() if query else {}
-            query_["limit"] = block_size
-            query_["offset"] = offset
-            res, dummy = self._get(url, query_, must_have_content=True, expected=[200])
+            query_ = _pagination_query(query, block_size=block_size, offset=offset)
+            res, dummy = self._get(
+                url,
+                query=query_,
+                must_have_content=True,
+                expected=[200],
+                require_json_object=True,
+            )
             result.extend(res["data"])
             if len(res["data"]) < block_size:
                 return result
             offset += block_size
 
     def get_zone_with_records_by_id(
-        self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
-    ):
+        self,
+        zone_id: int,
+        prefix: str | None | NotProvidedType = NOT_PROVIDED,
+        record_type: str | NotProvidedType = NOT_PROVIDED,
+    ) -> DNSZoneWithRecords[int, int] | None:
         """
         Given a zone ID, return the zone contents with records if found.
 
@@ -228,16 +277,20 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
             f"user/v1/zones/{zone_id}",
             expected=[200, 404],
             must_have_content=[200],
+            require_json_object=True,
         )
-        if info["status"] == 404:
+        if info["status"] == 404 or result is None:
             return None
         return _create_zone_with_records_from_json(
             result["data"], prefix=prefix, record_type=record_type
         )
 
     def get_zone_with_records_by_name(
-        self, name, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
-    ):
+        self,
+        name: str,
+        prefix: str | None | NotProvidedType = NOT_PROVIDED,
+        record_type: str | NotProvidedType = NOT_PROVIDED,
+    ) -> DNSZoneWithRecords[int, int] | None:
         """
         Given a zone name, return the zone contents with records if found.
 
@@ -250,13 +303,22 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         result = self._list_pagination("user/v1/zones", query={"query": name})
         for zone in result:
             if zone["name"] == name:
-                result, dummy = self._get(f"user/v1/zones/{zone['id']}", expected=[200])
+                zone_result, dummy = self._get(
+                    f"user/v1/zones/{zone['id']}",
+                    expected=[200],
+                    require_json_object=True,
+                )
                 return _create_zone_with_records_from_json(
-                    result["data"], prefix=prefix, record_type=record_type
+                    zone_result["data"], prefix=prefix, record_type=record_type
                 )
         return None
 
-    def get_zone_records(self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
+    def get_zone_records(
+        self,
+        zone_id: int,
+        prefix: str | None | NotProvidedType = NOT_PROVIDED,
+        record_type: str | NotProvidedType = NOT_PROVIDED,
+    ) -> list[DNSRecord[int]] | None:
         """
         Given a zone ID, return a list of records, optionally filtered by the provided criteria.
 
@@ -266,16 +328,17 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         @param record_type: The record type to filter for, if provided
         @return A list of DNSrecord objects, or None if zone was not found
         """
-        query = {}
+        query: dict[str, str] = {}
         if record_type is not NOT_PROVIDED:
-            query["type"] = record_type.upper()
+            query["type"] = record_type.upper()  # type: ignore  # Is a string
         result, info = self._get(
             f"user/v1/zones/{zone_id}/records",
             query=query,
             expected=[200, 404],
             must_have_content=[200],
+            require_json_object=True,
         )
-        if info["status"] == 404:
+        if info["status"] == 404 or result is None:
             return None
         return filter_records(
             [_create_record_from_json(record) for record in result["data"]],
@@ -283,7 +346,7 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
             record_type=record_type,
         )
 
-    def get_zone_by_name(self, name):
+    def get_zone_by_name(self, name: str) -> DNSZone[int] | None:
         """
         Given a zone name, return the zone contents if found.
 
@@ -297,7 +360,7 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
                 return self.get_zone_by_id(zone["id"])
         return None
 
-    def get_zone_by_id(self, zone_id):
+    def get_zone_by_id(self, zone_id: int) -> DNSZone[int] | None:
         """
         Given a zone ID, return the zone contents if found.
 
@@ -308,12 +371,15 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
             f"user/v1/zones/{zone_id}",
             expected=[200, 404],
             must_have_content=[200],
+            require_json_object=True,
         )
-        if info["status"] == 404:
+        if info["status"] == 404 or result is None:
             return None
         return _create_zone_from_json(result["data"])
 
-    def add_record(self, zone_id, record):
+    def add_record(
+        self, zone_id: int, record: IDNSRecord[int | None]
+    ) -> DNSRecord[int]:
         """
         Adds a new record to an existing zone.
 
@@ -323,11 +389,14 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
         """
         data = _record_to_json(record, include_id=False, include_type=True)
         result, dummy = self._post(
-            f"user/v1/zones/{zone_id}/records", data=data, expected=[201]
+            f"user/v1/zones/{zone_id}/records",
+            data=data,
+            expected=[201],
+            require_json_object=True,
         )
         return _create_record_from_json(result["data"])
 
-    def update_record(self, zone_id, record):
+    def update_record(self, zone_id: int, record: DNSRecord[int]) -> DNSRecord[int]:
         """
         Update a record.
 
@@ -342,10 +411,11 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
             f"user/v1/zones/{zone_id}/records/{record.id}",
             data=data,
             expected=[200],
+            require_json_object=True,
         )
         return _create_record_from_json(result["data"])
 
-    def delete_record(self, zone_id, record):
+    def delete_record(self, zone_id: int, record: DNSRecord[int]) -> bool:
         """
         Delete a record.
 
@@ -359,5 +429,6 @@ class HostTechJSONAPI(ZoneRecordAPI, JSONAPIHelper):
             f"user/v1/zones/{zone_id}/records/{record.id}",
             must_have_content=False,
             expected=[204, 404],
+            require_json_object=True,
         )
         return info["status"] == 204

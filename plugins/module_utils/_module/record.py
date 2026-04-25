@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import traceback
+import typing as t
 
 from ansible.module_utils.common.text.converters import to_text
 
@@ -44,8 +45,19 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_set_api
 
 from ._utils import get_prefix, normalize_dns_name
 
+if t.TYPE_CHECKING:
+    from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
 
-def create_module_argument_spec(provider_information):
+    from .._provider import ProviderInformation  # pragma: no cover
+    from .._record import IDNSRecord, RecordIDT  # pragma: no cover
+    from .._record_set import RecordSetIDT  # pragma: no cover
+    from .._zone import ZoneIDT  # pragma: no cover
+    from .._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
+
+
+def create_module_argument_spec(
+    provider_information: ProviderInformation,
+) -> ArgumentSpec:
     return ArgumentSpec(
         argument_spec={
             "state": {
@@ -79,8 +91,14 @@ def create_module_argument_spec(provider_information):
 
 
 def _run_module_record_api(
-    module, provider_information, record_converter, record_in, prefix_in, type_in, api
-):
+    module: AnsibleModule,
+    provider_information: ProviderInformation,
+    record_converter: RecordConverter,
+    record_in: str,
+    prefix_in: str | None,
+    type_in: str,
+    api: ZoneRecordAPI[ZoneIDT, RecordIDT],
+) -> t.NoReturn:
     # Get zone information
     if module.params.get("zone_name") is not None:
         zone_in = normalize_dns_name(module.params.get("zone_name"))
@@ -150,22 +168,23 @@ def _run_module_record_api(
             break
 
     before = existing_record.clone() if existing_record else None
-    after = before
+    after: IDNSRecord[RecordIDT | None] | None = before
     changed = False
 
     if module.params.get("state") == "present":
         if existing_record is None:
             # Create record
-            record = DNSRecord()
-            record.prefix = prefix
-            record.type = type_in
-            record.ttl = ttl_in
-            record.target = value_in
-            api_record = record_converter.clone_to_api(record)
+            new_record: DNSRecord[RecordIDT | None] = DNSRecord(
+                record_id=None, record_type=type_in, target=value_in
+            )
+            new_record.prefix = prefix
+            new_record.ttl = ttl_in
+            after = new_record
+            new_api_record = record_converter.clone_to_api(new_record)
             if not module.check_mode:
-                new_api_record = api.add_record(zone_id, api_record)
-                record = record_converter.clone_from_api(new_api_record)
-            after = record
+                created_api_record = api.add_record(zone_id, new_api_record)
+                created_record = record_converter.clone_from_api(created_api_record)
+                after = created_record
             changed = True
         elif not exact_match:
             # Update record
@@ -173,8 +192,8 @@ def _run_module_record_api(
             record.ttl = ttl_in
             api_record = record_converter.clone_to_api(record)
             if not module.check_mode:
-                new_api_record = api.update_record(zone_id, api_record)
-                record = record_converter.clone_from_api(new_api_record)
+                api_record = api.update_record(zone_id, api_record)
+                record = record_converter.clone_from_api(api_record)
             after = record
             changed = True
     else:
@@ -213,8 +232,14 @@ def _run_module_record_api(
 
 
 def _run_module_record_set_api(
-    module, provider_information, record_converter, record_in, prefix_in, type_in, api
-):
+    module: AnsibleModule,
+    provider_information: ProviderInformation,
+    record_converter: RecordConverter,
+    record_in: str,
+    prefix_in: str | None,
+    type_in: str,
+    api: ZoneRecordSetAPI[ZoneIDT, RecordSetIDT, RecordIDT],
+) -> t.NoReturn:
     # Get zone information
     if module.params.get("zone_name") is not None:
         zone_in = normalize_dns_name(module.params.get("zone_name"))
@@ -267,8 +292,8 @@ def _run_module_record_set_api(
 
     # Find matching records
     record_sets = filter_record_sets(record_sets, prefix=prefix, record_type=type_in)
-    for record_set in record_sets:
-        record_converter.process_set_from_api(record_set)
+    for record_set_ in record_sets:
+        record_converter.process_set_from_api(record_set_)
     record_set = record_sets[0] if record_sets else None
     records = list(record_set.records) if record_set else []
 
@@ -293,22 +318,23 @@ def _run_module_record_set_api(
     if module.params.get("state") == "present":
         if existing_record is None:
             # Create record
-            record = DNSRecord()
+            record = DNSRecord(record_id=None, record_type=type_in, target=value_in)
             record.prefix = prefix
-            record.type = type_in
             record.ttl = ttl_in
-            record.target = value_in
             after = record
             if record_set is None:
                 # Create record set
-                record_set = DNSRecordSet()
-                record_set.prefix = prefix
-                record_set.type = type_in
-                record_set.ttl = ttl_in
-                record_set.records.append(record)
+                new_record_set: DNSRecordSet[RecordSetIDT | None, RecordIDT | None] = (
+                    DNSRecordSet(record_set_id=None, record_type=type_in)
+                )
+                new_record_set.prefix = prefix
+                new_record_set.ttl = ttl_in
+                new_record_set.records.append(record)
                 if not module.check_mode:
-                    api_record_set = record_converter.clone_set_to_api(record_set)
-                    record_set = api.add_record_set(zone_id, api_record_set)
+                    new_api_record_set = record_converter.clone_set_to_api(
+                        new_record_set
+                    )
+                    record_set = api.add_record_set(zone_id, new_api_record_set)
             else:
                 record_set.records.append(record)
                 updated_ttl = record_set.ttl != ttl_in
@@ -323,11 +349,13 @@ def _run_module_record_set_api(
                     )
             changed = True
             if not module.check_mode:
+                assert record_set is not None
                 for record in record_set.records:
                     if record.target == value_in:
                         after = record_converter.clone_from_api(record)
                         break
         elif not exact_match:
+            assert record_set is not None
             # TTL needs updating
             record_set.ttl = ttl_in
             existing_record.ttl = ttl_in
@@ -346,11 +374,12 @@ def _run_module_record_set_api(
             changed = True
     else:
         if existing_record is not None:
+            assert record_set is not None
             record_set.records.remove(existing_record)
             if not module.check_mode:
                 api_record_set = record_converter.clone_set_to_api(record_set)
                 if not record_set.records:
-                    record_set = api.delete_record_set(zone_id, api_record_set)
+                    api.delete_record_set(zone_id, api_record_set)
                 else:
                     record_set = api.update_record_set(
                         zone_id, api_record_set, updated_records=True, updated_ttl=False
@@ -384,7 +413,11 @@ def _run_module_record_set_api(
     module.exit_json(**result)
 
 
-def run_module(module, create_api, provider_information):
+def run_module(
+    module: AnsibleModule,
+    create_api: t.Callable[[], ZoneRecordAPI | ZoneRecordSetAPI],
+    provider_information: ProviderInformation,
+) -> t.NoReturn:
     option_provider = ModuleOptionProvider(module)
     record_converter = RecordConverter(provider_information, option_provider)
     record_converter.emit_deprecations(module.deprecate)

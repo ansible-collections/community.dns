@@ -14,21 +14,30 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 )
 
 if t.TYPE_CHECKING:
+    from collections.abc import Sequence  # pragma: no cover
+
+    from ._argspec import OptionProvider  # pragma: no cover
     from ._provider import ProviderInformation  # pragma: no cover
-    from ._record import DNSRecord  # pragma: no cover
+    from ._record import DNSRecord, IDNSRecord, RecordIDT  # pragma: no cover
+    from ._zone import ZoneIDT  # pragma: no cover
     from ._zone_record_api import ZoneRecordAPI  # pragma: no cover
+
+    class _Result(t.TypedDict, t.Generic[RecordIDT]):  # pragma: no cover
+        deleted: list[DNSRecord[RecordIDT]]  # pragma: no cover
+        changed: list[DNSRecord[RecordIDT]]  # pragma: no cover
+        created: list[DNSRecord[RecordIDT]]  # pragma: no cover
 
 
 def bulk_apply_changes(
-    api: ZoneRecordAPI,
+    api: ZoneRecordAPI[ZoneIDT, RecordIDT],
     provider_information: ProviderInformation,
-    options,  # TODO type
-    zone_id: str,
-    records_to_delete: list[DNSRecord] | None = None,
-    records_to_change: list[DNSRecord] | None = None,
-    records_to_create: list[DNSRecord] | None = None,
+    options: OptionProvider,
+    zone_id: ZoneIDT,
+    records_to_delete: Sequence[DNSRecord[RecordIDT]] | None = None,
+    records_to_change: Sequence[DNSRecord[RecordIDT]] | None = None,
+    records_to_create: Sequence[IDNSRecord[RecordIDT | None]] | None = None,
     stop_early_on_errors: bool = True,
-) -> tuple[bool, list[DNSAPIError], dict[str, list[DNSRecord]]]:
+) -> tuple[bool, list[DNSAPIError], _Result[RecordIDT]]:
     """
     Update multiple records. If an operation failed, raise a DNSAPIException.
 
@@ -60,7 +69,7 @@ def bulk_apply_changes(
     if provider_information.supports_bulk_actions():
         bulk_threshold = options.get_option("bulk_operation_threshold")
 
-    success: dict[str, list[DNSRecord]] = {
+    success: _Result[RecordIDT] = {
         "deleted": [],
         "changed": [],
         "created": [],
@@ -119,24 +128,24 @@ def bulk_apply_changes(
 
     # Create records
     if len(records_to_create) >= bulk_threshold:
-        results = api.add_records(
+        create_results = api.add_records(
             {zone_id: records_to_create}, stop_early_on_errors=stop_early_on_errors
         )
-        result = results.get(zone_id) or []
-        for record, created, failed in result:
+        create_result = create_results.get(zone_id) or []
+        for crecord, created, failed in create_result:
             has_change |= created
             if failed is not None:
                 errors.append(failed)
             if created:
-                success["created"].append(record)
+                success["created"].append(crecord)  # type: ignore  # if created is True, crecord is a DNSRecord
         if errors and stop_early_on_errors:
             return has_change, errors, success
     else:
-        for record in records_to_create:
+        for create_record in records_to_create:
             try:
-                record = api.add_record(zone_id, record)
+                created_record = api.add_record(zone_id, create_record)
                 has_change = True
-                success["created"].append(record)
+                success["created"].append(created_record)
             except DNSAPIError as e:
                 errors.append(e)
                 if stop_early_on_errors:

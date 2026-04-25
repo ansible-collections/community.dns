@@ -27,27 +27,17 @@ def test_format_ttl():
 
 
 def test_format_records_for_output():
-    A1 = DNSRecord()
-    A1.type = "A"
+    A1 = DNSRecord(record_id=None, record_type="A", target="1.2.3.4")
     A1.ttl = 300
-    A1.target = "1.2.3.4"
     A1.extra["foo"] = "bar"
-    A2 = DNSRecord()
-    A2.type = "A"
+    A2 = DNSRecord(record_id=None, record_type="A", target="1.2.3.5")
     A2.ttl = 300
-    A2.target = "1.2.3.5"
-    A3 = DNSRecord()
-    A3.type = "A"
+    A3 = DNSRecord(record_id=None, record_type="A", target="1.2.3.6")
     A3.ttl = 3600
-    A3.target = "1.2.3.6"
-    AAAA = DNSRecord()
-    AAAA.type = "AAAA"
+    AAAA = DNSRecord(record_id=None, record_type="AAAA", target="::1")
     AAAA.ttl = 600
-    AAAA.target = "::1"
-    AAAA2 = DNSRecord()
-    AAAA2.type = "AAAA"
+    AAAA2 = DNSRecord(record_id=None, record_type="AAAA", target="::2")
     AAAA2.ttl = None
-    AAAA2.target = "::2"
     assert format_records_for_output([], "foo", "") == {
         "record": "foo",
         "prefix": "",
@@ -119,25 +109,20 @@ def test_format_records_for_output():
 
 
 def test_record_str_repr():
-    A1 = DNSRecord()
+    A1 = DNSRecord(record_id=None, record_type="A", target="1.2.3.4")
     A1.prefix = None
-    A1.type = "A"
     A1.ttl = 300
-    A1.target = "1.2.3.4"
-    assert str(A1) == 'DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)'
-    assert repr(A1) == 'DNSRecord(type: A, prefix: (none), target: "1.2.3.4", ttl: 5m)'
-    A2 = DNSRecord()
-    A2.id = 23
+    assert str(A1) == "DNSRecord(type: A, prefix: (none), target: '1.2.3.4', ttl: 5m)"
+    assert repr(A1) == "DNSRecord(type: A, prefix: (none), target: '1.2.3.4', ttl: 5m)"
+    A2 = DNSRecord(record_id=23, record_type="A", target="")
     A2.prefix = "bar"
-    A2.type = "A"
     A2.ttl = 1
-    A2.target = ""
     A2.extra["foo"] = "bar"
     assert (
         str(A2)
-        == "DNSRecord(id: 23, type: A, prefix: \"bar\", target: \"\", ttl: 1s, extra: {'foo': 'bar'})"
+        == "DNSRecord(id: 23, type: A, prefix: 'bar', target: '', ttl: 1s, extra: {'foo': 'bar'})"
     )
     assert (
         repr(A2)
-        == "DNSRecord(id: 23, type: A, prefix: \"bar\", target: \"\", ttl: 1s, extra: {'foo': 'bar'})"
+        == "DNSRecord(id: 23, type: A, prefix: 'bar', target: '', ttl: 1s, extra: {'foo': 'bar'})"
     )

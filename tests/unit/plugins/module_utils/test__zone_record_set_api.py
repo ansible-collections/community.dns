@@ -68,15 +68,11 @@ class _TestZoneRecordSetAPI(ZoneRecordSetAPI):
 
 
 def test_add_record_sets():
-    a1 = DNSRecordSet()
-    a1.id = "a1"
-    a2 = DNSRecordSet()
-    a2.id = "a2"
+    a1 = DNSRecordSet(record_set_id="a1", record_type="A")
+    a2 = DNSRecordSet(record_set_id="a2", record_type="A")
 
-    a1res = DNSRecordSet()
-    a1res.id = "a1res"
-    a2res = DNSRecordSet()
-    a2res.id = "a2res"
+    a1res = DNSRecordSet(record_set_id="a1res", record_type="A")
+    a2res = DNSRecordSet(record_set_id="a2res", record_type="A")
 
     err1 = DNSAPIError("err1")
 
@@ -137,15 +133,11 @@ def test_add_record_sets():
 
 
 def test_update_record_sets():
-    a1 = DNSRecordSet()
-    a1.id = "a1"
-    a2 = DNSRecordSet()
-    a2.id = "a2"
+    a1 = DNSRecordSet(record_set_id="a1", record_type="A")
+    a2 = DNSRecordSet(record_set_id="a2", record_type="A")
 
-    a1res = DNSRecordSet()
-    a1res.id = "a1res"
-    a2res = DNSRecordSet()
-    a2res.id = "a2res"
+    a1res = DNSRecordSet(record_set_id="a1res", record_type="A")
+    a2res = DNSRecordSet(record_set_id="a2res", record_type="A")
 
     err1 = DNSAPIError("err1")
 
@@ -210,10 +202,8 @@ def test_update_record_sets():
 
 
 def test_delete_record_sets():
-    a1 = DNSRecordSet()
-    a1.id = "a1"
-    a2 = DNSRecordSet()
-    a2.id = "a2"
+    a1 = DNSRecordSet(record_set_id="a1", record_type="A")
+    a2 = DNSRecordSet(record_set_id="a2", record_type="A")
 
     err1 = DNSAPIError("err1")
 

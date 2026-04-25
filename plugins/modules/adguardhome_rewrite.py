@@ -89,6 +89,7 @@ from ansible_collections.community.dns.plugins.module_utils._adguardhome.api imp
     AdGuardHomeAPIHandler,
     create_adguardhome_argument_spec,
 )
+from ansible_collections.community.dns.plugins.module_utils._argspec import ArgumentSpec
 
 
 def find_and_compare(rules, domain, answer):
@@ -115,10 +116,10 @@ def main():
         "answer": {"type": "str", "required": False},
         "domain": {"type": "str", "required": True},
     }
-    argument_spec = create_adguardhome_argument_spec(
-        required_if=[["state", "present", ["answer"]]],
-        additional_argument_specs=rewrite_arguments,
+    argument_spec = ArgumentSpec(
+        rewrite_arguments, required_if=[["state", "present", ["answer"]]]
     )
+    argument_spec.merge(create_adguardhome_argument_spec())
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
 
     domain = module.params.get("domain")

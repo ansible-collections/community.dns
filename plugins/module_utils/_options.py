@@ -7,10 +7,17 @@
 
 from __future__ import annotations
 
+import typing as t
+
 from ansible_collections.community.dns.plugins.module_utils._argspec import ArgumentSpec
 
+if t.TYPE_CHECKING:
+    from ._provider import ProviderInformation  # pragma: no cover
 
-def create_bulk_operations_argspec(provider_information):
+
+def create_bulk_operations_argspec(
+    provider_information: ProviderInformation,
+) -> ArgumentSpec:
     """
     If the provider supports bulk operations, return an ArgumentSpec object with appropriate
     options. Otherwise return an empty one.
@@ -25,7 +32,7 @@ def create_bulk_operations_argspec(provider_information):
     )
 
 
-def create_record_transformation_argspec():
+def create_record_transformation_argspec() -> ArgumentSpec:
     return ArgumentSpec(
         argument_spec={
             "txt_transformation": {

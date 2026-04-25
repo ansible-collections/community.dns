@@ -36,6 +36,9 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
     DNSAPIError,
     ZoneRecordAPI,
 )
+from ansible_collections.community.dns.plugins.module_utils._zone_record_set_api import (
+    ZoneRecordSetAPI,
+)
 from ansible_collections.community.dns.plugins.plugin_utils._unsafe import make_unsafe
 
 display = Display()
@@ -48,7 +51,7 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
     def __init__(self) -> None:
         super().__init__()
         self.provider_information: ProviderInformation | None = None
-        self.api: ZoneRecordAPI | None = None
+        self.api: ZoneRecordAPI | ZoneRecordSetAPI | None = None
 
     @abc.abstractmethod
     def setup_api(self) -> None:
