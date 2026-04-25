@@ -111,6 +111,8 @@ results:
         - ns3.example.org
 """
 
+import typing as t
+
 from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.community.dns.plugins.module_utils._resolver import (
@@ -120,7 +122,7 @@ from ansible_collections.community.dns.plugins.module_utils._resolver import (
 )
 
 
-def main():
+def main() -> None:
     module = AnsibleModule(
         argument_spec={
             "name": {"required": True, "type": "list", "elements": "str"},
@@ -145,11 +147,7 @@ def main():
         always_ask_default_resolver=module.params["always_ask_default_resolver"],
         server_addresses=module.params["server"],
     )
-    results = [None] * len(names)
-    for index, name in enumerate(names):
-        results[index] = {
-            "name": name,
-        }
+    results: list[dict[str, t.Any]] = [{"name": name} for name in names]
 
     def f():
         for index, name in enumerate(names):

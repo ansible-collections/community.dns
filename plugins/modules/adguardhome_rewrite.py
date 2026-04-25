@@ -83,6 +83,8 @@ rules:
       sample: dns.osuv.de
 """
 
+import typing as t
+
 from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.community.dns.plugins.module_utils._adguardhome.api import (
@@ -92,7 +94,9 @@ from ansible_collections.community.dns.plugins.module_utils._adguardhome.api imp
 from ansible_collections.community.dns.plugins.module_utils._argspec import ArgumentSpec
 
 
-def find_and_compare(rules, domain, answer):
+def find_and_compare(
+    rules: list[dict[str, t.Any]], domain: str, answer: str
+) -> tuple[bool, bool, dict[str, t.Any]]:
     domain_exists = False
     value_is_different = False
     target = {}
@@ -106,7 +110,7 @@ def find_and_compare(rules, domain, answer):
     return domain_exists, value_is_different, target
 
 
-def main():
+def main() -> None:
     rewrite_arguments = {
         "state": {
             "type": "str",
@@ -117,7 +121,7 @@ def main():
         "domain": {"type": "str", "required": True},
     }
     argument_spec = ArgumentSpec(
-        rewrite_arguments, required_if=[["state", "present", ["answer"]]]
+        rewrite_arguments, required_if=[("state", "present", ["answer"])]
     )
     argument_spec.merge(create_adguardhome_argument_spec())
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())

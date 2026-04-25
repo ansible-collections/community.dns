@@ -1,4 +1,3 @@
-plugins/module_utils/_adguardhome/api.py pep8:E704
 plugins/module_utils/_argspec.py pep8:E704
 plugins/module_utils/_hetzner/api.py pep8:E704
 plugins/module_utils/_json_api_helper.py pep8:E704

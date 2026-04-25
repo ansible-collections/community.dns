@@ -87,7 +87,7 @@ from ansible_collections.community.dns.plugins.module_utils._module.record impor
 )
 
 
-def main():
+def main() -> None:
     provider_information = create_hosttech_provider_information()
     argument_spec = create_hosttech_argument_spec()
     argument_spec.merge(

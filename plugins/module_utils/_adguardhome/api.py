@@ -11,14 +11,15 @@ import json
 import typing as t
 from urllib.error import HTTPError
 
+from ansible.module_utils.common.text.converters import to_native
 from ansible.module_utils.urls import Request
 
 from ansible_collections.community.dns.plugins.module_utils._argspec import ArgumentSpec
 
 if t.TYPE_CHECKING:
+    _P = t.ParamSpec("_P")  # pragma: no cover
 
-    class FailJson:  # pragma: no cover
-        def __call__(self, **kwargs) -> t.NoReturn: ...  # pragma: no cover
+    FailJson = t.Callable[_P, t.NoReturn]  # pragma: no cover
 
 
 def create_adguardhome_argument_spec() -> ArgumentSpec:
@@ -53,7 +54,7 @@ class AdGuardHomeAPIHandler:
             return json.loads(response.read().decode("utf-8"))
 
         except HTTPError as e:
-            self.fail_json(msg=e.read())
+            self.fail_json(msg=to_native(e.read()))
 
     def add_or_delete(
         self,
@@ -82,7 +83,7 @@ class AdGuardHomeAPIHandler:
             return True
 
         except HTTPError as e:
-            self.fail_json(msg=e.read())
+            self.fail_json(msg=to_native(e.read()))
 
     def update(
         self, domain: str, answer: str, target: dict[str, t.Any]
@@ -99,4 +100,4 @@ class AdGuardHomeAPIHandler:
             return True
 
         except HTTPError as e:
-            self.fail_json(msg=e.read())
+            self.fail_json(msg=to_native(e.read()))
