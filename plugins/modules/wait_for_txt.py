@@ -203,12 +203,7 @@ completed:
 
 import time
 import typing as t
-
-try:
-    from time import monotonic
-except ImportError:
-    # TODO: Python 2
-    from time import clock as monotonic  # type: ignore
+from time import monotonic
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.common.text.converters import to_text

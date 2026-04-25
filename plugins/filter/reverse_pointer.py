@@ -43,25 +43,15 @@ _value:
 """
 
 
+import ipaddress
 import typing as t
 from collections.abc import Callable
 
 from ansible.errors import AnsibleFilterError
 from ansible.module_utils.common.text.converters import to_text
 
-from ansible_collections.community.dns.plugins.plugin_utils._ips import (
-    assert_requirements_present,
-)
-
-try:
-    import ipaddress
-except ImportError:  # pragma: no cover
-    # handled by assert_requirements_present
-    pass  # pragma: no cover
-
 
 def reverse_pointer(ip: t.Any) -> str:
-    assert_requirements_present("community.dns.reverse_pointer", "filter")
     if not isinstance(ip, (str, bytes)):
         raise AnsibleFilterError(
             "Input for community.dns.reverse_pointer must be a string"

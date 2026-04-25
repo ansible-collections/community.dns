@@ -6,41 +6,9 @@ from __future__ import annotations
 
 import pytest
 
-from ansible_collections.community.dns.plugins.module_utils import _ips as ips
 from ansible_collections.community.dns.plugins.module_utils._ips import (
-    assert_requirements_present,
     is_ip_address,
 )
-
-# We need ipaddress
-ipaddress = pytest.importorskip("ipaddress")
-
-
-def test_assert_requirements_present():
-    class ModuleFailException(Exception):
-        pass
-
-    class FakeModule:
-        def fail_json(self, **kwargs):
-            raise ModuleFailException(kwargs)
-
-    module = FakeModule()
-
-    orig_importerror = ips.IPADDRESS_IMPORT_EXC
-    try:
-        ips.IPADDRESS_IMPORT_EXC = None
-        assert_requirements_present(module)
-
-        ips.IPADDRESS_IMPORT_EXC = "asdf"
-        with pytest.raises(ModuleFailException) as exc:
-            assert_requirements_present(module)
-
-        assert "ipaddress" in exc.value.args[0]["msg"]
-        assert exc.value.args[0]["exception"] == "asdf"
-
-    finally:
-        ips.IPADDRESS_IMPORT_EXC = orig_importerror
-
 
 IS_IP_ADDRESS_DATA = [
     ("foo.bar", False),
