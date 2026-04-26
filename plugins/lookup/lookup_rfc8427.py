@@ -12,7 +12,7 @@ author:
 short_description: Look up DNS records and return RFC 8427 JSON format
 version_added: 3.4.0
 requirements:
-  - dnspython >= 1.15.0 (maybe older versions also work)
+  - dnspython >= 2.0.0
 description:
   - Look up DNS records and return them in L(RFC 8427 DNS message JSON format, https://www.rfc-editor.org/rfc/rfc8427.html).
   - RFC 8427 defines a standardized format for representing DNS messages in JSON.

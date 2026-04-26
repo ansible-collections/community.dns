@@ -111,7 +111,7 @@ options:
     elements: str
     version_added: 2.7.0
 requirements:
-  - dnspython >= 1.15.0 (maybe older versions also work)
+  - dnspython >= 2.0.0
 """
 
 EXAMPLES = r"""

@@ -10,7 +10,7 @@ author: Felix Fontein (@felixfontein)
 short_description: Look up DNS records
 version_added: 2.6.0
 requirements:
-  - dnspython >= 1.15.0 (maybe older versions also work)
+  - dnspython >= 2.0.0
 description:
   - Look up DNS records.
 options:

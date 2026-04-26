@@ -23,6 +23,7 @@ try:
     import dns.rcode
     import dns.rdatatype
     import dns.resolver
+    import dns.version
 except ImportError:
     DNSPYTHON_IMPORTERROR = traceback.format_exc()
 else:
@@ -110,25 +111,13 @@ class _Resolve:
     ) -> dns.rrset.RRset | None:
         retry = 0
         while True:
-            try:
-                response = self._handle_timeout(
-                    resolver.resolve,
-                    dnsname,
-                    lifetime=self.timeout,
-                    rdtype=rdtype,
-                    **kwargs,
-                )
-            except AttributeError:
-                # For dnspython < 2.0.0
-                resolver.search = kwargs.pop("search", False)  # type: ignore
-                try:
-                    response = self._handle_timeout(
-                        resolver.query, dnsname, lifetime=self.timeout, rdtype=rdtype, **kwargs  # type: ignore
-                    )
-                except TypeError:
-                    # For dnspython < 1.6.0
-                    resolver.lifetime = self.timeout
-                    response = self._handle_timeout(resolver.query, dnsname, rdtype=rdtype**kwargs)  # type: ignore
+            response = self._handle_timeout(
+                resolver.resolve,
+                dnsname,
+                lifetime=self.timeout,
+                rdtype=rdtype,
+                **kwargs,
+            )
             if (
                 response.response.rcode() == dns.rcode.SERVFAIL
                 and retry < self.servfail_retries
@@ -502,6 +491,12 @@ def guarded_run(
 def assert_requirements_present(module: AnsibleModule) -> None:
     if DNSPYTHON_IMPORTERROR is not None:
         module.fail_json(
-            msg=missing_required_lib("dnspython"),
+            msg=missing_required_lib("dnspython >= 2.0.0"),
+            exception=DNSPYTHON_IMPORTERROR,
+        )
+    if dns.version.MAJOR < 2:
+        module.fail_json(
+            msg=missing_required_lib("dnspython >= 2.0.0")
+            + f" Found version {dns.version.version}.",
             exception=DNSPYTHON_IMPORTERROR,
         )
