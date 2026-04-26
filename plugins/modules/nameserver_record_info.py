@@ -89,11 +89,7 @@ options:
     elements: str
     version_added: 2.7.0
 requirements:
-  - dnspython >= 1.15.0 (maybe older versions also work)
-notes:
-  - Dnspython before 2.0.0 does not correctly support (un-)escaping UTF-8 in TXT-like records. This can result in wrongly
-    decoded TXT records. Please use dnspython 2.0.0 or later to fix this issue; see also U(https://github.com/rthalley/dnspython/issues/321).
-    Unfortunately dnspython 2.0.0 requires Python 3.6 or newer.
+  - dnspython >= 2.0.0
 """
 
 EXAMPLES = r"""

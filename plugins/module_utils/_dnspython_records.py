@@ -205,19 +205,7 @@ def convert_rdata_to_dict(
         if rdata.rdtype == dns.rdatatype.NSEC3 and f == "next":
             val = to_native(base64.b32encode(rdata.next).translate(dns.rdtypes.ANY.NSEC3.b32_normal_to_hex).lower())  # type: ignore
         if rdata.rdtype in (dns.rdatatype.NSEC, dns.rdatatype.NSEC3) and f == "windows":
-            try:
-                val = dns.rdtypes.util.Bitmap(rdata.windows).to_text().lstrip(" ")  # type: ignore
-            except AttributeError:
-                # dnspython < 2.0.0
-                val = []
-                for window, bitmap in rdata.windows:  # type: ignore
-                    for i, byte in enumerate(bitmap):
-                        for j in range(8):
-                            if (byte >> (7 - j)) & 1 != 0:
-                                val.append(
-                                    dns.rdatatype.to_text(window * 256 + i * 8 + j)
-                                )
-                val = " ".join(val).lstrip(" ")
+            val = dns.rdtypes.util.Bitmap(rdata.windows).to_text().lstrip(" ")  # type: ignore
         if (
             rdata.rdtype in (dns.rdatatype.NSEC3, dns.rdatatype.NSEC3PARAM)
             and f == "salt"

@@ -14,8 +14,6 @@ from ansible_collections.community.dns.plugins.module_utils._dnspython_records i
 # We need dnspython
 dns = pytest.importorskip("dns")
 
-import dns.version  # noqa: F811
-
 TEST_CONVERT_RDATA_TO_DICT = [
     (
         dns.rdata.from_text(dns.rdataclass.IN, dns.rdatatype.A, "3.3.3.3"),
@@ -355,54 +353,45 @@ TEST_CONVERT_RDATA_TO_DICT = [
             "value": "asdffoo bar",
         },
     ),
+    (
+        dns.rdata.from_text(
+            dns.rdataclass.IN, dns.rdatatype.TXT, r'asdf "foo \195\164"'
+        ),
+        {"to_unicode": False, "add_synthetic": False},
+        {
+            "strings": [b"asdf", b"foo \xc3\xa4"],
+        },
+    ),
+    (
+        dns.rdata.from_text(
+            dns.rdataclass.IN, dns.rdatatype.TXT, r'asdf "foo \195\164"'
+        ),
+        {"to_unicode": False, "add_synthetic": True},
+        {
+            "strings": [b"asdf", b"foo \xc3\xa4"],
+            "value": b"asdffoo \xc3\xa4",
+        },
+    ),
+    (
+        dns.rdata.from_text(
+            dns.rdataclass.IN, dns.rdatatype.TXT, r'asdf "foo \195\164"'
+        ),
+        {"to_unicode": True, "add_synthetic": False},
+        {
+            "strings": ["asdf", "foo ä"],
+        },
+    ),
+    (
+        dns.rdata.from_text(
+            dns.rdataclass.IN, dns.rdatatype.TXT, r'asdf "foo \195\164"'
+        ),
+        {"to_unicode": True, "add_synthetic": True},
+        {
+            "strings": ["asdf", "foo ä"],
+            "value": "asdffoo ä",
+        },
+    ),
 ]
-
-
-if dns.version.MAJOR >= 2:
-    # https://github.com/rthalley/dnspython/issues/321 makes this not working on dnspython < 2.0.0,
-    # which affects Python 3.5 and 2.x since these are only supported by dnspython < 2.0.0.
-    TEST_CONVERT_RDATA_TO_DICT.extend(
-        [
-            (
-                dns.rdata.from_text(
-                    dns.rdataclass.IN, dns.rdatatype.TXT, r'asdf "foo \195\164"'
-                ),
-                {"to_unicode": False, "add_synthetic": False},
-                {
-                    "strings": [b"asdf", b"foo \xc3\xa4"],
-                },
-            ),
-            (
-                dns.rdata.from_text(
-                    dns.rdataclass.IN, dns.rdatatype.TXT, r'asdf "foo \195\164"'
-                ),
-                {"to_unicode": False, "add_synthetic": True},
-                {
-                    "strings": [b"asdf", b"foo \xc3\xa4"],
-                    "value": b"asdffoo \xc3\xa4",
-                },
-            ),
-            (
-                dns.rdata.from_text(
-                    dns.rdataclass.IN, dns.rdatatype.TXT, r'asdf "foo \195\164"'
-                ),
-                {"to_unicode": True, "add_synthetic": False},
-                {
-                    "strings": ["asdf", "foo ä"],
-                },
-            ),
-            (
-                dns.rdata.from_text(
-                    dns.rdataclass.IN, dns.rdatatype.TXT, r'asdf "foo \195\164"'
-                ),
-                {"to_unicode": True, "add_synthetic": True},
-                {
-                    "strings": ["asdf", "foo ä"],
-                    "value": "asdffoo ä",
-                },
-            ),
-        ]
-    )
 
 
 @pytest.mark.parametrize("rdata, kwarg, expected_result", TEST_CONVERT_RDATA_TO_DICT)

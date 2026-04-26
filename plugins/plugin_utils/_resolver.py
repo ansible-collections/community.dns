@@ -28,6 +28,7 @@ try:
     import dns.rcode  # pylint: disable=unused-import
     import dns.rdatatype  # pylint: disable=unused-import
     import dns.resolver  # pylint: disable=unused-import
+    import dns.version
 except ImportError as exc:
     DNSPYTHON_IMPORTERROR = exc
 else:
@@ -53,5 +54,11 @@ def guarded_run(
 
 def assert_requirements_present(plugin_name: str, plugin_type: str) -> None:
     if DNSPYTHON_IMPORTERROR is not None:
-        msg = f'The {plugin_name} {plugin_type} plugin is missing requirements: {missing_required_lib("dnspython")}'
+        msg = f'The {plugin_name} {plugin_type} plugin is missing requirements: {missing_required_lib("dnspython >= 2.0.0")}'
         raise AnsibleError(msg) from DNSPYTHON_IMPORTERROR
+    if dns.version.MAJOR < 2:
+        msg = (
+            f'The {plugin_name} {plugin_type} plugin is missing requirements: {missing_required_lib("dnspython >= 2.0.0")}.'
+            f" Found version {dns.version.version}."
+        )
+        raise AnsibleError(msg)
