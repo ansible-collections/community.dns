@@ -106,12 +106,14 @@ class ArgumentSpec:
         required_if: RequiredIfT | None = None,
         required_one_of: RequiredOneOfT | None = None,
         mutually_exclusive: MutuallyExclusiveT | None = None,
+        required_by: RequiredByT | None = None,
     ) -> None:
         self.argument_spec: ArgumentSpecMutT = {}
         self.required_together: RequiredTogetherMutT = []
         self.required_if: RequiredIfMutT = []
         self.required_one_of: RequiredOneOfMutT = []
         self.mutually_exclusive: MutuallyExclusiveMutT = []
+        self.required_by: RequiredByMutT = {}
         if argument_spec:
             self.argument_spec.update(argument_spec)
         if required_together:
@@ -126,13 +128,42 @@ class ArgumentSpec:
                 self.mutually_exclusive.append(mutually_exclusive)  # type: ignore
             else:
                 self.mutually_exclusive.extend(mutually_exclusive)
+        if required_by:
+            self.required_by.update(required_by)
+
+    def update(
+        self,
+        *,
+        required_together: RequiredTogetherT | None = None,
+        required_if: RequiredIfT | None = None,
+        required_one_of: RequiredOneOfT | None = None,
+        mutually_exclusive: MutuallyExclusiveT | None = None,
+        required_by: RequiredByT | None = None,
+    ) -> t.Self:
+        if mutually_exclusive:
+            self.mutually_exclusive.extend(mutually_exclusive)
+        if required_together:
+            self.required_together.extend(required_together)
+        if required_one_of:
+            self.required_one_of.extend(required_one_of)
+        if required_if:
+            self.required_if.extend(required_if)
+        if required_by:
+            for k, v in required_by.items():
+                if k in self.required_by:
+                    v = list(self.required_by[k]) + list(v)
+                self.required_by[k] = v
+        return self
 
     def merge(self, other: ArgumentSpec) -> t.Self:
         self.argument_spec.update(other.argument_spec)
-        self.required_together.extend(other.required_together)
-        self.required_if.extend(other.required_if)
-        self.required_one_of.extend(other.required_one_of)
-        self.mutually_exclusive.extend(other.mutually_exclusive)
+        self.update(
+            mutually_exclusive=other.mutually_exclusive,
+            required_together=other.required_together,
+            required_one_of=other.required_one_of,
+            required_if=other.required_if,
+            required_by=other.required_by,
+        )
         return self
 
     def to_kwargs(self) -> dict[str, t.Any]:
@@ -142,6 +173,7 @@ class ArgumentSpec:
             "required_if": self.required_if,
             "required_one_of": self.required_one_of,
             "mutually_exclusive": self.mutually_exclusive,
+            "required_by": self.required_by,
         }
 
 
