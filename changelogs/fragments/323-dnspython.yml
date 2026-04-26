@@ -1,4 +1,0 @@
-removed_features:
-  - "Drop support for dnspython < 2.0.0.
-     All modules and plugins that require dnspython will no longer work with older versions
-     (https://github.com/ansible-collections/community.dns/pull/323)."
