@@ -13,5 +13,4 @@ skip_list:
   - yaml  # we're using yamllint ourselves
 
   # To be checked and maybe fixed:
-  - name
   - var-naming

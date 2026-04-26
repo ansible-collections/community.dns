@@ -8,7 +8,7 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- name: auth anker
+- name: Auth anker
   ansible.builtin.set_fact:
     adguardhome_connection: &adguardhome_connection
       username: "{{ adguardhome_user }}"
@@ -16,18 +16,18 @@
       host: "{{ adguardhome_host }}"
       validate_certs: "{{ adguardhome_validate_certs }}"
 
-- name: get dns all dns rewrites
+- name: Get all DNS rewrites
   register: rewrites
   community.dns.adguardhome_rewrite_info:
     <<: *adguardhome_connection
 
-- name: rewrite rules must be from type of list
+- name: Rewrite rules must be from type of list
   ansible.builtin.assert:
     that:
       - "'rules' in rewrites"
       - "rewrites['rules'] is iterable"
 
-- name: check mode - set a dns rewrite
+- name: Check mode - set a DNS rewrite
   register: set_rewrite
   check_mode: true
   community.dns.adguardhome_rewrite:
@@ -35,36 +35,36 @@
     domain: example.org
     answer: 127.0.0.1
 
-- name: check mode - rewrite is created
+- name: Check mode - rewrite is created
   ansible.builtin.assert:
     that:
       - set_rewrite is changed
 
-- name: set a dns rewrite
+- name: Set a DNS rewrite
   register: set_rewrite
   community.dns.adguardhome_rewrite:
     <<: *adguardhome_connection
     domain: example.org
     answer: 127.0.0.1
 
-- name: rewrite is created
+- name: Rewrite is created
   ansible.builtin.assert:
     that:
       - set_rewrite is changed
 
-- name: idempotent set dns rewrite
+- name: Idempotent set DNS rewrite
   register: set_rewrite
   community.dns.adguardhome_rewrite:
     <<: *adguardhome_connection
     domain: example.org
     answer: 127.0.0.1
 
-- name: rewrite is present
+- name: Rewrite is present
   ansible.builtin.assert:
     that:
       - set_rewrite is not changed
 
-- name: check mode - change dns records
+- name: Check mode - change DNS records
   register: set_rewrite
   check_mode: true
   community.dns.adguardhome_rewrite:
@@ -72,36 +72,36 @@
     domain: example.org
     answer: 127.0.1.1
 
-- name: check mode - rewrite is changed
+- name: Check mode - rewrite is changed
   ansible.builtin.assert:
     that:
       - set_rewrite is changed
 
-- name: change dns records
+- name: Change DNS records
   register: set_rewrite
   community.dns.adguardhome_rewrite:
     <<: *adguardhome_connection
     domain: example.org
     answer: 127.0.1.1
 
-- name: rewrite is changed
+- name: Rewrite is changed
   ansible.builtin.assert:
     that:
       - set_rewrite is changed
 
-- name: idempotent change dns records
+- name: Idempotent change DNS records
   register: set_rewrite
   community.dns.adguardhome_rewrite:
     <<: *adguardhome_connection
     domain: example.org
     answer: 127.0.1.1
 
-- name: rewrite is not changed
+- name: Rewrite is not changed
   ansible.builtin.assert:
     that:
       - set_rewrite is not changed
 
-- name: check mode - remove set dns records
+- name: Check mode - remove set DNS records
   register: rm_rewrite
   check_mode: true
   community.dns.adguardhome_rewrite:
@@ -109,31 +109,31 @@
     domain: example.org
     state: absent
 
-- name: check mode - rewrite is removed
+- name: Check mode - rewrite is removed
   ansible.builtin.assert:
     that:
       - rm_rewrite is changed
 
-- name: remove set dns records
+- name: Remove set DNS records
   register: rm_rewrite
   community.dns.adguardhome_rewrite:
     <<: *adguardhome_connection
     domain: example.org
     state: absent
 
-- name: rewrite is removed. changed.
+- name: Rewrite is removed. changed.
   ansible.builtin.assert:
     that:
       - rm_rewrite is changed
 
-- name: idempotent remove set dns records
+- name: Idempotent remove set DNS records
   register: rm_rewrite
   community.dns.adguardhome_rewrite:
     <<: *adguardhome_connection
     domain: example.org
     state: absent
 
-- name: record is already removed. no change
+- name: Record is already removed. no change
   ansible.builtin.assert:
     that:
       - rm_rewrite is not changed

@@ -48,31 +48,31 @@
       - >
         'foo "bar baz" bam' | community.dns.unquote_txt == "foobar bazbam"
 
-- name: quote_txt failure - input not string
+- name: Quote_txt failure - input not string
   ansible.builtin.set_fact:
     output: "{{ 1 | community.dns.quote_txt }}"
   register: quote_failure_1
   ignore_errors: true
 
-- name: quote_txt failure - always_quote not a boolean
+- name: Quote_txt failure - always_quote not a boolean
   ansible.builtin.set_fact:
     output: "{{ '' | community.dns.quote_txt(always_quote=1) }}"
   register: quote_failure_2
   ignore_errors: true
 
-- name: quote_txt failure - character_encoding has invalid value
+- name: Quote_txt failure - character_encoding has invalid value
   ansible.builtin.set_fact:
     output: "{{ '' | community.dns.quote_txt(character_encoding='foo') }}"
   register: quote_failure_3
   ignore_errors: true
 
-- name: unquote_txt failure - input not string
+- name: Unquote_txt failure - input not string
   ansible.builtin.set_fact:
     output: "{{ 1 | community.dns.unquote_txt }}"
   register: unquote_failure_1
   ignore_errors: true
 
-- name: unquote_txt failure - character_encoding has invalid value
+- name: Unquote_txt failure - character_encoding has invalid value
   ansible.builtin.set_fact:
     output: "{{ '' | community.dns.unquote_txt(character_encoding='foo') }}"
   register: unquote_failure_2
