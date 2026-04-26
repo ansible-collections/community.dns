@@ -15,4 +15,3 @@ skip_list:
   # To be checked and maybe fixed:
   - name
   - var-naming
-  - fqcn

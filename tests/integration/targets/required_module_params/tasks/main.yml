@@ -3,144 +3,144 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- name: Run hetzner_dns_record without options
-  hetzner_dns_record:
+- name: Run community.dns.hetzner_dns_record without options
+  community.dns.hetzner_dns_record:  # noqa: args[module]
   register: result
   failed_when: result is not failed
 
-- name: Validate hetzner_dns_record run
-  assert:
+- name: Validate community.dns.hetzner_dns_record run
+  ansible.builtin.assert:
     that:
       - "'state' in result.msg"
       - "'type' in result.msg"
       - "'value' in result.msg"
 
-- name: Run hetzner_dns_record_info without options
-  hetzner_dns_record_info:
+- name: Run community.dns.hetzner_dns_record_info without options
+  community.dns.hetzner_dns_record_info:  # noqa: args[module]
   register: result
   failed_when: result is not failed
 
-- name: Validate hetzner_dns_record_info run
-  assert:
+- name: Validate community.dns.hetzner_dns_record_info run
+  ansible.builtin.assert:
     that:
       - "'hetzner_token' in result.msg"
 
-- name: Run hetzner_dns_record_set_info without options
-  hetzner_dns_record_set_info:
+- name: Run community.dns.hetzner_dns_record_set_info without options
+  community.dns.hetzner_dns_record_set_info:  # noqa: args[module]
   register: result
   failed_when: result is not failed
 
-- name: Validate hetzner_dns_record_set_info run
-  assert:
+- name: Validate community.dns.hetzner_dns_record_set_info run
+  ansible.builtin.assert:
     that:
       - "'hetzner_token' in result.msg"
 
-- name: Run hetzner_dns_record_set without options
-  hetzner_dns_record_set:
+- name: Run community.dns.hetzner_dns_record_set without options
+  community.dns.hetzner_dns_record_set:  # noqa: args[module]
   register: result
   failed_when: result is not failed
 
-- name: Validate hetzner_dns_record_set run
-  assert:
+- name: Validate community.dns.hetzner_dns_record_set run
+  ansible.builtin.assert:
     that:
       - "'state' in result.msg"
       - "'type' in result.msg"
 
-- name: Run hetzner_dns_record_sets without options
-  hetzner_dns_record_sets:
+- name: Run community.dns.hetzner_dns_record_sets without options
+  community.dns.hetzner_dns_record_sets:  # noqa: args[module]
   register: result
   failed_when: result is not failed
 
-- name: Validate hetzner_dns_record_sets run
-  assert:
+- name: Validate community.dns.hetzner_dns_record_sets run
+  ansible.builtin.assert:
     that:
       - "'record_sets' in result.msg"
 
-- name: Run hetzner_dns_zone_info without options
-  hetzner_dns_zone_info:
+- name: Run community.dns.hetzner_dns_zone_info without options
+  community.dns.hetzner_dns_zone_info:  # noqa: args[module]
   register: result
   failed_when: result is not failed
 
-- name: Validate hetzner_dns_zone_info run
-  assert:
+- name: Validate community.dns.hetzner_dns_zone_info run
+  ansible.builtin.assert:
     that:
       - "'hetzner_token' in result.msg"
 
-- name: Run hosttech_dns_record without options
-  hosttech_dns_record:
+- name: Run community.dns.hosttech_dns_record without options
+  community.dns.hosttech_dns_record:  # noqa: args[module]
   register: result
   failed_when: result is not failed
 
-- name: Validate hosttech_dns_record run
-  assert:
+- name: Validate community.dns.hosttech_dns_record run
+  ansible.builtin.assert:
     that:
       - "'state' in result.msg"
       - "'type' in result.msg"
       - "'value' in result.msg"
 
-- name: Run hosttech_dns_record_set_info without options
-  hosttech_dns_record_set_info:
+- name: Run community.dns.hosttech_dns_record_set_info without options
+  community.dns.hosttech_dns_record_set_info:  # noqa: args[module]
   register: result
   failed_when: result is not failed
 
-- name: Validate hosttech_dns_record_set_info run
-  assert:
+- name: Validate community.dns.hosttech_dns_record_set_info run
+  ansible.builtin.assert:
     that:
       - "'one of the following is required' in result.msg"
       - "'zone_name' in result.msg"
       - "'zone_id' in result.msg"
 
-- name: Run hosttech_dns_record_info without options
-  hosttech_dns_record_info:
+- name: Run community.dns.hosttech_dns_record_info without options
+  community.dns.hosttech_dns_record_info:  # noqa: args[module]
   register: result
   failed_when: result is not failed
 
-- name: Validate hosttech_dns_record_info run
-  assert:
+- name: Validate community.dns.hosttech_dns_record_info run
+  ansible.builtin.assert:
     that:
       - "'one of the following is required' in result.msg"
       - "'zone_name' in result.msg"
       - "'zone_id' in result.msg"
 
-- name: Run hosttech_dns_record_set without options
-  hosttech_dns_record_set:
+- name: Run community.dns.hosttech_dns_record_set without options
+  community.dns.hosttech_dns_record_set:  # noqa: args[module]
   register: result
   failed_when: result is not failed
 
-- name: Validate hosttech_dns_record_set run
-  assert:
+- name: Validate community.dns.hosttech_dns_record_set run
+  ansible.builtin.assert:
     that:
       - "'state' in result.msg"
       - "'type' in result.msg"
 
-- name: Run hosttech_dns_record_sets without options
-  hosttech_dns_record_sets:
+- name: Run community.dns.hosttech_dns_record_sets without options
+  community.dns.hosttech_dns_record_sets:  # noqa: args[module]
   register: result
   failed_when: result is not failed
 
-- name: Validate hosttech_dns_record_sets run
-  assert:
+- name: Validate community.dns.hosttech_dns_record_sets run
+  ansible.builtin.assert:
     that:
       - "'record_sets' in result.msg"
 
-- name: Run hosttech_dns_zone_info without options
-  hosttech_dns_zone_info:
+- name: Run community.dns.hosttech_dns_zone_info without options
+  community.dns.hosttech_dns_zone_info:  # noqa: args[module]
   register: result
   failed_when: result is not failed
 
-- name: Validate hosttech_dns_zone_info run
-  assert:
+- name: Validate community.dns.hosttech_dns_zone_info run
+  ansible.builtin.assert:
     that:
       - "'one of the following is required' in result.msg"
       - "'zone_name' in result.msg"
       - "'zone_id' in result.msg"
 
 - name: Run wait_for_txt without options
-  wait_for_txt:
+  community.dns.wait_for_txt:  # noqa: args[module]
   register: result
   failed_when: result is not failed
 
 - name: Validate wait_for_txt run
-  assert:
+  ansible.builtin.assert:
     that:
       - "'records' in result.msg"

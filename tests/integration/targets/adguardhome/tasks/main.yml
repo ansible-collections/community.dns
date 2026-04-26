@@ -22,7 +22,7 @@
     <<: *adguardhome_connection
 
 - name: rewrite rules must be from type of list
-  assert:
+  ansible.builtin.assert:
     that:
       - "'rules' in rewrites"
       - "rewrites['rules'] is iterable"
@@ -36,7 +36,7 @@
     answer: 127.0.0.1
 
 - name: check mode - rewrite is created
-  assert:
+  ansible.builtin.assert:
     that:
       - set_rewrite is changed
 
@@ -48,7 +48,7 @@
     answer: 127.0.0.1
 
 - name: rewrite is created
-  assert:
+  ansible.builtin.assert:
     that:
       - set_rewrite is changed
 
@@ -60,7 +60,7 @@
     answer: 127.0.0.1
 
 - name: rewrite is present
-  assert:
+  ansible.builtin.assert:
     that:
       - set_rewrite is not changed
 
@@ -73,7 +73,7 @@
     answer: 127.0.1.1
 
 - name: check mode - rewrite is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - set_rewrite is changed
 
@@ -85,7 +85,7 @@
     answer: 127.0.1.1
 
 - name: rewrite is changed
-  assert:
+  ansible.builtin.assert:
     that:
       - set_rewrite is changed
 
@@ -97,7 +97,7 @@
     answer: 127.0.1.1
 
 - name: rewrite is not changed
-  assert:
+  ansible.builtin.assert:
     that:
       - set_rewrite is not changed
 
@@ -110,7 +110,7 @@
     state: absent
 
 - name: check mode - rewrite is removed
-  assert:
+  ansible.builtin.assert:
     that:
       - rm_rewrite is changed
 
@@ -122,7 +122,7 @@
     state: absent
 
 - name: rewrite is removed. changed.
-  assert:
+  ansible.builtin.assert:
     that:
       - rm_rewrite is changed
 
@@ -134,6 +134,6 @@
     state: absent
 
 - name: record is already removed. no change
-  assert:
+  ansible.builtin.assert:
     that:
       - rm_rewrite is not changed

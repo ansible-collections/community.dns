@@ -16,7 +16,7 @@
   register: success
 
 - name: Validate results
-  assert:
+  ansible.builtin.assert:
     that:
       - success is not changed
       - success.msg == 'All checks passed'
@@ -41,7 +41,7 @@
   failed_when: timeout is not failed
 
 - name: Validate results
-  assert:
+  ansible.builtin.assert:
     that:
       - timeout.msg == 'Timeout (0 out of 1 check(s) passed).'
       - timeout.completed == 0
@@ -62,7 +62,7 @@
   failed_when: timeout is not failed
 
 - name: Validate results
-  assert:
+  ansible.builtin.assert:
     that:
       - timeout.msg == 'Timeout (0 out of 1 check(s) passed).'
       - timeout.completed == 0
