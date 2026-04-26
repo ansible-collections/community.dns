@@ -14,45 +14,45 @@
         type: CNAME
         ttl: 300
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
-      failed_when: RECORD is not failed
+      register: record_result
+      failed_when: record_result is not failed
 
     - name: Verify graceful error handling
       ansible.builtin.assert:
         that:
-          - RECORD is not changed
-          - 'RECORD.msg == "Zone not found"'
+          - record_result is not changed
+          - 'record_result.msg == "Zone not found"'
 
     - name: Fetch zone info
       community.dns.hetzner_dns_zone_info:
         zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
-      register: ZONES
+      register: zones_result
 
     - name: Fetch zone info must also work in check_mode
       community.dns.hetzner_dns_zone_info:
         zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
       check_mode: true
-      register: ZONES
+      register: zones_result
 
     - name: Add record
       community.dns.hetzner_dns_record:
-        zone_id: "{{ ZONES.zone_id }}"
+        zone_id: "{{ zones_result.zone_id }}"
         prefix: dns_ansible_collection
         state: present
         value: "{{ hetzner_test_zone }}."
         type: CNAME
         ttl: 300
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
 
     - name: Assert add record 1
       ansible.builtin.assert:
         that:
-          - RECORD is changed
-          # - RECORD.record_set_info.record.ttl == 300
-          # - RECORD.record_set_info | count == 1
+          - record_result is changed
+          # - record_result.record_set_info.record.ttl == 300
+          # - record_result.record_set_info | count == 1
 
     - name: Fetch record info
       community.dns.hetzner_dns_record_set_info:
@@ -60,18 +60,18 @@
         type: CNAME
         zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
 
     - name: Show record set
       ansible.builtin.debug:
-        msg: "{{ RECORD }}"
+        msg: "{{ record_result }}"
 
     - name: Assert add record 2
       ansible.builtin.assert:
         that:
-          - RECORD.set.ttl == 300
-          - RECORD.set.type == 'CNAME'
-          - RECORD.set.value == [hetzner_test_zone ~ "."]
+          - record_result.set.ttl == 300
+          - record_result.set.type == 'CNAME'
+          - record_result.set.value == [hetzner_test_zone ~ "."]
 
     - name: Fetch record info must also work in check_mode
       community.dns.hetzner_dns_record_set_info:
@@ -90,20 +90,20 @@
         type: CNAME
         ttl: 300
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
       diff: true
 
     - name: Show record set
       ansible.builtin.debug:
-        var: RECORD
+        var: record_result
 
     - name: Assert add record no change
       ansible.builtin.assert:
         that:
-          - RECORD is not changed
-          - RECORD.diff.before.ttl == 300
-          - RECORD.diff.after.ttl == 300
-          - RECORD.diff.after.value == hetzner_test_zone ~ '.'
+          - record_result is not changed
+          - record_result.diff.before.ttl == 300
+          - record_result.diff.after.ttl == 300
+          - record_result.diff.after.value == hetzner_test_zone ~ '.'
 
     - name: Modify record change in check_mode
       community.dns.hetzner_dns_record:
@@ -115,16 +115,16 @@
         ttl: 60
         hetzner_token: "{{ hetzner_token }}"
       check_mode: true
-      register: RECORD
+      register: record_result
       diff: true
 
     - name: Assert change record check_mode
       ansible.builtin.assert:
         that:
-          - RECORD is changed
-          - RECORD.diff.before.ttl == 300
-          - RECORD.diff.after.ttl == 60
-          - RECORD.diff.after.value == hetzner_test_zone ~ '.'
+          - record_result is changed
+          - record_result.diff.before.ttl == 300
+          - record_result.diff.after.ttl == 60
+          - record_result.diff.after.value == hetzner_test_zone ~ '.'
 
     - name: Modify record change
       community.dns.hetzner_dns_record:
@@ -135,16 +135,16 @@
         type: CNAME
         ttl: 60
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
       diff: true
 
     - name: Assert change record
       ansible.builtin.assert:
         that:
-          - RECORD is changed
-          - RECORD.diff.before.ttl == 300
-          - RECORD.diff.after.ttl == 60
-          - RECORD.diff.after.value == hetzner_test_zone ~ '.'
+          - record_result is changed
+          - record_result.diff.before.ttl == 300
+          - record_result.diff.after.ttl == 60
+          - record_result.diff.after.value == hetzner_test_zone ~ '.'
 
     - name: Delete record
       community.dns.hetzner_dns_record:
@@ -154,12 +154,12 @@
         value: "{{ hetzner_test_zone }}."
         state: absent
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
 
     - name: Assert delete record
       ansible.builtin.assert:
         that:
-          - RECORD is changed
+          - record_result is changed
 
     - name: Delete record no change
       community.dns.hetzner_dns_record:
@@ -169,45 +169,45 @@
         value: "{{ hetzner_test_zone }}."
         state: absent
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
 
     - name: Assert delete record
       ansible.builtin.assert:
         that:
-          - RECORD is not changed
+          - record_result is not changed
 
     - name: Add single A record
       community.dns.hetzner_dns_record:
-        zone_id: "{{ ZONES.zone_id }}"
+        zone_id: "{{ zones_result.zone_id }}"
         prefix: dns_ansible_collection
         state: present
         value: 1.1.1.1
         type: A
         ttl: 60
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
 
     - name: Append A record
       community.dns.hetzner_dns_record:
-        zone_id: "{{ ZONES.zone_id }}"
+        zone_id: "{{ zones_result.zone_id }}"
         prefix: dns_ansible_collection
         state: present
         value: 8.8.8.8
         type: A
         ttl: 60
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
 
     - name: Append A record
       community.dns.hetzner_dns_record:
-        zone_id: "{{ ZONES.zone_id }}"
+        zone_id: "{{ zones_result.zone_id }}"
         prefix: dns_ansible_collection
         state: present
         value: 8.8.4.4
         type: A
         ttl: 60
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
 
     - name: Fetch record info
       community.dns.hetzner_dns_record_set_info:
@@ -215,12 +215,12 @@
         type: A
         zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
 
     - name: Assert 3 A records
       ansible.builtin.assert:
         that:
-          - RECORD.set.value | count == 3
+          - record_result.set.value | count == 3
 
     - name: Delete single A record
       community.dns.hetzner_dns_record:
@@ -237,12 +237,12 @@
         type: A
         zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
 
     - name: Assert 2 A records
       ansible.builtin.assert:
         that:
-          - RECORD.set.value | count == 2
+          - record_result.set.value | count == 2
 
     - name: Delete another A records
       community.dns.hetzner_dns_record:
@@ -259,12 +259,12 @@
         type: A
         zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
 
     - name: Assert 1 A records
       ansible.builtin.assert:
         that:
-          - RECORD.set.value | count == 1
+          - record_result.set.value | count == 1
 
     - name: Delete last A records
       community.dns.hetzner_dns_record:
@@ -281,12 +281,12 @@
         type: A
         zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
 
     - name: Assert 0 A records
       ansible.builtin.assert:
         that:
-          - RECORD.set == {}
+          - record_result.set == {}
 
     - name: Add record
       community.dns.hetzner_dns_record:
@@ -312,12 +312,12 @@
         type: A
         zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
 
     - name: Assert 2 A record
       ansible.builtin.assert:
         that:
-          - RECORD.set.value | count == 2
+          - record_result.set.value | count == 2
 
     - name: Delete first record for website1
       community.dns.hetzner_dns_record:
@@ -334,12 +334,12 @@
         type: A
         zone_name: "{{ hetzner_test_zone }}"
         hetzner_token: "{{ hetzner_token }}"
-      register: RECORD
+      register: record_result
 
     - name: Assert 1 A records
       ansible.builtin.assert:
         that:
-          - RECORD.set.value | count == 1
+          - record_result.set.value | count == 1
 
   always:
     - name: Always delete CNAME record
