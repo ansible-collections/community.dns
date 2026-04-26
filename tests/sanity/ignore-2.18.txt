@@ -1,2 +1,12 @@
-plugins/plugin_utils/_inventory/records.py no-assert  # The asserts are mainly needed for type inference
+plugins/module_utils/_argspec.py pep8:E704
+plugins/module_utils/_hetzner/api.py pep8:E704
+plugins/module_utils/_json_api_helper.py pep8:E704
+plugins/module_utils/_module/record.py no-assert  # The asserts are mainly needed for type inference
+plugins/module_utils/_module/record_sets.py no-assert  # The asserts are mainly needed for type inference
+plugins/module_utils/_module/_utils.py pep8:E704
+plugins/module_utils/_record.py pep8:E704
+plugins/module_utils/_record_set.py pep8:E704
+plugins/module_utils/_zone.py pep8:E704
+plugins/module_utils/_zone_record_api.py pep8:E704
+plugins/module_utils/_zone_record_set_api.py pep8:E704
 plugins/public_suffix_list.dat no-smart-quotes

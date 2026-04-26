@@ -83,15 +83,20 @@ rules:
       sample: dns.osuv.de
 """
 
+import typing as t
+
 from ansible.module_utils.basic import AnsibleModule
 
 from ansible_collections.community.dns.plugins.module_utils._adguardhome.api import (
     AdGuardHomeAPIHandler,
     create_adguardhome_argument_spec,
 )
+from ansible_collections.community.dns.plugins.module_utils._argspec import ArgumentSpec
 
 
-def find_and_compare(rules, domain, answer):
+def find_and_compare(
+    rules: list[dict[str, t.Any]], domain: str, answer: str
+) -> tuple[bool, bool, dict[str, t.Any]]:
     domain_exists = False
     value_is_different = False
     target = {}
@@ -105,20 +110,20 @@ def find_and_compare(rules, domain, answer):
     return domain_exists, value_is_different, target
 
 
-def main():
-    rewrite_arguments = {
-        "state": {
-            "type": "str",
-            "default": "present",
-            "choices": ["present", "absent"],
+def main() -> None:
+    argument_spec = ArgumentSpec(
+        {
+            "state": {
+                "type": "str",
+                "default": "present",
+                "choices": ["present", "absent"],
+            },
+            "answer": {"type": "str", "required": False},
+            "domain": {"type": "str", "required": True},
         },
-        "answer": {"type": "str", "required": False},
-        "domain": {"type": "str", "required": True},
-    }
-    argument_spec = create_adguardhome_argument_spec(
-        required_if=[["state", "present", ["answer"]]],
-        additional_argument_specs=rewrite_arguments,
+        required_if=[("state", "present", ["answer"])],
     )
+    argument_spec.merge(create_adguardhome_argument_spec())
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
 
     domain = module.params.get("domain")

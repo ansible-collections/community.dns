@@ -69,6 +69,7 @@ _result:
     - example.org
 """
 
+import ipaddress
 import typing as t
 from collections.abc import Callable
 
@@ -79,9 +80,6 @@ from ansible.plugins.lookup import LookupBase
 from ansible_collections.community.dns.plugins.module_utils._ips import is_ip_address
 from ansible_collections.community.dns.plugins.module_utils._resolver import (
     SimpleResolver,
-)
-from ansible_collections.community.dns.plugins.plugin_utils._ips import (
-    assert_requirements_present as assert_requirements_present_ipaddress,
 )
 from ansible_collections.community.dns.plugins.plugin_utils._resolver import (
     assert_requirements_present as assert_requirements_present_dnspython,
@@ -99,12 +97,6 @@ except ImportError:
     pass
 else:
     RdataType = int  # type: ignore  # noqa: F811
-
-try:
-    import ipaddress
-except ImportError:  # pragma: no cover
-    # handled by assert_requirements_present
-    pass  # pragma: no cover
 
 
 class LookupModule(LookupBase):
@@ -150,7 +142,6 @@ class LookupModule(LookupBase):
         self, terms: list[t.Any], variables: t.Any | None = None, **kwargs: t.Any
     ) -> list[str]:
         assert_requirements_present_dnspython("community.dns.reverse_lookup", "lookup")
-        assert_requirements_present_ipaddress("community.dns.reverse_lookup", "lookup")
 
         self.set_options(var_options=variables, direct=kwargs)
 

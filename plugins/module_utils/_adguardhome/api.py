@@ -8,52 +8,62 @@
 from __future__ import annotations
 
 import json
+import typing as t
 from urllib.error import HTTPError
 
+from ansible.module_utils.common.text.converters import to_native
 from ansible.module_utils.urls import Request
 
 from ansible_collections.community.dns.plugins.module_utils._argspec import ArgumentSpec
 
+if t.TYPE_CHECKING:
+    _P = t.ParamSpec("_P")  # pragma: no cover
 
-def create_adguardhome_argument_spec(required_if=None, additional_argument_specs=None):
-    argument_spec = {
-        "username": {"type": "str", "required": True},
-        "password": {"type": "str", "required": True, "no_log": True},
-        "host": {"type": "str", "required": True},
-        "validate_certs": {"type": "bool", "default": True},
-    }
+    FailJson = t.Callable[_P, t.NoReturn]  # pragma: no cover
 
-    if additional_argument_specs:
-        argument_spec.update(additional_argument_specs)
 
-    return ArgumentSpec(required_if=required_if, argument_spec=argument_spec)
+def create_adguardhome_argument_spec() -> ArgumentSpec:
+    return ArgumentSpec(
+        {
+            "username": {"type": "str", "required": True},
+            "password": {"type": "str", "required": True, "no_log": True},
+            "host": {"type": "str", "required": True},
+            "validate_certs": {"type": "bool", "default": True},
+        }
+    )
 
 
 class AdGuardHomeAPIHandler:
-    def __init__(self, params, fail_json):
-        host = params.get("host")
-        self.url = host + "/control/rewrite"
+    def __init__(self, params: dict[str, t.Any], fail_json: FailJson) -> None:
+        host: str = params["host"]  # type: ignore
+        self.url = f"{host}/control/rewrite"
 
-        self.validate_certs = params.get("validate_certs")
+        self.validate_certs: bool = params["validate_certs"]  # type: ignore
         self.fail_json = fail_json
         self.r = Request(
-            validate_certs=params.get("validate_certs"),
-            url_username=params.get("username"),
-            url_password=params.get("password"),
+            validate_certs=self.validate_certs,
+            url_username=params["username"],
+            url_password=params["password"],
             force_basic_auth=True,
             headers={"Content-Type": "application/json"},
         )
 
-    def list(self):
+    def list(self) -> list[dict[str, t.Any]]:
         try:
-            response = self.r.open("GET", self.url + "/list")
+            response = self.r.open("GET", f"{self.url}/list")
 
             return json.loads(response.read().decode("utf-8"))
 
         except HTTPError as e:
-            self.fail_json(msg=e.read())
+            self.fail_json(msg=to_native(e.read()))
 
-    def add_or_delete(self, domain, answer, method, target):
+    def add_or_delete(
+        self,
+        domain: str,
+        answer: str,
+        method: t.Literal["add", "delete"],
+        target: dict[str, t.Any],
+    ) -> t.Literal[True]:
         """
         the delete api requires the matching answer value.
         but because we make the answer value optional, it's
@@ -68,25 +78,27 @@ class AdGuardHomeAPIHandler:
         try:
             self.r.open(
                 "POST",
-                self.url + "/" + method,
+                f"{self.url}/{method}",
                 data=data,
             )
             return True
 
         except HTTPError as e:
-            self.fail_json(msg=e.read())
+            self.fail_json(msg=to_native(e.read()))
 
-    def update(self, domain, answer, target):
+    def update(
+        self, domain: str, answer: str, target: dict[str, t.Any]
+    ) -> t.Literal[True]:
         data = json.dumps(
             {"target": target, "update": {"domain": domain, "answer": answer}}
         ).encode("utf-8")
         try:
             self.r.open(
                 "PUT",
-                self.url + "/update",
+                f"{self.url}/update",
                 data=data,
             )
             return True
 
         except HTTPError as e:
-            self.fail_json(msg=e.read())
+            self.fail_json(msg=to_native(e.read()))

@@ -15,6 +15,7 @@ ignore = [
     "SIM117",  # Combine multiple 'with' statements
     # Dubious:
     "SIM105",  # suppressible-exception
+    "SIM108",  # Use ternary instead of if-then-else
     "UP012",  # Unnecessary call to `encode` as UTF-8
     "UP015",  # Unnecessary mode argument
 ]

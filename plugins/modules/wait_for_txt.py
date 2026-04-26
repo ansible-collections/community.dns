@@ -202,11 +202,8 @@ completed:
 """
 
 import time
-
-try:
-    from time import monotonic
-except ImportError:
-    from time import clock as monotonic  # type: ignore
+import typing as t
+from time import monotonic
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.common.text.converters import to_text
@@ -222,8 +219,11 @@ try:
 except ImportError:
     pass  # handled in assert_requirements_present()
 
+if t.TYPE_CHECKING:
+    import dns.rdtypes.ANY.TXT  # pragma: no cover
 
-def lookup(resolver, name):
+
+def lookup(resolver: ResolveDirectlyFromNameServers, name: str) -> dict[str, list[str]]:
     result = {}
     txts = resolver.resolve(name, rdtype=dns.rdatatype.TXT)
     for key, txt in txts.items():
@@ -235,11 +235,16 @@ def lookup(resolver, name):
                     line.append(to_text(txtstring))
                 res.append("".join(line))
         result[key] = res
-        txts[key] = []
     return result
 
 
-def validate_check(record_values, expected_values, comparison_mode):
+def validate_check(
+    record_values: list[str],
+    expected_values: list[str],
+    comparison_mode: t.Literal[
+        "subset", "superset", "superset_not_empty", "equals", "equals_ordered"
+    ],
+) -> bool:
     if comparison_mode == "subset":
         return set(expected_values) <= set(record_values)
 
@@ -259,7 +264,7 @@ def validate_check(record_values, expected_values, comparison_mode):
 
 
 class Waiter:
-    def __init__(self, module):
+    def __init__(self, module: AnsibleModule) -> None:
         self.module = module
 
         self.resolver = ResolveDirectlyFromNameServers(
@@ -271,20 +276,21 @@ class Waiter:
             ],
             server_addresses=self.module.params["server"],
         )
-        self.records = self.module.params["records"]
-        self.timeout = self.module.params["timeout"]
-        self.max_sleep = self.module.params["max_sleep"]
+        self.records: list[dict[str, t.Any]] = self.module.params["records"]
+        self.timeout: float | None = self.module.params["timeout"]
+        self.max_sleep: float = self.module.params["max_sleep"]
 
-        self.results = [None] * len(self.records)
-        for index, record in enumerate(self.records):
-            self.results[index] = {
+        self.results = [
+            {
                 "name": record["name"],
                 "done": False,
                 "check_count": 0,
             }
+            for record in self.records
+        ]
         self.finished_checks = 0
 
-    def _run(self):
+    def _run(self) -> None:
         start_time = monotonic()
 
         step = 0
@@ -332,13 +338,13 @@ class Waiter:
             time.sleep(wait)
             step += 1
 
-    def _generate_additional_results(self):
+    def _generate_additional_results(self) -> dict[str, t.Any]:
         return {
             "records": self.results,
             "completed": self.finished_checks,
         }
 
-    def run(self):
+    def run(self) -> None:
         guarded_run(
             self._run,
             self.module,
@@ -346,7 +352,7 @@ class Waiter:
         )
 
 
-def main():
+def main() -> None:
     module = AnsibleModule(
         argument_spec={
             "records": {

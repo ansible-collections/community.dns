@@ -8,13 +8,17 @@
 from __future__ import annotations
 
 import re
+import typing as t
 
 from ansible.module_utils.common.text.converters import to_text
+
+if t.TYPE_CHECKING:
+    from collections.abc import Sequence  # pragma: no cover
 
 _ASCII_PRINTABLE_MATCHER = re.compile(r"^[\x20-\x7e]*$")
 
 
-def is_ascii_label(domain):
+def is_ascii_label(domain: str) -> bool:
     """
     Check whether domain name has only ASCII labels.
     """
@@ -27,7 +31,7 @@ class InvalidDomainName(Exception):
     """
 
 
-def split_into_labels(domain):
+def split_into_labels(domain: str) -> tuple[list[str], t.Literal["", "."]]:
     """
     Split domain name to a list of labels. Start with the top-most label.
 
@@ -36,7 +40,7 @@ def split_into_labels(domain):
     """
     result = []
     index = len(domain)
-    tail = ""
+    tail: t.Literal["", "."] = ""
     if domain.endswith("."):
         index -= 1
         tail = "."
@@ -51,14 +55,14 @@ def split_into_labels(domain):
     return result, tail
 
 
-def join_labels(labels, tail=""):
+def join_labels(labels: Sequence[str], tail: str = "") -> str:
     """
     Combines the result of split_into_labels() back into a domain name.
     """
     return ".".join(reversed(labels)) + tail
 
 
-def normalize_label(label):
+def normalize_label(label: str) -> str:
     """
     Normalize a domain label. Returns a lower-case ASCII label.
 

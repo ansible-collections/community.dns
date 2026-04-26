@@ -14,24 +14,50 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 )
 
 if t.TYPE_CHECKING:
+    from collections.abc import Sequence  # pragma: no cover
+
+    from ._argspec import OptionProvider  # pragma: no cover
     from ._provider import ProviderInformation  # pragma: no cover
-    from ._record_set import DNSRecordSet  # pragma: no cover
+    from ._record import RecordIDT  # pragma: no cover
+    from ._record_set import (
+        DNSRecordSet,
+        IDNSRecordSet,
+        RecordSetIDT,
+    )  # pragma: no cover
+    from ._zone import ZoneIDT  # pragma: no cover
     from ._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
 
 
 def bulk_apply_changes(
-    api: ZoneRecordSetAPI,
+    api: ZoneRecordSetAPI[ZoneIDT, RecordSetIDT, RecordIDT],
     provider_information: ProviderInformation,
-    options,  # TODO type
-    zone_id: str,
-    record_sets_to_delete: list[DNSRecordSet] | None = None,
-    record_sets_to_change: list[tuple[DNSRecordSet, bool, bool]] | None = None,
-    record_sets_to_create: list[DNSRecordSet] | None = None,
+    options: OptionProvider,
+    zone_id: ZoneIDT,
+    record_sets_to_delete: (
+        Sequence[DNSRecordSet[RecordSetIDT, RecordIDT]] | None
+    ) = None,
+    record_sets_to_change: (
+        Sequence[tuple[DNSRecordSet[RecordSetIDT, RecordIDT], bool, bool]] | None
+    ) = None,
+    record_sets_to_create: (
+        Sequence[IDNSRecordSet[RecordSetIDT | None, RecordIDT | None]] | None
+    ) = None,
     stop_early_on_errors: bool = True,
 ) -> tuple[
     bool,
-    list[tuple[t.Literal["delete", "change", "create"], DNSRecordSet, DNSAPIError]],
-    dict[str, list[DNSRecordSet]],
+    list[
+        tuple[
+            t.Literal["create"],
+            IDNSRecordSet[RecordSetIDT | None, RecordIDT | None],
+            DNSAPIError,
+        ]
+        | tuple[
+            t.Literal["delete", "change"],
+            DNSRecordSet[RecordSetIDT, RecordIDT],
+            DNSAPIError,
+        ]
+    ],
+    dict[str, list[DNSRecordSet[RecordSetIDT, RecordIDT]]],
 ]:
     """
     Update multiple records. If an operation failed, raise a DNSAPIException.
@@ -60,14 +86,23 @@ def bulk_apply_changes(
 
     has_change = False
     errors: list[
-        tuple[t.Literal["delete", "change", "create"], DNSRecordSet, DNSAPIError]
+        tuple[
+            t.Literal["create"],
+            IDNSRecordSet[RecordSetIDT | None, RecordIDT | None],
+            DNSAPIError,
+        ]
+        | tuple[
+            t.Literal["delete", "change"],
+            DNSRecordSet[RecordSetIDT, RecordIDT],
+            DNSAPIError,
+        ]
     ] = []
 
     bulk_threshold = 2
     if provider_information.supports_bulk_actions():
         bulk_threshold = options.get_option("bulk_operation_threshold")
 
-    success: dict[str, list[DNSRecordSet]] = {
+    success: dict[str, list[DNSRecordSet[RecordSetIDT, RecordIDT]]] = {
         "deleted": [],
         "changed": [],
         "created": [],
@@ -131,26 +166,26 @@ def bulk_apply_changes(
 
     # Create record sets
     if len(record_sets_to_create) >= bulk_threshold:
-        results = api.add_record_sets(
+        create_results = api.add_record_sets(
             {zone_id: record_sets_to_create}, stop_early_on_errors=stop_early_on_errors
         )
-        result = results.get(zone_id) or []
-        for record_set, created, failed in result:
+        create_result = create_results.get(zone_id) or []
+        for crecord_set, created, failed in create_result:
             has_change |= created
             if failed is not None:
-                errors.append(("create", record_set, failed))
+                errors.append(("create", crecord_set, failed))
             if created:
-                success["created"].append(record_set)
+                success["created"].append(crecord_set)  # type: ignore  # if created is True, crecord is a DNSRecordSet
         if errors and stop_early_on_errors:
             return has_change, errors, success
     else:
-        for record_set in record_sets_to_create:
+        for create_record_set in record_sets_to_create:
             try:
-                record_set = api.add_record_set(zone_id, record_set)
+                created_record_set = api.add_record_set(zone_id, create_record_set)
                 has_change = True
-                success["created"].append(record_set)
+                success["created"].append(created_record_set)
             except DNSAPIError as e:
-                errors.append(("create", record_set, e))
+                errors.append(("create", create_record_set, e))
                 if stop_early_on_errors:
                     return has_change, errors, success
 

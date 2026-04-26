@@ -61,7 +61,7 @@ from ansible_collections.community.dns.plugins.module_utils._adguardhome.api imp
 )
 
 
-def main():
+def main() -> None:
     argument_spec = create_adguardhome_argument_spec()
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
 

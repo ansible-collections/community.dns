@@ -1,2 +1,3 @@
-plugins/plugin_utils/_inventory/records.py no-assert  # The asserts are mainly needed for type inference
+plugins/module_utils/_module/record.py no-assert  # The asserts are mainly needed for type inference
+plugins/module_utils/_module/record_sets.py no-assert  # The asserts are mainly needed for type inference
 plugins/public_suffix_list.dat no-smart-quotes

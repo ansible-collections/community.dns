@@ -7,6 +7,8 @@
 
 from __future__ import annotations
 
+import typing as t
+
 from ansible.module_utils.common.text.converters import to_native
 
 from ansible_collections.community.dns.plugins.module_utils._record import DNSRecord
@@ -27,30 +29,45 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
     filter_records,
 )
 
+if t.TYPE_CHECKING:
+    from .._http import HTTPHelper  # pragma: no cover
+    from .._record import IDNSRecord  # pragma: no cover
+    from .._zone_record_api import NotProvidedType  # pragma: no cover
 
-def _create_record_from_encoding(source, record_type=None):
+    _T = t.TypeVar("_T")  # pragma: no cover
+
+
+def _create_record_from_encoding(
+    source: dict[str, t.Any], record_type: str | None = None
+) -> DNSRecord[int]:
     source = dict(source)
-    result = DNSRecord()
-    result.id = source.pop("id")
-    result.type = source.pop("type", record_type)
+    record_type = source.pop("type", record_type)
+    if record_type is None:
+        raise DNSAPIError("Record from API has no type")
+
+    priority = source.pop("priority")
+    target: str = source.pop("target")
+    if record_type in ("PTR", "MX"):
+        target = f"{priority} {target}"
+
+    result = DNSRecord(
+        record_id=source.pop("id"), record_type=record_type, target=target
+    )
     result.prefix = source.pop("prefix", None)
     ttl = source.pop("ttl")
     result.ttl = int(ttl) if ttl is not None else None
-    priority = source.pop("priority")
-    target = source.pop("target")
-    if result.type in ("PTR", "MX"):
-        result.target = f"{priority} {target}"
-    else:
-        result.target = target
     source.pop("zone", None)
     result.extra["comment"] = source.pop("comment") or ""
     result.extra.update(source)
     return result
 
 
-def _create_zone_from_encoding(source, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
-    zone = DNSZone(source["name"])
-    zone.id = source["id"]
+def _create_zone_from_encoding(
+    source: dict[str, t.Any],
+    prefix: str | None | NotProvidedType = NOT_PROVIDED,
+    record_type: str | NotProvidedType = NOT_PROVIDED,
+) -> DNSZoneWithRecords[int, int]:
+    zone = DNSZone(zone_id=source["id"], name=source["name"])
     zone.info = {
         "email": source.get("email"),
         "ttl": source["ttl"],
@@ -65,8 +82,10 @@ def _create_zone_from_encoding(source, prefix=NOT_PROVIDED, record_type=NOT_PROV
     )
 
 
-def _encode_record(record, include_id=False):
-    result = {
+def _encode_record(
+    record: IDNSRecord[int | None], include_id: bool = False
+) -> dict[str, t.Any]:
+    result: dict[str, t.Any] = {
         "type": record.type,
         "prefix": record.prefix,
         "target": record.target,
@@ -88,28 +107,15 @@ def _encode_record(record, include_id=False):
     return result
 
 
-def _encode_zone(zone):
-    return {
-        "id": zone.id,
-        "name": zone.name,
-        # 'email': zone.email,
-        # 'ttl': zone.ttl,
-        # 'nameserver': zone.nameserver,
-        # 'serial': zone.serial,
-        # 'template': zone.template,
-        "records": [_encode_record(record, include_id=True) for record in zone.records],
-    }
-
-
-class HostTechWSDLAPI(ZoneRecordAPI):
+class HostTechWSDLAPI(ZoneRecordAPI[int, int]):
     def __init__(
         self,
-        http_helper,
-        username,
-        password,
-        api="https://ns1.hosttech.eu/public/api",
-        debug=False,
-    ):
+        http_helper: HTTPHelper,
+        username: str,
+        password: str,
+        api: str = "https://ns1.hosttech.eu/public/api",
+        debug: bool = False,
+    ) -> None:
         """
         Create a new HostTech API instance with given username and password.
         """
@@ -122,17 +128,19 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         self._password = password
         self._debug = debug
 
-    def _prepare(self):
+    def _prepare(self) -> Composer:
         command = Composer(self._http_helper, self._api, self._namespaces)
         command.add_auth(self._username, self._password)
         return command
 
-    def _announce(self, msg):
+    def _announce(self, msg: str) -> None:
         if self._debug:
             pass  # pragma: no cover
             # q.q('{0} {1} {2}'.format('=' * 4, msg, '=' * 40))
 
-    def _execute(self, command, result_name, acceptable_types):
+    def _execute(
+        self, command: Composer, result_name: str, acceptable_type: type[_T]
+    ) -> _T:
         if self._debug:
             pass  # pragma: no cover
             # q.q('Request: {0}'.format(command))
@@ -145,7 +153,7 @@ class HostTechWSDLAPI(ZoneRecordAPI):
                 ) from e
             raise
         res = result.get_result(result_name)
-        if isinstance(res, acceptable_types):
+        if isinstance(res, acceptable_type):
             if self._debug:
                 pass  # pragma: no cover
                 # q.q('Extracted result: {0} (type {1})'.format(res, type(res)))
@@ -154,12 +162,15 @@ class HostTechWSDLAPI(ZoneRecordAPI):
             pass  # pragma: no cover
             # q.q('Result: {0}; extracted type {1}'.format(result, type(res)))
         raise DNSAPIError(
-            f"Result has unexpected type {type(res)} (expecting {acceptable_types})!"
+            f"Result has unexpected type {type(res)} (expecting {acceptable_type})!"
         )
 
     def get_zone_with_records_by_name(
-        self, name, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
-    ):
+        self,
+        name: str,
+        prefix: str | None | NotProvidedType = NOT_PROVIDED,
+        record_type: str | NotProvidedType = NOT_PROVIDED,
+    ) -> DNSZoneWithRecords[int, int] | None:
         """
         Given a zone name, return the zone contents with records if found.
 
@@ -188,8 +199,11 @@ class HostTechWSDLAPI(ZoneRecordAPI):
             ) from exc
 
     def get_zone_with_records_by_id(
-        self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
-    ):
+        self,
+        zone_id: int,
+        prefix: str | None | NotProvidedType = NOT_PROVIDED,
+        record_type: str | NotProvidedType = NOT_PROVIDED,
+    ) -> DNSZoneWithRecords[int, int] | None:
         """
         Given a zone ID, return the zone contents with records if found.
 
@@ -203,7 +217,12 @@ class HostTechWSDLAPI(ZoneRecordAPI):
             str(zone_id), prefix=prefix, record_type=record_type
         )
 
-    def get_zone_records(self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
+    def get_zone_records(
+        self,
+        zone_id: int,
+        prefix: str | None | NotProvidedType = NOT_PROVIDED,
+        record_type: str | NotProvidedType = NOT_PROVIDED,
+    ) -> list[DNSRecord[int]] | None:
         """
         Given a zone ID, return a list of records, optionally filtered by the provided criteria.
 
@@ -218,7 +237,7 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         )
         return result.records if result is not None else None
 
-    def get_zone_by_name(self, name):
+    def get_zone_by_name(self, name: str) -> DNSZone[int] | None:
         """
         Given a zone name, return the zone contents if found.
 
@@ -228,7 +247,7 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         zone = self.get_zone_with_records_by_name(name)
         return zone.zone if zone else None
 
-    def get_zone_by_id(self, zone_id):
+    def get_zone_by_id(self, zone_id: int) -> DNSZone[int] | None:
         """
         Given a zone ID, return the zone contents if found.
 
@@ -238,7 +257,9 @@ class HostTechWSDLAPI(ZoneRecordAPI):
         zone = self.get_zone_with_records_by_id(zone_id)
         return zone.zone if zone else None
 
-    def add_record(self, zone_id, record):
+    def add_record(
+        self, zone_id: int, record: IDNSRecord[int | None]
+    ) -> DNSRecord[int]:
         """
         Adds a new record to an existing zone.
 
@@ -264,7 +285,7 @@ class HostTechWSDLAPI(ZoneRecordAPI):
                 f"Network error while adding record: {to_native(exc)}"
             ) from exc
 
-    def update_record(self, zone_id, record):
+    def update_record(self, zone_id: int, record: DNSRecord[int]) -> DNSRecord[int]:
         """
         Update a record.
 
@@ -292,7 +313,7 @@ class HostTechWSDLAPI(ZoneRecordAPI):
                 f"Network error while updating record: {to_native(exc)}"
             ) from exc
 
-    def delete_record(self, zone_id, record):
+    def delete_record(self, zone_id: int, record: DNSRecord[int]) -> bool:
         """
         Delete a record.
 

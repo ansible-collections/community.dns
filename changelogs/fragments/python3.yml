@@ -1,4 +1,5 @@
 minor_changes:
   - "Migrate codebase to Python 3 only
      (https://github.com/ansible-collections/community.dns/pull/319,
-     https://github.com/ansible-collections/community.dns/pull/320)."
+     https://github.com/ansible-collections/community.dns/pull/320,
+     https://github.com/ansible-collections/community.dns/pull/321)."

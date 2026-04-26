@@ -183,7 +183,7 @@ from ansible_collections.community.dns.plugins.module_utils._module.record_set_i
 )
 
 
-def main():
+def main() -> None:
     provider_information = create_hetzner_provider_information()
     argument_spec = create_hetzner_argument_spec()
     argument_spec.merge(

@@ -7,30 +7,14 @@
 
 from __future__ import annotations
 
-import traceback
+import ipaddress
 
-from ansible.module_utils.basic import missing_required_lib
 from ansible.module_utils.common.text.converters import to_text
 
-try:
-    import ipaddress
-except ImportError:
-    IPADDRESS_IMPORT_EXC = traceback.format_exc()
-else:
-    IPADDRESS_IMPORT_EXC = None  # type: ignore  # TODO
 
-
-def is_ip_address(server):
+def is_ip_address(server: str | bytes) -> bool:
     try:
         ipaddress.ip_address(to_text(server))
         return True
     except ValueError:
         return False
-
-
-def assert_requirements_present(module):
-    if IPADDRESS_IMPORT_EXC is not None:
-        module.fail_json(
-            msg=missing_required_lib("ipaddress"),
-            exception=IPADDRESS_IMPORT_EXC,
-        )

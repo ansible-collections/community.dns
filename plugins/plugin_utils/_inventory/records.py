@@ -36,6 +36,9 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
     DNSAPIError,
     ZoneRecordAPI,
 )
+from ansible_collections.community.dns.plugins.module_utils._zone_record_set_api import (
+    ZoneRecordSetAPI,
+)
 from ansible_collections.community.dns.plugins.plugin_utils._unsafe import make_unsafe
 
 display = Display()
@@ -45,15 +48,10 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
     VALID_ENDINGS = ("dns.yaml", "dns.yml")
     NAME: str
 
-    def __init__(self) -> None:
-        super().__init__()
-        self.provider_information: ProviderInformation | None = None
-        self.api: ZoneRecordAPI | None = None
-
     @abc.abstractmethod
-    def setup_api(self) -> None:
+    def setup_api(self) -> tuple[ProviderInformation, ZoneRecordAPI | ZoneRecordSetAPI]:
         """
-        This function needs to set up self.provider_information and self.api.
+        This function needs to create a provider information and an API object.
         It can indicate errors by raising DNSAPIError.
         """
 
@@ -75,11 +73,9 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
         self.templar = Templar(loader=loader)
 
         try:
-            self.setup_api()
-            assert self.provider_information is not None
-            assert self.api is not None
+            provider_information, api = self.setup_api()
 
-            record_converter = RecordConverter(self.provider_information, self)
+            record_converter = RecordConverter(provider_information, self)
             record_converter.emit_deprecations(display.deprecated)
 
             zone_name = self.get_option("zone_name")
@@ -91,7 +87,7 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
                     zone_id = self.templar.template(variable=zone_id)
                 # For templating, we need to make the zone_id type 'string' or 'raw'.
                 # This converts the value to its proper type expected by the API.
-                zone_id_type = self.provider_information.get_record_id_type()
+                zone_id_type = provider_information.get_record_id_type()
                 try:
                     zone_id = ensure_type(zone_id, zone_id_type)
                 except TypeError as exc:
@@ -99,13 +95,11 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
                         f"Error while ensuring that zone_id is of type {zone_id_type}: {exc}"
                     ) from exc
 
-            if isinstance(self.api, ZoneRecordAPI):
+            if isinstance(api, ZoneRecordAPI):
                 if zone_name is not None:
-                    zone_with_records = self.api.get_zone_with_records_by_name(
-                        zone_name
-                    )
+                    zone_with_records = api.get_zone_with_records_by_name(zone_name)
                 elif zone_id is not None:
-                    zone_with_records = self.api.get_zone_with_records_by_id(zone_id)
+                    zone_with_records = api.get_zone_with_records_by_id(zone_id)
                 else:
                     raise AnsibleError(
                         "One of zone_name and zone_id must be specified!"
@@ -118,13 +112,11 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
                 records = zone_with_records.records
             else:
                 if zone_name is not None:
-                    zone_with_record_sets = self.api.get_zone_with_record_sets_by_name(
+                    zone_with_record_sets = api.get_zone_with_record_sets_by_name(
                         zone_name
                     )
                 elif zone_id is not None:
-                    zone_with_record_sets = self.api.get_zone_with_record_sets_by_id(
-                        zone_id
-                    )
+                    zone_with_record_sets = api.get_zone_with_record_sets_by_id(zone_id)
                 else:
                     raise AnsibleError(
                         "One of zone_name and zone_id must be specified!"

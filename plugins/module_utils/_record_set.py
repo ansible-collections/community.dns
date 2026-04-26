@@ -7,35 +7,73 @@
 
 from __future__ import annotations
 
-from ._record import format_ttl as _format_ttl
+import typing as t
+
+from ansible_collections.community.dns.plugins.module_utils._record import (
+    RecordIDT,
+    RecordIDT_co,
+)
+from ansible_collections.community.dns.plugins.module_utils._record import (
+    format_ttl as _format_ttl,
+)
+
+if t.TYPE_CHECKING:
+    from collections.abc import Mapping, Sequence  # pragma: no cover
+
+    from ._conversion.converter import RecordConverter  # pragma: no cover
+    from ._record import DNSRecord, IDNSRecord  # pragma: no cover
 
 
-class DNSRecordSet:
-    def __init__(self):
-        self.id = None
-        self.type = None
-        self.prefix = None
-        self.ttl = None
-        self.records = []
-        self.extra = {}
+RecordSetIDT = t.TypeVar("RecordSetIDT")
+RecordSetIDT_co = t.TypeVar("RecordSetIDT_co", covariant=True)
 
-    def clone(self):
-        result = DNSRecordSet()
-        result.id = self.id
-        result.type = self.type
+
+class IDNSRecordSet(t.Protocol, t.Generic[RecordSetIDT_co, RecordIDT_co]):
+    @property
+    def id(self) -> RecordSetIDT_co: ...
+
+    @property
+    def type(self) -> str: ...
+
+    @property
+    def prefix(self) -> str | None: ...
+
+    @property
+    def ttl(self) -> int | None: ...
+
+    @property
+    def records(self) -> Sequence[IDNSRecord[RecordIDT_co]]: ...
+
+    @property
+    def extra(self) -> Mapping[str, str]: ...
+
+
+class DNSRecordSet(t.Generic[RecordSetIDT, RecordIDT]):
+    def __init__(self, *, record_set_id: RecordSetIDT, record_type: str) -> None:
+        self.id = record_set_id
+        self.type = record_type
+        self.prefix: str | None = None
+        self.ttl: int | None = None
+        self.records: list[DNSRecord] = []
+        self.extra: dict[str, str] = {}
+
+    def clone(self) -> DNSRecordSet[RecordSetIDT, RecordIDT]:
+        result: DNSRecordSet[RecordSetIDT, RecordIDT] = DNSRecordSet(
+            record_set_id=self.id, record_type=self.type
+        )
         result.prefix = self.prefix
         result.records = [record.clone() for record in self.records]
         result.ttl = self.ttl
         result.extra = dict(self.extra)
         return result
 
-    def __str__(self):
+    def __str__(self) -> str:
         data = []
-        if self.id:
+        if self.id is not None:
             data.append(f"id: {self.id}")
         data.append(f"type: {self.type}")
-        if self.prefix:
-            data.append(f'prefix: "{self.prefix}"')
+        if self.prefix is not None:
+            data.append(f"prefix: {self.prefix!r}")
         else:
             data.append("prefix: (none)")
         data.append(f"ttl: {_format_ttl(self.ttl)}")
@@ -44,14 +82,17 @@ class DNSRecordSet:
             data.append(f"extra: {self.extra}")
         return "DNSRecordSet(" + ", ".join(data) + ")"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return self.__str__()
 
 
 def format_record_set_for_output(
-    record_set, record_name, prefix=None, record_converter=None
-):
-    entry = {
+    record_set: IDNSRecordSet[RecordSetIDT_co, RecordIDT_co],
+    record_name: str | None,
+    prefix: str | None = None,
+    record_converter: RecordConverter | None = None,
+) -> dict[str, t.Any]:
+    entry: dict[str, t.Any] = {
         "prefix": prefix or "",
         "type": record_set.type,
         "ttl": record_set.ttl,

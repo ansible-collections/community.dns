@@ -8,10 +8,25 @@
 from __future__ import annotations
 
 import abc
+import typing as t
 
+from ansible_collections.community.dns.plugins.module_utils._record import (
+    RecordIDT,
+    RecordIDT_co,
+)
 from ansible_collections.community.dns.plugins.module_utils._zone import (
     DNSZoneWithRecords,
+    ZoneIDT,
 )
+
+if t.TYPE_CHECKING:
+    from collections.abc import Mapping, Sequence  # pragma: no cover
+
+    from ._record import (
+        DNSRecord,
+        IDNSRecord,
+    )  # pragma: no cover
+    from ._zone import DNSZone  # pragma: no cover
 
 
 class DNSAPIError(Exception):
@@ -29,9 +44,9 @@ class NotProvidedType:
 NOT_PROVIDED = NotProvidedType()
 
 
-class ZoneRecordAPI(metaclass=abc.ABCMeta):
+class ZoneRecordAPI(t.Generic[ZoneIDT, RecordIDT], metaclass=abc.ABCMeta):
     @abc.abstractmethod
-    def get_zone_by_name(self, name):
+    def get_zone_by_name(self, name: str) -> DNSZone[ZoneIDT] | None:
         """
         Given a zone name, return the zone contents if found.
 
@@ -40,7 +55,7 @@ class ZoneRecordAPI(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def get_zone_by_id(self, zone_id):
+    def get_zone_by_id(self, zone_id: ZoneIDT) -> DNSZone[ZoneIDT] | None:
         """
         Given a zone ID, return the zone contents if found.
 
@@ -49,8 +64,11 @@ class ZoneRecordAPI(metaclass=abc.ABCMeta):
         """
 
     def get_zone_with_records_by_name(
-        self, name, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
-    ):
+        self,
+        name: str,
+        prefix: str | None | NotProvidedType = NOT_PROVIDED,
+        record_type: str | NotProvidedType = NOT_PROVIDED,
+    ) -> DNSZoneWithRecords[ZoneIDT, RecordIDT] | None:
         """
         Given a zone name, return the zone contents with records if found.
 
@@ -63,13 +81,17 @@ class ZoneRecordAPI(metaclass=abc.ABCMeta):
         zone = self.get_zone_by_name(name)
         if zone is None:
             return None
-        return DNSZoneWithRecords(
-            zone, self.get_zone_records(zone.id, prefix=prefix, record_type=record_type)
-        )
+        records = self.get_zone_records(zone.id, prefix=prefix, record_type=record_type)
+        if records is None:
+            return None
+        return DNSZoneWithRecords(zone, records)
 
     def get_zone_with_records_by_id(
-        self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED
-    ):
+        self,
+        zone_id: ZoneIDT,
+        prefix: str | None | NotProvidedType = NOT_PROVIDED,
+        record_type: str | NotProvidedType = NOT_PROVIDED,
+    ) -> DNSZoneWithRecords[ZoneIDT, RecordIDT] | None:
         """
         Given a zone ID, return the zone contents with records if found.
 
@@ -82,12 +104,18 @@ class ZoneRecordAPI(metaclass=abc.ABCMeta):
         zone = self.get_zone_by_id(zone_id)
         if zone is None:
             return None
-        return DNSZoneWithRecords(
-            zone, self.get_zone_records(zone.id, prefix=prefix, record_type=record_type)
-        )
+        records = self.get_zone_records(zone.id, prefix=prefix, record_type=record_type)
+        if records is None:
+            return None
+        return DNSZoneWithRecords(zone, records)
 
     @abc.abstractmethod
-    def get_zone_records(self, zone_id, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
+    def get_zone_records(
+        self,
+        zone_id: ZoneIDT,
+        prefix: str | None | NotProvidedType = NOT_PROVIDED,
+        record_type: str | NotProvidedType = NOT_PROVIDED,
+    ) -> list[DNSRecord[RecordIDT]] | None:
         """
         Given a zone ID, return a list of records, optionally filtered by the provided criteria.
 
@@ -99,7 +127,9 @@ class ZoneRecordAPI(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def add_record(self, zone_id, record):
+    def add_record(
+        self, zone_id: ZoneIDT, record: IDNSRecord[RecordIDT | None]
+    ) -> DNSRecord[RecordIDT]:
         """
         Adds a new record to an existing zone.
 
@@ -109,7 +139,9 @@ class ZoneRecordAPI(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def update_record(self, zone_id, record):
+    def update_record(
+        self, zone_id: ZoneIDT, record: DNSRecord[RecordIDT]
+    ) -> DNSRecord[RecordIDT]:
         """
         Update a record.
 
@@ -119,7 +151,7 @@ class ZoneRecordAPI(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def delete_record(self, zone_id, record):
+    def delete_record(self, zone_id: ZoneIDT, record: DNSRecord[RecordIDT]) -> bool:
         """
         Delete a record.
 
@@ -128,7 +160,17 @@ class ZoneRecordAPI(metaclass=abc.ABCMeta):
         @return True in case of success (boolean)
         """
 
-    def add_records(self, records_per_zone_id, stop_early_on_errors=True):
+    def add_records(
+        self,
+        records_per_zone_id: Mapping[ZoneIDT, Sequence[IDNSRecord[RecordIDT | None]]],
+        stop_early_on_errors: bool = True,
+    ) -> dict[
+        ZoneIDT,
+        list[
+            tuple[DNSRecord[RecordIDT], t.Literal[True], None]
+            | tuple[IDNSRecord[RecordIDT | None], t.Literal[False], DNSAPIError | None]
+        ],
+    ]:
         """
         Add new records to an existing zone.
 
@@ -144,7 +186,12 @@ class ZoneRecordAPI(metaclass=abc.ABCMeta):
         """
         results_per_zone_id = {}
         for zone_id, records in records_per_zone_id.items():
-            result = []
+            result: list[
+                tuple[DNSRecord[RecordIDT], t.Literal[True], None]
+                | tuple[
+                    IDNSRecord[RecordIDT | None], t.Literal[False], DNSAPIError | None
+                ]
+            ] = []
             results_per_zone_id[zone_id] = result
             for record in records:
                 try:
@@ -155,7 +202,11 @@ class ZoneRecordAPI(metaclass=abc.ABCMeta):
                         return results_per_zone_id
         return results_per_zone_id
 
-    def update_records(self, records_per_zone_id, stop_early_on_errors=True):
+    def update_records(
+        self,
+        records_per_zone_id: Mapping[ZoneIDT, Sequence[DNSRecord[RecordIDT]]],
+        stop_early_on_errors: bool = True,
+    ) -> dict[ZoneIDT, list[tuple[DNSRecord[RecordIDT], bool, DNSAPIError | None]]]:
         """
         Update multiple records.
 
@@ -171,7 +222,7 @@ class ZoneRecordAPI(metaclass=abc.ABCMeta):
         """
         results_per_zone_id = {}
         for zone_id, records in records_per_zone_id.items():
-            result = []
+            result: list[tuple[DNSRecord[RecordIDT], bool, DNSAPIError | None]] = []
             results_per_zone_id[zone_id] = result
             for record in records:
                 try:
@@ -182,7 +233,11 @@ class ZoneRecordAPI(metaclass=abc.ABCMeta):
                         return results_per_zone_id
         return results_per_zone_id
 
-    def delete_records(self, records_per_zone_id, stop_early_on_errors=True):
+    def delete_records(
+        self,
+        records_per_zone_id: Mapping[ZoneIDT, Sequence[DNSRecord[RecordIDT]]],
+        stop_early_on_errors: bool = True,
+    ) -> dict[ZoneIDT, list[tuple[DNSRecord[RecordIDT], bool, DNSAPIError | None]]]:
         """
         Delete multiple records.
 
@@ -197,7 +252,7 @@ class ZoneRecordAPI(metaclass=abc.ABCMeta):
         """
         results_per_zone_id = {}
         for zone_id, records in records_per_zone_id.items():
-            result = []
+            result: list[tuple[DNSRecord, bool, DNSAPIError | None]] = []
             results_per_zone_id[zone_id] = result
             for record in records:
                 try:
@@ -209,7 +264,35 @@ class ZoneRecordAPI(metaclass=abc.ABCMeta):
         return results_per_zone_id
 
 
-def filter_records(records, prefix=NOT_PROVIDED, record_type=NOT_PROVIDED):
+@t.overload
+def filter_records(
+    records: list[DNSRecord[RecordIDT]],
+    prefix: str | None | NotProvidedType = NOT_PROVIDED,
+    record_type: str | NotProvidedType = NOT_PROVIDED,
+) -> list[DNSRecord[RecordIDT]]: ...
+
+
+@t.overload
+def filter_records(
+    records: Sequence[DNSRecord[RecordIDT]],
+    prefix: str | None | NotProvidedType = NOT_PROVIDED,
+    record_type: str | NotProvidedType = NOT_PROVIDED,
+) -> Sequence[DNSRecord[RecordIDT]]: ...
+
+
+@t.overload
+def filter_records(
+    records: Sequence[IDNSRecord[RecordIDT_co]],
+    prefix: str | None | NotProvidedType = NOT_PROVIDED,
+    record_type: str | NotProvidedType = NOT_PROVIDED,
+) -> Sequence[IDNSRecord[RecordIDT_co]]: ...
+
+
+def filter_records(
+    records: Sequence[DNSRecord | IDNSRecord],
+    prefix: str | None | NotProvidedType = NOT_PROVIDED,
+    record_type: str | NotProvidedType = NOT_PROVIDED,
+) -> list[DNSRecord] | Sequence[DNSRecord | IDNSRecord]:
     """
     Given a list of records, returns a filtered subset.
 

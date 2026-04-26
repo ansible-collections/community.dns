@@ -7,6 +7,8 @@
 
 from __future__ import annotations
 
+import typing as t
+
 from ansible.module_utils.common.text.converters import to_bytes, to_text
 
 from ansible_collections.community.dns.plugins.module_utils._conversion.base import (
@@ -20,7 +22,7 @@ _STATE_QUOTED_STRING = 1
 _STATE_UNQUOTED_STRING = 3
 
 
-def _parse_quoted(value, index, use_octal):
+def _parse_quoted(value: bytes, index: int, use_octal: bool) -> tuple[bytes, int]:
     if index == len(value):
         raise DNSConversionError("Unexpected backslash at end of string")
     letter = value[index : index + 1]
@@ -67,7 +69,9 @@ def _parse_quoted(value, index, use_octal):
     )
 
 
-def decode_txt_value(value, character_encoding):
+def decode_txt_value(
+    value: str | bytes, character_encoding: t.Literal["octal", "decimal"]
+) -> str:
     """
     Given an encoded TXT value, decodes it.
 
@@ -128,12 +132,12 @@ def _get_utf8_length(first_byte_value):
 
 
 def encode_txt_value(
-    value,
+    value: str | bytes,
     *,
-    always_quote=False,
-    use_character_encoding=True,
-    character_encoding,
-):
+    always_quote: bool = False,
+    use_character_encoding: bool = True,
+    character_encoding: t.Literal["octal", "decimal"],
+) -> str:
     """
     Given a decoded TXT value, encodes it.
 
@@ -144,11 +148,11 @@ def encode_txt_value(
         raise ValueError('character_encoding must be set to "octal" or "decimal"')
 
     value = to_bytes(value)
-    buffer = []
-    output = []
+    buffer: list[bytes] = []  # the entries must be single character strings
+    output: list[bytes] = []
 
-    def append(buffer):
-        value = b"".join(buffer)
+    def append(buf: list[bytes]) -> None:
+        value = b"".join(buf)
         if b" " in value or not value or always_quote:
             value = b'"%s"' % value
         output.append(value)

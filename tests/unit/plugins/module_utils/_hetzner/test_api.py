@@ -21,20 +21,28 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 
 
 def test_list_pagination():
-    def get_1(url, query=None, must_have_content=True, expected=None):
+    def get_1(
+        url,
+        query=None,
+        must_have_content=True,
+        expected=None,
+        require_json_object=False,
+    ):
         assert url == "https://example.com"
         assert must_have_content == [200]
         assert expected == [200]
+        assert require_json_object is True
         assert query is not None
         assert len(query) == 2
-        assert query["per_page"] == 1
-        assert query["page"] in [1, 2, 3]
-        if query["page"] < 3:
+        assert query[0] == ("per_page", "1")
+        assert query[1] in [("page", "1"), ("page", "2"), ("page", "3")]
+        page = int(query[1][1])
+        if page < 3:
             return {
-                "data": [query["page"]],
+                "data": [page],
                 "meta": {
                     "pagination": {
-                        "page": query["page"],
+                        "page": page,
                         "per_page": 1,
                         "last_page": 3,
                         "total_entries": 2,
@@ -45,7 +53,7 @@ def test_list_pagination():
             "data": [],
             "meta": {
                 "pagination": {
-                    "page": query["page"],
+                    "page": page,
                     "per_page": 1,
                     "last_page": 3,
                     "total_entries": 2,
@@ -53,21 +61,29 @@ def test_list_pagination():
             },
         }, {"status": 200}
 
-    def get_2(url, query=None, must_have_content=True, expected=None):
+    def get_2(
+        url,
+        query=None,
+        must_have_content=True,
+        expected=None,
+        require_json_object=False,
+    ):
         assert url == "https://example.com"
         assert must_have_content == [200]
-        assert expected == ([200, 404] if query["page"] == 1 else [200])
+        assert require_json_object is True
         assert query is not None
         assert len(query) == 3
         assert query["foo"] == "bar"
-        assert query["per_page"] == 2
-        assert query["page"] in [1, 2]
-        if query["page"] < 2:
+        assert query["per_page"] == "2"
+        assert query["page"] in ["1", "2"]
+        page = int(query["page"])
+        assert expected == ([200, 404] if page == 1 else [200])
+        if page < 2:
             return {
                 "foobar": ["bar", "baz"],
                 "meta": {
                     "pagination": {
-                        "page": query["page"],
+                        "page": page,
                         "per_page": 2,
                         "last_page": 2,
                         "total_entries": 3,
@@ -78,7 +94,7 @@ def test_list_pagination():
             "foobar": ["foo"],
             "meta": {
                 "pagination": {
-                    "page": query["page"],
+                    "page": page,
                     "per_page": 2,
                     "last_page": 2,
                     "total_entries": 3,
@@ -86,14 +102,21 @@ def test_list_pagination():
             },
         }, {"status": 200}
 
-    def get_3(url, query=None, must_have_content=True, expected=None):
+    def get_3(
+        url,
+        query=None,
+        must_have_content=True,
+        expected=None,
+        require_json_object=False,
+    ):
         assert url == "https://example.com"
         assert must_have_content == [200]
         assert expected == [200, 404]
+        assert require_json_object is True
         assert query is not None
         assert len(query) == 2
-        assert query["per_page"] == 100
-        assert query["page"] == 1
+        assert query[0] == ("per_page", "100")
+        assert query[1] == ("page", "1")
         return None, {"status": 404}
 
     api = HetznerAPI(MagicMock(), "123")
@@ -122,14 +145,14 @@ def test_list_pagination():
 def test_update_id_missing():
     api = HetznerAPI(MagicMock(), "123")
     with pytest.raises(DNSAPIError) as exc:
-        api.update_record(1, DNSRecord())
+        api.update_record(1, DNSRecord(record_id=None, record_type="TXT", target=""))
     assert exc.value.args[0] == "Need record ID to update record!"
 
 
 def test_update_id_delete():
     api = HetznerAPI(MagicMock(), "123")
     with pytest.raises(DNSAPIError) as exc:
-        api.delete_record(1, DNSRecord())
+        api.delete_record(1, DNSRecord(record_id=None, record_type="TXT", target=""))
     assert exc.value.args[0] == "Need record ID to delete record!"
 
 

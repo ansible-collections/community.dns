@@ -22,6 +22,8 @@ from ansible.module_utils.urls import (
 if t.TYPE_CHECKING:
     from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
 
+    HTTPMethod = t.Literal["DELETE", "GET", "HEAD", "POST", "PUT"]  # pragma: no cover
+
 
 class NetworkError(Exception):
     pass
@@ -32,7 +34,8 @@ class HTTPHelper(metaclass=abc.ABCMeta):
     def fetch_url(
         self,
         url: str,
-        method: str = "GET",
+        *,
+        method: HTTPMethod = "GET",
         headers: dict[str, str] | None = None,
         data: bytes | None = None,
         timeout: int | None = None,
@@ -54,7 +57,8 @@ class ModuleHTTPHelper(HTTPHelper):
     def fetch_url(
         self,
         url: str,
-        method: str = "GET",
+        *,
+        method: HTTPMethod = "GET",
         headers: dict[str, str] | None = None,
         data: bytes | None = None,
         timeout: int | None = None,
@@ -76,7 +80,8 @@ class OpenURLHelper(HTTPHelper):
     def fetch_url(
         self,
         url: str,
-        method: str = "GET",
+        *,
+        method: HTTPMethod = "GET",
         headers: dict[str, str] | None = None,
         data: bytes | None = None,
         timeout: int | None = None,

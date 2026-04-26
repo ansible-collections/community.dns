@@ -34,8 +34,7 @@ def test_user_api():
     assert converter.process_value_to_user("TXT", '"xyz \\') == '"xyz \\'
     assert converter.process_values_to_user("TXT", ['"xyz \\']) == ['"xyz \\']
 
-    record = DNSRecord()
-    record.type = "TXT"
+    record = DNSRecord(record_id=None, record_type="TXT", target="")
 
     record.target = '"xyz \\'
     converter.process_from_user(record)
@@ -78,8 +77,7 @@ def test_user_quoted():
         '"hello w\\195\\182rld"'
     ]
 
-    record = DNSRecord()
-    record.type = "TXT"
+    record = DNSRecord(record_id=None, record_type="TXT", target="")
 
     record.target = 'hëllo " w\\195\\182rld"'
     converter.process_from_user(record)
@@ -105,7 +103,7 @@ def test_user_quoted():
         'While processing record from the user: A backslash must not be followed by "o" (index 4)'
     )
 
-    rrset = DNSRecordSet()
+    rrset = DNSRecordSet(record_set_id=None, record_type=record.type)
     rrset.records.append(record)
     record.target = '"foo"'
     converter.process_set_from_user(rrset)
@@ -134,8 +132,7 @@ def test_user_unquoted():
         'hello "wörl\\d"'
     ]
 
-    record = DNSRecord()
-    record.type = "TXT"
+    record = DNSRecord(record_id=None, record_type="TXT", target="")
 
     record.target = 'hello "wörl\\d"'
     converter.process_from_user(record)
@@ -163,8 +160,7 @@ def test_api_decoded():
             {"txt_transformation": "unquoted", "txt_character_encoding": "decimal"}
         ),
     )
-    record = DNSRecord()
-    record.type = "TXT"
+    record = DNSRecord(record_id=None, record_type="TXT", target="")
 
     record.target = '"xyz \\'
     record_2 = converter.clone_from_api(record)
@@ -210,8 +206,7 @@ def test_api_encoded():
             {"txt_transformation": "unquoted", "txt_character_encoding": "decimal"}
         ),
     )
-    record = DNSRecord()
-    record.type = "TXT"
+    record = DNSRecord(record_id=None, record_type="TXT", target="")
 
     record.target = 'xyz " " \\\\\\195\\182'
     record_2 = converter.clone_from_api(record)
@@ -239,7 +234,7 @@ def test_api_encoded():
     converter.process_to_api(record)
     assert record.target == '"xyz \\\\\\195\\182"'
 
-    rrset = DNSRecordSet()
+    rrset = DNSRecordSet(record_set_id=None, record_type=record.type)
     rrset.records.append(record)
     record.target = "xyz \\ö"
     converter.process_set_to_api(rrset)
@@ -273,8 +268,7 @@ def test_api_encoded_no_char_encoding():
             {"txt_transformation": "unquoted", "txt_character_encoding": "decimal"}
         ),
     )
-    record = DNSRecord()
-    record.type = "TXT"
+    record = DNSRecord(record_id=None, record_type="TXT", target="")
 
     record.target = 'xyz " " \\\\\\195\\182'
     record_2 = converter.clone_from_api(record)

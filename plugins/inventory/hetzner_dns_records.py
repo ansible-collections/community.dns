@@ -70,6 +70,7 @@ hetzner_token: >-
   {{ (lookup('community.sops.sops', 'keys/hetzner.sops.yml') | from_yaml).hetzner_dns_token }}
 """
 
+import typing as t
 
 from ansible_collections.community.dns.plugins.module_utils._hetzner.api import (
     create_hetzner_api,
@@ -83,14 +84,21 @@ from ansible_collections.community.dns.plugins.plugin_utils._templated_options i
     TemplatedOptionProvider,
 )
 
+if t.TYPE_CHECKING:
+    from ..module_utils._provider import ProviderInformation  # pragma: no cover
+    from ..module_utils._zone_record_api import ZoneRecordAPI  # pragma: no cover
+    from ..module_utils._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
+
 
 class InventoryModule(RecordsInventoryModule):
     NAME = "community.dns.hetzner_dns_records"
     VALID_ENDINGS = ("hetzner_dns.yaml", "hetzner_dns.yml")
 
-    def setup_api(self) -> None:
+    def setup_api(self) -> tuple[ProviderInformation, ZoneRecordAPI | ZoneRecordSetAPI]:
         option_provider = TemplatedOptionProvider(self, self.templar)
-        self.provider_information = create_hetzner_provider_information(
+        provider_information = create_hetzner_provider_information(
             option_provider=option_provider
         )
-        self.api = create_hetzner_api(option_provider, OpenURLHelper())
+        return provider_information, create_hetzner_api(
+            option_provider, OpenURLHelper()
+        )

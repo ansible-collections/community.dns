@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import traceback
+import typing as t
 
 from ansible.module_utils.common.text.converters import to_text
 
@@ -19,8 +20,17 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 
 from ._utils import normalize_dns_name
 
+if t.TYPE_CHECKING:
+    from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
 
-def create_module_argument_spec(provider_information):
+    from .._provider import ProviderInformation  # pragma: no cover
+    from .._zone_record_api import ZoneRecordAPI  # pragma: no cover
+    from .._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
+
+
+def create_module_argument_spec(
+    provider_information: ProviderInformation,
+) -> ArgumentSpec:
     return ArgumentSpec(
         argument_spec={
             "zone_name": {"type": "str", "aliases": ["zone"]},
@@ -35,7 +45,11 @@ def create_module_argument_spec(provider_information):
     )
 
 
-def run_module(module, create_api, provider_information):
+def run_module(
+    module: AnsibleModule,
+    create_api: t.Callable[[], ZoneRecordAPI | ZoneRecordSetAPI],
+    provider_information: ProviderInformation,
+) -> t.NoReturn:
     try:
         # Create API
         api = create_api()

@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import traceback
+import typing as t
 from collections import OrderedDict, defaultdict
 
 from ansible.module_utils.common.text.converters import to_text
@@ -49,8 +50,27 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_set_hel
 
 from ._utils import get_prefix, normalize_dns_name
 
+if t.TYPE_CHECKING:
+    from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
 
-def create_module_argument_spec(provider_information):
+    from .._provider import ProviderInformation  # pragma: no cover
+    from .._record import RecordIDT  # pragma: no cover
+    from .._record_set import RecordSetIDT  # pragma: no cover
+    from .._zone import ZoneIDT  # pragma: no cover
+    from .._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
+
+    class RecordSetDict(t.TypedDict):  # pragma: no cover
+        record: str  # pragma: no cover  # input might be None
+        prefix: str | None  # pragma: no cover
+        type: str  # pragma: no cover
+        ttl: int | None  # pragma: no cover
+        value: list[str] | None  # pragma: no cover  # never None if ignore == False
+        ignore: bool  # pragma: no cover
+
+
+def create_module_argument_spec(
+    provider_information: ProviderInformation,
+) -> ArgumentSpec:
     return (
         ArgumentSpec(
             argument_spec={
@@ -93,9 +113,17 @@ def create_module_argument_spec(provider_information):
     )
 
 
-def _get_record_sets_dict(module, provider_information, record_converter, zone_in):
+def _get_record_sets_dict(
+    module: AnsibleModule,
+    provider_information: ProviderInformation,
+    record_converter: RecordConverter,
+    zone_in: str,
+) -> OrderedDict[tuple[str | None, str], RecordSetDict]:
     record_sets = module.params["record_sets"]
-    record_sets_dict = OrderedDict()
+    record_sets_dict: OrderedDict[
+        tuple[str | None, str],
+        tuple[int, RecordSetDict],
+    ] = OrderedDict()
     for index, record_set in enumerate(record_sets):
         record_set = record_set.copy()
         record_name = record_set["record"]
@@ -129,8 +157,12 @@ def _get_record_sets_dict(module, provider_information, record_converter, zone_i
 
 
 def _run_module_record_api(
-    option_provider, module, provider_information, record_converter, api
-):
+    option_provider,
+    module: AnsibleModule,
+    provider_information: ProviderInformation,
+    record_converter: RecordConverter,
+    api: ZoneRecordAPI[ZoneIDT, RecordIDT],
+) -> t.NoReturn:
     # Get zone information
     if module.params["zone_name"] is not None:
         zone_in = normalize_dns_name(module.params["zone_name"])
@@ -156,7 +188,7 @@ def _run_module_record_api(
     )
 
     # Group existing record sets
-    existing_record_sets = {}
+    existing_record_sets: dict[tuple[str | None, str], list[DNSRecord]] = {}
     for record in zone_records:
         key = (record.prefix, record.type)
         if key not in existing_record_sets:
@@ -173,7 +205,7 @@ def _run_module_record_api(
     to_create = []
     to_delete = []
     to_change = []
-    for (prefix, record_type), record_set in record_sets_dict.items():
+    for (prefix, record_type), record_set_dict in record_sets_dict.items():
         key = (prefix, record_type)
         if key not in new_record_sets:
             new_record_sets[key] = []
@@ -181,14 +213,15 @@ def _run_module_record_api(
         existing_record_sets[key] = []
         new_recs = new_record_sets[key]
 
-        if record_set["ignore"]:
+        if record_set_dict["ignore"]:
             continue
+        assert record_set_dict["value"] is not None  # since ignore==False
 
         mismatch_recs = []
         keep_record_sets = []
-        values = list(record_set["value"])
+        values = list(record_set_dict["value"])
         for record in existing_recs:
-            if record.ttl != record_set["ttl"]:
+            if record.ttl != record_set_dict["ttl"]:
                 mismatch_recs.append(record)
                 new_recs.remove(record)
                 continue
@@ -203,15 +236,18 @@ def _run_module_record_api(
             if mismatch_recs:
                 record = mismatch_recs.pop()
                 to_change.append(record)
+                new_record: DNSRecord[RecordIDT | None] = record  # type: ignore
             else:
                 # Otherwise create new record
-                record = DNSRecord()
-                to_create.append(record)
-            record.prefix = prefix
-            record.type = record_type
-            record.ttl = record_set["ttl"]
-            record.target = target
-            new_recs.append(record)
+                new_record = DNSRecord(
+                    record_id=None, record_type=record_type, target=target
+                )
+                to_create.append(new_record)
+            new_record.prefix = prefix
+            new_record.type = record_type
+            new_record.ttl = record_set_dict["ttl"]
+            new_record.target = target
+            new_recs.append(new_record)
 
         to_delete.extend(mismatch_recs)
 
@@ -301,8 +337,12 @@ def _run_module_record_api(
 
 
 def _run_module_record_set_api(
-    option_provider, module, provider_information, record_converter, api
-):
+    option_provider,
+    module: AnsibleModule,
+    provider_information: ProviderInformation,
+    record_converter: RecordConverter,
+    api: ZoneRecordSetAPI[ZoneIDT, RecordSetIDT, RecordIDT],
+) -> t.NoReturn:
     # Get zone information
     if module.params["zone_name"] is not None:
         zone_in = normalize_dns_name(module.params["zone_name"])
@@ -329,29 +369,34 @@ def _run_module_record_set_api(
     )
 
     # Group existing record sets
-    existing_record_sets = OrderedDict()
+    existing_record_sets: OrderedDict[
+        tuple[str | None, str], DNSRecordSet[RecordSetIDT, RecordIDT]
+    ] = OrderedDict()
     for record_set in zone_record_sets:
         key = (record_set.prefix, record_set.type)
         existing_record_sets[key] = record_set
 
     # Data required for diff
     old_record_sets = {k: v.clone() for k, v in existing_record_sets.items()}
-    new_record_sets = dict(existing_record_sets)
+    new_record_sets: dict[
+        tuple[str | None, str],
+        DNSRecordSet[RecordSetIDT | None, RecordIDT | None]
+        | DNSRecordSet[RecordSetIDT, RecordIDT],
+    ] = dict(existing_record_sets)
 
     # Create action lists
-    to_create = []
-    to_delete = []
-    to_change = []
-    for (prefix, record_type), record_set in record_sets_dict.items():
+    to_create: list[DNSRecordSet[RecordSetIDT | None, RecordIDT | None]] = []
+    to_delete: list[DNSRecordSet[RecordSetIDT, RecordIDT]] = []
+    to_change: list[tuple[DNSRecordSet[RecordSetIDT, RecordIDT], bool, bool]] = []
+    for (prefix, record_type), record_set_dict in record_sets_dict.items():
         key = (prefix, record_type)
-        existing_record_sets.pop(key, None)
-        if record_set["ignore"]:
+        new_rrset = existing_record_sets.pop(key, None)
+        if record_set_dict["ignore"]:
             continue
+        assert record_set_dict["value"] is not None  # since ignore==False
 
-        new_rrset = new_record_sets.get(key)
-
-        ttl = record_set["ttl"]
-        values = sorted(record_set["value"])
+        ttl = record_set_dict["ttl"]
+        values = sorted(record_set_dict["value"])
         if not values:
             if new_rrset:
                 to_delete.append(new_rrset)
@@ -359,17 +404,18 @@ def _run_module_record_set_api(
             continue
 
         if new_rrset is None:
-            rrset = DNSRecordSet()
+            rrset: DNSRecordSet[RecordSetIDT | None, RecordIDT | None] = DNSRecordSet(
+                record_set_id=None, record_type=record_type
+            )
             rrset.prefix = prefix
-            rrset.type = record_type
             rrset.ttl = ttl
             rrset.records = []
             for value in values:
-                rec = DNSRecord()
+                rec: DNSRecord[RecordIDT | None] = DNSRecord(
+                    record_id=None, record_type=record_type, target=value
+                )
                 rec.prefix = prefix
-                rec.type = record_type
                 rec.ttl = ttl
-                rec.target = value
                 rrset.records.append(rec)
             to_create.append(rrset)
             new_record_sets[key] = rrset
@@ -392,10 +438,8 @@ def _run_module_record_set_api(
             if recs:
                 new_rrset.records.append(recs.pop())
                 continue
-            rec = DNSRecord()
+            rec = DNSRecord(record_id=None, record_type=record_type, target=value)
             rec.prefix = prefix
-            rec.type = record_type
-            rec.target = value
             new_rrset.records.append(rec)
 
     # If pruning, remove superfluous record sets
@@ -491,7 +535,11 @@ def _run_module_record_set_api(
     module.exit_json(**result)
 
 
-def run_module(module, create_api, provider_information):
+def run_module(
+    module: AnsibleModule,
+    create_api: t.Callable[[], ZoneRecordAPI | ZoneRecordSetAPI],
+    provider_information: ProviderInformation,
+) -> t.NoReturn:
     option_provider = ModuleOptionProvider(module)
     record_converter = RecordConverter(provider_information, option_provider)
     record_converter.emit_deprecations(module.deprecate)

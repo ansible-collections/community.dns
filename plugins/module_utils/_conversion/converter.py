@@ -7,6 +7,8 @@
 
 from __future__ import annotations
 
+import typing as t
+
 from ansible.module_utils.common.text.converters import to_text
 
 from ansible_collections.community.dns.plugins.module_utils._conversion.base import (
@@ -18,9 +20,19 @@ from ansible_collections.community.dns.plugins.module_utils._conversion.txt impo
 )
 from ansible_collections.community.dns.plugins.module_utils._record import DNSRecord
 
+if t.TYPE_CHECKING:
+    from collections.abc import Sequence  # pragma: no cover
+
+    from .._argspec import OptionProvider  # pragma: no cover
+    from .._provider import ProviderInformation  # pragma: no cover
+    from .._record import RecordIDT  # pragma: no cover
+    from .._record_set import DNSRecordSet, RecordSetIDT  # pragma: no cover
+
 
 class RecordConverter:
-    def __init__(self, provider_information, option_provider):
+    def __init__(
+        self, provider_information: ProviderInformation, option_provider: OptionProvider
+    ) -> None:
         """
         Create a record converter.
         """
@@ -42,10 +54,10 @@ class RecordConverter:
             "txt_character_encoding"
         )
 
-    def emit_deprecations(self, deprecator):
+    def emit_deprecations(self, deprecator: t.Callable[[str], None]) -> None:
         pass
 
-    def _handle_txt_api(self, to_api, record):
+    def _handle_txt_api(self, to_api: bool, record: DNSRecord[RecordIDT]) -> None:
         """
         Handle TXT records for sending to/from the API.
         """
@@ -70,7 +82,7 @@ class RecordConverter:
                     record.target, character_encoding=self._txt_api_character_encoding
                 )
 
-    def _handle_txt_user(self, to_user, record):
+    def _handle_txt_user(self, to_user: bool, record: DNSRecord[RecordIDT]) -> None:
         """
         Handle TXT records for sending to/from the user.
         """
@@ -89,7 +101,7 @@ class RecordConverter:
                     record.target, character_encoding=self._txt_character_encoding
                 )
 
-    def process_from_api(self, record):
+    def process_from_api(self, record: DNSRecord[RecordIDT]) -> DNSRecord[RecordIDT]:
         """
         Process a record object (DNSRecord) after receiving from API.
         Modifies the record in-place.
@@ -104,7 +116,7 @@ class RecordConverter:
                 f"While processing record from API: {e.error_message}"
             ) from e
 
-    def process_to_api(self, record):
+    def process_to_api(self, record: DNSRecord[RecordIDT]) -> DNSRecord[RecordIDT]:
         """
         Process a record object (DNSRecord) for sending to API.
         Modifies the record in-place.
@@ -119,7 +131,7 @@ class RecordConverter:
                 f"While processing record for the API: {e.error_message}"
             ) from e  # pragma: no cover
 
-    def process_from_user(self, record):
+    def process_from_user(self, record: DNSRecord[RecordIDT]) -> DNSRecord[RecordIDT]:
         """
         Process a record object (DNSRecord) after receiving from the user.
         Modifies the record in-place.
@@ -134,7 +146,7 @@ class RecordConverter:
                 f"While processing record from the user: {e.error_message}"
             ) from e
 
-    def process_to_user(self, record):
+    def process_to_user(self, record: DNSRecord[RecordIDT]) -> DNSRecord[RecordIDT]:
         """
         Process a record object (DNSRecord) for sending to the user.
         Modifies the record in-place.
@@ -149,7 +161,7 @@ class RecordConverter:
                 f"While processing record for the user: {e.error_message}"
             ) from e  # pragma: no cover
 
-    def clone_from_api(self, record):
+    def clone_from_api(self, record: DNSRecord[RecordIDT]) -> DNSRecord[RecordIDT]:
         """
         Process a record object (DNSRecord) after receiving from API.
         Return a modified clone of the record; the original will not be modified.
@@ -158,7 +170,7 @@ class RecordConverter:
         self.process_from_api(record)
         return record
 
-    def clone_to_api(self, record):
+    def clone_to_api(self, record: DNSRecord[RecordIDT]) -> DNSRecord[RecordIDT]:
         """
         Process a record object (DNSRecord) for sending to API.
         Return a modified clone of the record; the original will not be modified.
@@ -167,21 +179,27 @@ class RecordConverter:
         self.process_to_api(record)
         return record
 
-    def clone_multiple_from_api(self, records):
+    def clone_multiple_from_api(
+        self, records: Sequence[DNSRecord[RecordIDT]]
+    ) -> list[DNSRecord[RecordIDT]]:
         """
         Process a list of record object (DNSRecord) after receiving from API.
         Return a list of modified clones of the records; the originals will not be modified.
         """
         return [self.clone_from_api(record) for record in records]
 
-    def clone_multiple_to_api(self, records):
+    def clone_multiple_to_api(
+        self, records: Sequence[DNSRecord[RecordIDT]]
+    ) -> list[DNSRecord[RecordIDT]]:
         """
         Process a list of record objects (DNSRecord) for sending to API.
         Return a list of modified clones of the records; the originals will not be modified.
         """
         return [self.clone_to_api(record) for record in records]
 
-    def clone_set_to_api(self, record_set):
+    def clone_set_to_api(
+        self, record_set: DNSRecordSet[RecordSetIDT, RecordIDT]
+    ) -> DNSRecordSet[RecordSetIDT, RecordIDT]:
         """
         Process a record set object (DNSRecordSet) for sending to API.
         Return a modified clone of the record set; the original will not be modified.
@@ -192,7 +210,9 @@ class RecordConverter:
         ]
         return record_set
 
-    def process_multiple_from_api(self, records):
+    def process_multiple_from_api(
+        self, records: list[DNSRecord[RecordIDT]]
+    ) -> list[DNSRecord[RecordIDT]]:
         """
         Process a list of record object (DNSRecord) after receiving from API.
         Modifies the records in-place.
@@ -201,7 +221,9 @@ class RecordConverter:
             self.process_from_api(record)
         return records
 
-    def process_multiple_to_api(self, records):
+    def process_multiple_to_api(
+        self, records: list[DNSRecord[RecordIDT]]
+    ) -> list[DNSRecord[RecordIDT]]:
         """
         Process a list of record objects (DNSRecord) for sending to API.
         Modifies the records in-place.
@@ -210,7 +232,9 @@ class RecordConverter:
             self.process_to_api(record)
         return records
 
-    def process_multiple_from_user(self, records):
+    def process_multiple_from_user(
+        self, records: list[DNSRecord[RecordIDT]]
+    ) -> list[DNSRecord[RecordIDT]]:
         """
         Process a list of record object (DNSRecord) after receiving from the user.
         Modifies the records in-place.
@@ -219,7 +243,9 @@ class RecordConverter:
             self.process_from_user(record)
         return records
 
-    def process_multiple_to_user(self, records):
+    def process_multiple_to_user(
+        self, records: list[DNSRecord[RecordIDT]]
+    ) -> list[DNSRecord[RecordIDT]]:
         """
         Process a list of record objects (DNSRecord) for sending to the user.
         Modifies the records in-place.
@@ -228,7 +254,9 @@ class RecordConverter:
             self.process_to_user(record)
         return records
 
-    def process_set_from_api(self, record_set):
+    def process_set_from_api(
+        self, record_set: DNSRecordSet[RecordSetIDT, RecordIDT]
+    ) -> DNSRecordSet[RecordSetIDT, RecordIDT]:
         """
         Process a record set object (DNSRecordSet) after receiving from API.
         Modifies the records in-place.
@@ -237,7 +265,9 @@ class RecordConverter:
             self.process_from_api(record)
         return record_set
 
-    def process_set_to_api(self, record_set):
+    def process_set_to_api(
+        self, record_set: DNSRecordSet[RecordSetIDT, RecordIDT]
+    ) -> DNSRecordSet[RecordSetIDT, RecordIDT]:
         """
         Process a record set object (DNSRecordSet) for sending to API.
         Modifies the records in-place.
@@ -246,7 +276,9 @@ class RecordConverter:
             self.process_to_api(record)
         return record_set
 
-    def process_set_from_user(self, record_set):
+    def process_set_from_user(
+        self, record_set: DNSRecordSet[RecordSetIDT, RecordIDT]
+    ) -> DNSRecordSet[RecordSetIDT, RecordIDT]:
         """
         Process a record set object (DNSRecordSet) after receiving from the user.
         Modifies the records in-place.
@@ -255,7 +287,9 @@ class RecordConverter:
             self.process_from_user(record)
         return record_set
 
-    def process_set_to_user(self, record_set):
+    def process_set_to_user(
+        self, record_set: DNSRecordSet[RecordSetIDT, RecordIDT]
+    ) -> DNSRecordSet[RecordSetIDT, RecordIDT]:
         """
         Process a record set objects (DNSRecordSet) for sending to the user.
         Modifies the records in-place.
@@ -264,33 +298,37 @@ class RecordConverter:
             self.process_to_user(record)
         return record_set
 
-    def process_value_from_user(self, record_type, value):
+    def process_value_from_user(self, record_type: str, value: str) -> str:
         """
         Process a record value (string) after receiving from the user.
         """
-        record = DNSRecord()
-        record.type = record_type
-        record.target = value
+        record: DNSRecord[None] = DNSRecord(
+            record_id=None, record_type=record_type, target=value
+        )
         self.process_from_user(record)
         return record.target
 
-    def process_values_from_user(self, record_type, values):
+    def process_values_from_user(
+        self, record_type: str, values: Sequence[str]
+    ) -> list[str]:
         """
         Process a list of record values (strings) after receiving from the user.
         """
         return [self.process_value_from_user(record_type, value) for value in values]
 
-    def process_value_to_user(self, record_type, value):
+    def process_value_to_user(self, record_type: str, value: str) -> str:
         """
         Process a record value (string) for sending to the user.
         """
-        record = DNSRecord()
-        record.type = record_type
-        record.target = value
+        record: DNSRecord[None] = DNSRecord(
+            record_id=None, record_type=record_type, target=value
+        )
         self.process_to_user(record)
         return record.target
 
-    def process_values_to_user(self, record_type, values):
+    def process_values_to_user(
+        self, record_type: str, values: Sequence[str]
+    ) -> list[str]:
         """
         Process a list of record values (strings) for sending to the user.
         """

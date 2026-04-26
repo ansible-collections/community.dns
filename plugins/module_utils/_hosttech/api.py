@@ -7,6 +7,8 @@
 
 from __future__ import annotations
 
+import typing as t
+
 from ansible_collections.community.dns.plugins.module_utils._argspec import ArgumentSpec
 from ansible_collections.community.dns.plugins.module_utils._hosttech.json_api import (
     HostTechJSONAPI,
@@ -22,34 +24,39 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
     DNSAPIError,
 )
 
+if t.TYPE_CHECKING:
+    from .._argspec import OptionProvider  # pragma: no cover
+    from .._http import HTTPHelper  # pragma: no cover
+    from .._provider import AnsibleType  # pragma: no cover
+
 
 class HosttechProviderInformation(ProviderInformation):
-    def get_supported_record_types(self):
+    def get_supported_record_types(self) -> list[str]:
         """
         Return a list of supported record types.
         """
         return ["A", "CNAME", "MX", "AAAA", "TXT", "PTR", "SRV", "SPF", "NS", "CAA"]
 
-    def get_zone_id_type(self):
+    def get_zone_id_type(self) -> AnsibleType:
         """
         Return the (short) type for zone IDs, like ``'int'`` or ``'str'``.
         """
         return "int"
 
-    def get_record_id_type(self):
+    def get_record_id_type(self) -> AnsibleType:
         """
         Return the (short) type for record IDs, like ``'int'`` or ``'str'``.
         """
         return "int"
 
-    def get_record_default_ttl(self):
+    def get_record_default_ttl(self) -> int | None:
         """
         Return the default TTL for records, like 300, 3600 or None.
         None means that some other TTL (usually from the zone) will be used.
         """
         return 3600
 
-    def normalize_prefix(self, prefix):
+    def normalize_prefix(self, prefix: str | None) -> str | None:
         """
         Given a prefix (string or None), return its normalized form.
 
@@ -61,7 +68,9 @@ class HosttechProviderInformation(ProviderInformation):
         """
         return prefix or None
 
-    def txt_record_handling(self):
+    def txt_record_handling(
+        self,
+    ) -> t.Literal["decoded", "encoded", "encoded-no-char-encoding"]:
         """
         Return how the API handles TXT records.
 
@@ -73,11 +82,11 @@ class HosttechProviderInformation(ProviderInformation):
         return "decoded"
 
 
-def create_hosttech_provider_information():
+def create_hosttech_provider_information() -> HosttechProviderInformation:
     return HosttechProviderInformation()
 
 
-def create_hosttech_argument_spec():
+def create_hosttech_argument_spec() -> ArgumentSpec:
     return ArgumentSpec(
         argument_spec={
             "hosttech_username": {"type": "str"},
@@ -89,7 +98,9 @@ def create_hosttech_argument_spec():
     )
 
 
-def create_hosttech_api(option_provider, http_helper):
+def create_hosttech_api(
+    option_provider: OptionProvider, http_helper: HTTPHelper
+) -> HostTechJSONAPI | HostTechWSDLAPI:
     username = option_provider.get_option("hosttech_username")
     password = option_provider.get_option("hosttech_password")
     if username is not None and password is not None:

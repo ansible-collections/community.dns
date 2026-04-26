@@ -33,8 +33,8 @@ except ImportError as exc:
 else:
     DNSPYTHON_IMPORTERROR = None  # type: ignore  # TODO
 
-
-_T = t.TypeVar("_T")
+if t.TYPE_CHECKING:
+    _T = t.TypeVar("_T")
 
 
 def guarded_run(

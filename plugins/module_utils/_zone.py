@@ -9,18 +9,42 @@ from __future__ import annotations
 
 import typing as t
 
+from ansible_collections.community.dns.plugins.module_utils._record import RecordIDT
+from ansible_collections.community.dns.plugins.module_utils._record_set import (
+    RecordSetIDT,
+)
+
 if t.TYPE_CHECKING:
+    from collections.abc import Mapping  # pragma: no cover
+
     from ._record import DNSRecord  # pragma: no cover
     from ._record_set import DNSRecordSet  # pragma: no cover
 
 
-class DNSZone:
+ZoneIDT = t.TypeVar("ZoneIDT")
+ZoneIDT_co = t.TypeVar("ZoneIDT_co", covariant=True)
+
+
+class IDNSZone(t.Protocol, t.Generic[ZoneIDT_co]):
+    @property
+    def id(self) -> ZoneIDT_co: ...
+
+    @property
+    def name(self) -> str: ...
+
+    @property
+    def info(self) -> Mapping[str, t.Any]: ...
+
+
+class DNSZone(t.Generic[ZoneIDT]):
     def __init__(
         self,
+        *,
+        zone_id: ZoneIDT,
         name: str,
         info: dict[str, t.Any] | None = None,
     ) -> None:
-        self.id: str | None = None
+        self.id = zone_id
         self.name = name
         self.info: dict[str, t.Any] = info or {}
 
@@ -36,11 +60,11 @@ class DNSZone:
         return self.__str__()
 
 
-class DNSZoneWithRecords:
+class DNSZoneWithRecords(t.Generic[ZoneIDT, RecordIDT]):
     def __init__(
         self,
-        zone: DNSZone,
-        records: list[DNSRecord],
+        zone: DNSZone[ZoneIDT],
+        records: list[DNSRecord[RecordIDT]],
     ) -> None:
         self.zone = zone
         self.records = records
@@ -52,11 +76,11 @@ class DNSZoneWithRecords:
         return f"DNSZoneWithRecords({self.zone!r}, {self.records!r})"
 
 
-class DNSZoneWithRecordSets:
+class DNSZoneWithRecordSets(t.Generic[ZoneIDT, RecordSetIDT, RecordIDT]):
     def __init__(
         self,
-        zone: DNSZone,
-        record_sets: list[DNSRecordSet],
+        zone: DNSZone[ZoneIDT],
+        record_sets: list[DNSRecordSet[RecordSetIDT, RecordIDT]],
     ) -> None:
         self.zone = zone
         self.record_sets = record_sets

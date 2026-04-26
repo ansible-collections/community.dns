@@ -14,31 +14,22 @@ from ansible_collections.community.dns.plugins.module_utils._record_set import (
 
 
 def test_format_record_set_for_output():
-    A1 = DNSRecord()
-    A1.type = "A"
+    A1 = DNSRecord(record_id=None, record_type="A", target="1.2.3.4")
     A1.ttl = 300
-    A1.target = "1.2.3.4"
     A1.extra["foo"] = "bar"
-    A2 = DNSRecord()
-    A2.type = "A"
+    A2 = DNSRecord(record_id=None, record_type="A", target="1.2.3.5")
     A2.ttl = 300
-    A2.target = "1.2.3.5"
-    A3 = DNSRecord()
-    A3.type = "A"
+    A3 = DNSRecord(record_id=None, record_type="A", target="1.2.3.6")
     A3.prefix = "foo"
     A3.ttl = None
-    A3.target = "1.2.3.6"
 
-    a1 = DNSRecordSet()
-    a1.type = "A"
+    a1 = DNSRecordSet(record_set_id=None, record_type="A")
     a1.prefix = None
     a1.ttl = 300
     a1.records = [A1, A2]
     a1.extra = {}
 
-    a2 = DNSRecordSet()
-    a2.id = "foo/A"
-    a2.type = "A"
+    a2 = DNSRecordSet(record_set_id="foo/A", record_type="A")
     a2.prefix = "foo"
     a2.ttl = None
     a2.records = [A3]
@@ -68,30 +59,23 @@ def test_format_record_set_for_output():
 
 
 def test_record_str_repr():
-    A1 = DNSRecord()
-    A1.type = "A"
+    A1 = DNSRecord(record_id=None, record_type="A", target="1.2.3.4")
     A1.ttl = 300
-    A1.target = "1.2.3.4"
     A1.extra["foo"] = "bar"
-    A2 = DNSRecord()
-    A2.type = "A"
+    A2 = DNSRecord(record_id=None, record_type="A", target="1.2.3.5")
     A2.ttl = 300
-    A2.target = "1.2.3.5"
-    A3 = DNSRecord()
-    A3.type = "A"
+    A3 = DNSRecord(record_id=None, record_type="A", target="1.2.3.6")
     A3.prefix = "foo"
     A3.ttl = None
-    A3.target = "1.2.3.6"
 
-    a1 = DNSRecordSet()
+    a1 = DNSRecordSet(record_set_id=None, record_type="A")
     a1.type = "A"
     a1.prefix = None
     a1.ttl = 300
     a1.records = [A1, A2]
     a1.extra = {}
 
-    a2 = DNSRecordSet()
-    a2.id = "foo/A"
+    a2 = DNSRecordSet(record_set_id="foo/A", record_type="A")
     a2.type = "A"
     a2.prefix = "foo"
     a2.ttl = None
@@ -103,10 +87,10 @@ def test_record_str_repr():
     assert str(a1) == repr(a1)
     assert str(a1) == (
         "DNSRecordSet(type: A, prefix: (none), ttl: 5m, records: [DNSRecord(type: A, prefix: (none), target: "
-        "\"1.2.3.4\", ttl: 5m, extra: {'foo': 'bar'}), DNSRecord(type: A, prefix: (none), target: \"1.2.3.5\", ttl: 5m)])"
+        "'1.2.3.4', ttl: 5m, extra: {'foo': 'bar'}), DNSRecord(type: A, prefix: (none), target: '1.2.3.5', ttl: 5m)])"
     )
     assert str(a2) == repr(a2)
     assert str(a2) == (
-        'DNSRecordSet(id: foo/A, type: A, prefix: "foo", ttl: default, records: [DNSRecord(type: A,'
-        " prefix: \"foo\", target: \"1.2.3.6\", ttl: default)], extra: {'foo': 'bar'})"
+        "DNSRecordSet(id: foo/A, type: A, prefix: 'foo', ttl: default, records: [DNSRecord(type: A,"
+        " prefix: 'foo', target: '1.2.3.6', ttl: default)], extra: {'foo': 'bar'})"
     )

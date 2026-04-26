@@ -77,6 +77,8 @@ hosttech_token: >-
   {{ (lookup('community.sops.sops', 'keys/hosttech.sops.yml') | from_yaml).hosttech_dns_token }}
 """
 
+import typing as t
+
 from ansible_collections.community.dns.plugins.module_utils._hosttech.api import (
     create_hosttech_api,
     create_hosttech_provider_information,
@@ -89,13 +91,18 @@ from ansible_collections.community.dns.plugins.plugin_utils._templated_options i
     TemplatedOptionProvider,
 )
 
+if t.TYPE_CHECKING:
+    from ..module_utils._provider import ProviderInformation  # pragma: no cover
+    from ..module_utils._zone_record_api import ZoneRecordAPI  # pragma: no cover
+    from ..module_utils._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
+
 
 class InventoryModule(RecordsInventoryModule):
     NAME = "community.dns.hosttech_dns_records"
     VALID_ENDINGS = ("hosttech_dns.yaml", "hosttech_dns.yml")
 
-    def setup_api(self) -> None:
-        self.provider_information = create_hosttech_provider_information()
-        self.api = create_hosttech_api(
+    def setup_api(self) -> tuple[ProviderInformation, ZoneRecordAPI | ZoneRecordSetAPI]:
+        provider_information = create_hosttech_provider_information()
+        return provider_information, create_hosttech_api(
             TemplatedOptionProvider(self, self.templar), OpenURLHelper()
         )

@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import abc
+import typing as t
 
 from ansible.module_utils.common.validation import (
     check_type_bool,
@@ -18,8 +19,11 @@ from ansible.module_utils.common.validation import (
     check_type_str,
 )
 
+if t.TYPE_CHECKING:
+    AnsibleType = t.Literal["int", "str", "float", "bool"]  # pragma: no cover
 
-def ensure_type(value, type_name):
+
+def ensure_type(value: t.Any, type_name: str) -> t.Any:
     if type_name == "str":
         return check_type_str(value)
     if type_name == "list":
@@ -37,50 +41,52 @@ def ensure_type(value, type_name):
 
 class ProviderInformation(metaclass=abc.ABCMeta):
     @abc.abstractmethod
-    def get_zone_id_type(self):
+    def get_zone_id_type(self) -> AnsibleType:
         """
         Return the (short) type for zone IDs, like ``'int'`` or ``'str'``.
         """
 
     @abc.abstractmethod
-    def get_record_id_type(self):
+    def get_record_id_type(self) -> AnsibleType:
         """
         Return the (short) type for record IDs, like ``'int'`` or ``'str'``.
         """
 
     @abc.abstractmethod
-    def get_record_default_ttl(self):
+    def get_record_default_ttl(self) -> int | None:
         """
         Return the default TTL for records, like 300, 3600 or None.
         None means that some other TTL (usually from the zone) will be used.
         """
 
     @abc.abstractmethod
-    def get_supported_record_types(self):
+    def get_supported_record_types(self) -> list[str]:
         """
         Return a list of supported record types.
         """
 
-    def normalize_prefix(self, prefix):
+    def normalize_prefix(self, prefix: str | None) -> str | None:
         """
-        Given a prefix (string or None), return its normalized form.
+        Given a prefix (string or ``None``), return its normalized form.
 
         The result should always be None for the trivial prefix, and a non-zero length DNS name
         for a non-trivial prefix.
 
         If a provider supports other identifiers for the trivial prefix, such as '@', this
-        function needs to convert them to None as well.
+        function needs to convert them to ``None`` as well.
         """
         return prefix or None
 
-    def supports_bulk_actions(self):
+    def supports_bulk_actions(self) -> bool:
         """
         Return whether the API supports some kind of bulk actions.
         """
         return False
 
     @abc.abstractmethod
-    def txt_record_handling(self):
+    def txt_record_handling(
+        self,
+    ) -> t.Literal["decoded", "encoded", "encoded-no-char-encoding"]:
         """
         Return how the API handles TXT records.
 
@@ -90,7 +96,7 @@ class ProviderInformation(metaclass=abc.ABCMeta):
         * 'encoded-no-char-encoding' - the API works with encoded values, but without character encoding
         """
 
-    def txt_character_encoding(self):
+    def txt_character_encoding(self) -> t.Literal["decimal", "octal"]:
         """
         Return how the API handles escape sequences in TXT records.
 
@@ -104,7 +110,7 @@ class ProviderInformation(metaclass=abc.ABCMeta):
         """
         return "decimal"
 
-    def txt_always_quote(self):
+    def txt_always_quote(self) -> bool:
         """
         Return whether TXT records sent to the API should always be quoted.
 

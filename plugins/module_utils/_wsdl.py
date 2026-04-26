@@ -7,6 +7,8 @@
 
 from __future__ import annotations
 
+import typing as t
+
 from ansible.module_utils.common.text.converters import to_native
 
 try:
@@ -17,6 +19,11 @@ except ImportError:
     HAS_LXML_ETREE = False
 
 from ansible_collections.community.dns.plugins.module_utils._http import NetworkError
+
+if t.TYPE_CHECKING:
+    from collections.abc import Mapping  # pragma: no cover
+
+    from ._http import HTTPHelper  # pragma: no cover
 
 
 class WSDLException(Exception):
@@ -39,7 +46,9 @@ class WSDLCodingException(WSDLException):
     pass
 
 
-def _split_text_namespace(node, text):
+def _split_text_namespace(
+    node: lxml.etree.Element, text: str
+) -> tuple[str, str | None]:
     i = text.find(":")
     if i < 0:
         return text, None
@@ -55,13 +64,18 @@ _NAMESPACE_XML_SOAP = "http://xml.apache.org/xml-soap"
 _NAMESPACE_XML_SOAP_ENCODING = "http://schemas.xmlsoap.org/soap/encoding/"
 
 
-def _set_type(node, type_value, namespace=None):
+def _set_type(
+    node: lxml.etree.Element, type_value: str, namespace: str | None = None
+) -> None:
+    tv: lxml.etree.QName | str
     if namespace is not None:
-        type_value = lxml.etree.QName(namespace, type_value)
-    node.set(lxml.etree.QName(_NAMESPACE_XSI, "type").text, type_value)
+        tv = lxml.etree.QName(namespace, type_value)
+    else:
+        tv = type_value
+    node.set(lxml.etree.QName(_NAMESPACE_XSI, "type").text, tv)
 
 
-def encode_wsdl(node, value):
+def encode_wsdl(node: lxml.etree.Element, value: t.Any) -> None:
     if value is None:
         node.set(lxml.etree.QName(_NAMESPACE_XSI, "nil").text, "true")
     elif isinstance(value, str):
@@ -94,17 +108,25 @@ def encode_wsdl(node, value):
         raise WSDLCodingException(f"Do not know how to encode {type(value)}!")
 
 
-def _decode_wsdl_array(result, node, root_ns, ids):
+def _decode_wsdl_array(
+    result: list[t.Any],
+    node: lxml.etree.Element,
+    root_ns: str | None,
+    ids: dict[str, str],
+):
     for item in node:
         if item.tag != "item":
-            raise WSDLCodingException(f'Invalid child tag "{item.tag}" in map!')
+            raise WSDLCodingException(f"Invalid child tag {item.tag!r} in map!")
         result.append(decode_wsdl(item, root_ns, ids))
 
 
-def decode_wsdl(node, root_ns, ids):
+def decode_wsdl(
+    node: lxml.etree.Element, root_ns: str | None, ids: dict[str, str]
+) -> t.Any:
     href = node.get("href")
     nil = node.get(lxml.etree.QName(_NAMESPACE_XSI, "nil"))
     nid = node.get("id")
+    result: t.Any
     if href is not None:
         if not href.startswith("#"):
             raise WSDLCodingException(f'Global reference "{href}" not supported!')
@@ -129,10 +151,17 @@ def decode_wsdl(node, root_ns, ids):
                     result = False
                 else:
                     raise WSDLCodingException(
-                        f'Invalid value for boolean: "{node.text}"'
+                        f"Invalid value for boolean: {node.text!r}"
                     )
             elif ntype == "int":
-                result = int(node.text)
+                try:
+                    if node.text is None:
+                        raise TypeError
+                    result = int(node.text)
+                except (TypeError, ValueError) as exc:
+                    raise WSDLCodingException(
+                        f"Invalid value for int: {node.text!r}"
+                    ) from exc
             elif ntype == "string":
                 result = node.text
             else:
@@ -145,15 +174,15 @@ def decode_wsdl(node, root_ns, ids):
                 for item in node:
                     if item.tag != "item":
                         raise WSDLCodingException(
-                            f'Invalid child tag "{item.tag}" in map!'
+                            f"Invalid child tag {item.tag!r} in map!"
                         )
                     key = item.find("key")
                     if key is None:
-                        raise WSDLCodingException(f'Cannot find key for "{item}"!')
+                        raise WSDLCodingException(f"Cannot find key for {item!r}!")
                     key = decode_wsdl(key, root_ns, ids)
                     value = item.find("value")
                     if value is None:
-                        raise WSDLCodingException(f'Cannot find value for "{item}"!')
+                        raise WSDLCodingException(f"Cannot find value for {item!r}!")
                     value = decode_wsdl(value, root_ns, ids)
                     result[key] = value
                 return result
@@ -191,7 +220,9 @@ def decode_wsdl(node, root_ns, ids):
 
 
 class Parser:
-    def _parse(self, result, node, where):
+    def _parse(
+        self, result: dict[str, t.Any], node: lxml.etree.Element, where: str
+    ) -> None:
         for child in node:
             tag = lxml.etree.QName(child.tag)
             if tag.namespace != self._api:
@@ -201,7 +232,7 @@ class Parser:
             for res in child.iter("return"):
                 result[tag.localname] = decode_wsdl(res, self._api, {})
 
-    def __init__(self, api, root):
+    def __init__(self, api: str, root: lxml.etree.Element) -> None:
         self._main_ns = _NAMESPACE_ENVELOPE
         self._api = api
         self._root = root
@@ -220,23 +251,23 @@ class Parser:
             raise WSDLError(
                 origin, fault_code_val, lxml.etree.tostring(fault).decode("utf-8")
             )
-        self._header = {}
-        self._body = {}
+        self._header: dict[str, t.Any] = {}
+        self._body: dict[str, t.Any] = {}
         for header in self._root.iter(lxml.etree.QName(self._main_ns, "Header").text):
             self._parse(self._header, header, "header")
         for body in self._root.iter(lxml.etree.QName(self._main_ns, "Body").text):
             self._parse(self._body, body, "body")
 
-    def get_header(self, header):
+    def get_header(self, header: str) -> t.Any:
         return self._header[header]
 
-    def get_result(self, body):
+    def get_result(self, body: str) -> t.Any:
         return self._body[body]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"header={self._header}, body={self._body}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             """<?xml version='1.0' encoding='utf-8'?>"""
             + "\n"
@@ -246,22 +277,27 @@ class Parser:
 
 class Composer:
     @staticmethod
-    def _create(tag, namespace=None, **kwarg):
+    def _create(tag: str, namespace: str | None = None, **kwarg) -> lxml.etree.Element:
         if namespace:
             return lxml.etree.Element(lxml.etree.QName(namespace, tag), **kwarg)
         return lxml.etree.Element(tag, **kwarg)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             """<?xml version='1.0' encoding='utf-8'?>"""
             + "\n"
             + lxml.etree.tostring(self._root, pretty_print=True).decode("utf-8")
         )
 
-    def _create_envelope(self, tag, **kwarg):
+    def _create_envelope(self, tag: str, **kwarg) -> lxml.etree.Element:
         return self._create(tag, self._main_ns, **kwarg)
 
-    def __init__(self, http_helper, api, namespaces=None):
+    def __init__(
+        self,
+        http_helper: HTTPHelper,
+        api: str,
+        namespaces: Mapping[str, str] | None = None,
+    ) -> None:
         self._http_helper = http_helper
         self._main_ns = _NAMESPACE_ENVELOPE
         self._api = api
@@ -284,9 +320,9 @@ class Composer:
         self._root.append(self._header)
         self._body = self._create_envelope("Body")
         self._root.append(self._body)
-        self._command = None
+        self._command: str | None = None
 
-    def add_auth(self, username, password):
+    def add_auth(self, username: str, password: str) -> None:
         auth = self._create("authenticate", "auth")
         user = self._create("UserName")
         user.text = username
@@ -296,16 +332,16 @@ class Composer:
         auth.append(pw)
         self._header.append(auth)
 
-    def add_simple_command(self, command, **args):
+    def add_simple_command(self, command: str, **args) -> None:
         self._command = command
-        command = self._create(command, self._api)
+        cmd = self._create(command, self._api)
         for arg, value in args.items():
-            arg = self._create(arg)
-            encode_wsdl(arg, value)
-            command.append(arg)
-        self._body.append(command)
+            arg_elt = self._create(arg)
+            encode_wsdl(arg_elt, value)
+            cmd.append(arg_elt)
+        self._body.append(cmd)
 
-    def execute(self, debug=False):
+    def execute(self, debug: bool = False) -> Parser:
         payload = (
             b"""<?xml version='1.0' encoding='utf-8'?>"""
             + b"\n"
@@ -327,11 +363,19 @@ class Composer:
             raise WSDLNetworkError(to_native(e)) from e
         # if debug:
         #     q.q('Result: {0}, content: {1}'.format(code, result.decode('utf-8')))
-        if code < 200 or code >= 300:
-            Parser(self._api, lxml.etree.fromstring(result))
+        try:
+            node = lxml.etree.fromstring(result or b"")
+        except Exception as exc:
             raise WSDLError(
                 "server",
                 "",
-                f"Error {code} while executing WSDL command:\n{result.decode('utf-8')}",
+                f"Error while parsing WSDL command result: {exc}\nResult:\n{(result or b'').decode('utf-8')}",
+            ) from exc
+        parser = Parser(self._api, node)
+        if code < 200 or code >= 300:
+            raise WSDLError(
+                "server",
+                "",
+                f"Error {code} while executing WSDL command:\n{(result or b'').decode('utf-8')}",
             )
-        return Parser(self._api, lxml.etree.fromstring(result))
+        return parser

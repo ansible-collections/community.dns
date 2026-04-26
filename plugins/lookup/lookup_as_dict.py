@@ -472,9 +472,6 @@ from ansible_collections.community.dns.plugins.module_utils._ips import is_ip_ad
 from ansible_collections.community.dns.plugins.module_utils._resolver import (
     SimpleResolver,
 )
-from ansible_collections.community.dns.plugins.plugin_utils._ips import (
-    assert_requirements_present as assert_requirements_present_ipaddress,
-)
 from ansible_collections.community.dns.plugins.plugin_utils._resolver import (
     assert_requirements_present as assert_requirements_present_dnspython,
 )
@@ -568,9 +565,6 @@ class LookupModule(LookupBase):
         server_addresses: list[str] | None = None
         if self.get_option("server"):
             server_addresses = []
-            assert_requirements_present_ipaddress(
-                "community.dns.lookup", "lookup_as_dict"
-            )
             servers: list[str] = self.get_option("server")
             for server in servers:
                 if is_ip_address(server):

@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import time
 import typing as t
+from collections.abc import Sequence
 from urllib.parse import urlencode
 
 from ansible.module_utils.common.text.converters import to_native
@@ -23,10 +24,16 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 if t.TYPE_CHECKING:
     from collections.abc import Collection  # pragma: no cover
 
-    from ._http import HTTPHelper  # pragma: no cover
+    from ._http import HTTPHelper, HTTPMethod  # pragma: no cover
+
+    class _RequestKwarg(t.TypedDict):  # pragma: no cover
+        method: t.NotRequired[HTTPMethod]  # pragma: no cover
+        headers: t.NotRequired[dict[str, str] | None]  # pragma: no cover
+        data: t.NotRequired[bytes | None]  # pragma: no cover
+        timeout: t.NotRequired[int | None]  # pragma: no cover
 
 
-ERROR_CODES = {
+ERROR_CODES: dict[int, str] = {
     200: "Successful response",
     401: "Unauthorized",
     403: "Forbidden",
@@ -70,13 +77,13 @@ class JSONAPIHelper:
     def _build_url(
         self,
         url: str,
-        query: dict[str, str] | None = None,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
     ) -> str:
         return f"{self._api}{url}{'?' + urlencode(query) if query else ''}"
 
     def _extract_error_message(
         self,
-        result: bytes | None,
+        result: t.Any | None,
     ) -> str:
         if result is None:
             return ""
@@ -84,13 +91,12 @@ class JSONAPIHelper:
 
     def _validate(
         self,
-        result: bytes | None = None,
-        info: dict[str, t.Any] | None = None,
+        *,
+        result: t.Any | None = None,
+        info: dict[str, t.Any],
         expected: Collection[int] | None = None,
-        method: str = "GET",
+        method: HTTPMethod = "GET",
     ) -> None:
-        if info is None:
-            raise DNSAPIError("Internal error: info needs to be provided")
         status = info["status"]
         url = info.get("url")  # not present when using open_url
         # Check expected status
@@ -113,11 +119,13 @@ class JSONAPIHelper:
         self,
         content: bytes | None,
         info: dict[str, t.Any],
-        must_have_content: bool | list[int] | tuple[int, ...] = True,
-        method: str = "GET",
+        *,
+        must_have_content: bool | Sequence[int] = True,
+        method: HTTPMethod = "GET",
         expected: Collection[int] | None = None,
+        require_json_object: bool = False,
     ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]:
-        if isinstance(must_have_content, (list, tuple)):
+        if isinstance(must_have_content, Sequence):
             must_have_content = info["status"] in must_have_content
         # Check for unauthenticated
         if info["status"] == 401:
@@ -148,7 +156,7 @@ class JSONAPIHelper:
             if must_have_content:
                 raise DNSAPIError(
                     f"{method} {info['url']} did not yield JSON data, but HTTP status code {info['status']}"
-                    f' with Content-Type "{content_type}" and data: {to_native(content)}'
+                    f" with Content-Type {content_type!r} and data: {to_native(content)}"
                 )
             self._validate(result=content, info=info, expected=expected, method=method)
             return None, info
@@ -156,27 +164,44 @@ class JSONAPIHelper:
         try:
             result = json.loads(content.decode("utf8"))  # type: ignore
         except Exception as exc:
+            # TODO: This looks like a bug; decoding errors are not "empty"!
             if must_have_content:
                 raise DNSAPIError(
                     f"{method} {info['url']} did not yield JSON data, but HTTP status code {info['status']} with data: {to_native(content)}"
                 ) from exc
             self._validate(result=content, info=info, expected=expected, method=method)
             return None, info
+        if not isinstance(result, dict):
+            if require_json_object:
+                raise DNSAPIError(
+                    f"{method} {info['url']} did not yield a JSON object, but {type(result)}"
+                )
+            if not isinstance(result, list):
+                raise DNSAPIError(
+                    f"{method} {info['url']} did not yield a JSON object or a JSON array, but {type(result)}"
+                )
         self._validate(result=result, info=info, expected=expected, method=method)
         return result, info
 
-    def _is_rate_limiting_result(self, content, info):
+    def _is_rate_limiting_result(
+        self, content: bytes | None, info: dict[str, t.Any]
+    ) -> bool | int | float:
         if info["status"] != 429:
             return False
         try:
-            return max(min(float(_get_header_value(info, "retry-after")), 60), 1)  # type: ignore
+            hv = _get_header_value(info, "retry-after")
+            if hv is None:
+                raise TypeError
+            return max(min(float(hv), 60), 1)
         except (ValueError, TypeError):
             return 10
 
-    def _should_retry(self, content, info):
+    def _should_retry(self, content: bytes | None, info: dict[str, t.Any]) -> bool:
         return info["status"] in (-1, 502, 503, 504)
 
-    def _request(self, url: str, **kwargs) -> tuple[bytes | None, dict[str, t.Any]]:
+    def _request(
+        self, url: str, **kwargs: t.Unpack[_RequestKwarg]
+    ) -> tuple[bytes | None, dict[str, t.Any]]:
         """Execute a HTTP request and handle common things like rate limiting."""
         number_retries = 10
         countdown = number_retries + 1
@@ -218,12 +243,58 @@ class JSONAPIHelper:
     def _create_put_headers(self) -> dict[str, str]:
         return self._create_headers()
 
+    @t.overload
     def _get(
         self,
         url: str,
-        query: dict[str, str] | None = None,
-        must_have_content: bool | list[int] | tuple[int, ...] = True,
+        *,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: t.Literal[True] = True,
         expected: Collection[int] | None = None,
+        require_json_object: t.Literal[True],
+    ) -> tuple[dict[str, t.Any], dict[str, t.Any]]: ...
+
+    @t.overload
+    def _get(
+        self,
+        url: str,
+        *,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: t.Literal[True] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: bool = False,
+    ) -> tuple[dict[str, t.Any] | list[t.Any], dict[str, t.Any]]: ...
+
+    @t.overload
+    def _get(
+        self,
+        url: str,
+        *,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: bool | Sequence[int] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: t.Literal[True],
+    ) -> tuple[dict[str, t.Any] | None, dict[str, t.Any]]: ...
+
+    @t.overload
+    def _get(
+        self,
+        url: str,
+        *,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: bool | Sequence[int] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: bool = False,
+    ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]: ...
+
+    def _get(
+        self,
+        url: str,
+        *,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: bool | Sequence[int] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: bool = False,
     ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]:
         full_url = self._build_url(url, query)
         if self._debug:
@@ -237,15 +308,66 @@ class JSONAPIHelper:
             must_have_content=must_have_content,
             method="GET",
             expected=expected,
+            require_json_object=require_json_object,
         )
+
+    @t.overload
+    def _post(
+        self,
+        url: str,
+        *,
+        data: dict[str, t.Any] | None = None,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: t.Literal[True] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: t.Literal[True],
+    ) -> tuple[dict[str, t.Any], dict[str, t.Any]]: ...
+
+    @t.overload
+    def _post(
+        self,
+        url: str,
+        *,
+        data: dict[str, t.Any] | None = None,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: t.Literal[True] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: bool = False,
+    ) -> tuple[dict[str, t.Any] | list[t.Any], dict[str, t.Any]]: ...
+
+    @t.overload
+    def _post(
+        self,
+        url: str,
+        *,
+        data: dict[str, t.Any] | None = None,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: bool | Sequence[int] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: t.Literal[True],
+    ) -> tuple[dict[str, t.Any] | None, dict[str, t.Any]]: ...
+
+    @t.overload
+    def _post(
+        self,
+        url: str,
+        *,
+        data: dict[str, t.Any] | None = None,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: bool | Sequence[int] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: bool = False,
+    ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]: ...
 
     def _post(
         self,
         url: str,
+        *,
         data: dict[str, t.Any] | None = None,
-        query: dict[str, str] | None = None,
-        must_have_content: bool | list[int] | tuple[int, ...] = True,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: bool | Sequence[int] = True,
         expected: Collection[int] | None = None,
+        require_json_object: bool = False,
     ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]:
         full_url = self._build_url(url, query)
         if self._debug:
@@ -265,15 +387,66 @@ class JSONAPIHelper:
             must_have_content=must_have_content,
             method="POST",
             expected=expected,
+            require_json_object=require_json_object,
         )
+
+    @t.overload
+    def _put(
+        self,
+        url: str,
+        *,
+        data: dict[str, t.Any] | None = None,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: t.Literal[True] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: t.Literal[True],
+    ) -> tuple[dict[str, t.Any], dict[str, t.Any]]: ...
+
+    @t.overload
+    def _put(
+        self,
+        url: str,
+        *,
+        data: dict[str, t.Any] | None = None,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: t.Literal[True] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: bool = False,
+    ) -> tuple[dict[str, t.Any] | list[t.Any], dict[str, t.Any]]: ...
+
+    @t.overload
+    def _put(
+        self,
+        url: str,
+        *,
+        data: dict[str, t.Any] | None = None,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: bool | Sequence[int] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: t.Literal[True],
+    ) -> tuple[dict[str, t.Any] | None, dict[str, t.Any]]: ...
+
+    @t.overload
+    def _put(
+        self,
+        url: str,
+        *,
+        data: dict[str, t.Any] | None = None,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: bool | Sequence[int] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: bool = False,
+    ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]: ...
 
     def _put(
         self,
         url: str,
+        *,
         data: dict[str, t.Any] | None = None,
-        query: dict[str, str] | None = None,
-        must_have_content: bool | list[int] | tuple[int, ...] = True,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: bool | Sequence[int] = True,
         expected: Collection[int] | None = None,
+        require_json_object: bool = False,
     ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]:
         full_url = self._build_url(url, query)
         if self._debug:
@@ -293,14 +466,61 @@ class JSONAPIHelper:
             must_have_content=must_have_content,
             method="PUT",
             expected=expected,
+            require_json_object=require_json_object,
         )
+
+    @t.overload
+    def _delete(
+        self,
+        url: str,
+        *,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: t.Literal[True] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: t.Literal[True],
+    ) -> tuple[dict[str, t.Any], dict[str, t.Any]]: ...
+
+    @t.overload
+    def _delete(
+        self,
+        url: str,
+        *,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: t.Literal[True] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: bool = False,
+    ) -> tuple[dict[str, t.Any] | list[t.Any], dict[str, t.Any]]: ...
+
+    @t.overload
+    def _delete(
+        self,
+        url: str,
+        *,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: bool | Sequence[int] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: t.Literal[True],
+    ) -> tuple[dict[str, t.Any] | None, dict[str, t.Any]]: ...
+
+    @t.overload
+    def _delete(
+        self,
+        url: str,
+        *,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: bool | Sequence[int] = True,
+        expected: Collection[int] | None = None,
+        require_json_object: bool = False,
+    ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]: ...
 
     def _delete(
         self,
         url: str,
-        query: dict[str, str] | None = None,
-        must_have_content: bool | list[int] | tuple[int, ...] = True,
+        *,
+        query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
+        must_have_content: bool | Sequence[int] = True,
         expected: Collection[int] | None = None,
+        require_json_object: bool = False,
     ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]:
         full_url = self._build_url(url, query)
         if self._debug:
@@ -314,4 +534,5 @@ class JSONAPIHelper:
             must_have_content=must_have_content,
             method="DELETE",
             expected=expected,
+            require_json_object=require_json_object,
         )

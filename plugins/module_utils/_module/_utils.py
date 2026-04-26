@@ -7,6 +7,8 @@
 
 from __future__ import annotations
 
+import typing as t
+
 from ansible_collections.community.dns.plugins.module_utils._names import (
     join_labels,
     normalize_label,
@@ -16,8 +18,19 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
     DNSAPIError,
 )
 
+if t.TYPE_CHECKING:
+    from .._provider import ProviderInformation  # pragma: no cover
 
-def normalize_dns_name(name):
+
+@t.overload
+def normalize_dns_name(name: str) -> str: ...
+
+
+@t.overload
+def normalize_dns_name(name: str | None) -> str | None: ...
+
+
+def normalize_dns_name(name: str | None) -> str | None:
     if name is None:
         return name
     labels, dummy = split_into_labels(name)
@@ -25,8 +38,12 @@ def normalize_dns_name(name):
 
 
 def get_prefix(
-    normalized_zone, provider_information, normalized_record=None, prefix=None
-):
+    normalized_zone: str,
+    provider_information: ProviderInformation,
+    *,
+    normalized_record: str | None = None,
+    prefix: str | None = None
+) -> tuple[str, str | None]:
     # If normalized_record is not specified, use prefix
     if normalized_record is None:
         if prefix is not None:
