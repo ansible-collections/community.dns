@@ -111,17 +111,17 @@ def find_and_compare(
 
 
 def main() -> None:
-    rewrite_arguments = {
-        "state": {
-            "type": "str",
-            "default": "present",
-            "choices": ["present", "absent"],
-        },
-        "answer": {"type": "str", "required": False},
-        "domain": {"type": "str", "required": True},
-    }
     argument_spec = ArgumentSpec(
-        rewrite_arguments, required_if=[("state", "present", ["answer"])]
+        {
+            "state": {
+                "type": "str",
+                "default": "present",
+                "choices": ["present", "absent"],
+            },
+            "answer": {"type": "str", "required": False},
+            "domain": {"type": "str", "required": True},
+        },
+        required_if=[("state", "present", ["answer"])],
     )
     argument_spec.merge(create_adguardhome_argument_spec())
     module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())

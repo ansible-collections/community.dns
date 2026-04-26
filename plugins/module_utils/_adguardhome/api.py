@@ -23,13 +23,14 @@ if t.TYPE_CHECKING:
 
 
 def create_adguardhome_argument_spec() -> ArgumentSpec:
-    argument_spec = {
-        "username": {"type": "str", "required": True},
-        "password": {"type": "str", "required": True, "no_log": True},
-        "host": {"type": "str", "required": True},
-        "validate_certs": {"type": "bool", "default": True},
-    }
-    return ArgumentSpec(argument_spec=argument_spec)
+    return ArgumentSpec(
+        {
+            "username": {"type": "str", "required": True},
+            "password": {"type": "str", "required": True, "no_log": True},
+            "host": {"type": "str", "required": True},
+            "validate_certs": {"type": "bool", "default": True},
+        }
+    )
 
 
 class AdGuardHomeAPIHandler:
