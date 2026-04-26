@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: "Test get_public_suffix filter"
-  assert:
+  ansible.builtin.assert:
     that:
       - "'' | community.dns.get_public_suffix == ''"
       - "'' | community.dns.get_public_suffix(keep_leading_period=false) == ''"
@@ -20,19 +20,19 @@
       - "'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63' | community.dns.get_public_suffix == ''"
 
 - name: "Test get_public_suffix failures I"
-  set_fact:
+  ansible.builtin.set_fact:
     failure: "{{ 42 | community.dns.get_public_suffix }}"
   ignore_errors: true
   register: result1
 
 - name: "Test get_public_suffix failures II"
-  set_fact:
+  ansible.builtin.set_fact:
     failure: "{{ '' | community.dns.get_public_suffix(keep_unknown_suffix=42) }}"
   ignore_errors: true
   register: result2
 
 - name: "Test get_public_suffix failures"
-  assert:
+  ansible.builtin.assert:
     that:
       - result1 is failed
       - >-
@@ -42,7 +42,7 @@
         "keep_unknown_suffix must be a boolean, not 42" in result2.msg
 
 - name: "Test remove_public_suffix filter"
-  assert:
+  ansible.builtin.assert:
     that:
       - "'' | community.dns.remove_public_suffix == ''"
       - "'' | community.dns.remove_public_suffix(keep_trailing_period=true) == ''"
@@ -63,19 +63,19 @@
         == 'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63'
 
 - name: "Test remove_public_suffix failures I"
-  set_fact:
+  ansible.builtin.set_fact:
     failure: "{{ 42 | community.dns.remove_public_suffix }}"
   ignore_errors: true
   register: result1
 
 - name: "Test remove_public_suffix failures II"
-  set_fact:
+  ansible.builtin.set_fact:
     failure: "{{ '' | community.dns.remove_public_suffix(keep_unknown_suffix=42) }}"
   ignore_errors: true
   register: result2
 
 - name: "Test remove_public_suffix failures"
-  assert:
+  ansible.builtin.assert:
     that:
       - result1 is failed
       - >-
@@ -85,7 +85,7 @@
         "keep_unknown_suffix must be a boolean, not 42" in result2.msg
 
 - name: "Test get_registrable_domain filter"
-  assert:
+  ansible.builtin.assert:
     that:
       - "'' | community.dns.get_registrable_domain == ''"
       - "'com' | community.dns.get_registrable_domain == ''"
@@ -104,19 +104,19 @@
       - "'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63' | community.dns.get_registrable_domain == ''"
 
 - name: "Test get_registrable_domain failures I"
-  set_fact:
+  ansible.builtin.set_fact:
     failure: "{{ 42 | community.dns.get_registrable_domain }}"
   ignore_errors: true
   register: result1
 
 - name: "Test get_registrable_domain failures II"
-  set_fact:
+  ansible.builtin.set_fact:
     failure: "{{ '' | community.dns.get_registrable_domain(only_if_registerable=42) }}"
   ignore_errors: true
   register: result2
 
 - name: "Test get_registrable_domain failures"
-  assert:
+  ansible.builtin.assert:
     that:
       - result1 is failed
       - >-
@@ -126,7 +126,7 @@
         "only_if_registerable must be a boolean, not 42" in result2.msg
 
 - name: "Test remove_registrable_domain filter"
-  assert:
+  ansible.builtin.assert:
     that:
       - "'' | community.dns.remove_registrable_domain == ''"
       - "'' | community.dns.remove_registrable_domain(keep_trailing_period=true) == ''"
@@ -150,19 +150,19 @@
         == 'thisisaninvalidlabelbecauseitiswaytoolongitscharacterlengthislargerthan63'
 
 - name: "Test remove_registrable_domain failures I"
-  set_fact:
+  ansible.builtin.set_fact:
     failure: "{{ 42 | community.dns.remove_registrable_domain }}"
   ignore_errors: true
   register: result1
 
 - name: "Test remove_registrable_domain failures II"
-  set_fact:
+  ansible.builtin.set_fact:
     failure: "{{ '' | community.dns.remove_registrable_domain(only_if_registerable=42) }}"
   ignore_errors: true
   register: result2
 
 - name: "Test remove_registrable_domain failures"
-  assert:
+  ansible.builtin.assert:
     that:
       - result1 is failed
       - >-
