@@ -57,6 +57,7 @@ codeblocks_allow_without_type = false
 codeblocks_allow_literal_blocks = false
 
 [sessions.license_check]
+run_reuse = true
 
 [sessions.extra_checks]
 run_no_unwanted_files = true
