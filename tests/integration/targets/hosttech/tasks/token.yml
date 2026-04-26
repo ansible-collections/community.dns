@@ -3,43 +3,44 @@
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-- name: (token) Get zone info
-  hosttech_dns_zone_info:
+- name: "[token] Get zone info"
+  community.dns.hosttech_dns_zone_info:
     zone_name: '{{ test_zone }}'
     hosttech_token: '{{ hosttech_token }}'
   register: result_zone
 
-- name: (token) Get zone info by ID
-  hosttech_dns_zone_info:
+- name: "[token] Get zone info by ID"
+  community.dns.hosttech_dns_zone_info:
     zone_id: '{{ result_zone.zone_id }}'
     hosttech_token: '{{ hosttech_token }}'
   register: result_zone_id
 
-- name: (token) Get all NS records
-  hosttech_dns_record_set_info:
+- name: "[token] Get all NS records"
+  community.dns.hosttech_dns_record_set_info:
     zone_name: '{{ test_zone }}'
     record: '{{ test_zone }}'
     type: NS
     hosttech_token: '{{ hosttech_token }}'
   register: result
 
-- name: (token) Output all records
-  debug:
+- name: "[token] Output all records"
+  ansible.builtin.debug:
     var: result
 
-- assert:
+- name: "[token] Check results"
+  ansible.builtin.assert:
     that:
       - result_zone == result_zone_id
       - result_zone.zone_name == test_zone
       - result_zone.zone_id == result.zone_id
       - result.set
 
-- name: (token) Set zone ID
-  set_fact:
+- name: "[token] Set zone ID"
+  ansible.builtin.set_fact:
     hosttech_zone_id: "{{ result.zone_id }}"
 
-- name: (token) Ensure that test record is not present
-  hosttech_dns_record_set:
+- name: "[token] Ensure that test record is not present"
+  community.dns.hosttech_dns_record_set:
     state: present
     zone_name: '{{ test_zone }}'
     record: '{{ test_record }}'
@@ -48,22 +49,24 @@
     value: []
     hosttech_token: '{{ hosttech_token }}'
 
-- block:
+- name: "[token] Run tests with cleanup"
+  block:
 
-    - name: (token) Get test record
-      hosttech_dns_record_set_info:
+    - name: "[token] Get test record"
+      community.dns.hosttech_dns_record_set_info:
         zone_id: '{{ hosttech_zone_id }}'
         record: '{{ test_record }}'
         type: A
         hosttech_token: '{{ hosttech_token }}'
       register: rec
 
-    - assert:
+    - name: "[token] Check results"
+      ansible.builtin.assert:
         that:
           - not rec.set
 
-    - name: (token) Create test record
-      hosttech_dns_record_set:
+    - name: "[token] Create test record"
+      community.dns.hosttech_dns_record_set:
         state: present
         zone_name: '{{ test_zone }}'
         record: '{{ test_record }}'
@@ -75,8 +78,8 @@
           - 1.2.3.6
         hosttech_token: '{{ hosttech_token }}'
 
-    - name: (token) Modify test record
-      hosttech_dns_record_set:
+    - name: "[token] Modify test record"
+      community.dns.hosttech_dns_record_set:
         state: present
         zone_name: '{{ test_zone }}'
         prefix: '{{ test_record_prefix }}'
@@ -87,8 +90,8 @@
           - 1.2.3.7
         hosttech_token: '{{ hosttech_token }}'
 
-    - name: (token) Add test record
-      hosttech_dns_record:
+    - name: "[token] Add test record"
+      community.dns.hosttech_dns_record:
         state: present
         zone_name: '{{ test_zone }}'
         prefix: '{{ test_record_prefix }}'
@@ -97,8 +100,8 @@
         value: 1.2.3.8
         hosttech_token: '{{ hosttech_token }}'
 
-    - name: (token) Remove test record
-      hosttech_dns_record:
+    - name: "[token] Remove test record"
+      community.dns.hosttech_dns_record:
         state: absent
         zone_name: '{{ test_zone }}'
         prefix: '{{ test_record_prefix }}'
@@ -107,15 +110,16 @@
         value: 1.2.3.4
         hosttech_token: '{{ hosttech_token }}'
 
-    - name: (token) Get test record
-      hosttech_dns_record_set_info:
+    - name: "[token] Get test record"
+      community.dns.hosttech_dns_record_set_info:
         zone_name: '{{ test_zone }}'
         record: '{{ test_record }}'
         type: A
         hosttech_token: '{{ hosttech_token }}'
       register: rec
 
-    - assert:
+    - name: "[token] Check results"
+      ansible.builtin.assert:
         that:
           - rec.set
           - rec.set.record == test_record
@@ -124,8 +128,8 @@
           - rec.set.value | length == 2
           - rec.set.value | sort == ['1.2.3.7', '1.2.3.8']
 
-    - name: (token) Delete test record
-      hosttech_dns_record_set:
+    - name: "[token] Delete test record"
+      community.dns.hosttech_dns_record_set:
         state: absent
         zone_id: '{{ hosttech_zone_id }}'
         record: '{{ rec.set.record }}'
@@ -136,8 +140,8 @@
         hosttech_token: '{{ hosttech_token }}'
 
   always:
-    - name: (token) Ensure that test record is not present
-      hosttech_dns_record_set:
+    - name: "[token] Ensure that test record is not present"
+      community.dns.hosttech_dns_record_set:
         state: absent
         zone_name: '{{ test_zone }}'
         record: '{{ test_record }}'
