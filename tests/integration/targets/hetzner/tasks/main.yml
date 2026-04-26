@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 - name: Run tests with record sets
-  include_tasks: record-sets.yml
+  ansible.builtin.include_tasks: record-sets.yml
 
 - name: Run tests with records
-  include_tasks: records.yml
+  ansible.builtin.include_tasks: records.yml

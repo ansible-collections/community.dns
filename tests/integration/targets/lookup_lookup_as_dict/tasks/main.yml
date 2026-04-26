@@ -15,7 +15,7 @@
       {{ query('community.dns.lookup_as_dict', 'does-not-exist.ansible.com') }}
 
 - name: Check results
-  assert:
+  ansible.builtin.assert:
     that:
       - ansible_a | length > 0
       - ansible_a[0].address is string
@@ -38,7 +38,7 @@
   ignore_errors: true
 
 - name: Check results
-  assert:
+  ansible.builtin.assert:
     that:
       - result is failed
       - >-
