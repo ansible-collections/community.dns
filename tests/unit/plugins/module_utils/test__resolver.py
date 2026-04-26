@@ -221,6 +221,7 @@ def test_resolver():
             ("1:2::3", "2:3::4", "3.3.3.3"): [
                 {
                     "target": dns.name.from_unicode("example.org"),
+                    "rdtype": dns.rdatatype.A,
                     "lifetime": 10,
                     "result": create_mock_answer(
                         dns.rrset.from_rdata(
@@ -236,6 +237,7 @@ def test_resolver():
             ("4.4.4.4",): [
                 {
                     "target": dns.name.from_unicode("example.org"),
+                    "rdtype": dns.rdatatype.A,
                     "lifetime": 10,
                     "result": create_mock_answer(
                         dns.rrset.from_rdata(
@@ -372,7 +374,9 @@ def test_resolver():
                     "example.com", resolve_addresses=True
                 ) == ["1:2::3", "2:3::4", "3.3.3.3"]
                 # www.example.com is a CNAME for example.org
-                rrset_dict = resolver_instance.resolve("www.example.com")
+                rrset_dict = resolver_instance.resolve(
+                    "www.example.com", rdtype=dns.rdatatype.A
+                )
                 assert sorted(rrset_dict.keys()) == ["ns.example.com", "ns.example.org"]
                 rrset = rrset_dict["ns.example.com"]
                 assert len(rrset) == 1
@@ -745,6 +749,7 @@ def test_error_nxdomain_ok():
             ("1:2::3", "2:3::4", "3.3.3.3"): [
                 {
                     "target": dns.name.from_unicode("example.com"),
+                    "rdtype": dns.rdatatype.A,
                     "lifetime": 10,
                     "result": create_mock_answer(rcode=dns.rcode.NXDOMAIN),
                 },
@@ -787,11 +792,12 @@ def test_error_nxdomain_ok():
             with patch("dns.query.udp", mock_query_udp(udp_sequence)):
                 resolver_instance = ResolveDirectlyFromNameServers()
                 rrset_dict = resolver_instance.resolve(
-                    "example.com", nxdomain_is_empty=True
+                    "example.com", nxdomain_is_empty=True, rdtype=dns.rdatatype.A
                 )
                 print(rrset_dict)
                 assert sorted(rrset_dict.keys()) == ["ns.com"]
-                assert rrset_dict["ns.com"] == []
+                assert rrset_dict["ns.com"] is not None
+                assert len(rrset_dict["ns.com"]) == 0
 
 
 def test_error_nxdomain_fail():
@@ -834,6 +840,7 @@ def test_error_nxdomain_fail():
             ("1:2::3", "2:3::4", "3.3.3.3"): [
                 {
                     "target": dns.name.from_unicode("example.com"),
+                    "rdtype": dns.rdatatype.A,
                     "lifetime": 10,
                     "result": create_mock_answer(rcode=dns.rcode.NXDOMAIN),
                 },
@@ -876,7 +883,9 @@ def test_error_nxdomain_fail():
             with patch("dns.query.udp", mock_query_udp(udp_sequence)):
                 resolver_instance = ResolveDirectlyFromNameServers()
                 with pytest.raises(dns.resolver.NXDOMAIN) as exc:
-                    resolver_instance.resolve("example.com", nxdomain_is_empty=False)
+                    resolver_instance.resolve(
+                        "example.com", nxdomain_is_empty=False, rdtype=dns.rdatatype.A
+                    )
                 print(exc.value.args[0])
                 assert (
                     exc.value.args[0]
@@ -1335,6 +1344,7 @@ def test_no_response():
             ("3.3.3.3", "5.5.5.5"): [
                 {
                     "target": dns.name.from_unicode("example.com"),
+                    "rdtype": dns.rdatatype.A,
                     "lifetime": 10,
                     "result": create_mock_answer(),
                 },
@@ -1342,6 +1352,7 @@ def test_no_response():
             ("4.4.4.4",): [
                 {
                     "target": dns.name.from_unicode("example.com"),
+                    "rdtype": dns.rdatatype.A,
                     "lifetime": 10,
                     "raise": dns.resolver.NoAnswer(response=fake_query),
                 },
@@ -1397,7 +1408,9 @@ def test_no_response():
         with patch("dns.resolver.Resolver", mock_resolver_instance):
             with patch("dns.query.udp", mock_query_udp(udp_sequence)):
                 resolver_instance = ResolveDirectlyFromNameServers()
-                rrset_dict = resolver_instance.resolve("example.com")
+                rrset_dict = resolver_instance.resolve(
+                    "example.com", rdtype=dns.rdatatype.A
+                )
                 assert sorted(rrset_dict.keys()) == [
                     "ns.example.com",
                     "ns2.example.com",
@@ -1597,7 +1610,7 @@ def test_cname_loop():
             with patch("dns.query.udp", mock_query_udp(udp_sequence)):
                 resolver_instance = ResolveDirectlyFromNameServers()
                 with pytest.raises(ResolverError) as exc:
-                    resolver_instance.resolve("www.example.com")
+                    resolver_instance.resolve("www.example.com", rdtype=dns.rdatatype.A)
                 assert (
                     exc.value.args[0] == "Found CNAME loop starting at www.example.com"
                 )
@@ -1695,6 +1708,7 @@ def test_resolver_non_default():
                 {
                     "target": dns.name.from_unicode("example.org"),
                     "lifetime": 10,
+                    "rdtype": dns.rdatatype.A,
                     "result": create_mock_answer(
                         dns.rrset.from_rdata(
                             "example.org",
@@ -1710,6 +1724,7 @@ def test_resolver_non_default():
                 {
                     "target": dns.name.from_unicode("example.org"),
                     "lifetime": 10,
+                    "rdtype": dns.rdatatype.A,
                     "result": create_mock_answer(
                         dns.rrset.from_rdata(
                             "example.org",
@@ -1847,7 +1862,9 @@ def test_resolver_non_default():
                     "ns.example.com"
                 ]
                 # www.example.com is a CNAME for example.org
-                rrset_dict = resolver_instance.resolve("www.example.com")
+                rrset_dict = resolver_instance.resolve(
+                    "www.example.com", rdtype=dns.rdatatype.A
+                )
                 assert sorted(rrset_dict.keys()) == ["ns.example.com", "ns.example.org"]
                 rrset = rrset_dict["ns.example.com"]
                 assert len(rrset) == 1

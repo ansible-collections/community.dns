@@ -219,6 +219,9 @@ try:
 except ImportError:
     pass  # handled in assert_requirements_present()
 
+if t.TYPE_CHECKING:
+    import dns.rdtypes.ANY.TXT  # pragma: no cover
+
 
 def lookup(resolver: ResolveDirectlyFromNameServers, name: str) -> dict[str, list[str]]:
     result = {}
@@ -232,7 +235,6 @@ def lookup(resolver: ResolveDirectlyFromNameServers, name: str) -> dict[str, lis
                     line.append(to_text(txtstring))
                 res.append("".join(line))
         result[key] = res
-        txts[key] = []
     return result
 
 
