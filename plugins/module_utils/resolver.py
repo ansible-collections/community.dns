@@ -173,26 +173,48 @@ class ResolveDirectlyFromNameServers(_Resolve):
         if nameservers is None and nameserver_ips is None:
             nameserver_ips = self.default_nameservers
         if not nameserver_ips and nameservers:
-            nameserver_ips = self._lookup_address(nameservers[0])
+            for ns in nameservers:
+                nameserver_ips = self._lookup_address(ns)
+                if nameserver_ips:
+                    break
         if not nameserver_ips:
+            if nameservers:
+                raise ResolverError(
+                    "Have neither nameservers nor nameserver IPs: the given nameservers do not resolve to IPs"
+                )
             raise ResolverError('Have neither nameservers nor nameserver IPs')
 
-        # Sanity check: do we have a valid nameserver IP?
-        try:
-            dns.inet.af_for_address(nameserver_ips[0])
-        except ValueError:
-            raise InvalidInput("Invalid nameserver IP address {0}".format(nameserver_ips[0]))
+        nameserver = nameserver_ips[0]
+
+        if isinstance(nameserver, str):
+            # Sanity check: do we have a valid nameserver IP?
+            try:
+                dns.inet.af_for_address(nameserver)
+            except ValueError:
+                raise InvalidInput("Invalid nameserver IP address {0}".format(nameserver))
 
         query = dns.message.make_query(target, dns.rdatatype.NS)
         retry = 0
         while True:
-            response = self._handle_timeout(dns.query.udp, query, nameserver_ips[0], timeout=self.timeout)
+            if isinstance(nameserver, str):
+                response = self._handle_timeout(dns.query.udp, query, nameserver, timeout=self.timeout)
+            else:
+                response = self._handle_timeout(
+                    nameserver.query,
+                    query,
+                    timeout=self.timeout,
+                    # The following are taken from the default arguments of
+                    # dns.resolver.Resolver.resolve():
+                    source=None,
+                    source_port=0,
+                    max_size=False,
+                )
             if response.rcode() == dns.rcode.SERVFAIL and retry < self.servfail_retries:
                 retry += 1
                 continue
             break
         self._handle_reponse_errors(
-            target, response, nameserver=nameserver_ips[0], query='get NS for "%s"' % target, accept_errors=[dns.rcode.NXDOMAIN],
+            target, response, nameserver=nameserver, query='get NS for "%s"' % target, accept_errors=[dns.rcode.NXDOMAIN],
         )
 
         cname = None
