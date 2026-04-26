@@ -1,0 +1,5 @@
+release_summary: |-
+  First pre-release of 4.0.0.
+
+  This release removes support for ansible-core < 2.18, and thus Python < 3.8,
+  and for dnspython < 2.0.0.
