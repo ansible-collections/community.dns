@@ -224,6 +224,7 @@ class Parser:
         self, result: dict[str, t.Any], node: lxml.etree.Element, where: str
     ) -> None:
         for child in node:
+            assert isinstance(child.tag, (str, bytes, lxml.etree.QName))
             tag = lxml.etree.QName(child.tag)
             if tag.namespace != self._api:
                 raise WSDLCodingException(
