@@ -4,6 +4,20 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.5.5
+======
+
+Release Summary
+---------------
+
+Bugfix release with updated PSL.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- nameserver_info, nameserver_record_info, wait_for_txt - fix handling of DNSPython ``Nameserver`` objects when default resolver addresses are used (https://github.com/ansible-collections/community.dns/pull/321).
+
 v3.5.4
 ======
 

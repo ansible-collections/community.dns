@@ -1260,3 +1260,16 @@ releases:
       - 3.5.4.yml
       - update-psl.yml
     release_date: '2026-04-19'
+  3.5.5:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+        - nameserver_info, nameserver_record_info, wait_for_txt - fix handling of
+          DNSPython ``Nameserver`` objects when default resolver addresses are used
+          (https://github.com/ansible-collections/community.dns/pull/321).
+      release_summary: Bugfix release with updated PSL.
+    fragments:
+      - 3.5.5.yml
+      - 321-resolving.yml
+      - update-psl.yml
+    release_date: '2026-05-17'
