@@ -74,7 +74,7 @@
   
               <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Community.Dns Release Notes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#v4-0-0-b1">v4.0.0-b1</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#v4-0-0">v4.0.0</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#release-summary">Release Summary</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#minor-changes">Minor Changes</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#breaking-changes-porting-guide">Breaking Changes / Porting Guide</a></li>
@@ -622,7 +622,7 @@
 <ul class="simple">
 <li><p><a class="reference internal" href="#community-dns-release-notes" id="id200">Community.Dns Release Notes</a></p>
 <ul>
-<li><p><a class="reference internal" href="#v4-0-0-b1" id="id201">v4.0.0-b1</a></p>
+<li><p><a class="reference internal" href="#v4-0-0" id="id201">v4.0.0</a></p>
 <ul>
 <li><p><a class="reference internal" href="#release-summary" id="id202">Release Summary</a></p></li>
 <li><p><a class="reference internal" href="#minor-changes" id="id203">Minor Changes</a></p></li>
@@ -1181,13 +1181,11 @@
 </li>
 </ul>
 </nav>
-<section id="v4-0-0-b1">
-<h2><a class="toc-backref" href="#id201" role="doc-backlink">v4.0.0-b1</a><a class="headerlink" href="#v4-0-0-b1" title="Link to this heading"></a></h2>
+<section id="v4-0-0">
+<h2><a class="toc-backref" href="#id201" role="doc-backlink">v4.0.0</a><a class="headerlink" href="#v4-0-0" title="Link to this heading"></a></h2>
 <section id="release-summary">
 <h3><a class="toc-backref" href="#id202" role="doc-backlink">Release Summary</a><a class="headerlink" href="#release-summary" title="Link to this heading"></a></h3>
-<p>First pre-release of 4.0.0.</p>
-<p>This release removes support for ansible-core &lt; 2.18, and thus Python &lt; 3.8,
-and for dnspython &lt; 2.0.0.</p>
+<p>This new major release removes support for ansible-core &lt; 2.18, and thus Python &lt; 3.8, and for dnspython &lt; 2.0.0.’</p>
 </section>
 <section id="minor-changes">
 <h3><a class="toc-backref" href="#id203" role="doc-backlink">Minor Changes</a><a class="headerlink" href="#minor-changes" title="Link to this heading"></a></h3>
@@ -1210,6 +1208,7 @@ and for dnspython &lt; 2.0.0.</p>
 <section id="bugfixes">
 <h3><a class="toc-backref" href="#id206" role="doc-backlink">Bugfixes</a><a class="headerlink" href="#bugfixes" title="Link to this heading"></a></h3>
 <ul class="simple">
+<li><p>Update Public Suffix List.</p></li>
 <li><p>Update Public Suffix List.</p></li>
 <li><p>nameserver_info, nameserver_record_info, wait_for_txt - fix handling of DNSPython <code class="docutils literal notranslate"><span class="pre">Nameserver</span></code> objects when default resolver addresses are used (<a class="reference external" href="https://github.com/ansible-collections/community.dns/pull/321">https://github.com/ansible-collections/community.dns/pull/321</a>).</p></li>
 </ul>
