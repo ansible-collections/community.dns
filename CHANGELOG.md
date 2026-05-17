@@ -2,7 +2,7 @@
 
 **Topics**
 
-- <a href="#v4-0-0-b1">v4\.0\.0\-b1</a>
+- <a href="#v4-0-0">v4\.0\.0</a>
     - <a href="#release-summary">Release Summary</a>
     - <a href="#minor-changes">Minor Changes</a>
     - <a href="#breaking-changes--porting-guide">Breaking Changes / Porting Guide</a>
@@ -297,16 +297,13 @@
         - <a href="#filter-2">Filter</a>
     - <a href="#new-modules-5">New Modules</a>
 
-<a id="v4-0-0-b1"></a>
-## v4\.0\.0\-b1
+<a id="v4-0-0"></a>
+## v4\.0\.0
 
 <a id="release-summary"></a>
 ### Release Summary
 
-First pre\-release of 4\.0\.0\.
-
-This release removes support for ansible\-core \< 2\.18\, and thus Python \< 3\.8\,
-and for dnspython \< 2\.0\.0\.
+This new major release removes support for ansible\-core \< 2\.18\, and thus Python \< 3\.8\, and for dnspython \< 2\.0\.0\.\'
 
 <a id="minor-changes"></a>
 ### Minor Changes
@@ -326,6 +323,7 @@ and for dnspython \< 2\.0\.0\.
 <a id="bugfixes"></a>
 ### Bugfixes
 
+* Update Public Suffix List\.
 * Update Public Suffix List\.
 * nameserver\_info\, nameserver\_record\_info\, wait\_for\_txt \- fix handling of DNSPython <code>Nameserver</code> objects when default resolver addresses are used \([https\://github\.com/ansible\-collections/community\.dns/pull/321](https\://github\.com/ansible\-collections/community\.dns/pull/321)\)\.
 

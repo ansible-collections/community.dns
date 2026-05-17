@@ -4,16 +4,13 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
-v4.0.0-b1
-=========
+v4.0.0
+======
 
 Release Summary
 ---------------
 
-First pre-release of 4.0.0.
-
-This release removes support for ansible-core < 2.18, and thus Python < 3.8,
-and for dnspython < 2.0.0.
+This new major release removes support for ansible-core < 2.18, and thus Python < 3.8, and for dnspython < 2.0.0.'
 
 Minor Changes
 -------------
@@ -33,6 +30,7 @@ Removed Features (previously deprecated)
 Bugfixes
 --------
 
+- Update Public Suffix List.
 - Update Public Suffix List.
 - nameserver_info, nameserver_record_info, wait_for_txt - fix handling of DNSPython ``Nameserver`` objects when default resolver addresses are used (https://github.com/ansible-collections/community.dns/pull/321).
 
