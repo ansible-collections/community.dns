@@ -274,16 +274,16 @@ def test_inventory_file_simple(mocker) -> None:
         in im._inventory.groups["ungrouped"].hosts
     )
     assert (
-        im._inventory.get_host("example.com").get_vars()["ansible_host"] == "1.2.{3.4"
+        im._inventory.get_host("example.com").get_vars()["ansible_host"] == "1.2.{3.4"  # type: ignore[union-attr]
     )
     assert (
-        im._inventory.get_host("*.example.com").get_vars()["ansible_host"] == "1.2.{3.5"
+        im._inventory.get_host("*.example.com").get_vars()["ansible_host"] == "1.2.{3.5"  # type: ignore[union-attr]
     )
     assert not is_trusted(
-        im._inventory.get_host("example.com").get_vars()["ansible_host"]
+        im._inventory.get_host("example.com").get_vars()["ansible_host"]  # type: ignore[union-attr]
     )
     assert not is_trusted(
-        im._inventory.get_host("*.example.com").get_vars()["ansible_host"]
+        im._inventory.get_host("*.example.com").get_vars()["ansible_host"]  # type: ignore[union-attr]
     )
     assert len(im._inventory.groups["ungrouped"].hosts) == 2
     assert len(im._inventory.groups["all"].hosts) == 0
@@ -347,16 +347,16 @@ def test_inventory_file_simple_2(mocker) -> None:
         in im._inventory.groups["ungrouped"].hosts
     )
     assert (
-        im._inventory.get_host("example.com").get_vars()["ansible_host"] == "1.2.{3.4"
+        im._inventory.get_host("example.com").get_vars()["ansible_host"] == "1.2.{3.4"  # type: ignore[union-attr]
     )
     assert (
-        im._inventory.get_host("*.example.com").get_vars()["ansible_host"] == "1.2.{3.5"
+        im._inventory.get_host("*.example.com").get_vars()["ansible_host"] == "1.2.{3.5"  # type: ignore[union-attr]
     )
     assert not is_trusted(
-        im._inventory.get_host("example.com").get_vars()["ansible_host"]
+        im._inventory.get_host("example.com").get_vars()["ansible_host"]  # type: ignore[union-attr]
     )
     assert not is_trusted(
-        im._inventory.get_host("*.example.com").get_vars()["ansible_host"]
+        im._inventory.get_host("*.example.com").get_vars()["ansible_host"]  # type: ignore[union-attr]
     )
     assert len(im._inventory.groups["ungrouped"].hosts) == 2
     assert len(im._inventory.groups["all"].hosts) == 0
@@ -424,14 +424,14 @@ def test_inventory_file_collision(mocker) -> None:
         in im._inventory.groups["ungrouped"].hosts
     )
     assert (
-        im._inventory.get_host("example.com").get_vars()["ansible_host"]
+        im._inventory.get_host("example.com").get_vars()["ansible_host"]  # type: ignore[union-attr]
         == "2001:1:2::3"
     )
     assert (
-        im._inventory.get_host("*.example.com").get_vars()["ansible_host"] == "1.2.3.5"
+        im._inventory.get_host("*.example.com").get_vars()["ansible_host"] == "1.2.3.5"  # type: ignore[union-attr]
     )
     assert (
-        im._inventory.get_host("foo.example.com").get_vars()["ansible_host"]
+        im._inventory.get_host("foo.example.com").get_vars()["ansible_host"]  # type: ignore[union-attr]
         == "2001:1:2::4"
     )
     assert len(im._inventory.groups["ungrouped"].hosts) == 3
@@ -491,18 +491,18 @@ def test_inventory_file_no_filter(mocker) -> None:
         in im._inventory.groups["ungrouped"].hosts
     )
     assert (
-        im._inventory.get_host("example.com").get_vars()["ansible_host"]
+        im._inventory.get_host("example.com").get_vars()["ansible_host"]  # type: ignore[union-attr]
         == "2001:1:2::3"
     )
     assert (
-        im._inventory.get_host("*.example.com").get_vars()["ansible_host"] == "1.2.3.5"
+        im._inventory.get_host("*.example.com").get_vars()["ansible_host"] == "1.2.3.5"  # type: ignore[union-attr]
     )
     assert (
-        im._inventory.get_host("foo.example.com").get_vars()["ansible_host"]
+        im._inventory.get_host("foo.example.com").get_vars()["ansible_host"]  # type: ignore[union-attr]
         == "2001:1:2::4"
     )
     assert (
-        im._inventory.get_host("bar.example.com").get_vars()["ansible_host"]
+        im._inventory.get_host("bar.example.com").get_vars()["ansible_host"]  # type: ignore[union-attr]
         == "example.org."
     )
     assert len(im._inventory.groups["ungrouped"].hosts) == 4
