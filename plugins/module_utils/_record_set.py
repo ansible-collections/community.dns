@@ -18,10 +18,10 @@ from ansible_collections.community.dns.plugins.module_utils._record import (
 )
 
 if t.TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence  # pragma: no cover
+    from collections.abc import Mapping, Sequence
 
-    from ._conversion.converter import RecordConverter  # pragma: no cover
-    from ._record import DNSRecord, IDNSRecord  # pragma: no cover
+    from ._conversion.converter import RecordConverter
+    from ._record import DNSRecord, IDNSRecord
 
 
 RecordSetIDT = t.TypeVar("RecordSetIDT")

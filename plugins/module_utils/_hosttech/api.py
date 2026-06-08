@@ -25,9 +25,9 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 )
 
 if t.TYPE_CHECKING:
-    from .._argspec import OptionProvider  # pragma: no cover
-    from .._http import HTTPHelper  # pragma: no cover
-    from .._provider import AnsibleType  # pragma: no cover
+    from .._argspec import OptionProvider
+    from .._http import HTTPHelper
+    from .._provider import AnsibleType
 
 
 class HosttechProviderInformation(ProviderInformation):

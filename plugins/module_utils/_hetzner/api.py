@@ -44,14 +44,14 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_set_api
 )
 
 if t.TYPE_CHECKING:
-    from collections.abc import Collection, Sequence  # pragma: no cover
+    from collections.abc import Collection, Sequence
 
-    from .._argspec import OptionProvider  # pragma: no cover
-    from .._http import HTTPHelper, HTTPMethod  # pragma: no cover
-    from .._provider import AnsibleType  # pragma: no cover
-    from .._record import IDNSRecord  # pragma: no cover
-    from .._record_set import IDNSRecordSet  # pragma: no cover
-    from .._zone_record_api import NotProvidedType  # pragma: no cover
+    from .._argspec import OptionProvider
+    from .._http import HTTPHelper, HTTPMethod
+    from .._provider import AnsibleType
+    from .._record import IDNSRecord
+    from .._record_set import IDNSRecordSet
+    from .._zone_record_api import NotProvidedType
 
 
 def _create_zone_from_json(source: dict[str, t.Any]) -> DNSZone[str]:

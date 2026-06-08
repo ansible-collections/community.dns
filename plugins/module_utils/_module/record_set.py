@@ -51,13 +51,13 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_set_api
 from ._utils import get_prefix, normalize_dns_name
 
 if t.TYPE_CHECKING:
-    from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
+    from ansible.module_utils.basic import AnsibleModule
 
-    from .._provider import ProviderInformation  # pragma: no cover
-    from .._record import IDNSRecord, RecordIDT  # pragma: no cover
-    from .._record_set import IDNSRecordSet, RecordSetIDT  # pragma: no cover
-    from .._zone import ZoneIDT  # pragma: no cover
-    from .._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
+    from .._provider import ProviderInformation
+    from .._record import IDNSRecord, RecordIDT
+    from .._record_set import IDNSRecordSet, RecordSetIDT
+    from .._zone import ZoneIDT
+    from .._zone_record_set_api import ZoneRecordSetAPI
 
 
 def create_module_argument_spec(

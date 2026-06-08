@@ -15,7 +15,7 @@ import typing as t
 from ansible.module_utils.common.text.converters import to_bytes, to_native, to_text
 
 if t.TYPE_CHECKING:
-    import dns.rdatatype  # pragma: no cover
+    import dns.rdatatype
 
 
 NAME_TO_RDTYPE: dict[str, dns.rdatatype.RdataType] = {}

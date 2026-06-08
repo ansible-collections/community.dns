@@ -51,21 +51,21 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_set_hel
 from ._utils import get_prefix, normalize_dns_name
 
 if t.TYPE_CHECKING:
-    from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
+    from ansible.module_utils.basic import AnsibleModule
 
-    from .._provider import ProviderInformation  # pragma: no cover
-    from .._record import RecordIDT  # pragma: no cover
-    from .._record_set import RecordSetIDT  # pragma: no cover
-    from .._zone import ZoneIDT  # pragma: no cover
-    from .._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
+    from .._provider import ProviderInformation
+    from .._record import RecordIDT
+    from .._record_set import RecordSetIDT
+    from .._zone import ZoneIDT
+    from .._zone_record_set_api import ZoneRecordSetAPI
 
-    class RecordSetDict(t.TypedDict):  # pragma: no cover
-        record: str  # pragma: no cover  # input might be None
-        prefix: str | None  # pragma: no cover
-        type: str  # pragma: no cover
-        ttl: int | None  # pragma: no cover
-        value: list[str] | None  # pragma: no cover  # never None if ignore == False
-        ignore: bool  # pragma: no cover
+    class RecordSetDict(t.TypedDict):
+        record: str  # input might be None
+        prefix: str | None
+        type: str
+        ttl: int | None
+        value: list[str] | None  # never None if ignore == False
+        ignore: bool
 
 
 def create_module_argument_spec(
