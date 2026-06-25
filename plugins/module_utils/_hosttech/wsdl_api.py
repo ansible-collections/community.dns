@@ -30,11 +30,11 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 )
 
 if t.TYPE_CHECKING:
-    from .._http import HTTPHelper  # pragma: no cover
-    from .._record import IDNSRecord  # pragma: no cover
-    from .._zone_record_api import NotProvidedType  # pragma: no cover
+    from .._http import HTTPHelper
+    from .._record import IDNSRecord
+    from .._zone_record_api import NotProvidedType
 
-    _T = t.TypeVar("_T")  # pragma: no cover
+    _T = t.TypeVar("_T")
 
 
 def _create_record_from_encoding(

@@ -20,13 +20,13 @@ from ansible_collections.community.dns.plugins.module_utils._zone import (
 )
 
 if t.TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence  # pragma: no cover
+    from collections.abc import Mapping, Sequence
 
     from ._record import (
         DNSRecord,
         IDNSRecord,
-    )  # pragma: no cover
-    from ._zone import DNSZone  # pragma: no cover
+    )
+    from ._zone import DNSZone
 
 
 class DNSAPIError(Exception):

@@ -20,9 +20,9 @@ from ansible.module_utils.urls import (
 )
 
 if t.TYPE_CHECKING:
-    from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
+    from ansible.module_utils.basic import AnsibleModule
 
-    HTTPMethod = t.Literal["DELETE", "GET", "HEAD", "POST", "PUT"]  # pragma: no cover
+    HTTPMethod = t.Literal["DELETE", "GET", "HEAD", "POST", "PUT"]
 
 
 class NetworkError(Exception):
