@@ -22,15 +22,15 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 )
 
 if t.TYPE_CHECKING:
-    from collections.abc import Collection  # pragma: no cover
+    from collections.abc import Collection
 
-    from ._http import HTTPHelper, HTTPMethod  # pragma: no cover
+    from ._http import HTTPHelper, HTTPMethod
 
-    class _RequestKwarg(t.TypedDict):  # pragma: no cover
-        method: t.NotRequired[HTTPMethod]  # pragma: no cover
-        headers: t.NotRequired[dict[str, str] | None]  # pragma: no cover
-        data: t.NotRequired[bytes | None]  # pragma: no cover
-        timeout: t.NotRequired[int | None]  # pragma: no cover
+    class _RequestKwarg(t.TypedDict):
+        method: t.NotRequired[HTTPMethod]
+        headers: t.NotRequired[dict[str, str] | None]
+        data: t.NotRequired[bytes | None]
+        timeout: t.NotRequired[int | None]
 
 
 ERROR_CODES: dict[int, str] = {

@@ -19,7 +19,7 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 )
 
 if t.TYPE_CHECKING:
-    from .._provider import ProviderInformation  # pragma: no cover
+    from .._provider import ProviderInformation
 
 
 @t.overload

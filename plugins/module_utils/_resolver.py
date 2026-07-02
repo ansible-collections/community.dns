@@ -30,15 +30,15 @@ else:
     DNSPYTHON_IMPORTERROR = None  # type: ignore  # TODO
 
 if t.TYPE_CHECKING:
-    from collections.abc import Collection, Mapping, Sequence  # pragma: no cover
+    from collections.abc import Collection, Mapping, Sequence
 
-    from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
+    from ansible.module_utils.basic import AnsibleModule
 
-    _P = t.ParamSpec("_P")  # pragma: no cover
-    _T = t.TypeVar("_T")  # pragma: no cover
+    _P = t.ParamSpec("_P")
+    _T = t.TypeVar("_T")
 
-    class ResolverParams(t.TypedDict):  # pragma: no cover
-        search: t.NotRequired[bool]  # pragma: no cover
+    class ResolverParams(t.TypedDict):
+        search: t.NotRequired[bool]
 
 
 _EDNS_SIZE = 1232  # equals dns.message.DEFAULT_EDNS_PAYLOAD; larger values cause problems with Route53 nameservers for me

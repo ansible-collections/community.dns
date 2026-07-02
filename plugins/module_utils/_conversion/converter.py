@@ -21,12 +21,12 @@ from ansible_collections.community.dns.plugins.module_utils._conversion.txt impo
 from ansible_collections.community.dns.plugins.module_utils._record import DNSRecord
 
 if t.TYPE_CHECKING:
-    from collections.abc import Sequence  # pragma: no cover
+    from collections.abc import Sequence
 
-    from .._argspec import OptionProvider  # pragma: no cover
-    from .._provider import ProviderInformation  # pragma: no cover
-    from .._record import RecordIDT  # pragma: no cover
-    from .._record_set import DNSRecordSet, RecordSetIDT  # pragma: no cover
+    from .._argspec import OptionProvider
+    from .._provider import ProviderInformation
+    from .._record import RecordIDT
+    from .._record_set import DNSRecordSet, RecordSetIDT
 
 
 class RecordConverter:

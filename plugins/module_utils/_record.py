@@ -10,9 +10,9 @@ from __future__ import annotations
 import typing as t
 
 if t.TYPE_CHECKING:
-    from collections.abc import Collection, Mapping, Sequence  # pragma: no cover
+    from collections.abc import Collection, Mapping, Sequence
 
-    from ._conversion.converter import RecordConverter  # pragma: no cover
+    from ._conversion.converter import RecordConverter
 
 
 def format_ttl(ttl: int | None) -> str:

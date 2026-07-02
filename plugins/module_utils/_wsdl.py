@@ -21,9 +21,9 @@ except ImportError:
 from ansible_collections.community.dns.plugins.module_utils._http import NetworkError
 
 if t.TYPE_CHECKING:
-    from collections.abc import Mapping  # pragma: no cover
+    from collections.abc import Mapping
 
-    from ._http import HTTPHelper  # pragma: no cover
+    from ._http import HTTPHelper
 
 
 class WSDLException(Exception):

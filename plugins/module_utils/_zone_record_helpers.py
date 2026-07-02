@@ -14,18 +14,18 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 )
 
 if t.TYPE_CHECKING:
-    from collections.abc import Sequence  # pragma: no cover
+    from collections.abc import Sequence
 
-    from ._argspec import OptionProvider  # pragma: no cover
-    from ._provider import ProviderInformation  # pragma: no cover
-    from ._record import DNSRecord, IDNSRecord, RecordIDT  # pragma: no cover
-    from ._zone import ZoneIDT  # pragma: no cover
-    from ._zone_record_api import ZoneRecordAPI  # pragma: no cover
+    from ._argspec import OptionProvider
+    from ._provider import ProviderInformation
+    from ._record import DNSRecord, IDNSRecord, RecordIDT
+    from ._zone import ZoneIDT
+    from ._zone_record_api import ZoneRecordAPI
 
-    class _Result(t.TypedDict, t.Generic[RecordIDT]):  # pragma: no cover
-        deleted: list[DNSRecord[RecordIDT]]  # pragma: no cover
-        changed: list[DNSRecord[RecordIDT]]  # pragma: no cover
-        created: list[DNSRecord[RecordIDT]]  # pragma: no cover
+    class _Result(t.TypedDict, t.Generic[RecordIDT]):
+        deleted: list[DNSRecord[RecordIDT]]
+        changed: list[DNSRecord[RecordIDT]]
+        created: list[DNSRecord[RecordIDT]]
 
 
 def bulk_apply_changes(
