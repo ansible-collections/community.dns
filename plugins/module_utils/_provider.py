@@ -19,8 +19,8 @@ from ansible.module_utils.common.validation import (
     check_type_str,
 )
 
-if t.TYPE_CHECKING:
-    AnsibleType = t.Literal["int", "str", "float", "bool"]  # pragma: no cover
+if t.TYPE_CHECKING:  # pragma: no cover
+    AnsibleType = t.Literal["int", "str", "float", "bool"]
 
 
 def ensure_type(value: t.Any, type_name: str) -> t.Any:

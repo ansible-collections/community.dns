@@ -34,7 +34,7 @@ except ImportError as exc:
 else:
     DNSPYTHON_IMPORTERROR = None  # type: ignore  # TODO
 
-if t.TYPE_CHECKING:
+if t.TYPE_CHECKING:  # pragma: no cover
     _T = t.TypeVar("_T")
 
 

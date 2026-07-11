@@ -13,19 +13,19 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
     DNSAPIError,
 )
 
-if t.TYPE_CHECKING:
-    from collections.abc import Sequence  # pragma: no cover
+if t.TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import Sequence
 
-    from ._argspec import OptionProvider  # pragma: no cover
-    from ._provider import ProviderInformation  # pragma: no cover
-    from ._record import RecordIDT  # pragma: no cover
+    from ._argspec import OptionProvider
+    from ._provider import ProviderInformation
+    from ._record import RecordIDT
     from ._record_set import (
         DNSRecordSet,
         IDNSRecordSet,
         RecordSetIDT,
-    )  # pragma: no cover
-    from ._zone import ZoneIDT  # pragma: no cover
-    from ._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
+    )
+    from ._zone import ZoneIDT
+    from ._zone_record_set_api import ZoneRecordSetAPI
 
 
 def bulk_apply_changes(

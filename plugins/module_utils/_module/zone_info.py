@@ -20,12 +20,12 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 
 from ._utils import normalize_dns_name
 
-if t.TYPE_CHECKING:
-    from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
+if t.TYPE_CHECKING:  # pragma: no cover
+    from ansible.module_utils.basic import AnsibleModule
 
-    from .._provider import ProviderInformation  # pragma: no cover
-    from .._zone_record_api import ZoneRecordAPI  # pragma: no cover
-    from .._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
+    from .._provider import ProviderInformation
+    from .._zone_record_api import ZoneRecordAPI
+    from .._zone_record_set_api import ZoneRecordSetAPI
 
 
 def create_module_argument_spec(

@@ -219,8 +219,8 @@ try:
 except ImportError:
     pass  # handled in assert_requirements_present()
 
-if t.TYPE_CHECKING:
-    import dns.rdtypes.ANY.TXT  # pragma: no cover
+if t.TYPE_CHECKING:  # pragma: no cover
+    import dns.rdtypes.ANY.TXT
 
 
 def lookup(resolver: ResolveDirectlyFromNameServers, name: str) -> dict[str, list[str]]:

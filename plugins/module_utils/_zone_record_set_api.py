@@ -28,15 +28,15 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
     DNSAPIError,
 )
 
-if t.TYPE_CHECKING:
-    from collections.abc import Mapping, Sequence  # pragma: no cover
+if t.TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import Mapping, Sequence
 
     from ._record_set import (
         DNSRecordSet,
         IDNSRecordSet,
-    )  # pragma: no cover
-    from ._zone import DNSZone  # pragma: no cover
-    from ._zone_record_api import NotProvidedType  # pragma: no cover
+    )
+    from ._zone import DNSZone
+    from ._zone_record_api import NotProvidedType
 
 
 class ZoneRecordSetAPI(

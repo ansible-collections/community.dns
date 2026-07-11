@@ -8,7 +8,7 @@ try:
     import lxml.etree
 except ImportError:  # pragma: no cover
     # should be handled in module importing this one
-    pass  # pragma: no cover
+    pass
 
 
 HOSTTECH_WSDL_DEFAULT_ENTRIES = [

@@ -21,16 +21,16 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
     DNSAPIError,
 )
 
-if t.TYPE_CHECKING:
-    from collections.abc import Collection  # pragma: no cover
+if t.TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import Collection
 
-    from ._http import HTTPHelper, HTTPMethod  # pragma: no cover
+    from ._http import HTTPHelper, HTTPMethod
 
-    class _RequestKwarg(t.TypedDict):  # pragma: no cover
-        method: t.NotRequired[HTTPMethod]  # pragma: no cover
-        headers: t.NotRequired[dict[str, str] | None]  # pragma: no cover
-        data: t.NotRequired[bytes | None]  # pragma: no cover
-        timeout: t.NotRequired[int | None]  # pragma: no cover
+    class _RequestKwarg(t.TypedDict):
+        method: t.NotRequired[HTTPMethod]
+        headers: t.NotRequired[dict[str, str] | None]
+        data: t.NotRequired[bytes | None]
+        timeout: t.NotRequired[int | None]
 
 
 ERROR_CODES: dict[int, str] = {
@@ -297,8 +297,8 @@ class JSONAPIHelper:
         require_json_object: bool = False,
     ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]:
         full_url = self._build_url(url, query)
-        if self._debug:
-            pass  # pragma: no cover
+        if self._debug:  # pragma: no cover
+            pass
             # q.q('Request: GET {0}'.format(full_url))
         headers = self._create_headers()
         content, info = self._request(full_url, headers=headers, method="GET")
@@ -370,8 +370,8 @@ class JSONAPIHelper:
         require_json_object: bool = False,
     ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]:
         full_url = self._build_url(url, query)
-        if self._debug:
-            pass  # pragma: no cover
+        if self._debug:  # pragma: no cover
+            pass
             # q.q('Request: POST {0}'.format(full_url))
         headers = self._create_post_headers()
         encoded_data = None
@@ -449,8 +449,8 @@ class JSONAPIHelper:
         require_json_object: bool = False,
     ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]:
         full_url = self._build_url(url, query)
-        if self._debug:
-            pass  # pragma: no cover
+        if self._debug:  # pragma: no cover
+            pass
             # q.q('Request: PUT {0}'.format(full_url))
         headers = self._create_put_headers()
         encoded_data = None
@@ -523,8 +523,8 @@ class JSONAPIHelper:
         require_json_object: bool = False,
     ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]:
         full_url = self._build_url(url, query)
-        if self._debug:
-            pass  # pragma: no cover
+        if self._debug:  # pragma: no cover
+            pass
             # q.q('Request: DELETE {0}'.format(full_url))
         headers = self._create_headers()
         content, info = self._request(full_url, headers=headers, method="DELETE")
