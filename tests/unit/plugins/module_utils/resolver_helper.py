@@ -11,7 +11,7 @@ from ansible_collections.community.internal_test_tools.tests.unit.compat.mock im
 try:
     import dns.rcode
 except ImportError:  # pragma: no cover
-    pass  # pragma: no cover
+    pass
 
 
 def mock_resolver(default_nameservers, nameserver_resolve_sequence):

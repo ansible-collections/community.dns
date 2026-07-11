@@ -14,11 +14,11 @@ from ansible_collections.community.dns.plugins.module_utils._record_set import (
     RecordSetIDT,
 )
 
-if t.TYPE_CHECKING:
-    from collections.abc import Mapping  # pragma: no cover
+if t.TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import Mapping
 
-    from ._record import DNSRecord  # pragma: no cover
-    from ._record_set import DNSRecordSet  # pragma: no cover
+    from ._record import DNSRecord
+    from ._record_set import DNSRecordSet
 
 
 ZoneIDT = t.TypeVar("ZoneIDT")

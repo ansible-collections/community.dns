@@ -11,8 +11,8 @@ import typing as t
 
 from ansible_collections.community.dns.plugins.module_utils._argspec import ArgumentSpec
 
-if t.TYPE_CHECKING:
-    from ._provider import ProviderInformation  # pragma: no cover
+if t.TYPE_CHECKING:  # pragma: no cover
+    from ._provider import ProviderInformation
 
 
 def create_bulk_operations_argspec(

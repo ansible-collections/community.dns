@@ -34,7 +34,7 @@ try:
 
     HAS_LXML_ETREE = True
 except ImportError:  # pragma: no cover
-    HAS_LXML_ETREE = False  # pragma: no cover
+    HAS_LXML_ETREE = False
 
 
 def mock_sleep(delay):

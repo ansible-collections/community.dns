@@ -16,10 +16,10 @@ from ansible.module_utils.urls import Request
 
 from ansible_collections.community.dns.plugins.module_utils._argspec import ArgumentSpec
 
-if t.TYPE_CHECKING:
-    _P = t.ParamSpec("_P")  # pragma: no cover
+if t.TYPE_CHECKING:  # pragma: no cover
+    _P = t.ParamSpec("_P")
 
-    FailJson = t.Callable[_P, t.NoReturn]  # pragma: no cover
+    FailJson = t.Callable[_P, t.NoReturn]
 
 
 def create_adguardhome_argument_spec() -> ArgumentSpec:

@@ -14,8 +14,8 @@ import typing as t
 
 from ansible.module_utils.common.text.converters import to_bytes, to_native, to_text
 
-if t.TYPE_CHECKING:
-    import dns.rdatatype  # pragma: no cover
+if t.TYPE_CHECKING:  # pragma: no cover
+    import dns.rdatatype
 
 
 NAME_TO_RDTYPE: dict[str, dns.rdatatype.RdataType] = {}
@@ -31,7 +31,7 @@ try:
     try:
         import dns.rdtypes.ANY.NSEC3
     except ImportError:  # pragma: no cover
-        pass  # pragma: no cover
+        pass
     try:
         import dns.rdtypes.svcbbase
     except ImportError:
@@ -132,7 +132,7 @@ try:
             if _min_version is None:  # pragma: no cover
                 raise RuntimeError(
                     f"Internal error: rdtype {_name} is None, but min_version is also None!"
-                )  # pragma: no cover
+                )
             NAME_TO_REQUIRED_VERSION[_name] = _min_version
         else:
             NAME_TO_RDTYPE[_name] = _rdtype
@@ -166,7 +166,7 @@ def _convert_dns_rdtypes_svcbbase_param(
         return to_native(base64.b64encode(value.ech)), True
     # Fallbacks:
     if hasattr(value, "to_text"):  # pragma: no cover
-        return value.to_text(), False  # pragma: no cover
+        return value.to_text(), False
     return str(value), False  # pragma: no cover
 
 

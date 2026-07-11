@@ -91,10 +91,10 @@ from ansible_collections.community.dns.plugins.plugin_utils._templated_options i
     TemplatedOptionProvider,
 )
 
-if t.TYPE_CHECKING:
-    from ..module_utils._provider import ProviderInformation  # pragma: no cover
-    from ..module_utils._zone_record_api import ZoneRecordAPI  # pragma: no cover
-    from ..module_utils._zone_record_set_api import ZoneRecordSetAPI  # pragma: no cover
+if t.TYPE_CHECKING:  # pragma: no cover
+    from ..module_utils._provider import ProviderInformation
+    from ..module_utils._zone_record_api import ZoneRecordAPI
+    from ..module_utils._zone_record_set_api import ZoneRecordSetAPI
 
 
 class InventoryModule(RecordsInventoryModule):

@@ -19,10 +19,10 @@ from ansible.module_utils.urls import (
     open_url,
 )
 
-if t.TYPE_CHECKING:
-    from ansible.module_utils.basic import AnsibleModule  # pragma: no cover
+if t.TYPE_CHECKING:  # pragma: no cover
+    from ansible.module_utils.basic import AnsibleModule
 
-    HTTPMethod = t.Literal["DELETE", "GET", "HEAD", "POST", "PUT"]  # pragma: no cover
+    HTTPMethod = t.Literal["DELETE", "GET", "HEAD", "POST", "PUT"]
 
 
 class NetworkError(Exception):
@@ -104,7 +104,7 @@ class OpenURLHelper(HTTPHelper):
             try:
                 info.update({k.lower(): v for k, v in e.info().items()})
             except Exception:  # pragma: no cover
-                pass  # pragma: no cover
+                pass
             info["status"] = e.code
         except NoSSLError as e:
             raise NetworkError(f"Cannot connect via SSL: {to_native(e)}") from e

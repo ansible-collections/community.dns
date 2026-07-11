@@ -12,8 +12,8 @@ import typing as t
 
 from ansible.module_utils.common.text.converters import to_text
 
-if t.TYPE_CHECKING:
-    from collections.abc import Sequence  # pragma: no cover
+if t.TYPE_CHECKING:  # pragma: no cover
+    from collections.abc import Sequence
 
 _ASCII_PRINTABLE_MATCHER = re.compile(r"^[\x20-\x7e]*$")
 

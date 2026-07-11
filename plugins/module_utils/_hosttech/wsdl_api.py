@@ -29,12 +29,12 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
     filter_records,
 )
 
-if t.TYPE_CHECKING:
-    from .._http import HTTPHelper  # pragma: no cover
-    from .._record import IDNSRecord  # pragma: no cover
-    from .._zone_record_api import NotProvidedType  # pragma: no cover
+if t.TYPE_CHECKING:  # pragma: no cover
+    from .._http import HTTPHelper
+    from .._record import IDNSRecord
+    from .._zone_record_api import NotProvidedType
 
-    _T = t.TypeVar("_T")  # pragma: no cover
+    _T = t.TypeVar("_T")
 
 
 def _create_record_from_encoding(
@@ -134,15 +134,15 @@ class HostTechWSDLAPI(ZoneRecordAPI[int, int]):
         return command
 
     def _announce(self, msg: str) -> None:
-        if self._debug:
-            pass  # pragma: no cover
+        if self._debug:  # pragma: no cover
+            pass
             # q.q('{0} {1} {2}'.format('=' * 4, msg, '=' * 40))
 
     def _execute(
         self, command: Composer, result_name: str, acceptable_type: type[_T]
     ) -> _T:
-        if self._debug:
-            pass  # pragma: no cover
+        if self._debug:  # pragma: no cover
+            pass
             # q.q('Request: {0}'.format(command))
         try:
             result = command.execute(debug=self._debug)
@@ -154,12 +154,12 @@ class HostTechWSDLAPI(ZoneRecordAPI[int, int]):
             raise
         res = result.get_result(result_name)
         if isinstance(res, acceptable_type):
-            if self._debug:
-                pass  # pragma: no cover
+            if self._debug:  # pragma: no cover
+                pass
                 # q.q('Extracted result: {0} (type {1})'.format(res, type(res)))
             return res
-        if self._debug:
-            pass  # pragma: no cover
+        if self._debug:  # pragma: no cover
+            pass
             # q.q('Result: {0}; extracted type {1}'.format(result, type(res)))
         raise DNSAPIError(
             f"Result has unexpected type {type(res)} (expecting {acceptable_type})!"
