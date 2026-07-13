@@ -1310,3 +1310,12 @@ releases:
       - 4.0.1.yml
       - update-psl.yml
     release_date: '2026-06-14'
+  4.0.2:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+      release_summary: Maintenance release with updated PSL.
+    fragments:
+      - 4.0.2.yml
+      - update-psl.yml
+    release_date: '2026-07-13'
