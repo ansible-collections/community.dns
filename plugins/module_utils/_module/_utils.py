@@ -87,6 +87,8 @@ def get_zone_id_or_name(
         zone_name = normalize_dns_name(zone_name)
     if zone_id is None:
         assert zone_name is not None
+        if provider_information.is_zone_id_equal_to_zone_name():
+            return zone_name, zone_name
         return zone_name, None
     return None, zone_id
 

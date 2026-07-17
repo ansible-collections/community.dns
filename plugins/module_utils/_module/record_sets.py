@@ -165,7 +165,16 @@ def _run_module_record_api(
 ) -> t.NoReturn:
     # Get zone information
     zone_name_in, zone_id_in = get_zone_id_or_name(module.params, provider_information)
-    if zone_name_in is not None:
+    if provider_information.is_zone_id_equal_to_zone_name():
+        zone_records = api.get_zone_records(
+            zone_id_in,  # type: ignore
+        )
+        if zone_records is None:
+            module.fail_json(msg="Zone not found")
+        assert zone_name_in is not None
+        zone_in = zone_name_in
+        zone_id: ZoneIDT = zone_name_in  # type: ignore
+    elif zone_name_in is not None:
         zone_in = zone_name_in
         zone = api.get_zone_with_records_by_name(zone_in)
         if zone is None:
@@ -346,7 +355,16 @@ def _run_module_record_set_api(
 ) -> t.NoReturn:
     # Get zone information
     zone_name_in, zone_id_in = get_zone_id_or_name(module.params, provider_information)
-    if zone_name_in is not None:
+    if provider_information.is_zone_id_equal_to_zone_name():
+        zone_record_sets = api.get_zone_record_sets(
+            zone_id_in,  # type: ignore
+        )
+        if zone_record_sets is None:
+            module.fail_json(msg="Zone not found")
+        assert zone_name_in is not None
+        zone_in = zone_name_in
+        zone_id: ZoneIDT = zone_name_in  # type: ignore
+    elif zone_name_in is not None:
         zone_in = zone_name_in
         zone = api.get_zone_with_record_sets_by_name(zone_in)
         if zone is None:

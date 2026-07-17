@@ -1345,6 +1345,14 @@ class HetznerProviderInformation(ProviderInformation):
         # Since we have to support both APIs, we're using 'str'.
         return "str"
 
+    def is_zone_id_equal_to_zone_name(self) -> bool:
+        """
+        Whether the zone ID is equal to the zone's name (FQDN).
+
+        If ``True``, implies that ``get_zone_id_type()`` returns ``str``.
+        """
+        return False
+
     def get_record_id_type(self) -> AnsibleType:
         """
         Return the (short) type for record IDs, like ``'int'`` or ``'str'``.

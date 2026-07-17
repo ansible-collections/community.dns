@@ -80,6 +80,8 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
 
             zone_name: str | None = self.get_option("zone_name")
             zone_id: t.Any | None = self.get_option("zone_id")
+            if provider_information.is_zone_id_equal_to_zone_name() and zone_id is None:
+                zone_id, zone_name = zone_name, None
             if zone_name is not None and self.templar.is_template(zone_name):
                 zone_name = self.templar.template(variable=zone_name)
             if zone_id is not None:
