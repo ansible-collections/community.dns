@@ -1,0 +1,218 @@
+#!/usr/bin/python
+# Copyright (c) 2021 Felix Fontein
+# GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+from __future__ import annotations
+
+DOCUMENTATION = r"""
+module: infomaniak_dns_record_set
+
+short_description: Add or delete record sets in Infomaniak DNS service
+
+version_added: 4.1.0
+
+description:
+  - Creates and deletes DNS record sets in Infomaniak DNS service.
+extends_documentation_fragment:
+  - community.dns._infomaniak
+  - community.dns._infomaniak.record_default_ttl
+  - community.dns._infomaniak.record_notes
+  - community.dns._infomaniak.record_type_choices
+  - community.dns._infomaniak.record_type_seealso
+  - community.dns._infomaniak.zone_id_type
+  - community.dns._module_record_set
+  - community.dns._options.record_transformation
+  - community.dns._attributes
+  - community.dns._attributes.actiongroup_infomaniak
+
+author:
+  - Felix Fontein (@felixfontein)
+"""
+
+EXAMPLES = r"""
+- name: Add new.foo.com as an A record with 3 IPs
+  community.dns.infomaniak_dns_record_set:
+    state: present
+    zone: foo.com
+    record: new.foo.com
+    type: A
+    ttl: 7200
+    value: 1.1.1.1,2.2.2.2,3.3.3.3
+    infomaniak_token: access_token
+
+- name: Update new.foo.com as an A record with a list of 3 IPs
+  community.dns.infomaniak_dns_record_set:
+    state: present
+    zone: foo.com
+    record: new.foo.com
+    type: A
+    ttl: 7200
+    value:
+      - 1.1.1.1
+      - 2.2.2.2
+      - 3.3.3.3
+    infomaniak_token: access_token
+
+- name: Retrieve the details for new.foo.com
+  community.dns.infomaniak_dns_record_set_info:
+    zone: foo.com
+    record: new.foo.com
+    type: A
+    infomaniak_token: access_token
+  register: rec
+
+- name: Delete new.foo.com A record using the results from the facts retrieval command
+  community.dns.infomaniak_dns_record_set:
+    state: absent
+    zone: foo.com
+    record: "{{ rec.set.record }}"
+    ttl: "{{ rec.set.ttl }}"
+    type: "{{ rec.set.type }}"
+    value: "{{ rec.set.value }}"
+    infomaniak_token: access_token
+
+- name: Add an AAAA record
+  # Note that because there are colons in the value that the IPv6 address must be quoted!
+  community.dns.infomaniak_dns_record_set:
+    state: present
+    zone: foo.com
+    record: localhost.foo.com
+    type: AAAA
+    ttl: 7200
+    value: "::1"
+    infomaniak_token: access_token
+
+- name: Add a TXT record
+  community.dns.infomaniak_dns_record_set:
+    state: present
+    zone: foo.com
+    record: localhost.foo.com
+    type: TXT
+    ttl: 7200
+    value: 'bar'
+    infomaniak_token: access_token
+
+- name: Remove the TXT record
+  community.dns.infomaniak_dns_record_set:
+    state: absent
+    zone: foo.com
+    record: localhost.foo.com
+    type: TXT
+    ttl: 7200
+    value: 'bar'
+    infomaniak_token: access_token
+
+- name: Add a CAA record
+  community.dns.infomaniak_dns_record_set:
+    state: present
+    zone: foo.com
+    record: foo.com
+    type: CAA
+    value:
+      - '128 issue "letsencrypt.org"'
+      - '128 iodef "mailto:webmaster@foo.com"'
+    infomaniak_token: access_token
+
+- name: Add an MX record
+  community.dns.infomaniak_dns_record_set:
+    state: present
+    zone: foo.com
+    record: foo.com
+    type: MX
+    ttl: 3600
+    value:
+      - "10 mail.foo.com"
+    infomaniak_token: access_token
+
+- name: Add a CNAME record
+  community.dns.infomaniak_dns_record_set:
+    state: present
+    zone: bla.foo.com
+    record: foo.com
+    type: CNAME
+    ttl: 3600
+    value:
+      - foo.foo.com
+    infomaniak_token: access_token
+
+- name: Add a PTR record
+  community.dns.infomaniak_dns_record_set:
+    state: present
+    zone: foo.foo.com
+    record: foo.com
+    type: PTR
+    ttl: 3600
+    value:
+      - foo.foo.com
+    infomaniak_token: access_token
+
+- name: Add an SPF record
+  community.dns.infomaniak_dns_record_set:
+    state: present
+    zone: foo.com
+    record: foo.com
+    type: SPF
+    ttl: 3600
+    value:
+      - "v=spf1 a mx ~all"
+    infomaniak_token: access_token
+
+- name: Add a PTR record
+  community.dns.infomaniak_dns_record_set:
+    state: present
+    zone: foo.com
+    record: foo.com
+    type: PTR
+    ttl: 3600
+    value:
+      - "10 100 3333 service.foo.com"
+    infomaniak_token: access_token
+"""
+
+RETURN = r"""
+zone_id:
+  description: The ID of the zone.
+  type: str
+  returned: success
+  sample: foo.com
+"""
+
+from ansible.module_utils.basic import AnsibleModule
+
+from ansible_collections.community.dns.plugins.module_utils._argspec import (
+    ModuleOptionProvider,
+)
+from ansible_collections.community.dns.plugins.module_utils._http import (
+    ModuleHTTPHelper,
+)
+from ansible_collections.community.dns.plugins.module_utils._infomaniak.api import (
+    create_infomaniak_api,
+    create_infomaniak_argument_spec,
+    create_infomaniak_provider_information,
+)
+from ansible_collections.community.dns.plugins.module_utils._module.record_set import (
+    create_module_argument_spec,
+    run_module,
+)
+
+
+def main() -> None:
+    provider_information = create_infomaniak_provider_information()
+    argument_spec = create_infomaniak_argument_spec()
+    argument_spec.merge(
+        create_module_argument_spec(provider_information=provider_information)
+    )
+    module = AnsibleModule(supports_check_mode=True, **argument_spec.to_kwargs())
+    option_provider = ModuleOptionProvider(module)
+    run_module(
+        module,
+        lambda: create_infomaniak_api(option_provider, ModuleHTTPHelper(module)),
+        provider_information=create_infomaniak_provider_information(
+            option_provider=option_provider
+        ),
+    )
+
+
+if __name__ == "__main__":
+    main()

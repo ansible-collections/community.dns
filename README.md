@@ -66,6 +66,12 @@ If you use the Ansible package and do not update collections independently, use 
   - `hosttech_dns_record_set`: create/update/delete DNS record sets with HostTech DNS.
   - `hosttech_dns_record_set`: bulk synchronize DNS record sets in Hosttech DNS service.
   - `hosttech_dns_zone_info`: retrieve zone information from HostTech DNS.
+  - `infomaniak_dns_record_info`: retrieve information on DNS records from Infomaniak DNS.
+  - `infomaniak_dns_record`: create/update/delete single DNS records with Infomaniak DNS.
+  - `infomaniak_dns_record_set_info`: retrieve information on DNS record sets from Infomaniak DNS.
+  - `infomaniak_dns_record_set`: create/update/delete DNS record sets with Infomaniak DNS.
+  - `infomaniak_dns_record_set`: bulk synchronize DNS record sets in Infomaniak DNS service.
+  - `infomaniak_dns_zone_info`: retrieve zone information from Infomaniak DNS.
   - `nameserver_info`: Look up nameservers for a DNS name.
   - `nameserver_record_info`: Look up all records of a type from all nameservers for a DNS name.
   - `wait_for_txt`: wait for TXT records to propagate to all name servers.
@@ -76,6 +82,7 @@ If you use the Ansible package and do not update collections independently, use 
 - Inventory plugins:
   - `hetzner_dns_records`: create inventory from Hetzner DNS records.
   - `hosttech_dns_records`: create inventory from HostTech DNS records.
+  - `infomaniak_dns_records`: create inventory from Infomaniak DNS records.
 - Filters:
   - `get_public_suffix`: given a domain name, returns the public suffix. For example, `"www.ansible.com" | community.dns.get_public_suffix == ".com"` and `"some.random.prefixes.ansible.co.uk" | community.dns.get_public_suffix == ".co.uk"`.
   - `get_registrable_domain`: given a domain name, returns the *registrable domain name* (also called *registered domain name*). For example, `"www.ansible.com" | community.dns.get_registrable_domain == "ansible.com"` and `"some.random.prefixes.ansible.co.uk" | community.dns.get_registrable_domain == "ansible.co.uk"`.
