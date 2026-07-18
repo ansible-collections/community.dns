@@ -237,6 +237,20 @@ example: <code class="docutils literal notranslate"><span class="pre">input</spa
 </ul>
 </div></td>
 </tr>
+<tr class="row-odd"><td><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-lenient"></div><p class="ansible-option-title" id="ansible-collections-community-dns-unquote-txt-filter-parameter-lenient"><strong>lenient</strong></p>
+<a class="ansibleOptionLink" href="#parameter-lenient" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">boolean</span></p>
+<p><em class="ansible-option-versionadded">added in community.dns 4.1.0</em></p>
+</div></td>
+<td><div class="ansible-option-cell"><p>Whether to accept slightly invalid encoding, such as missing trailing double quote.</p>
+<p>When set to <code class="ansible-value docutils literal notranslate"><span class="pre">true</span></code>, inputs such as <code class="ansible-value docutils literal notranslate"><span class="pre">&quot;foo</span></code> are accepted.</p>
+<p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
+<ul class="simple">
+<li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">false</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">true</span></code></p></li>
+</ul>
+</div></td>
+</tr>
 </tbody>
 </table>
 </section>
