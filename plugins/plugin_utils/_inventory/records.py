@@ -87,7 +87,7 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
                     zone_id = self.templar.template(variable=zone_id)
                 # For templating, we need to make the zone_id type 'string' or 'raw'.
                 # This converts the value to its proper type expected by the API.
-                zone_id_type = provider_information.get_record_id_type()
+                zone_id_type = provider_information.get_zone_id_type()
                 try:
                     zone_id = ensure_type(zone_id, zone_id_type)
                 except TypeError as exc:
