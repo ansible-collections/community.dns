@@ -99,7 +99,7 @@ def _run_module_record_api(option_provider, module, provider_information, record
         zone = api.get_zone_with_records_by_id(
             module.params.get('zone_id'),
             record_type=type_in,
-            prefix=provider_information.normalize_prefix(prefix_in) if prefix_in is not None else NOT_PROVIDED,
+            prefix=provider_information.normalize_prefix(normalize_dns_name(prefix_in)) if prefix_in is not None else NOT_PROVIDED,
         )
         if zone is None:
             module.fail_json(msg='Zone not found')
@@ -110,7 +110,7 @@ def _run_module_record_api(option_provider, module, provider_information, record
         records = zone.records
     else:
         zone_id = module.params.get('zone_id')
-        prefix = provider_information.normalize_prefix(prefix_in)
+        prefix = provider_information.normalize_prefix(normalize_dns_name(prefix_in))
         records = api.get_zone_records(
             zone_id,
             record_type=type_in,
@@ -270,7 +270,7 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
         zone = api.get_zone_with_record_sets_by_id(
             module.params.get('zone_id'),
             record_type=type_in,
-            prefix=provider_information.normalize_prefix(prefix_in) if prefix_in is not None else NOT_PROVIDED,
+            prefix=provider_information.normalize_prefix(normalize_dns_name(prefix_in)) if prefix_in is not None else NOT_PROVIDED,
         )
         if zone is None:
             module.fail_json(msg='Zone not found')
@@ -281,7 +281,7 @@ def _run_module_record_set_api(option_provider, module, provider_information, re
         record_sets = zone.record_sets
     else:
         zone_id = module.params.get('zone_id')
-        prefix = provider_information.normalize_prefix(prefix_in)
+        prefix = provider_information.normalize_prefix(normalize_dns_name(prefix_in))
         record_sets = api.get_zone_record_sets(
             zone_id,
             record_type=type_in,

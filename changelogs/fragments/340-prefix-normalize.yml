@@ -1,0 +1,3 @@
+bugfixes:
+  - "various DNS modules - if ``zone_id`` was combined with an IDN ``prefix``, the prefix was not converted to punycode
+     (https://github.com/ansible-collections/community.dns/pull/340)."
