@@ -233,10 +233,10 @@ def run_module(module, create_api, provider_information):
         if filter_record_type and filter_record_type not in provider_information.get_supported_record_types():
             module.fail_json(msg='Invalid record type {type}'.format(type=filter_record_type))
         if module.params.get('prefix') is not None:
-            filter_prefix = provider_information.normalize_prefix(module.params.get('prefix'))
+            filter_prefix = provider_information.normalize_prefix(normalize_dns_name(module.params.get('prefix')))
     elif module.params.get('what') == 'all_types_for_record':
         if module.params.get('prefix') is not None:
-            filter_prefix = provider_information.normalize_prefix(module.params.get('prefix'))
+            filter_prefix = provider_information.normalize_prefix(normalize_dns_name(module.params.get('prefix')))
 
     try:
         # Create API

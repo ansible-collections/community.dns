@@ -952,6 +952,65 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
         assert result['changed'] is True
         assert result['zone_id'] == 42
 
+    def test_change_add_one_idn_prefix_zone_id(self, mocker):
+        result = self.run_module_success(
+            mocker,
+            hosttech_dns_record,
+            {
+                "hosttech_token": "foo",
+                "state": "present",
+                "zone_id": 42,
+                "prefix": "☺",
+                "type": "CAA",
+                "ttl": 3600,
+                "value": '128 issue "letsencrypt.org"',
+                "_ansible_remote_tmp": "/tmp/tmp",
+                "_ansible_keep_remote_files": True,
+            },
+            [
+                FetchUrlCall("GET", 200)
+                .expect_header("accept", "application/json")
+                .expect_header("authorization", "Bearer foo")
+                .expect_url(
+                    "https://api.ns1.hosttech.eu/api/user/v1/zones/42/records",
+                    without_query=True,
+                )
+                .expect_query_values("type", "CAA")
+                .return_header("Content-Type", "application/json")
+                .result_json(HOSTTECH_JSON_ZONE_RECORDS_GET_RESULT),
+                FetchUrlCall("POST", 201)
+                .expect_header("accept", "application/json")
+                .expect_header("authorization", "Bearer foo")
+                .expect_url("https://api.ns1.hosttech.eu/api/user/v1/zones/42/records")
+                .expect_json_value_absent(["id"])
+                .expect_json_value(["type"], "CAA")
+                .expect_json_value(["ttl"], 3600)
+                .expect_json_value(["comment"], "")
+                .expect_json_value(["name"], "xn--74h")
+                .expect_json_value(["flag"], "128")
+                .expect_json_value(["tag"], "issue")
+                .expect_json_value(["value"], "letsencrypt.org")
+                .return_header("Content-Type", "application/json")
+                .result_json(
+                    {
+                        "data": {
+                            "id": 133,
+                            "type": "CAA",
+                            "name": "xn--74h",
+                            "flag": "128",
+                            "tag": "issue",
+                            "value": "letsencrypt.org",
+                            "ttl": 3600,
+                            "comment": "",
+                        },
+                    }
+                ),
+            ],
+        )
+
+        assert result["changed"] is True
+        assert result["zone_id"] == 42
+
     def test_modify_check(self, mocker):
         result = self.run_module_success(mocker, hosttech_dns_record, {
             'hosttech_token': 'foo',
