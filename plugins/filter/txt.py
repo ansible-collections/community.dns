@@ -35,15 +35,21 @@ def quote_txt(
     )
 
 
-def unquote_txt(value: t.Any, character_encoding: t.Any = "decimal") -> str:
+def unquote_txt(
+    value: t.Any, character_encoding: t.Any = "decimal", lenient: t.Any = False
+) -> str:
     if not isinstance(value, (str, bytes)):
         raise AnsibleFilterError("Input for community.dns.unquote_txt must be a string")
     if character_encoding not in ("decimal", "octal"):
         raise AnsibleFilterError(
             f'character_encoding must be "decimal" or "octal", not {character_encoding!r}'
         )
+    if not isinstance(lenient, bool):
+        raise AnsibleFilterError(f"lenient must be a boolean, not {lenient!r}")
     value = to_text(value)
-    return decode_txt_value(value, character_encoding=character_encoding)
+    return decode_txt_value(
+        value, character_encoding=character_encoding, lenient=lenient
+    )
 
 
 class FilterModule:

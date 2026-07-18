@@ -4,6 +4,8 @@
 
 from __future__ import annotations
 
+import typing as t
+
 import pytest
 
 from ansible_collections.community.dns.plugins.module_utils._conversion.base import (
@@ -16,19 +18,27 @@ from ansible_collections.community.dns.plugins.module_utils._conversion.txt impo
 )
 
 TEST_DECODE = [
-    (r"", "decimal", ""),
-    (r'"" "" ""', "decimal", ""),
-    (r'   ""     ""  ', "decimal", ""),
-    (r"\032\033", "decimal", " !"),
-    (r'"\032" \033 ""', "decimal", " !"),
-    (r"\040\041", "octal", " !"),
-    (r'"\040" \041 ""', "octal", " !"),
+    (r"", "decimal", False, ""),
+    (r'"" "" ""', "decimal", False, ""),
+    (r'   ""     ""  ', "decimal", False, ""),
+    (r"\032\033", "decimal", False, " !"),
+    (r'"\032" \033 ""', "decimal", False, " !"),
+    (r"\040\041", "octal", False, " !"),
+    (r'"\040" \041 ""', "octal", False, " !"),
+    (r'"\"foo\"', "decimal", True, '"foo"'),
 ]
 
 
-@pytest.mark.parametrize("encoded, character_encoding, decoded", TEST_DECODE)
-def test_decode(encoded, character_encoding, decoded):
-    decoded_ = decode_txt_value(encoded, character_encoding=character_encoding)
+@pytest.mark.parametrize("encoded, character_encoding, lenient, decoded", TEST_DECODE)
+def test_decode(
+    encoded: str,
+    character_encoding: t.Literal["octal", "decimal"],
+    lenient: bool,
+    decoded: str,
+) -> None:
+    decoded_ = decode_txt_value(
+        encoded, character_encoding=character_encoding, lenient=lenient
+    )
     print(repr(decoded_), repr(decoded))
     assert decoded_ == decoded
 
@@ -210,7 +220,9 @@ TEST_ENCODE_DECODE = [
 def test_encode_decode(
     decoded, encoded, always_quote, use_character_encoding, character_encoding
 ):
-    decoded_ = decode_txt_value(encoded, character_encoding=character_encoding)
+    decoded_ = decode_txt_value(
+        encoded, character_encoding=character_encoding, lenient=False
+    )
     print(repr(decoded_), repr(decoded))
     assert decoded_ == decoded
     encoded_ = encode_txt_value(
@@ -264,14 +276,14 @@ TEST_DECODE_ERROR = [
 @pytest.mark.parametrize("encoded, character_encoding, error", TEST_DECODE_ERROR)
 def test_decode_error(encoded, character_encoding, error):
     with pytest.raises(DNSConversionError) as exc:
-        decode_txt_value(encoded, character_encoding=character_encoding)
+        decode_txt_value(encoded, character_encoding=character_encoding, lenient=False)
     print(exc.value.error_message)
     assert exc.value.error_message == error
 
 
 def test_validation():
     with pytest.raises(ValueError) as exc:
-        decode_txt_value("foo", character_encoding="foo")
+        decode_txt_value("foo", character_encoding="foo", lenient=False)
     print(exc.value.args)
     assert exc.value.args == ('character_encoding must be set to "octal" or "decimal"',)
 

@@ -24,6 +24,13 @@ DOCUMENTATION:
       choices:
         - decimal
         - octal
+    lenient:
+      description:
+        - Whether to accept slightly invalid encoding, such as missing trailing double quote.
+        - When set to V(true), inputs such as V("foo) are accepted.
+      type: bool
+      default: false
+      version_added: 4.1.0
   author:
     - Felix Fontein (@felixfontein)
 

@@ -22,7 +22,7 @@ _STATE_QUOTED_STRING = 1
 _STATE_UNQUOTED_STRING = 3
 
 
-def _parse_quoted(value: bytes, index: int, use_octal: bool) -> tuple[bytes, int]:
+def _parse_quoted(value: bytes, index: int, *, use_octal: bool) -> tuple[bytes, int]:
     if index == len(value):
         raise DNSConversionError("Unexpected backslash at end of string")
     letter = value[index : index + 1]
@@ -70,7 +70,10 @@ def _parse_quoted(value: bytes, index: int, use_octal: bool) -> tuple[bytes, int
 
 
 def decode_txt_value(
-    value: str | bytes, character_encoding: t.Literal["octal", "decimal"]
+    value: str | bytes,
+    *,
+    character_encoding: t.Literal["octal", "decimal"],
+    lenient: bool
 ) -> str:
     """
     Given an encoded TXT value, decodes it.
@@ -95,7 +98,9 @@ def decode_txt_value(
         elif letter == b"\\":
             if state != _STATE_QUOTED_STRING:
                 state = _STATE_UNQUOTED_STRING
-            letter, index = _parse_quoted(value, index, character_encoding == "octal")
+            letter, index = _parse_quoted(
+                value, index, use_octal=character_encoding == "octal"
+            )
             result.append(letter)
         elif letter == b'"':
             if state == _STATE_QUOTED_STRING:
@@ -111,7 +116,7 @@ def decode_txt_value(
                 state = _STATE_UNQUOTED_STRING
             result.append(letter)
 
-    if state == _STATE_QUOTED_STRING:
+    if state == _STATE_QUOTED_STRING and not lenient:
         raise DNSConversionError("Missing double quotation mark at the end of value")
 
     return to_text(b"".join(result))
