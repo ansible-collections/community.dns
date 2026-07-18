@@ -119,3 +119,9 @@ class ProviderInformation(metaclass=abc.ABCMeta):
         This return value is only used if txt_record_handling does not return 'decoded'.
         """
         return False
+
+    def txt_decode_lenient_from_api(self) -> bool:
+        """
+        Whether TXT records send from the API should be decoded with lenient=True.
+        """
+        return False

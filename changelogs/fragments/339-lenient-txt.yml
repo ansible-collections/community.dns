@@ -1,0 +1,4 @@
+minor_changes:
+  - "unquote_txt filter plugin - a new ``lenient`` option allows to be more lenient when decoding TXT values.
+     Right now this allows missing ending double quotation marks
+     (https://github.com/ansible-collections/community.dns/pull/339)."

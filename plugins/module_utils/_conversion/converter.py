@@ -53,6 +53,9 @@ class RecordConverter:
         self._txt_character_encoding = self._option_provider.get_option(
             "txt_character_encoding"
         )
+        self._txt_decode_api_lenient = (
+            self._provider_information.txt_decode_lenient_from_api()
+        )
 
     def emit_deprecations(self, deprecator: t.Callable[[str], None]) -> None:
         pass
@@ -79,7 +82,9 @@ class RecordConverter:
                 )
             else:
                 record.target = decode_txt_value(
-                    record.target, character_encoding=self._txt_api_character_encoding
+                    record.target,
+                    character_encoding=self._txt_api_character_encoding,
+                    lenient=self._txt_decode_api_lenient,
                 )
 
     def _handle_txt_user(self, to_user: bool, record: DNSRecord[RecordIDT]) -> None:
@@ -98,7 +103,9 @@ class RecordConverter:
                 )
             else:
                 record.target = decode_txt_value(
-                    record.target, character_encoding=self._txt_character_encoding
+                    record.target,
+                    character_encoding=self._txt_character_encoding,
+                    lenient=False,
                 )
 
     def process_from_api(self, record: DNSRecord[RecordIDT]) -> DNSRecord[RecordIDT]:

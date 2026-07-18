@@ -47,6 +47,8 @@
         '"foo" "bar"' | community.dns.unquote_txt == "foobar"
       - >
         'foo "bar baz" bam' | community.dns.unquote_txt == "foobar bazbam"
+      - >
+        '"foo' | community.dns.unquote_txt(lenient=true) == "foo"
 
 - name: Quote_txt failure - input not string
   ansible.builtin.set_fact:
@@ -78,6 +80,12 @@
   register: unquote_failure_2
   ignore_errors: true
 
+- name: Unquote_txt failure - lenient has invalid value
+  ansible.builtin.set_fact:
+    output: "{{ '' | community.dns.unquote_txt(lenient=42) }}"
+  register: unquote_failure_3
+  ignore_errors: true
+
 - name: Validate errors
   ansible.builtin.assert:
     that:
@@ -96,3 +104,6 @@
       - unquote_failure_2 is failed
       - >-
         "character_encoding must be \"decimal\" or \"octal\", not 'foo'" in unquote_failure_2.msg
+      - unquote_failure_3 is failed
+      - >-
+        "lenient must be a boolean, not 42" in unquote_failure_3.msg
