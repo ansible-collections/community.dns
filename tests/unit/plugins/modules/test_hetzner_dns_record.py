@@ -828,6 +828,62 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
         assert result["changed"] is True
         assert result["zone_id"] == "42"
 
+    def test_change_add_one_idn_prefix_zone_id(self, mocker):
+        result = self.run_module_success(
+            mocker,
+            hetzner_dns_record,
+            {
+                "hetzner_token": "foo",
+                "state": "present",
+                "zone_id": "42",
+                "prefix": "☺",
+                "type": "CAA",
+                "ttl": 3600,
+                "value": '128 issue "letsencrypt.org"',
+                "_ansible_remote_tmp": "/tmp/tmp",
+                "_ansible_keep_remote_files": True,
+            },
+            [
+                FetchUrlCall("GET", 200)
+                .expect_header("accept", "application/json")
+                .expect_header("auth-api-token", "foo")
+                .expect_url(
+                    "https://dns.hetzner.com/api/v1/records", without_query=True
+                )
+                .expect_query_values("zone_id", "42")
+                .expect_query_values("page", "1")
+                .expect_query_values("per_page", "100")
+                .return_header("Content-Type", "application/json")
+                .result_json(HETZNER_JSON_ZONE_RECORDS_GET_RESULT),
+                FetchUrlCall("POST", 200)
+                .expect_header("accept", "application/json")
+                .expect_header("auth-api-token", "foo")
+                .expect_url("https://dns.hetzner.com/api/v1/records")
+                .expect_json_value_absent(["id"])
+                .expect_json_value(["type"], "CAA")
+                .expect_json_value(["ttl"], 3600)
+                .expect_json_value(["zone_id"], "42")
+                .expect_json_value(["name"], "☺")  # FIXME!
+                .expect_json_value(["value"], '128 issue "letsencrypt.org"')
+                .return_header("Content-Type", "application/json")
+                .result_json(
+                    {
+                        "record": {
+                            "id": "133",
+                            "type": "CAA",
+                            "name": "xn--74h",
+                            "value": '128 issue "letsencrypt.org"',
+                            "ttl": 3600,
+                            "zone_id": "42",
+                        },
+                    }
+                ),
+            ],
+        )
+
+        assert result["changed"] is True
+        assert result["zone_id"] == "42"
+
     def test_modify_check(self, mocker):
         result = self.run_module_success(
             mocker,
@@ -2126,6 +2182,117 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                     .expect_header("Authorization", "Bearer foo")
                     .expect_url("https://api.hetzner.cloud/v1/zones/42/rrsets")
                     .expect_json_value(["name"], "xn--74h")
+                    .expect_json_value(["type"], "CAA")
+                    .expect_json_value(["ttl"], 3600)
+                    .expect_json_value(
+                        ["records", 0, "value"], '128 issue "letsencrypt.org"'
+                    )
+                    .expect_json_value(["records", 0, "comment"], None)
+                    .expect_json_value_absent(["records", 1])
+                    .return_header("Content-Type", "application/json")
+                    .result_json(
+                        {
+                            "rrset": {
+                                "id": "xn--74h/CAA",
+                                "name": "xn--74h",
+                                "type": "CAA",
+                                "ttl": 3600,
+                                "labels": {},
+                                "protection": {
+                                    "change": False,
+                                },
+                                "records": [
+                                    {
+                                        "value": '128 issue "letsencrypt.org"',
+                                        "comment": "",
+                                    },
+                                ],
+                                "zone": 42,
+                            },
+                            "action": {
+                                "id": 1,
+                                "command": "create_rrset",
+                                "status": "running",
+                                "progress": 50,
+                                "started": "2016-01-30T23:55:00Z",
+                                "finished": None,
+                                "resources": [
+                                    {
+                                        "id": 42,
+                                        "type": "zone",
+                                    },
+                                ],
+                                "error": None,
+                            },
+                        }
+                    ),
+                    FetchUrlCall("GET", 200)
+                    .expect_header("accept", "application/json")
+                    .expect_header("Authorization", "Bearer foo")
+                    .expect_url("https://api.hetzner.cloud/v1/actions/1")
+                    .return_header("Content-Type", "application/json")
+                    .result_json(
+                        {
+                            "action": {
+                                "id": 1,
+                                "command": "create_rrset",
+                                "status": "success",
+                                "progress": 100,
+                                "started": "2016-01-30T23:55:00Z",
+                                "finished": "2026-01-30T23:55:00Z",
+                                "resources": [
+                                    {
+                                        "id": 42,
+                                        "type": "zone",
+                                    },
+                                ],
+                                "error": None,
+                            },
+                        }
+                    ),
+                ],
+            )
+
+        assert result["changed"] is True
+        assert result["zone_id"] == "42"
+
+    def test_change_add_one_idn_prefix_zone_id(self, mocker):
+        with patch("time.sleep", mock_sleep):
+            result = self.run_module_success(
+                mocker,
+                hetzner_dns_record,
+                {
+                    "hetzner_api_token": "foo",
+                    "state": "present",
+                    "zone_id": "42",
+                    "prefix": "☺",
+                    "type": "CAA",
+                    "ttl": 3600,
+                    "value": '128 issue "letsencrypt.org"',
+                    "_ansible_remote_tmp": "/tmp/tmp",
+                    "_ansible_keep_remote_files": True,
+                },
+                [
+                    FetchUrlCall("GET", 200)
+                    .expect_header("accept", "application/json")
+                    .expect_header("Authorization", "Bearer foo")
+                    .expect_url(
+                        "https://api.hetzner.cloud/v1/zones/42/rrsets",
+                        without_query=True,
+                    )
+                    .expect_query_values("name", "☺")  # FIXME!
+                    .expect_query_values("type", "CAA")
+                    .expect_query_values("page", "1")
+                    .expect_query_values("per_page", "100")
+                    .return_header("Content-Type", "application/json")
+                    .result_json(
+                        get_hetzner_new_json_records(name="xn--74h", record_type="CAA")
+                    ),
+                    FetchUrlCall("POST", 201)
+                    .expect_header("accept", "application/json")
+                    .expect_header("Authorization", "Bearer foo")
+                    .expect_url("https://api.hetzner.cloud/v1/zones/42/rrsets")
+                    .expect_json_value(["name"], "☺")  # FIXME!
                     .expect_json_value(["type"], "CAA")
                     .expect_json_value(["ttl"], 3600)
                     .expect_json_value(
