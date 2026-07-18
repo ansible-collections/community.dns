@@ -35,7 +35,11 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
     ZoneRecordAPI,
 )
 
-from ._utils import get_prefix, get_zone_id_or_name, normalize_dns_name
+from ._utils import (
+    get_prefix,
+    get_zone_id_or_name_with_prefix_filter,
+    normalize_dns_name,
+)
 
 if t.TYPE_CHECKING:  # pragma: no cover
     from ansible.module_utils.basic import AnsibleModule
@@ -88,11 +92,14 @@ def _run_module_record_api(
     provider_information: ProviderInformation,
     record_converter: RecordConverter,
     filter_record_type: str | NotProvidedType,
-    filter_prefix: str | None | NotProvidedType,
     api: ZoneRecordAPI[ZoneIDT, RecordIDT],
 ) -> t.NoReturn:
     # Get zone information
-    zone_name_in, zone_id_in = get_zone_id_or_name(module.params, provider_information)
+    zone_name_in, zone_id_in, filter_prefix = get_zone_id_or_name_with_prefix_filter(
+        module.params,
+        provider_information,
+        use_prefix_or_record=module.params["what"] != "all_records",
+    )
     if zone_name_in is not None:
         zone_in = zone_name_in
         zone = api.get_zone_with_records_by_name(
@@ -112,7 +119,7 @@ def _run_module_record_api(
 
     # Retrieve requested information
     records = []
-    if module.params.get("what") in ("single_record", "all_types_for_record"):
+    if module.params["what"] in ("single_record", "all_types_for_record"):
         check_prefix = True
         record_in = normalize_dns_name(module.params.get("record"))
         prefix_in = module.params.get("prefix")
@@ -159,11 +166,14 @@ def _run_module_record_set_api(
     provider_information: ProviderInformation,
     record_converter: RecordConverter,
     filter_record_type: str | NotProvidedType,
-    filter_prefix: str | None | NotProvidedType,
     api: ZoneRecordSetAPI[ZoneIDT, RecordSetIDT, RecordIDT],
 ) -> t.NoReturn:
     # Get zone information
-    zone_name_in, zone_id_in = get_zone_id_or_name(module.params, provider_information)
+    zone_name_in, zone_id_in, filter_prefix = get_zone_id_or_name_with_prefix_filter(
+        module.params,
+        provider_information,
+        use_prefix_or_record=module.params["what"] != "all_records",
+    )
     if zone_name_in is not None:
         zone_in = zone_name_in
         zone = api.get_zone_with_record_sets_by_name(
@@ -182,7 +192,7 @@ def _run_module_record_set_api(
         zone_in = normalize_dns_name(zone.zone.name)
 
     # Retrieve requested information
-    if module.params.get("what") in ("single_record", "all_types_for_record"):
+    if module.params["what"] in ("single_record", "all_types_for_record"):
         check_prefix = True
         record_in = normalize_dns_name(module.params.get("record"))
         prefix_in = module.params.get("prefix")
@@ -238,8 +248,7 @@ def run_module(
     record_converter.emit_deprecations(module.deprecate)
 
     filter_record_type: str | NotProvidedType = NOT_PROVIDED
-    filter_prefix: str | None | NotProvidedType = NOT_PROVIDED
-    if module.params.get("what") == "single_record":
+    if module.params["what"] == "single_record":
         filter_record_type = module.params.get("type")
         if (
             filter_record_type
@@ -247,15 +256,6 @@ def run_module(
             not in provider_information.get_supported_record_types()
         ):
             module.fail_json(msg=f"Invalid record type {filter_record_type}")
-        if module.params.get("prefix") is not None:
-            filter_prefix = provider_information.normalize_prefix(
-                normalize_dns_name(module.params.get("prefix"))
-            )
-    elif module.params.get("what") == "all_types_for_record":
-        if module.params.get("prefix") is not None:
-            filter_prefix = provider_information.normalize_prefix(
-                normalize_dns_name(module.params.get("prefix"))
-            )
 
     try:
         # Create API
@@ -267,7 +267,6 @@ def run_module(
                 provider_information,
                 record_converter,
                 filter_record_type,
-                filter_prefix,
                 api,
             )
         else:
@@ -276,7 +275,6 @@ def run_module(
                 provider_information,
                 record_converter,
                 filter_record_type,
-                filter_prefix,
                 api,
             )
     except DNSConversionError as e:
