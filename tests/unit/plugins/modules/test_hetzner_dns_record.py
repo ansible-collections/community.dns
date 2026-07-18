@@ -863,7 +863,7 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                 .expect_json_value(["type"], "CAA")
                 .expect_json_value(["ttl"], 3600)
                 .expect_json_value(["zone_id"], "42")
-                .expect_json_value(["name"], "☺")  # FIXME!
+                .expect_json_value(["name"], "xn--74h")
                 .expect_json_value(["value"], '128 issue "letsencrypt.org"')
                 .return_header("Content-Type", "application/json")
                 .result_json(
@@ -2280,7 +2280,7 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                         "https://api.hetzner.cloud/v1/zones/42/rrsets",
                         without_query=True,
                     )
-                    .expect_query_values("name", "☺")  # FIXME!
+                    .expect_query_values("name", "xn--74h")
                     .expect_query_values("type", "CAA")
                     .expect_query_values("page", "1")
                     .expect_query_values("per_page", "100")
@@ -2292,7 +2292,7 @@ class TestHetznerDNSRecordNewJSON(BaseTestModule):
                     .expect_header("accept", "application/json")
                     .expect_header("Authorization", "Bearer foo")
                     .expect_url("https://api.hetzner.cloud/v1/zones/42/rrsets")
-                    .expect_json_value(["name"], "☺")  # FIXME!
+                    .expect_json_value(["name"], "xn--74h")
                     .expect_json_value(["type"], "CAA")
                     .expect_json_value(["ttl"], 3600)
                     .expect_json_value(

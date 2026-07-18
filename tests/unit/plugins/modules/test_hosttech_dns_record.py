@@ -1290,7 +1290,7 @@ class TestHosttechDNSRecordJSON(BaseTestModule):
                 .expect_json_value(["type"], "CAA")
                 .expect_json_value(["ttl"], 3600)
                 .expect_json_value(["comment"], "")
-                .expect_json_value(["name"], "☺")  # FIXME!
+                .expect_json_value(["name"], "xn--74h")
                 .expect_json_value(["flag"], "128")
                 .expect_json_value(["tag"], "issue")
                 .expect_json_value(["value"], "letsencrypt.org")
