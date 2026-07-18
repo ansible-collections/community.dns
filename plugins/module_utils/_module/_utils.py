@@ -61,3 +61,16 @@ def get_prefix(
         normalized_record,
         normalized_record[: len(normalized_record) - len(normalized_zone) - 1],
     )
+
+
+def get_zone_id_or_name(
+    module_params: dict[str, t.Any], provider_information: ProviderInformation
+) -> tuple[str, None] | tuple[None, t.Any]:
+    zone_name: str | None = module_params["zone_name"]
+    zone_id: t.Any | None = module_params["zone_id"]
+    if zone_name is not None:
+        zone_name = normalize_dns_name(zone_name)
+    if zone_id is None:
+        assert zone_name is not None
+        return zone_name, None
+    return None, zone_id
