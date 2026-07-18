@@ -1330,7 +1330,7 @@ class TestHetznerDNSRecordInfoNewJSON(BaseTestModule):
                         "https://api.hetzner.cloud/v1/zones/42/rrsets",
                         without_query=True,
                     )
-                    .expect_query_absent("name")
+                    .expect_query_values("name", "@")
                     .expect_query_values("type", "TXT")
                     .expect_query_values("page", "1")
                     .expect_query_values("per_page", "100")
@@ -1427,7 +1427,7 @@ class TestHetznerDNSRecordInfoNewJSON(BaseTestModule):
                         "https://api.hetzner.cloud/v1/zones/42/rrsets",
                         without_query=True,
                     )
-                    .expect_query_absent("name")
+                    .expect_query_values("name", "@")
                     .expect_query_values("type", "A")
                     .expect_query_values("page", "1")
                     .expect_query_values("per_page", "100")
@@ -1517,7 +1517,7 @@ class TestHetznerDNSRecordInfoNewJSON(BaseTestModule):
                 .expect_url(
                     "https://api.hetzner.cloud/v1/zones/42/rrsets", without_query=True
                 )
-                .expect_query_absent("name")
+                .expect_query_values("name", "*")
                 .expect_query_absent("type")
                 .expect_query_values("page", "1")
                 .expect_query_values("per_page", "100")

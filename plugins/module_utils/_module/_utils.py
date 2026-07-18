@@ -15,11 +15,13 @@ from ansible_collections.community.dns.plugins.module_utils._names import (
     split_into_labels,
 )
 from ansible_collections.community.dns.plugins.module_utils._zone_record_api import (
+    NOT_PROVIDED,
     DNSAPIError,
 )
 
 if t.TYPE_CHECKING:  # pragma: no cover
     from .._provider import ProviderInformation
+    from .._zone_record_api import NotProvidedType
 
 
 @t.overload
@@ -37,6 +39,20 @@ def normalize_dns_name(name: str | None) -> str | None:
     return join_labels([normalize_label(label) for label in labels])
 
 
+def is_prefix(*, normalized_record: str, normalized_zone: str) -> bool:
+    return (
+        normalized_record.endswith("." + normalized_zone)
+        or normalized_record == normalized_zone
+    )
+
+
+def _extract_prefix(*, normalized_record: str, normalized_zone: str) -> str | None:
+    # Assumes that is_prefix() returned True
+    if normalized_record == normalized_zone:
+        return None
+    return normalized_record[: len(normalized_record) - len(normalized_zone) - 1]
+
+
 def get_prefix(
     normalized_zone: str,
     provider_information: ProviderInformation,
@@ -50,14 +66,52 @@ def get_prefix(
             prefix = provider_information.normalize_prefix(normalize_dns_name(prefix))
         return (prefix + "." + normalized_zone) if prefix else normalized_zone, prefix
     # Convert record to prefix
-    if (
-        not normalized_record.endswith("." + normalized_zone)
-        and normalized_record != normalized_zone
+    if not is_prefix(
+        normalized_record=normalized_record, normalized_zone=normalized_zone
     ):
         raise DNSAPIError("Record must be in zone")
-    if normalized_record == normalized_zone:
-        return normalized_record, None
     return (
         normalized_record,
-        normalized_record[: len(normalized_record) - len(normalized_zone) - 1],
+        _extract_prefix(
+            normalized_record=normalized_record, normalized_zone=normalized_zone
+        ),
     )
+
+
+def get_zone_id_or_name(
+    module_params: dict[str, t.Any], provider_information: ProviderInformation
+) -> tuple[str, None] | tuple[None, t.Any] | tuple[str, t.Any]:
+    zone_name: str | None = module_params["zone_name"]
+    zone_id: t.Any | None = module_params["zone_id"]
+    if zone_name is not None:
+        zone_name = normalize_dns_name(zone_name)
+    if zone_id is None:
+        assert zone_name is not None
+        return zone_name, None
+    return None, zone_id
+
+
+def get_zone_id_or_name_with_prefix_filter(
+    module_params: dict[str, t.Any],
+    provider_information: ProviderInformation,
+    *,
+    use_prefix_or_record: bool = False
+) -> tuple[str | None, t.Any | None, str | None | NotProvidedType]:
+    zone_name, zone_id = get_zone_id_or_name(module_params, provider_information)
+    prefix_filter: str | None | NotProvidedType = NOT_PROVIDED
+    if use_prefix_or_record:
+        prefix = module_params["prefix"]
+        record = module_params["record"]
+        if prefix is not None:
+            prefix_filter = provider_information.normalize_prefix(
+                normalize_dns_name(prefix)
+            )
+        elif record is not None and zone_name is not None:
+            normalized_record = normalize_dns_name(record)
+            if is_prefix(
+                normalized_record=normalized_record, normalized_zone=zone_name
+            ):
+                prefix_filter = _extract_prefix(
+                    normalized_record=normalized_record, normalized_zone=zone_name
+                )
+    return zone_name, zone_id, prefix_filter

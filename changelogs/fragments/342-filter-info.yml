@@ -1,0 +1,5 @@
+minor_changes:
+  - >-
+    hetzner_dns_record_info, hetzner_dns_record_set_info - if ``zone_name`` is provided together with ``record`` for the new JSON API,
+    and ``what`` is not ``all_records``, also filter by prefix. This was already done if ``prefix`` had been specified
+    (https://github.com/ansible-collections/community.dns/pull/340)."

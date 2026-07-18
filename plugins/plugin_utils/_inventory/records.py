@@ -78,10 +78,10 @@ class RecordsInventoryModule(BaseInventoryPlugin, metaclass=abc.ABCMeta):
             record_converter = RecordConverter(provider_information, self)
             record_converter.emit_deprecations(display.deprecated)
 
-            zone_name = self.get_option("zone_name")
-            if self.templar.is_template(zone_name):
+            zone_name: str | None = self.get_option("zone_name")
+            zone_id: t.Any | None = self.get_option("zone_id")
+            if zone_name is not None and self.templar.is_template(zone_name):
                 zone_name = self.templar.template(variable=zone_name)
-            zone_id = self.get_option("zone_id")
             if zone_id is not None:
                 if self.templar.is_template(zone_id):
                     zone_id = self.templar.template(variable=zone_id)
