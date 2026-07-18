@@ -247,12 +247,12 @@ def run_module(
             module.fail_json(msg=f"Invalid record type {filter_record_type}")
         if module.params.get("prefix") is not None:
             filter_prefix = provider_information.normalize_prefix(
-                module.params.get("prefix")
+                normalize_dns_name(module.params.get("prefix"))
             )
     elif module.params.get("what") == "all_types_for_record":
         if module.params.get("prefix") is not None:
             filter_prefix = provider_information.normalize_prefix(
-                module.params.get("prefix")
+                normalize_dns_name(module.params.get("prefix"))
             )
 
     try:

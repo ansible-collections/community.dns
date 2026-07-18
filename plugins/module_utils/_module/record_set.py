@@ -141,7 +141,7 @@ def _run_module_record_api(
             module.params.get("zone_id"),
             record_type=type_in,
             prefix=(
-                provider_information.normalize_prefix(prefix_in)
+                provider_information.normalize_prefix(normalize_dns_name(prefix_in))
                 if prefix_in is not None
                 else NOT_PROVIDED
             ),
@@ -159,7 +159,7 @@ def _run_module_record_api(
         records = zone.records
     else:
         zone_id = module.params.get("zone_id")
-        prefix = provider_information.normalize_prefix(prefix_in)
+        prefix = provider_information.normalize_prefix(normalize_dns_name(prefix_in))
         records = api.get_zone_records(
             zone_id,
             record_type=type_in,
@@ -358,7 +358,7 @@ def _run_module_record_set_api(
             module.params.get("zone_id"),
             record_type=type_in,
             prefix=(
-                provider_information.normalize_prefix(prefix_in)
+                provider_information.normalize_prefix(normalize_dns_name(prefix_in))
                 if prefix_in is not None
                 else NOT_PROVIDED
             ),
@@ -376,7 +376,7 @@ def _run_module_record_set_api(
         record_sets = zone.record_sets
     else:
         zone_id = module.params.get("zone_id")
-        prefix = provider_information.normalize_prefix(prefix_in)
+        prefix = provider_information.normalize_prefix(normalize_dns_name(prefix_in))
         record_sets = api.get_zone_record_sets(
             zone_id,
             record_type=type_in,
