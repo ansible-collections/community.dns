@@ -48,7 +48,12 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_set_hel
     bulk_apply_changes as rrset_bulk_apply_changes,
 )
 
-from ._utils import get_prefix, get_zone_id_or_name, normalize_dns_name
+from ._utils import (
+    create_zone_name_id_argspec,
+    get_prefix,
+    get_zone_id_or_name,
+    normalize_dns_name,
+)
 
 if t.TYPE_CHECKING:  # pragma: no cover
     from ansible.module_utils.basic import AnsibleModule
@@ -74,8 +79,6 @@ def create_module_argument_spec(
     return (
         ArgumentSpec(
             argument_spec={
-                "zone_name": {"type": "str", "aliases": ["zone"]},
-                "zone_id": {"type": provider_information.get_zone_id_type()},
                 "prune": {"type": "bool", "default": False},
                 "record_sets": {
                     "type": "list",
@@ -101,15 +104,10 @@ def create_module_argument_spec(
                     "mutually_exclusive": [("record", "prefix")],
                 },
             },
-            required_one_of=[
-                ("zone_name", "zone_id"),
-            ],
-            mutually_exclusive=[
-                ("zone_name", "zone_id"),
-            ],
         )
         .merge(create_bulk_operations_argspec(provider_information))
         .merge(create_record_transformation_argspec())
+        .merge(create_zone_name_id_argspec(provider_information))
     )
 
 

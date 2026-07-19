@@ -23,12 +23,11 @@ extends_documentation_fragment:
   - community.dns._infomaniak.record_notes
   - community.dns._infomaniak.record_type_choices
   - community.dns._infomaniak.record_type_seealso
-  - community.dns._infomaniak.zone_id_type
   - community.dns._module_record
   - community.dns._options.record_transformation
   - community.dns._attributes
   - community.dns._attributes.actiongroup_infomaniak
-  - community.dns._zone_name_id.combined_query
+  - community.dns._zone_name_id.name_only_modify
 
 author:
   - Felix Fontein (@felixfontein)

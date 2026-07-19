@@ -18,7 +18,7 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
     DNSAPIError,
 )
 
-from ._utils import get_zone_id_or_name
+from ._utils import create_zone_name_id_argspec, get_zone_id_or_name
 
 if t.TYPE_CHECKING:  # pragma: no cover
     from ansible.module_utils.basic import AnsibleModule
@@ -31,18 +31,7 @@ if t.TYPE_CHECKING:  # pragma: no cover
 def create_module_argument_spec(
     provider_information: ProviderInformation,
 ) -> ArgumentSpec:
-    return ArgumentSpec(
-        argument_spec={
-            "zone_name": {"type": "str", "aliases": ["zone"]},
-            "zone_id": {"type": provider_information.get_zone_id_type()},
-        },
-        required_one_of=[
-            ("zone_name", "zone_id"),
-        ],
-        mutually_exclusive=[
-            ("zone_name", "zone_id"),
-        ],
-    )
+    return create_zone_name_id_argspec(provider_information)
 
 
 def run_module(
