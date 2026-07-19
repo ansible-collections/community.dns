@@ -25,11 +25,11 @@ if t.TYPE_CHECKING:  # pragma: no cover
 
 
 @t.overload
-def normalize_dns_name(name: str) -> str: ...
+def normalize_dns_name(name: str) -> str: ...  # pragma: no cover
 
 
 @t.overload
-def normalize_dns_name(name: str | None) -> str | None: ...
+def normalize_dns_name(name: str | None) -> str | None: ...  # pragma: no cover
 
 
 def normalize_dns_name(name: str | None) -> str | None:

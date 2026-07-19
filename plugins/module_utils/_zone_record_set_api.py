@@ -321,7 +321,7 @@ def filter_record_sets(
     record_sets: list[DNSRecordSet[RecordSetIDT, RecordIDT]],
     prefix: str | None | NotProvidedType = NOT_PROVIDED,
     record_type: str | NotProvidedType = NOT_PROVIDED,
-) -> list[DNSRecordSet[RecordSetIDT, RecordIDT]]: ...
+) -> list[DNSRecordSet[RecordSetIDT, RecordIDT]]: ...  # pragma: no cover
 
 
 @t.overload
@@ -329,7 +329,7 @@ def filter_record_sets(
     record_sets: Sequence[DNSRecordSet[RecordSetIDT, RecordIDT]],
     prefix: str | None | NotProvidedType = NOT_PROVIDED,
     record_type: str | NotProvidedType = NOT_PROVIDED,
-) -> Sequence[DNSRecordSet[RecordSetIDT, RecordIDT]]: ...
+) -> Sequence[DNSRecordSet[RecordSetIDT, RecordIDT]]: ...  # pragma: no cover
 
 
 @t.overload
@@ -337,7 +337,7 @@ def filter_record_sets(
     record_sets: Sequence[IDNSRecordSet[RecordSetIDT_co, RecordIDT_co]],
     prefix: str | None | NotProvidedType = NOT_PROVIDED,
     record_type: str | NotProvidedType = NOT_PROVIDED,
-) -> Sequence[IDNSRecordSet[RecordSetIDT_co, RecordIDT_co]]: ...
+) -> Sequence[IDNSRecordSet[RecordSetIDT_co, RecordIDT_co]]: ...  # pragma: no cover
 
 
 def filter_record_sets(

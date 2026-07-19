@@ -158,7 +158,7 @@ class InfomaniakJSONAPI(ZoneRecordAPI[str, int], JSONAPIHelper):
         query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
         per_page: int = 100,
         allow_404: t.Literal[False] = False,
-    ) -> list[t.Any]: ...
+    ) -> list[t.Any]: ...  # pragma: no cover
 
     @t.overload
     def _list_pagination(
@@ -168,7 +168,7 @@ class InfomaniakJSONAPI(ZoneRecordAPI[str, int], JSONAPIHelper):
         query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
         per_page: int = 100,
         allow_404: t.Literal[True],
-    ) -> list[t.Any] | None: ...
+    ) -> list[t.Any] | None: ...  # pragma: no cover
 
     def _list_pagination(
         self,

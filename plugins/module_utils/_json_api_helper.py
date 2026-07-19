@@ -252,7 +252,7 @@ class JSONAPIHelper:
         must_have_content: t.Literal[True] = True,
         expected: Collection[int] | None = None,
         require_json_object: t.Literal[True],
-    ) -> tuple[dict[str, t.Any], dict[str, t.Any]]: ...
+    ) -> tuple[dict[str, t.Any], dict[str, t.Any]]: ...  # pragma: no cover
 
     @t.overload
     def _get(
@@ -263,7 +263,9 @@ class JSONAPIHelper:
         must_have_content: t.Literal[True] = True,
         expected: Collection[int] | None = None,
         require_json_object: bool = False,
-    ) -> tuple[dict[str, t.Any] | list[t.Any], dict[str, t.Any]]: ...
+    ) -> tuple[
+        dict[str, t.Any] | list[t.Any], dict[str, t.Any]
+    ]: ...  # pragma: no cover
 
     @t.overload
     def _get(
@@ -274,7 +276,7 @@ class JSONAPIHelper:
         must_have_content: bool | Sequence[int] = True,
         expected: Collection[int] | None = None,
         require_json_object: t.Literal[True],
-    ) -> tuple[dict[str, t.Any] | None, dict[str, t.Any]]: ...
+    ) -> tuple[dict[str, t.Any] | None, dict[str, t.Any]]: ...  # pragma: no cover
 
     @t.overload
     def _get(
@@ -285,7 +287,9 @@ class JSONAPIHelper:
         must_have_content: bool | Sequence[int] = True,
         expected: Collection[int] | None = None,
         require_json_object: bool = False,
-    ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]: ...
+    ) -> tuple[
+        dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]
+    ]: ...  # pragma: no cover
 
     def _get(
         self,
@@ -321,7 +325,7 @@ class JSONAPIHelper:
         must_have_content: t.Literal[True] = True,
         expected: Collection[int] | None = None,
         require_json_object: t.Literal[True],
-    ) -> tuple[dict[str, t.Any], dict[str, t.Any]]: ...
+    ) -> tuple[dict[str, t.Any], dict[str, t.Any]]: ...  # pragma: no cover
 
     @t.overload
     def _post(
@@ -333,7 +337,9 @@ class JSONAPIHelper:
         must_have_content: t.Literal[True] = True,
         expected: Collection[int] | None = None,
         require_json_object: bool = False,
-    ) -> tuple[dict[str, t.Any] | list[t.Any], dict[str, t.Any]]: ...
+    ) -> tuple[
+        dict[str, t.Any] | list[t.Any], dict[str, t.Any]
+    ]: ...  # pragma: no cover
 
     @t.overload
     def _post(
@@ -345,7 +351,7 @@ class JSONAPIHelper:
         must_have_content: bool | Sequence[int] = True,
         expected: Collection[int] | None = None,
         require_json_object: t.Literal[True],
-    ) -> tuple[dict[str, t.Any] | None, dict[str, t.Any]]: ...
+    ) -> tuple[dict[str, t.Any] | None, dict[str, t.Any]]: ...  # pragma: no cover
 
     @t.overload
     def _post(
@@ -357,7 +363,9 @@ class JSONAPIHelper:
         must_have_content: bool | Sequence[int] = True,
         expected: Collection[int] | None = None,
         require_json_object: bool = False,
-    ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]: ...
+    ) -> tuple[
+        dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]
+    ]: ...  # pragma: no cover
 
     def _post(
         self,
@@ -400,7 +408,7 @@ class JSONAPIHelper:
         must_have_content: t.Literal[True] = True,
         expected: Collection[int] | None = None,
         require_json_object: t.Literal[True],
-    ) -> tuple[dict[str, t.Any], dict[str, t.Any]]: ...
+    ) -> tuple[dict[str, t.Any], dict[str, t.Any]]: ...  # pragma: no cover
 
     @t.overload
     def _put(
@@ -412,7 +420,9 @@ class JSONAPIHelper:
         must_have_content: t.Literal[True] = True,
         expected: Collection[int] | None = None,
         require_json_object: bool = False,
-    ) -> tuple[dict[str, t.Any] | list[t.Any], dict[str, t.Any]]: ...
+    ) -> tuple[
+        dict[str, t.Any] | list[t.Any], dict[str, t.Any]
+    ]: ...  # pragma: no cover
 
     @t.overload
     def _put(
@@ -424,7 +434,7 @@ class JSONAPIHelper:
         must_have_content: bool | Sequence[int] = True,
         expected: Collection[int] | None = None,
         require_json_object: t.Literal[True],
-    ) -> tuple[dict[str, t.Any] | None, dict[str, t.Any]]: ...
+    ) -> tuple[dict[str, t.Any] | None, dict[str, t.Any]]: ...  # pragma: no cover
 
     @t.overload
     def _put(
@@ -436,7 +446,9 @@ class JSONAPIHelper:
         must_have_content: bool | Sequence[int] = True,
         expected: Collection[int] | None = None,
         require_json_object: bool = False,
-    ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]: ...
+    ) -> tuple[
+        dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]
+    ]: ...  # pragma: no cover
 
     def _put(
         self,
@@ -478,7 +490,7 @@ class JSONAPIHelper:
         must_have_content: t.Literal[True] = True,
         expected: Collection[int] | None = None,
         require_json_object: t.Literal[True],
-    ) -> tuple[dict[str, t.Any], dict[str, t.Any]]: ...
+    ) -> tuple[dict[str, t.Any], dict[str, t.Any]]: ...  # pragma: no cover
 
     @t.overload
     def _delete(
@@ -489,7 +501,9 @@ class JSONAPIHelper:
         must_have_content: t.Literal[True] = True,
         expected: Collection[int] | None = None,
         require_json_object: bool = False,
-    ) -> tuple[dict[str, t.Any] | list[t.Any], dict[str, t.Any]]: ...
+    ) -> tuple[
+        dict[str, t.Any] | list[t.Any], dict[str, t.Any]
+    ]: ...  # pragma: no cover
 
     @t.overload
     def _delete(
@@ -500,7 +514,7 @@ class JSONAPIHelper:
         must_have_content: bool | Sequence[int] = True,
         expected: Collection[int] | None = None,
         require_json_object: t.Literal[True],
-    ) -> tuple[dict[str, t.Any] | None, dict[str, t.Any]]: ...
+    ) -> tuple[dict[str, t.Any] | None, dict[str, t.Any]]: ...  # pragma: no cover
 
     @t.overload
     def _delete(
@@ -511,7 +525,9 @@ class JSONAPIHelper:
         must_have_content: bool | Sequence[int] = True,
         expected: Collection[int] | None = None,
         require_json_object: bool = False,
-    ) -> tuple[dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]]: ...
+    ) -> tuple[
+        dict[str, t.Any] | list[t.Any] | None, dict[str, t.Any]
+    ]: ...  # pragma: no cover
 
     def _delete(
         self,
