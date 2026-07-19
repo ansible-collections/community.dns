@@ -14,6 +14,7 @@ import os
 import re
 import sys
 import textwrap
+import traceback
 
 import yaml
 
@@ -349,7 +350,10 @@ def main(program, arguments):
                 )
 
     except Exception as e:
-        errors.append(f"{program}: Unexpected error: {e}")
+        backtrace = "\n".join(
+            f"{' ' * len(program)}  {line}" for line in traceback.format_exception(e)
+        )
+        errors.append(f"{program}: Unexpected error: {e}\n{backtrace}")
 
     for error in errors:
         print(error)
