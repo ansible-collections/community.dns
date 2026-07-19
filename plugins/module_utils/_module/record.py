@@ -43,6 +43,7 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_set_api
 )
 
 from ._utils import (
+    create_zone_name_id_argspec,
     get_prefix,
     get_zone_id_or_name_with_prefix_filter,
     normalize_dns_name,
@@ -61,36 +62,36 @@ if t.TYPE_CHECKING:  # pragma: no cover
 def create_module_argument_spec(
     provider_information: ProviderInformation,
 ) -> ArgumentSpec:
-    return ArgumentSpec(
-        argument_spec={
-            "state": {
-                "type": "str",
-                "choices": ["present", "absent"],
-                "required": True,
+    return (
+        ArgumentSpec(
+            argument_spec={
+                "state": {
+                    "type": "str",
+                    "choices": ["present", "absent"],
+                    "required": True,
+                },
+                "record": {"type": "str"},
+                "prefix": {"type": "str"},
+                "ttl": {
+                    "type": "int",
+                    "default": provider_information.get_record_default_ttl(),
+                },
+                "type": {
+                    "choices": provider_information.get_supported_record_types(),
+                    "required": True,
+                },
+                "value": {"type": "str", "required": True},
             },
-            "zone_name": {"type": "str", "aliases": ["zone"]},
-            "zone_id": {"type": provider_information.get_zone_id_type()},
-            "record": {"type": "str"},
-            "prefix": {"type": "str"},
-            "ttl": {
-                "type": "int",
-                "default": provider_information.get_record_default_ttl(),
-            },
-            "type": {
-                "choices": provider_information.get_supported_record_types(),
-                "required": True,
-            },
-            "value": {"type": "str", "required": True},
-        },
-        required_one_of=[
-            ("zone_name", "zone_id"),
-            ("record", "prefix"),
-        ],
-        mutually_exclusive=[
-            ("zone_name", "zone_id"),
-            ("record", "prefix"),
-        ],
-    ).merge(create_record_transformation_argspec())
+            required_one_of=[
+                ("record", "prefix"),
+            ],
+            mutually_exclusive=[
+                ("record", "prefix"),
+            ],
+        )
+        .merge(create_record_transformation_argspec())
+        .merge(create_zone_name_id_argspec(provider_information))
+    )
 
 
 def _run_module_record_api(

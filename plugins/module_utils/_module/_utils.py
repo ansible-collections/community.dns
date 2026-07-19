@@ -9,6 +9,9 @@ from __future__ import annotations
 
 import typing as t
 
+from ansible_collections.community.dns.plugins.module_utils._argspec import (
+    ArgumentSpec,
+)
 from ansible_collections.community.dns.plugins.module_utils._names import (
     join_labels,
     normalize_label,
@@ -22,6 +25,33 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 if t.TYPE_CHECKING:  # pragma: no cover
     from .._provider import ProviderInformation
     from .._zone_record_api import NotProvidedType
+
+
+def create_zone_name_id_argspec(
+    provider_information: ProviderInformation,
+) -> ArgumentSpec:
+    if provider_information.is_zone_id_equal_to_zone_name():
+        return ArgumentSpec(
+            argument_spec={
+                "zone_name": {
+                    "type": "str",
+                    "aliases": ["zone", "zone_id"],
+                    "required": True,
+                },
+            },
+        )
+    return ArgumentSpec(
+        argument_spec={
+            "zone_name": {"type": "str", "aliases": ["zone"]},
+            "zone_id": {"type": provider_information.get_zone_id_type()},
+        },
+        required_one_of=[
+            ("zone_name", "zone_id"),
+        ],
+        mutually_exclusive=[
+            ("zone_name", "zone_id"),
+        ],
+    )
 
 
 @t.overload
@@ -81,13 +111,14 @@ def get_prefix(
 def get_zone_id_or_name(
     module_params: dict[str, t.Any], provider_information: ProviderInformation
 ) -> tuple[str, None] | tuple[None, t.Any] | tuple[str, t.Any]:
+    zone_id_name_equal = provider_information.is_zone_id_equal_to_zone_name()
     zone_name: str | None = module_params["zone_name"]
-    zone_id: t.Any | None = module_params["zone_id"]
+    zone_id: t.Any | None = None if zone_id_name_equal else module_params["zone_id"]
     if zone_name is not None:
         zone_name = normalize_dns_name(zone_name)
     if zone_id is None:
         assert zone_name is not None
-        if provider_information.is_zone_id_equal_to_zone_name():
+        if zone_id_name_equal:
             return zone_name, zone_name
         return zone_name, None
     return None, zone_id

@@ -48,6 +48,7 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_set_api
 )
 
 from ._utils import (
+    create_zone_name_id_argspec,
     get_prefix,
     get_zone_id_or_name_with_prefix_filter,
     normalize_dns_name,
@@ -74,8 +75,6 @@ def create_module_argument_spec(
                     "choices": ["present", "absent"],
                     "required": True,
                 },
-                "zone_name": {"type": "str", "aliases": ["zone"]},
-                "zone_id": {"type": provider_information.get_zone_id_type()},
                 "record": {"type": "str"},
                 "prefix": {"type": "str"},
                 "ttl": {
@@ -94,11 +93,9 @@ def create_module_argument_spec(
                 },
             },
             required_one_of=[
-                ("zone_name", "zone_id"),
                 ("record", "prefix"),
             ],
             mutually_exclusive=[
-                ("zone_name", "zone_id"),
                 ("record", "prefix"),
             ],
             required_if=[
@@ -110,6 +107,7 @@ def create_module_argument_spec(
         )
         .merge(create_bulk_operations_argspec(provider_information))
         .merge(create_record_transformation_argspec())
+        .merge(create_zone_name_id_argspec(provider_information))
     )
 
 

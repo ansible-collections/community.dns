@@ -38,3 +38,31 @@ options:
       - The ID of the DNS zone to query.
       - Exactly one of O(zone_name) and O(zone_id) must be specified.
 """
+
+    NAME_ONLY_MODIFY = r"""
+options:
+  zone_name:
+    description:
+      - The DNS zone to modify.
+      - Note that the API does not allow to query by zone ID.
+        Therefore, O(zone_id) is an alias of O(zone_name) for compatibility with modules and plugins for other providers.
+    type: str
+    aliases:
+      - zone
+      - zone_id
+    required: true
+"""
+
+    NAME_ONLY_QUERY = r"""
+options:
+  zone_name:
+    description:
+      - The DNS zone to query.
+      - Note that the API does not allow to query by zone ID.
+        Therefore, O(zone_id) is an alias of O(zone_name) for compatibility with modules and plugins for other providers.
+    type: str
+    aliases:
+      - zone
+      - zone_id
+    required: true
+"""

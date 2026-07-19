@@ -36,6 +36,7 @@ from ansible_collections.community.dns.plugins.module_utils._zone_record_api imp
 )
 
 from ._utils import (
+    create_zone_name_id_argspec,
     get_prefix,
     get_zone_id_or_name_with_prefix_filter,
     normalize_dns_name,
@@ -55,36 +56,34 @@ if t.TYPE_CHECKING:  # pragma: no cover
 def create_module_argument_spec(
     provider_information: ProviderInformation,
 ) -> ArgumentSpec:
-    return ArgumentSpec(
-        argument_spec={
-            "what": {
-                "type": "str",
-                "choices": ["single_record", "all_types_for_record", "all_records"],
-                "default": "single_record",
+    return (
+        ArgumentSpec(
+            argument_spec={
+                "what": {
+                    "type": "str",
+                    "choices": ["single_record", "all_types_for_record", "all_records"],
+                    "default": "single_record",
+                },
+                "record": {"type": "str"},
+                "prefix": {"type": "str"},
+                "type": {
+                    "type": "str",
+                    "choices": provider_information.get_supported_record_types(),
+                    "default": None,
+                },
             },
-            "zone_name": {"type": "str", "aliases": ["zone"]},
-            "zone_id": {"type": provider_information.get_zone_id_type()},
-            "record": {"type": "str"},
-            "prefix": {"type": "str"},
-            "type": {
-                "type": "str",
-                "choices": provider_information.get_supported_record_types(),
-                "default": None,
-            },
-        },
-        required_if=[
-            ("what", "single_record", ["type"]),
-            ("what", "single_record", ["record", "prefix"], True),
-            ("what", "all_types_for_record", ["record", "prefix"], True),
-        ],
-        required_one_of=[
-            ("zone_name", "zone_id"),
-        ],
-        mutually_exclusive=[
-            ("zone_name", "zone_id"),
-            ("record", "prefix"),
-        ],
-    ).merge(create_record_transformation_argspec())
+            required_if=[
+                ("what", "single_record", ["type"]),
+                ("what", "single_record", ["record", "prefix"], True),
+                ("what", "all_types_for_record", ["record", "prefix"], True),
+            ],
+            mutually_exclusive=[
+                ("record", "prefix"),
+            ],
+        )
+        .merge(create_record_transformation_argspec())
+        .merge(create_zone_name_id_argspec(provider_information))
+    )
 
 
 def _run_module_record_api(

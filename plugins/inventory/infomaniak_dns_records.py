@@ -29,10 +29,9 @@ extends_documentation_fragment:
   - community.dns._infomaniak.plugin
   - community.dns._infomaniak.record_type_choices_records_inventory
   - community.dns._infomaniak.record_type_seealso
-  - community.dns._infomaniak.zone_id_type
   - community.dns._inventory_records
   - community.dns._options.record_transformation
-  - community.dns._zone_name_id.combined_query
+  - community.dns._zone_name_id.name_only_query
   - community.library_inventory_filtering_v1.inventory_filter
 
 notes:
