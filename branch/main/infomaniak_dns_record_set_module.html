@@ -7,7 +7,7 @@
 <meta content="2.24.0" name="antsibull-docs" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>community.dns.hetzner_dns_record_set module – Add or delete record sets in Hetzner DNS service &mdash; Community.Dns Collection  documentation</title>
+  <title>community.dns.infomaniak_dns_record_set module – Add or delete record sets in Infomaniak DNS service &mdash; Community.Dns Collection  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=41de9001" />
       <link rel="stylesheet" type="text/css" href="_static/css/ansible.css?v=b54c304f" />
       <link rel="stylesheet" type="text/css" href="_static/antsibull-minimal.css" />
@@ -22,8 +22,8 @@
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="community.dns.hetzner_dns_record_set_info module – Retrieve record sets in Hetzner DNS service" href="hetzner_dns_record_set_info_module.html" />
-    <link rel="prev" title="community.dns.hetzner_dns_record_info module – Retrieve records in Hetzner DNS service" href="hetzner_dns_record_info_module.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
+    <link rel="next" title="community.dns.infomaniak_dns_record_set_info module – Retrieve record sets in Infomaniak DNS service" href="infomaniak_dns_record_set_info_module.html" />
+    <link rel="prev" title="community.dns.infomaniak_dns_record_info module – Retrieve records in Infomaniak DNS service" href="infomaniak_dns_record_info_module.html" /><!-- extra head elements for Ansible beyond RTD Sphinx Theme -->
 
 
 
@@ -87,7 +87,19 @@
 <li class="toctree-l1"><a class="reference internal" href="adguardhome_rewrite_info_module.html">community.dns.adguardhome_rewrite_info module – Retrieve DNS rewrite rules from AdGuardHome</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_module.html">community.dns.hetzner_dns_record module – Add or delete a single record in Hetzner DNS service</a></li>
 <li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_info_module.html">community.dns.hetzner_dns_record_info module – Retrieve records in Hetzner DNS service</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">community.dns.hetzner_dns_record_set module – Add or delete record sets in Hetzner DNS service</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_set_module.html">community.dns.hetzner_dns_record_set module – Add or delete record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_set_info_module.html">community.dns.hetzner_dns_record_set_info module – Retrieve record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_sets_module.html">community.dns.hetzner_dns_record_sets module – Bulk synchronize DNS record sets in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_zone_info_module.html">community.dns.hetzner_dns_zone_info module – Retrieve zone information in Hetzner DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_module.html">community.dns.hosttech_dns_record module – Add or delete a single record in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_info_module.html">community.dns.hosttech_dns_record_info module – Retrieve records in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_set_module.html">community.dns.hosttech_dns_record_set module – Add or delete record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_set_info_module.html">community.dns.hosttech_dns_record_set_info module – Retrieve record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_sets_module.html">community.dns.hosttech_dns_record_sets module – Bulk synchronize DNS record sets in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_zone_info_module.html">community.dns.hosttech_dns_zone_info module – Retrieve zone information in Hosttech DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="infomaniak_dns_record_module.html">community.dns.infomaniak_dns_record module – Add or delete a single record in Infomaniak DNS service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="infomaniak_dns_record_info_module.html">community.dns.infomaniak_dns_record_info module – Retrieve records in Infomaniak DNS service</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">community.dns.infomaniak_dns_record_set module – Add or delete record sets in Infomaniak DNS service</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#synopsis">Synopsis</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#parameters">Parameters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#attributes">Attributes</a></li>
@@ -101,18 +113,6 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_set_info_module.html">community.dns.hetzner_dns_record_set_info module – Retrieve record sets in Hetzner DNS service</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_record_sets_module.html">community.dns.hetzner_dns_record_sets module – Bulk synchronize DNS record sets in Hetzner DNS service</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hetzner_dns_zone_info_module.html">community.dns.hetzner_dns_zone_info module – Retrieve zone information in Hetzner DNS service</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_module.html">community.dns.hosttech_dns_record module – Add or delete a single record in Hosttech DNS service</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_info_module.html">community.dns.hosttech_dns_record_info module – Retrieve records in Hosttech DNS service</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_set_module.html">community.dns.hosttech_dns_record_set module – Add or delete record sets in Hosttech DNS service</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_set_info_module.html">community.dns.hosttech_dns_record_set_info module – Retrieve record sets in Hosttech DNS service</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_record_sets_module.html">community.dns.hosttech_dns_record_sets module – Bulk synchronize DNS record sets in Hosttech DNS service</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hosttech_dns_zone_info_module.html">community.dns.hosttech_dns_zone_info module – Retrieve zone information in Hosttech DNS service</a></li>
-<li class="toctree-l1"><a class="reference internal" href="infomaniak_dns_record_module.html">community.dns.infomaniak_dns_record module – Add or delete a single record in Infomaniak DNS service</a></li>
-<li class="toctree-l1"><a class="reference internal" href="infomaniak_dns_record_info_module.html">community.dns.infomaniak_dns_record_info module – Retrieve records in Infomaniak DNS service</a></li>
-<li class="toctree-l1"><a class="reference internal" href="infomaniak_dns_record_set_module.html">community.dns.infomaniak_dns_record_set module – Add or delete record sets in Infomaniak DNS service</a></li>
 <li class="toctree-l1"><a class="reference internal" href="infomaniak_dns_record_set_info_module.html">community.dns.infomaniak_dns_record_set_info module – Retrieve record sets in Infomaniak DNS service</a></li>
 <li class="toctree-l1"><a class="reference internal" href="infomaniak_dns_record_sets_module.html">community.dns.infomaniak_dns_record_sets module – Bulk synchronize DNS record sets in Infomaniak DNS service</a></li>
 <li class="toctree-l1"><a class="reference internal" href="infomaniak_dns_zone_info_module.html">community.dns.infomaniak_dns_zone_info module – Retrieve zone information in Infomaniak DNS service</a></li>
@@ -156,10 +156,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">community.dns.hetzner_dns_record_set module – Add or delete record sets in Hetzner DNS service</li>
+      <li class="breadcrumb-item active">community.dns.infomaniak_dns_record_set module – Add or delete record sets in Infomaniak DNS service</li>
       <li class="wy-breadcrumbs-aside">
               <!-- User defined GitHub URL -->
-              <a href="https://github.com/ansible-collections/community.dns/edit/main/plugins/modules/hetzner_dns_record_set.py?description=%23%23%23%23%23%20SUMMARY%0A%3C!—%20Your%20description%20here%20–%3E%0A%0A%0A%23%23%23%23%23%20ISSUE%20TYPE%0A-%20Docs%20Pull%20Request%0A%0A%2Blabel:%20docsite_pr" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/ansible-collections/community.dns/edit/main/plugins/modules/infomaniak_dns_record_set.py?description=%23%23%23%23%23%20SUMMARY%0A%3C!—%20Your%20description%20here%20–%3E%0A%0A%0A%23%23%23%23%23%20ISSUE%20TYPE%0A-%20Docs%20Pull%20Request%0A%0A%2Blabel:%20docsite_pr" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -169,17 +169,17 @@
   
            <div itemprop="articleBody">
              
-  <span class="target" id="ansible-collections-community-dns-hetzner-dns-record-set-module"></span><section id="community-dns-hetzner-dns-record-set-module-add-or-delete-record-sets-in-hetzner-dns-service">
-<h1>community.dns.hetzner_dns_record_set module – Add or delete record sets in Hetzner DNS service<a class="headerlink" href="#community-dns-hetzner-dns-record-set-module-add-or-delete-record-sets-in-hetzner-dns-service" title="Link to this heading"></a></h1>
+  <span class="target" id="ansible-collections-community-dns-infomaniak-dns-record-set-module"></span><section id="community-dns-infomaniak-dns-record-set-module-add-or-delete-record-sets-in-infomaniak-dns-service">
+<h1>community.dns.infomaniak_dns_record_set module – Add or delete record sets in Infomaniak DNS service<a class="headerlink" href="#community-dns-infomaniak-dns-record-set-module-add-or-delete-record-sets-in-infomaniak-dns-service" title="Link to this heading"></a></h1>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This module is part of the <a class="reference external" href="https://galaxy.ansible.com/ui/repo/published/community/dns/">community.dns collection</a> (version 4.0.2).</p>
 <p>It is not included in <code class="docutils literal notranslate"><span class="pre">ansible-core</span></code>.
 To check whether it is installed, run <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">list</span></code>.</p>
 <p>To install it, use: <code class="code docutils literal notranslate"><span class="pre">ansible-galaxy</span> <span class="pre">collection</span> <span class="pre">install</span> <span class="pre">community.dns</span></code>.</p>
-<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">community.dns.hetzner_dns_record_set</span></code>.</p>
+<p>To use it in a playbook, specify: <code class="code docutils literal notranslate"><span class="pre">community.dns.infomaniak_dns_record_set</span></code>.</p>
 </div>
-<p class="ansible-version-added">New in community.dns 2.0.0</p>
+<p class="ansible-version-added">New in community.dns 4.1.0</p>
 <nav class="contents local" id="contents">
 <ul class="simple">
 <li><p><a class="reference internal" href="#synopsis" id="id1">Synopsis</a></p></li>
@@ -194,7 +194,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <section id="synopsis">
 <h2><a class="toc-backref" href="#id1" role="doc-backlink">Synopsis</a><a class="headerlink" href="#synopsis" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>Creates and deletes DNS record sets in Hetzner DNS service.</p></li>
+<li><p>Creates and deletes DNS record sets in Infomaniak DNS service.</p></li>
 </ul>
 </section>
 <section id="parameters">
@@ -207,44 +207,24 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-bulk_operation_threshold"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-bulk-operation-threshold"><strong>bulk_operation_threshold</strong></p>
-<a class="ansibleOptionLink" href="#parameter-bulk_operation_threshold" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
+<div class="ansibleOptionAnchor" id="parameter-infomaniak_token"></div>
+<div class="ansibleOptionAnchor" id="parameter-api_token"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-infomaniak-token"><span id="ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-api-token"></span><strong>infomaniak_token</strong></p>
+<a class="ansibleOptionLink" href="#parameter-infomaniak_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: api_token</span></p>
+<p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Determines the threshold from when on bulk operations are used.</p>
-<p>The default value 2 means that if 2 or more operations of a kind are planned, and the API supports bulk operations for this kind of operation, they will be used.</p>
-<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">2</span></code></p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-hetzner_api_token"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-hetzner-api-token"><strong>hetzner_api_token</strong></p>
-<a class="ansibleOptionLink" href="#parameter-hetzner_api_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The token for the new Hetzner DNS API.</p>
-<p>If not provided, will be read from the environment variable <a class="reference internal" href="environment_variables.html#envvar-HETZNER_API_TOKEN"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">HETZNER_API_TOKEN</span></code></a>.</p>
-<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-hetzner-token"><span class="std std-ref"><span class="pre">hetzner_token</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-hetzner-api-token"><span class="std std-ref"><span class="pre">hetzner_api_token</span></span></a></strong></code> must be provided.</p>
-</div></td>
-</tr>
-<tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-hetzner_token"></div>
-<div class="ansibleOptionAnchor" id="parameter-api_token"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-hetzner-token"><span id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-api-token"></span><strong>hetzner_token</strong></p>
-<a class="ansibleOptionLink" href="#parameter-hetzner_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: api_token</span></p>
-<p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-</div></td>
-<td><div class="ansible-option-cell"><p>The token for the classic Hetzner DNS API.</p>
-<p>If not provided, will be read from the environment variable <a class="reference internal" href="environment_variables.html#envvar-HETZNER_DNS_TOKEN"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">HETZNER_DNS_TOKEN</span></code></a>.</p>
-<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-hetzner-token"><span class="std std-ref"><span class="pre">hetzner_token</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-hetzner-api-token"><span class="std std-ref"><span class="pre">hetzner_api_token</span></span></a></strong></code> must be provided.</p>
+<td><div class="ansible-option-cell"><p>The token for Infomaniak’s DNS API.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-on_existing"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-on-existing"><strong>on_existing</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-on_existing"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-on-existing"><strong>on_existing</strong></p>
 <a class="ansibleOptionLink" href="#parameter-on_existing" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>This option defines the behavior if the record set already exists, but differs from the specified record set. For this comparison, <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-value"><span class="std std-ref"><span class="pre">value</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-ttl"><span class="std std-ref"><span class="pre">ttl</span></span></a></strong></code> are used for all records of type <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-type"><span class="std std-ref"><span class="pre">type</span></span></a></strong></code> matching the <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-prefix"><span class="std std-ref"><span class="pre">prefix</span></span></a></strong></code> resp. <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-record"><span class="std std-ref"><span class="pre">record</span></span></a></strong></code>.</p>
-<p>If set to <code class="ansible-value docutils literal notranslate"><span class="pre">replace</span></code>, the record will be updated (<code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>) or removed (<code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code>). This is the old <code class="ansible-option-value docutils literal notranslate"><span><span class="pre">overwrite=true</span></span></code> behavior.</p>
-<p>If set to <code class="ansible-value docutils literal notranslate"><span class="pre">keep_and_fail</span></code>, the module will fail and not modify the records. This is the old <code class="ansible-option-value docutils literal notranslate"><span><span class="pre">overwrite=false</span></span></code> behavior if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>.</p>
+<td><div class="ansible-option-cell"><p>This option defines the behavior if the record set already exists, but differs from the specified record set. For this comparison, <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-value"><span class="std std-ref"><span class="pre">value</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-ttl"><span class="std std-ref"><span class="pre">ttl</span></span></a></strong></code> are used for all records of type <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-type"><span class="std std-ref"><span class="pre">type</span></span></a></strong></code> matching the <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-prefix"><span class="std std-ref"><span class="pre">prefix</span></span></a></strong></code> resp. <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-record"><span class="std std-ref"><span class="pre">record</span></span></a></strong></code>.</p>
+<p>If set to <code class="ansible-value docutils literal notranslate"><span class="pre">replace</span></code>, the record will be updated (<code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>) or removed (<code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code>). This is the old <code class="ansible-option-value docutils literal notranslate"><span><span class="pre">overwrite=true</span></span></code> behavior.</p>
+<p>If set to <code class="ansible-value docutils literal notranslate"><span class="pre">keep_and_fail</span></code>, the module will fail and not modify the records. This is the old <code class="ansible-option-value docutils literal notranslate"><span><span class="pre">overwrite=false</span></span></code> behavior if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code>.</p>
 <p>If set to <code class="ansible-value docutils literal notranslate"><span class="pre">keep_and_warn</span></code>, the module will warn and not modify the records.</p>
-<p>If set to <code class="ansible-value docutils literal notranslate"><span class="pre">keep</span></code>, the module will not modify the records. This is the old <code class="ansible-option-value docutils literal notranslate"><span><span class="pre">overwrite=false</span></span></code> behavior if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code>.</p>
-<p>If <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code> and the value is not <code class="ansible-value docutils literal notranslate"><span class="pre">replace</span></code>, <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-value"><span class="std std-ref"><span class="pre">value</span></span></a></strong></code> must be specified.</p>
+<p>If set to <code class="ansible-value docutils literal notranslate"><span class="pre">keep</span></code>, the module will not modify the records. This is the old <code class="ansible-option-value docutils literal notranslate"><span><span class="pre">overwrite=false</span></span></code> behavior if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code>.</p>
+<p>If <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code> and the value is not <code class="ansible-value docutils literal notranslate"><span class="pre">replace</span></code>, <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-value"><span class="std std-ref"><span class="pre">value</span></span></a></strong></code> must be specified.</p>
 <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
 <ul class="simple">
 <li><p><code class="ansible-option-default-bold docutils literal notranslate"><strong><span class="pre">&quot;replace&quot;</span></strong></code> <span class="ansible-option-choices-default-mark">← (default)</span></p></li>
@@ -255,25 +235,25 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-prefix"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-prefix"><strong>prefix</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-prefix"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-prefix"><strong>prefix</strong></p>
 <a class="ansibleOptionLink" href="#parameter-prefix" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 <p><em class="ansible-option-versionadded">added in community.dns 0.2.0</em></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The prefix of the DNS record.</p>
-<p>This is the part of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-record"><span class="std std-ref"><span class="pre">record</span></span></a></strong></code> before <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code>. For example, if the record to be modified is <code class="docutils literal notranslate"><span class="pre">www.example.com</span></code> for the zone <code class="docutils literal notranslate"><span class="pre">example.com</span></code>, the prefix is <code class="ansible-value docutils literal notranslate"><span class="pre">www</span></code>. If the record in this example would be <code class="docutils literal notranslate"><span class="pre">example.com</span></code>, the prefix would be <code class="ansible-value docutils literal notranslate"><span class="pre">''</span></code> (empty string).</p>
-<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-record"><span class="std std-ref"><span class="pre">record</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-prefix"><span class="std std-ref"><span class="pre">prefix</span></span></a></strong></code> must be specified.</p>
+<p>This is the part of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-record"><span class="std std-ref"><span class="pre">record</span></span></a></strong></code> before <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code>. For example, if the record to be modified is <code class="docutils literal notranslate"><span class="pre">www.example.com</span></code> for the zone <code class="docutils literal notranslate"><span class="pre">example.com</span></code>, the prefix is <code class="ansible-value docutils literal notranslate"><span class="pre">www</span></code>. If the record in this example would be <code class="docutils literal notranslate"><span class="pre">example.com</span></code>, the prefix would be <code class="ansible-value docutils literal notranslate"><span class="pre">''</span></code> (empty string).</p>
+<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-record"><span class="std std-ref"><span class="pre">record</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-prefix"><span class="std std-ref"><span class="pre">prefix</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-record"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-record"><strong>record</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-record"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-record"><strong>record</strong></p>
 <a class="ansibleOptionLink" href="#parameter-record" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The full DNS record to create or delete.</p>
-<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-record"><span class="std std-ref"><span class="pre">record</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-prefix"><span class="std std-ref"><span class="pre">prefix</span></span></a></strong></code> must be specified.</p>
+<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-record"><span class="std std-ref"><span class="pre">record</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-prefix"><span class="std std-ref"><span class="pre">prefix</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-state"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-state"><strong>state</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-state"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-state"><strong>state</strong></p>
 <a class="ansibleOptionLink" href="#parameter-state" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Specifies the state of the resource record.</p>
@@ -285,18 +265,19 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-ttl"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-ttl"><strong>ttl</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-ttl"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-ttl"><strong>ttl</strong></p>
 <a class="ansibleOptionLink" href="#parameter-ttl" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The TTL to give the new record, in seconds.</p>
+<p class="ansible-option-line"><strong class="ansible-option-default-bold">Default:</strong> <code class="ansible-option-default docutils literal notranslate"><span class="pre">300</span></code></p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-txt_character_encoding"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-txt-character-encoding"><strong>txt_character_encoding</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-txt_character_encoding"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-txt-character-encoding"><strong>txt_character_encoding</strong></p>
 <a class="ansibleOptionLink" href="#parameter-txt_character_encoding" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 <p><em class="ansible-option-versionadded">added in community.dns 2.5.0</em></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Whether to treat numeric escape sequences (<code class="ansible-value docutils literal notranslate"><span class="pre">\xyz</span></code>) as octal or decimal numbers. This is only used when <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-txt-transformation"><span class="std std-ref"><span class="pre">txt_transformation=quoted</span></span></a></code>.</p>
+<td><div class="ansible-option-cell"><p>Whether to treat numeric escape sequences (<code class="ansible-value docutils literal notranslate"><span class="pre">\xyz</span></code>) as octal or decimal numbers. This is only used when <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-txt-transformation"><span class="std std-ref"><span class="pre">txt_transformation=quoted</span></span></a></code>.</p>
 <p>The default changed to <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> in community.dns 3.0.0. Before, the default used to be <code class="ansible-value docutils literal notranslate"><span class="pre">octal</span></code>. The value <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> is compatible to <a class="reference external" href="https://www.ietf.org/rfc/rfc1035.txt">RFC 1035</a>.</p>
 <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
 <ul class="simple">
@@ -306,7 +287,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-txt_transformation"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-txt-transformation"><strong>txt_transformation</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-txt_transformation"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-txt-transformation"><strong>txt_transformation</strong></p>
 <a class="ansibleOptionLink" href="#parameter-txt_transformation" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Determines how TXT entry values are converted between the API and this module’s input and output.</p>
@@ -314,7 +295,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <p>The value <code class="ansible-value docutils literal notranslate"><span class="pre">unquoted</span></code> automatically transforms values so that you can pass in unquoted values, and the module will return unquoted values. If you pass in quoted values, they will be double-quoted.</p>
 <p>The value <code class="ansible-value docutils literal notranslate"><span class="pre">quoted</span></code> automatically transforms values so that you must use quoting for values that contain spaces, characters such as quotation marks and backslashes, and that are longer than 255 bytes. It also makes sure to return values from the API in a normalized encoding.</p>
 <p>The default value, <code class="ansible-value docutils literal notranslate"><span class="pre">unquoted</span></code>, ensures that you can work with values without having to care about how to correctly quote for DNS. Most users should use one of <code class="ansible-value docutils literal notranslate"><span class="pre">unquoted</span></code> or <code class="ansible-value docutils literal notranslate"><span class="pre">quoted</span></code>, but not <code class="ansible-value docutils literal notranslate"><span class="pre">api</span></code>.</p>
-<p><strong>Note:</strong> the conversion code assumes UTF-8 encoding for values. If you need another encoding use <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-txt-transformation"><span class="std std-ref"><span class="pre">txt_transformation=api</span></span></a></code> and handle the encoding yourself.</p>
+<p><strong>Note:</strong> the conversion code assumes UTF-8 encoding for values. If you need another encoding use <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-txt-transformation"><span class="std std-ref"><span class="pre">txt_transformation=api</span></span></a></code> and handle the encoding yourself.</p>
 <p class="ansible-option-line"><strong class="ansible-option-choices">Choices:</strong></p>
 <ul class="simple">
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;api&quot;</span></code></p></li>
@@ -324,7 +305,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-type"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-type"><strong>type</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-type"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-type"><strong>type</strong></p>
 <a class="ansibleOptionLink" href="#parameter-type" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The type of DNS record to create or delete.</p>
@@ -334,50 +315,49 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;AAAA&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;CAA&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;CNAME&quot;</span></code></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;DANE&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;DNAME&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;DNSKEY&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;DS&quot;</span></code></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;HINFO&quot;</span></code></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;HTTPS&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;MX&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;NS&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;PTR&quot;</span></code></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;RP&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;SMIMEA&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;SOA&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;SRV&quot;</span></code></p></li>
-<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;SVCB&quot;</span></code></p></li>
+<li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;SSHFP&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;TLSA&quot;</span></code></p></li>
 <li><p><code class="ansible-option-choices-entry docutils literal notranslate"><span class="pre">&quot;TXT&quot;</span></code></p></li>
 </ul>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-value"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-value"><strong>value</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-value"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-value"><strong>value</strong></p>
 <a class="ansibleOptionLink" href="#parameter-value" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The new value when creating a DNS record.</p>
 <p>YAML lists or multiple comma-spaced values are allowed.</p>
 <p>When deleting a record all values for the record must be specified or it will not be deleted.</p>
-<p>Must be specified if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code> or when <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-on-existing"><span class="std std-ref"><span class="pre">on_existing</span></span></a></strong></code> is not <code class="ansible-value docutils literal notranslate"><span class="pre">replace</span></code>.</p>
-<p>Will be ignored if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code> and <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-on-existing"><span class="std std-ref"><span class="pre">on_existing=replace</span></span></a></code>.</p>
+<p>Must be specified if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=present</span></span></a></code> or when <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-on-existing"><span class="std std-ref"><span class="pre">on_existing</span></span></a></strong></code> is not <code class="ansible-value docutils literal notranslate"><span class="pre">replace</span></code>.</p>
+<p>Will be ignored if <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-state"><span class="std std-ref"><span class="pre">state=absent</span></span></a></code> and <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-on-existing"><span class="std std-ref"><span class="pre">on_existing=replace</span></span></a></code>.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-zone-id"><strong>zone_id</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-zone-id"><strong>zone_id</strong></p>
 <a class="ansibleOptionLink" href="#parameter-zone_id" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 <p><em class="ansible-option-versionadded">added in community.dns 0.2.0</em></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The ID of the DNS zone to modify.</p>
-<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
+<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-zone_name"></div>
-<div class="ansibleOptionAnchor" id="parameter-zone"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-zone-name"><span id="ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-zone"></span><strong>zone_name</strong></p>
+<div class="ansibleOptionAnchor" id="parameter-zone"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-zone-name"><span id="ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-zone"></span><strong>zone_name</strong></p>
 <a class="ansibleOptionLink" href="#parameter-zone_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: zone</span></p>
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The DNS zone to modify.</p>
-<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
+<p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-set-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
 </tbody>
@@ -394,16 +374,15 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="attribute-action_group"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-attribute-action-group"><strong>action_group</strong></p>
+<div class="ansibleOptionAnchor" id="attribute-action_group"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-attribute-action-group"><strong>action_group</strong></p>
 <a class="ansibleOptionLink" href="#attribute-action_group" title="Permalink to this attribute"></a></div></td>
-<td><div class="ansible-option-cell"><p><strong class="ansible-attribute-support-property">Action group:</strong> <strong class="ansible-attribute-support-full">community.dns.hetzner</strong></p>
-<p><em class="ansible-option-versionadded">added in community.dns 2.4.0</em></p>
+<td><div class="ansible-option-cell"><p><strong class="ansible-attribute-support-property">Action group:</strong> <strong class="ansible-attribute-support-full">community.dns.infomaniak</strong></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>Use <code class="docutils literal notranslate"><span class="pre">group/community.dns.hetzner</span></code> in <code class="docutils literal notranslate"><span class="pre">module_defaults</span></code> to set defaults for this module.</p>
+<td><div class="ansible-option-cell"><p>Use <code class="docutils literal notranslate"><span class="pre">group/community.dns.infomaniak</span></code> in <code class="docutils literal notranslate"><span class="pre">module_defaults</span></code> to set defaults for this module.</p>
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="attribute-check_mode"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-attribute-check-mode"><strong>check_mode</strong></p>
+<div class="ansibleOptionAnchor" id="attribute-check_mode"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-attribute-check-mode"><strong>check_mode</strong></p>
 <a class="ansibleOptionLink" href="#attribute-check_mode" title="Permalink to this attribute"></a></div></td>
 <td><div class="ansible-option-cell"><p><strong class="ansible-attribute-support-label">Support: </strong><strong class="ansible-attribute-support-full">full</strong></p>
 </div></td>
@@ -411,7 +390,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="attribute-diff_mode"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-attribute-diff-mode"><strong>diff_mode</strong></p>
+<div class="ansibleOptionAnchor" id="attribute-diff_mode"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-attribute-diff-mode"><strong>diff_mode</strong></p>
 <a class="ansibleOptionLink" href="#attribute-diff_mode" title="Permalink to this attribute"></a></div></td>
 <td><div class="ansible-option-cell"><p><strong class="ansible-attribute-support-label">Support: </strong><strong class="ansible-attribute-support-full">full</strong></p>
 </div></td>
@@ -419,7 +398,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="attribute-idempotent"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-attribute-idempotent"><strong>idempotent</strong></p>
+<div class="ansibleOptionAnchor" id="attribute-idempotent"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-attribute-idempotent"><strong>idempotent</strong></p>
 <a class="ansibleOptionLink" href="#attribute-idempotent" title="Permalink to this attribute"></a></div></td>
 <td><div class="ansible-option-cell"><p><strong class="ansible-attribute-support-label">Support: </strong><strong class="ansible-attribute-support-full">full</strong></p>
 </div></td>
@@ -435,7 +414,6 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>Note that not all record types are supported by both APIs. The old API (<code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-hetzner-token"><span class="std std-ref"><span class="pre">hetzner_token</span></span></a></strong></code>) does not support <code class="ansible-value docutils literal notranslate"><span class="pre">HTTPS</span></code>, <code class="ansible-value docutils literal notranslate"><span class="pre">PTR</span></code>, and <code class="ansible-value docutils literal notranslate"><span class="pre">SVCB</span></code> records. The new API (<code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-module-parameter-hetzner-api-token"><span class="std std-ref"><span class="pre">hetzner_api_token</span></span></a></strong></code>) does not support <code class="ansible-value docutils literal notranslate"><span class="pre">DANE</span></code> records.</p></li>
 <li><p>For <code class="docutils literal notranslate"><span class="pre">CNAME</span></code> records, use absolute DNS names for values. Absolute DNS names end with a trailing period <code class="docutils literal notranslate"><span class="pre">.</span></code>, for example <code class="docutils literal notranslate"><span class="pre">foo.example.com.</span></code>. If you use a relative DNS name, with no trailing period, the value will be relative to the zone of the <code class="docutils literal notranslate"><span class="pre">CNAME</span></code> record.</p></li>
 </ul>
 </div>
@@ -445,7 +423,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <dl class="simple">
-<dt><a class="reference internal" href="docsite/hetzner_guide.html#ansible-collections-community-dns-docsite-hetzner-guide-records"><span class="std std-ref">Supported DNS records</span></a></dt><dd><p>More information on supported DNS record types.</p>
+<dt><a class="reference internal" href="docsite/infomaniak_guide.html#ansible-collections-community-dns-docsite-infomaniak-guide-records"><span class="std std-ref">Supported DNS records</span></a></dt><dd><p>More information on supported DNS record types.</p>
 </dd>
 </dl>
 </div>
@@ -453,17 +431,17 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <section id="examples">
 <h2><a class="toc-backref" href="#id6" role="doc-backlink">Examples</a><a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add new.foo.com as an A record with 3 IPs</span>
-<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_set</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">community.dns.infomaniak_dns_record_set</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 <span class="w">    </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
 <span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">new.foo.com</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A</span>
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7200</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1,2.2.2.2,3.3.3.3</span>
-<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
+<span class="w">    </span><span class="nt">infomaniak_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Update new.foo.com as an A record with a list of 3 IPs</span>
-<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_set</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">community.dns.infomaniak_dns_record_set</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 <span class="w">    </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
 <span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">new.foo.com</span>
@@ -473,59 +451,59 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.1.1.1</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">2.2.2.2</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3.3.3.3</span>
-<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
+<span class="w">    </span><span class="nt">infomaniak_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Retrieve the details for new.foo.com</span>
-<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_set_info</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">community.dns.infomaniak_dns_record_set_info</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
 <span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">new.foo.com</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A</span>
-<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
+<span class="w">    </span><span class="nt">infomaniak_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 <span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rec</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Delete new.foo.com A record using the results from the facts retrieval command</span>
-<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_set</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">community.dns.infomaniak_dns_record_set</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
 <span class="w">    </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
 <span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">rec.set.record</span> <span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">rec.set.ttl</span> <span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">rec.set.type</span> <span class="cp">}}</span><span class="s">&quot;</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;</span><span class="cp">{{</span> <span class="nv">rec.set.value</span> <span class="cp">}}</span><span class="s">&quot;</span>
-<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
+<span class="w">    </span><span class="nt">infomaniak_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add an AAAA record</span>
 <span class="w">  </span><span class="c1"># Note that because there are colons in the value that the IPv6 address must be quoted!</span>
-<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_set</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">community.dns.infomaniak_dns_record_set</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 <span class="w">    </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
 <span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost.foo.com</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AAAA</span>
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7200</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;::1&quot;</span>
-<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
+<span class="w">    </span><span class="nt">infomaniak_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add a TXT record</span>
-<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_set</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">community.dns.infomaniak_dns_record_set</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 <span class="w">    </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
 <span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost.foo.com</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TXT</span>
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7200</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;bar&#39;</span>
-<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
+<span class="w">    </span><span class="nt">infomaniak_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Remove the TXT record</span>
-<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_set</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">community.dns.infomaniak_dns_record_set</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absent</span>
 <span class="w">    </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
 <span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost.foo.com</span>
 <span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TXT</span>
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7200</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;bar&#39;</span>
-<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
+<span class="w">    </span><span class="nt">infomaniak_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add a CAA record</span>
-<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_set</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">community.dns.infomaniak_dns_record_set</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 <span class="w">    </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
 <span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
@@ -533,10 +511,10 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;128</span><span class="nv"> </span><span class="s">issue</span><span class="nv"> </span><span class="s">&quot;letsencrypt.org&quot;&#39;</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&#39;128</span><span class="nv"> </span><span class="s">iodef</span><span class="nv"> </span><span class="s">&quot;mailto:webmaster@foo.com&quot;&#39;</span>
-<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
+<span class="w">    </span><span class="nt">infomaniak_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add an MX record</span>
-<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_set</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">community.dns.infomaniak_dns_record_set</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 <span class="w">    </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
 <span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
@@ -544,10 +522,10 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;10</span><span class="nv"> </span><span class="s">mail.foo.com&quot;</span>
-<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
+<span class="w">    </span><span class="nt">infomaniak_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add a CNAME record</span>
-<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_set</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">community.dns.infomaniak_dns_record_set</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 <span class="w">    </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bla.foo.com</span>
 <span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
@@ -555,10 +533,10 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.foo.com</span>
-<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
+<span class="w">    </span><span class="nt">infomaniak_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add a PTR record</span>
-<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_set</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">community.dns.infomaniak_dns_record_set</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 <span class="w">    </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.foo.com</span>
 <span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
@@ -566,10 +544,10 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.foo.com</span>
-<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
+<span class="w">    </span><span class="nt">infomaniak_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add an SPF record</span>
-<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_set</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">community.dns.infomaniak_dns_record_set</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 <span class="w">    </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
 <span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
@@ -577,10 +555,10 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;v=spf1</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">mx</span><span class="nv"> </span><span class="s">~all&quot;</span>
-<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
+<span class="w">    </span><span class="nt">infomaniak_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Add a PTR record</span>
-<span class="w">  </span><span class="nt">community.dns.hetzner_dns_record_set</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">community.dns.infomaniak_dns_record_set</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span>
 <span class="w">    </span><span class="nt">zone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
 <span class="w">    </span><span class="nt">record</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.com</span>
@@ -588,7 +566,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <span class="w">    </span><span class="nt">ttl</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3600</span>
 <span class="w">    </span><span class="nt">value</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;10</span><span class="nv"> </span><span class="s">100</span><span class="nv"> </span><span class="s">3333</span><span class="nv"> </span><span class="s">service.foo.com&quot;</span>
-<span class="w">    </span><span class="nt">hetzner_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
+<span class="w">    </span><span class="nt">infomaniak_token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access_token</span>
 </pre></div>
 </div>
 </section>
@@ -603,12 +581,12 @@ To check whether it is installed, run <code class="code docutils literal notrans
 </thead>
 <tbody>
 <tr class="row-even"><td><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="return-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-module-return-zone-id"><strong>zone_id</strong></p>
+<div class="ansibleOptionAnchor" id="return-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-set-module-return-zone-id"><strong>zone_id</strong></p>
 <a class="ansibleOptionLink" href="#return-zone_id" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The ID of the zone.</p>
 <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
-<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">&quot;23&quot;</span></code></p>
+<p class="ansible-option-line ansible-option-sample"><strong class="ansible-option-sample-bold">Sample:</strong> <code class="ansible-option-sample docutils literal notranslate"><span class="pre">&quot;foo.com&quot;</span></code></p>
 </div></td>
 </tr>
 </tbody>
@@ -616,7 +594,6 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <section id="authors">
 <h3>Authors<a class="headerlink" href="#authors" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Markus Bergholz (&#64;markuman)</p></li>
 <li><p>Felix Fontein (&#64;felixfontein)</p></li>
 </ul>
 </section>
@@ -640,8 +617,8 @@ To check whether it is installed, run <code class="code docutils literal notrans
           
 
 <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="hetzner_dns_record_info_module.html" class="btn btn-neutral float-left" title="community.dns.hetzner_dns_record_info module – Retrieve records in Hetzner DNS service" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="hetzner_dns_record_set_info_module.html" class="btn btn-neutral float-right" title="community.dns.hetzner_dns_record_set_info module – Retrieve record sets in Hetzner DNS service" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="infomaniak_dns_record_info_module.html" class="btn btn-neutral float-left" title="community.dns.infomaniak_dns_record_info module – Retrieve records in Infomaniak DNS service" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="infomaniak_dns_record_set_info_module.html" class="btn btn-neutral float-right" title="community.dns.infomaniak_dns_record_set_info module – Retrieve record sets in Infomaniak DNS service" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
