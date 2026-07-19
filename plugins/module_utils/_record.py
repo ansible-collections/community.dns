@@ -93,11 +93,13 @@ class DNSRecord(t.Generic[RecordIDT]):
 
 
 @t.overload
-def sorted_ttls(ttls: Collection[int]) -> list[int]: ...
+def sorted_ttls(ttls: Collection[int]) -> list[int]: ...  # pragma: no cover
 
 
 @t.overload
-def sorted_ttls(ttls: Collection[int | None]) -> list[int | None]: ...
+def sorted_ttls(
+    ttls: Collection[int | None],
+) -> list[int | None]: ...  # pragma: no cover
 
 
 def sorted_ttls(ttls: Collection[int | None]) -> list[int | None] | list[int]:

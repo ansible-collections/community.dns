@@ -66,13 +66,13 @@ def _create_zone_from_json(source: dict[str, t.Any]) -> DNSZone[str]:
 @t.overload
 def _create_record_from_json(
     source: t.Any, *, record_type: str | None = None, has_id: t.Literal[True] = True
-) -> DNSRecord[str]: ...
+) -> DNSRecord[str]: ...  # pragma: no cover
 
 
 @t.overload
 def _create_record_from_json(
     source: t.Any, *, record_type: str | None = None, has_id: t.Literal[False]
-) -> DNSRecord[str | None]: ...
+) -> DNSRecord[str | None]: ...  # pragma: no cover
 
 
 def _create_record_from_json(
@@ -661,7 +661,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI[str, str, str], JSONAPIHelper):
         query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
         block_size: int = 100,
         accept_404: t.Literal[False] = False,
-    ) -> list[t.Any]: ...
+    ) -> list[t.Any]: ...  # pragma: no cover
 
     @t.overload
     def _list_pagination(
@@ -672,7 +672,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI[str, str, str], JSONAPIHelper):
         query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
         block_size: int = 100,
         accept_404: t.Literal[True],
-    ) -> list[t.Any] | None: ...
+    ) -> list[t.Any] | None: ...  # pragma: no cover
 
     def _list_pagination(
         self,
@@ -969,7 +969,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI[str, str, str], JSONAPIHelper):
                 DNSAPIError | None,
             ]
         ],
-    ]: ...
+    ]: ...  # pragma: no cover
 
     @t.overload
     def _collect_results(
@@ -988,7 +988,7 @@ class _HetznerNewAPI(ZoneRecordSetAPI[str, str, str], JSONAPIHelper):
     ) -> dict[
         str,
         list[tuple[DNSRecordSet[str, str], bool, DNSAPIError | None]],
-    ]: ...
+    ]: ...  # pragma: no cover
 
     def _collect_results(
         self,
