@@ -28,6 +28,7 @@ extends_documentation_fragment:
   - community.dns._options.record_transformation
   - community.dns._attributes
   - community.dns._attributes.actiongroup_hetzner
+  - community.dns._zone_name_id.combined_modify
 
 attributes:
   action_group:

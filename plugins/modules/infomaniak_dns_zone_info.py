@@ -22,6 +22,7 @@ extends_documentation_fragment:
   - community.dns._attributes.actiongroup_infomaniak
   - community.dns._attributes.info_module
   - community.dns._attributes.idempotent_not_modify_state
+  - community.dns._zone_name_id.combined_query
 
 author:
   - Felix Fontein (@felixfontein)

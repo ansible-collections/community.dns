@@ -28,6 +28,7 @@ extends_documentation_fragment:
   - community.dns._options.record_transformation
   - community.dns._attributes
   - community.dns._attributes.actiongroup_infomaniak
+  - community.dns._zone_name_id.combined_query
 
 author:
   - Felix Fontein (@felixfontein)

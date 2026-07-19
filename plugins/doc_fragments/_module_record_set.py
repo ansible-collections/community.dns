@@ -29,17 +29,7 @@ options:
     required: true
     choices: ['present', 'absent']
     type: str
-  zone_name:
-    description:
-      - The DNS zone to modify.
-      - Exactly one of O(zone_name) and O(zone_id) must be specified.
-    type: str
-    aliases:
-      - zone
   zone_id:
-    description:
-      - The ID of the DNS zone to modify.
-      - Exactly one of O(zone_name) and O(zone_id) must be specified.
     version_added: 0.2.0
   record:
     description:

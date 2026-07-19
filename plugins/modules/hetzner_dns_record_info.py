@@ -25,6 +25,7 @@ extends_documentation_fragment:
   - community.dns._attributes.actiongroup_hetzner
   - community.dns._attributes.info_module
   - community.dns._attributes.idempotent_not_modify_state
+  - community.dns._zone_name_id.combined_query
 
 attributes:
   action_group:
