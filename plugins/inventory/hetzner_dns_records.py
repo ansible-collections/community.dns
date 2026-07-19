@@ -25,6 +25,8 @@ options:
       - community.dns.hetzner_dns_records
     type: str
 
+  txt_character_encoding:
+    version_added: 2.5.0
   filters:
     version_added: 3.0.0
 
@@ -36,6 +38,7 @@ extends_documentation_fragment:
   - community.dns._hetzner.zone_id_type
   - community.dns._inventory_records
   - community.dns._options.record_transformation
+  - community.dns._zone_name_id.combined_query
   - community.library_inventory_filtering_v1.inventory_filter
 
 notes:

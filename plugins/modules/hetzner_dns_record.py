@@ -17,6 +17,9 @@ description:
   - If you do not want to add/remove values, but replace values, you will be interested in modifying a B(record set) and not
     a single record. This is in particular important when working with C(CNAME) and C(SOA) records. Use the M(community.dns.hetzner_dns_record_set)
     module for working with record sets.
+options:
+  txt_character_encoding:
+    version_added: 2.5.0
 extends_documentation_fragment:
   - community.dns._hetzner
   - community.dns._hetzner.record_default_ttl
@@ -28,6 +31,7 @@ extends_documentation_fragment:
   - community.dns._options.record_transformation
   - community.dns._attributes
   - community.dns._attributes.actiongroup_hetzner
+  - community.dns._zone_name_id.combined_modify
 
 attributes:
   action_group:

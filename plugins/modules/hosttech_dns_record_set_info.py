@@ -16,6 +16,13 @@ description:
   - Retrieves DNS record sets in Hosttech DNS service.
   - This module was renamed from C(community.dns.hosttech_dns_record_info) to M(community.dns.hosttech_dns_record_set_info)
     in community.dns 2.0.0.
+options:
+  prefix:
+    version_added: 0.2.0
+  txt_character_encoding:
+    version_added: 2.5.0
+  zone_id:
+    version_added: 0.2.0
 extends_documentation_fragment:
   - community.dns._hosttech
   - community.dns._hosttech.record_type_choices
@@ -27,6 +34,7 @@ extends_documentation_fragment:
   - community.dns._attributes.actiongroup_hosttech
   - community.dns._attributes.info_module
   - community.dns._attributes.idempotent_not_modify_state
+  - community.dns._zone_name_id.combined_query
 
 attributes:
   action_group:

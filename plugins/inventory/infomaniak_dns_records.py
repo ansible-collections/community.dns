@@ -1,5 +1,4 @@
-# Copyright (c) 2021 Felix Fontein
-# Copyright (c) 2020 Markus Bergholz <markuman+spambelongstogoogle@gmail.com>
+# Copyright (c) 2026 Felix Fontein
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -33,6 +32,7 @@ extends_documentation_fragment:
   - community.dns._infomaniak.zone_id_type
   - community.dns._inventory_records
   - community.dns._options.record_transformation
+  - community.dns._zone_name_id.combined_query
   - community.library_inventory_filtering_v1.inventory_filter
 
 notes:

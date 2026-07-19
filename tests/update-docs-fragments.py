@@ -14,6 +14,7 @@ import os
 import re
 import sys
 import textwrap
+import traceback
 
 import yaml
 
@@ -297,7 +298,7 @@ def augment_fragment(provider_fragment, provider_info):
                 if part not in insertion_pos:
                     insertion_pos[part] = {}
                 insertion_pos = insertion_pos[part]
-                original_pos = original_pos[part]
+                original_pos = original_pos.get(part) or {}
                 if depth >= 2:
                     for x in original_pos:
                         if x not in insertion_pos:
@@ -349,7 +350,10 @@ def main(program, arguments):
                 )
 
     except Exception as e:
-        errors.append(f"{program}: Unexpected error: {e}")
+        backtrace = "\n".join(
+            f"{' ' * len(program)}  {line}" for line in traceback.format_exception(e)
+        )
+        errors.append(f"{program}: Unexpected error: {e}\n{backtrace}")
 
     for error in errors:
         print(error)

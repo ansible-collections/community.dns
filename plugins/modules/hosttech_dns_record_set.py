@@ -15,6 +15,9 @@ version_added: 2.0.0
 description:
   - Creates and deletes DNS record sets in Hosttech DNS service.
   - This module replaces C(hosttech_dns_record) from community.dns before 2.0.0.
+options:
+  txt_character_encoding:
+    version_added: 2.5.0
 extends_documentation_fragment:
   - community.dns._hosttech
   - community.dns._hosttech.record_default_ttl
@@ -26,6 +29,7 @@ extends_documentation_fragment:
   - community.dns._options.record_transformation
   - community.dns._attributes
   - community.dns._attributes.actiongroup_hosttech
+  - community.dns._zone_name_id.combined_modify
 
 attributes:
   action_group:
@@ -188,7 +192,6 @@ zone_id:
   type: int
   returned: success
   sample: 23
-  version_added: 0.2.0
 """
 
 from ansible.module_utils.basic import AnsibleModule

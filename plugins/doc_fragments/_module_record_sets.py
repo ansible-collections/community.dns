@@ -25,17 +25,6 @@ attributes:
   idempotent:
     support: full
 options:
-  zone_name:
-    description:
-      - The DNS zone to modify.
-      - Exactly one of O(zone_name) and O(zone_id) must be specified.
-    type: str
-    aliases:
-      - zone
-  zone_id:
-    description:
-      - The ID of the DNS zone to modify.
-      - Exactly one of O(zone_name) and O(zone_id) must be specified.
   prune:
     description:
       - If set to V(true), will remove all existing records in the zone that are not listed in O(record_sets).

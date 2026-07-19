@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# Copyright (c) 2021 Felix Fontein
+# Copyright (c) 2026 Felix Fontein
 # GNU General Public License v3.0+ (see LICENSES/GPL-3.0-or-later.txt or https://www.gnu.org/licenses/gpl-3.0.txt)
 # SPDX-License-Identifier: GPL-3.0-or-later
 
@@ -24,6 +24,7 @@ extends_documentation_fragment:
   - community.dns._options.record_transformation
   - community.dns._attributes
   - community.dns._attributes.actiongroup_infomaniak
+  - community.dns._zone_name_id.combined_modify
 
 author:
   - Felix Fontein (@felixfontein)

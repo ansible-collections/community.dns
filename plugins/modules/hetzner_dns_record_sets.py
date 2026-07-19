@@ -14,6 +14,9 @@ version_added: 2.0.0
 
 description:
   - Bulk synchronize DNS record sets in Hetzner DNS service.
+options:
+  txt_character_encoding:
+    version_added: 2.5.0
 extends_documentation_fragment:
   - community.dns._hetzner
   - community.dns._hetzner.record_notes
@@ -25,6 +28,7 @@ extends_documentation_fragment:
   - community.dns._options.record_transformation
   - community.dns._attributes
   - community.dns._attributes.actiongroup_hetzner
+  - community.dns._zone_name_id.combined_modify
 
 attributes:
   action_group:
