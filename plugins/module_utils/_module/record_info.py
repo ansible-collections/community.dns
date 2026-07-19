@@ -100,13 +100,26 @@ def _run_module_record_api(
         provider_information,
         use_prefix_or_record=module.params["what"] != "all_records",
     )
-    if zone_name_in is not None:
+    if provider_information.is_zone_id_equal_to_zone_name():
+        zone_records = api.get_zone_records(
+            zone_id_in,  # type: ignore
+            prefix=filter_prefix,
+            record_type=filter_record_type,
+        )
+        if zone_records is None:
+            module.fail_json(msg="Zone not found")
+        assert zone_name_in is not None
+        zone_in = zone_name_in
+        zone_id: ZoneIDT = zone_name_in  # type: ignore
+    elif zone_name_in is not None:
         zone_in = zone_name_in
         zone = api.get_zone_with_records_by_name(
             zone_in, prefix=filter_prefix, record_type=filter_record_type
         )
         if zone is None:
             module.fail_json(msg="Zone not found")
+        zone_records = zone.records
+        zone_id = zone.zone.id
     else:
         zone = api.get_zone_with_records_by_id(
             zone_id_in,  # type: ignore
@@ -116,6 +129,8 @@ def _run_module_record_api(
         if zone is None:
             module.fail_json(msg="Zone not found")
         zone_in = normalize_dns_name(zone.zone.name)
+        zone_records = zone.records
+        zone_id = zone.zone.id
 
     # Retrieve requested information
     records = []
@@ -134,7 +149,7 @@ def _run_module_record_api(
         prefix = None
 
     # Find matching records
-    for record in zone.records:
+    for record in zone_records:
         if check_prefix and record.prefix != prefix:
             continue
         records.append(
@@ -157,7 +172,7 @@ def _run_module_record_api(
     module.exit_json(
         changed=False,
         records=data,
-        zone_id=zone.zone.id,
+        zone_id=zone_id,
     )
 
 
@@ -174,13 +189,26 @@ def _run_module_record_set_api(
         provider_information,
         use_prefix_or_record=module.params["what"] != "all_records",
     )
-    if zone_name_in is not None:
+    if provider_information.is_zone_id_equal_to_zone_name():
+        zone_record_sets = api.get_zone_record_sets(
+            zone_id_in,  # type: ignore
+            prefix=filter_prefix,
+            record_type=filter_record_type,
+        )
+        if zone_record_sets is None:
+            module.fail_json(msg="Zone not found")
+        assert zone_name_in is not None
+        zone_in = zone_name_in
+        zone_id: ZoneIDT = zone_name_in  # type: ignore
+    elif zone_name_in is not None:
         zone_in = zone_name_in
         zone = api.get_zone_with_record_sets_by_name(
             zone_in, prefix=filter_prefix, record_type=filter_record_type
         )
         if zone is None:
             module.fail_json(msg="Zone not found")
+        zone_record_sets = zone.record_sets
+        zone_id = zone.zone.id
     else:
         zone = api.get_zone_with_record_sets_by_id(
             zone_id_in,  # type: ignore
@@ -190,6 +218,8 @@ def _run_module_record_set_api(
         if zone is None:
             module.fail_json(msg="Zone not found")
         zone_in = normalize_dns_name(zone.zone.name)
+        zone_record_sets = zone.record_sets
+        zone_id = zone.zone.id
 
     # Retrieve requested information
     if module.params["what"] in ("single_record", "all_types_for_record"):
@@ -208,7 +238,7 @@ def _run_module_record_set_api(
 
     # Find matching records
     records = []
-    for record_set in zone.record_sets:
+    for record_set in zone_record_sets:
         if check_prefix and record_set.prefix != prefix:
             continue
         records.extend(
@@ -234,7 +264,7 @@ def _run_module_record_set_api(
     module.exit_json(
         changed=False,
         records=data,
-        zone_id=zone.zone.id,
+        zone_id=zone_id,
     )
 
 

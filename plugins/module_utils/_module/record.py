@@ -106,7 +106,24 @@ def _run_module_record_api(
     zone_name_in, zone_id_in, filter_prefix = get_zone_id_or_name_with_prefix_filter(
         module.params, provider_information, use_prefix_or_record=True
     )
-    if zone_name_in is not None:
+    if provider_information.is_zone_id_equal_to_zone_name():
+        records = api.get_zone_records(
+            zone_id_in,  # type: ignore
+            prefix=filter_prefix,
+            record_type=type_in,
+        )
+        if records is None:
+            module.fail_json(msg="Zone not found")
+        assert zone_name_in is not None
+        zone_in = zone_name_in
+        zone_id: ZoneIDT = zone_name_in  # type: ignore
+        record_in, prefix = get_prefix(
+            normalized_zone=zone_in,
+            normalized_record=record_in,
+            prefix=prefix_in,
+            provider_information=provider_information,
+        )
+    elif zone_name_in is not None:
         zone_in = zone_name_in
         record_in, prefix = get_prefix(
             normalized_zone=zone_in,
@@ -246,7 +263,24 @@ def _run_module_record_set_api(
     zone_name_in, zone_id_in, filter_prefix = get_zone_id_or_name_with_prefix_filter(
         module.params, provider_information, use_prefix_or_record=True
     )
-    if zone_name_in is not None:
+    if provider_information.is_zone_id_equal_to_zone_name():
+        record_sets = api.get_zone_record_sets(
+            zone_id_in,  # type: ignore
+            prefix=filter_prefix,
+            record_type=type_in,
+        )
+        if record_sets is None:
+            module.fail_json(msg="Zone not found")
+        assert zone_name_in is not None
+        zone_in = zone_name_in
+        zone_id: ZoneIDT = zone_name_in  # type: ignore
+        record_in, prefix = get_prefix(
+            normalized_zone=zone_in,
+            normalized_record=record_in,
+            prefix=prefix_in,
+            provider_information=provider_information,
+        )
+    elif zone_name_in is not None:
         zone_in = zone_name_in
         record_in, prefix = get_prefix(
             normalized_zone=zone_in,

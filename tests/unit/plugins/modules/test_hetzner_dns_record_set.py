@@ -160,12 +160,19 @@ class TestHetznerDNSRecordJSON(BaseTestModule):
                 .expect_header("auth-api-token", "foo")
                 .expect_url("https://dns.hetzner.com/api/v1/zones", without_query=True)
                 .expect_query_values("name", "example.org")
-                .result_json({"message": "Invalid authentication credentials"}),
+                .result_json(
+                    {
+                        "error": {
+                            "message": "Invalid authentication credentials",
+                            "code": 401,
+                        }
+                    }
+                ),
             ],
         )
 
         assert result["msg"] == (
-            "Cannot authenticate: Unauthorized: the authentication parameters are incorrect (HTTP status 401): Invalid authentication credentials"
+            "Cannot authenticate: Unauthorized: the authentication parameters are incorrect (HTTP status 401)"
         )
 
     def test_other_error(self, mocker):

@@ -21,6 +21,9 @@ class CustomProviderInformation(ProviderInformation):
     def get_zone_id_type(self):
         return "str"  # pragma: no cover
 
+    def is_zone_id_equal_to_zone_name(self) -> bool:
+        return False  # pragma: no cover
+
     def get_record_id_type(self):
         return "str"  # pragma: no cover
 

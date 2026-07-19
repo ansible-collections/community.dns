@@ -68,6 +68,16 @@ attributes:
       - community.dns.hosttech
 """
 
+    ACTIONGROUP_INFOMANIAK = r"""
+options: {}
+attributes:
+  action_group:
+    description: Use C(group/community.dns.infomaniak) in C(module_defaults) to set defaults for this module.
+    support: full
+    membership:
+      - community.dns.infomaniak
+"""
+
     CONN = r"""
 options: {}
 attributes:
