@@ -230,7 +230,6 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <div class="ansibleOptionAnchor" id="parameter-api_token"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-hosttech-token"><span id="ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-api-token"></span><strong>hosttech_token</strong></p>
 <a class="ansibleOptionLink" href="#parameter-hosttech_token" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: api_token</span></p>
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-<p><em class="ansible-option-versionadded">added in community.dns 0.2.0</em></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The password for the Hosttech API user.</p>
 <p>Mutually exclusive with <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-hosttech-username"><span class="std std-ref"><span class="pre">hosttech_username</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-hosttech-password"><span class="std std-ref"><span class="pre">hosttech_password</span></span></a></strong></code>.</p>
@@ -268,7 +267,6 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-prefix"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-prefix"><strong>prefix</strong></p>
 <a class="ansibleOptionLink" href="#parameter-prefix" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-<p><em class="ansible-option-versionadded">added in community.dns 0.2.0</em></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The prefix of the DNS record.</p>
 <p>This is the part of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-record"><span class="std std-ref"><span class="pre">record</span></span></a></strong></code> before <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code>. For example, if the record to be modified is <code class="docutils literal notranslate"><span class="pre">www.example.com</span></code> for the zone <code class="docutils literal notranslate"><span class="pre">example.com</span></code>, the prefix is <code class="ansible-value docutils literal notranslate"><span class="pre">www</span></code>. If the record in this example would be <code class="docutils literal notranslate"><span class="pre">example.com</span></code>, the prefix would be <code class="ansible-value docutils literal notranslate"><span class="pre">''</span></code> (empty string).</p>
@@ -369,7 +367,6 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-zone-id"><strong>zone_id</strong></p>
 <a class="ansibleOptionLink" href="#parameter-zone_id" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
-<p><em class="ansible-option-versionadded">added in community.dns 0.2.0</em></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The ID of the DNS zone to modify.</p>
 <p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hosttech-dns-record-set-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
@@ -607,7 +604,6 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="return-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hosttech-dns-record-set-module-return-zone-id"><strong>zone_id</strong></p>
 <a class="ansibleOptionLink" href="#return-zone_id" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">integer</span></p>
-<p><em class="ansible-option-versionadded">added in community.dns 0.2.0</em></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The ID of the zone.</p>
 <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>

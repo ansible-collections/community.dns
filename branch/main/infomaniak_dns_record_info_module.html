@@ -233,7 +233,6 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <tr class="row-odd"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-txt_character_encoding"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-info-module-parameter-txt-character-encoding"><strong>txt_character_encoding</strong></p>
 <a class="ansibleOptionLink" href="#parameter-txt_character_encoding" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-<p><em class="ansible-option-versionadded">added in community.dns 2.5.0</em></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>Whether to treat numeric escape sequences (<code class="ansible-value docutils literal notranslate"><span class="pre">\xyz</span></code>) as octal or decimal numbers. This is only used when <code class="ansible-option-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-info-module-parameter-txt-transformation"><span class="std std-ref"><span class="pre">txt_transformation=quoted</span></span></a></code>.</p>
 <p>The default changed to <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> in community.dns 3.0.0. Before, the default used to be <code class="ansible-value docutils literal notranslate"><span class="pre">octal</span></code>. The value <code class="ansible-value docutils literal notranslate"><span class="pre">decimal</span></code> is compatible to <a class="reference external" href="https://www.ietf.org/rfc/rfc1035.txt">RFC 1035</a>.</p>
@@ -307,7 +306,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <div class="ansibleOptionAnchor" id="parameter-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-infomaniak-dns-record-info-module-parameter-zone-id"><strong>zone_id</strong></p>
 <a class="ansibleOptionLink" href="#parameter-zone_id" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>The ID of the DNS zone to modify.</p>
+<td><div class="ansible-option-cell"><p>The ID of the DNS zone to query.</p>
 <p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-info-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-info-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
@@ -317,7 +316,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <a class="ansibleOptionLink" href="#parameter-zone_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: zone</span></p>
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>The DNS zone to modify.</p>
+<td><div class="ansible-option-cell"><p>The DNS zone to query.</p>
 <p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-info-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-infomaniak-dns-record-info-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>

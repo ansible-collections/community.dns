@@ -229,7 +229,6 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-prefix"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-info-module-parameter-prefix"><strong>prefix</strong></p>
 <a class="ansibleOptionLink" href="#parameter-prefix" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-<p><em class="ansible-option-versionadded">added in community.dns 0.2.0</em></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The prefix of the DNS record.</p>
 <p>This is the part of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-info-module-parameter-record"><span class="std std-ref"><span class="pre">record</span></span></a></strong></code> before <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-info-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code>. For example, if the record to be modified is <code class="docutils literal notranslate"><span class="pre">www.example.com</span></code> for the zone <code class="docutils literal notranslate"><span class="pre">example.com</span></code>, the prefix is <code class="ansible-value docutils literal notranslate"><span class="pre">www</span></code>. If the record in this example would be <code class="docutils literal notranslate"><span class="pre">example.com</span></code>, the prefix would be <code class="ansible-value docutils literal notranslate"><span class="pre">''</span></code> (empty string).</p>
@@ -321,9 +320,8 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-info-module-parameter-zone-id"><strong>zone_id</strong></p>
 <a class="ansibleOptionLink" href="#parameter-zone_id" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-<p><em class="ansible-option-versionadded">added in community.dns 0.2.0</em></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>The ID of the DNS zone to modify.</p>
+<td><div class="ansible-option-cell"><p>The ID of the DNS zone to query.</p>
 <p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-info-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-info-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
@@ -333,7 +331,7 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <a class="ansibleOptionLink" href="#parameter-zone_name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: zone</span></p>
 <p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
-<td><div class="ansible-option-cell"><p>The DNS zone to modify.</p>
+<td><div class="ansible-option-cell"><p>The DNS zone to query.</p>
 <p>Exactly one of <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-info-module-parameter-zone-name"><span class="std std-ref"><span class="pre">zone_name</span></span></a></strong></code> and <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-hetzner-dns-record-set-info-module-parameter-zone-id"><span class="std std-ref"><span class="pre">zone_id</span></span></a></strong></code> must be specified.</p>
 </div></td>
 </tr>
@@ -451,7 +449,6 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="return-set/prefix"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-info-module-return-set-prefix"><strong>prefix</strong></p>
 <a class="ansibleOptionLink" href="#return-set/prefix" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-<p><em class="ansible-option-versionadded">added in community.dns 0.2.0</em></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The record prefix.</p>
 <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
@@ -518,7 +515,6 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="return-sets/prefix"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-info-module-return-sets-prefix"><strong>prefix</strong></p>
 <a class="ansibleOptionLink" href="#return-sets/prefix" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-<p><em class="ansible-option-versionadded">added in community.dns 0.2.0</em></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The record prefix.</p>
 <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
@@ -576,7 +572,6 @@ To check whether it is installed, run <code class="code docutils literal notrans
 <tr class="row-even"><td><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="return-zone_id"></div><p class="ansible-option-title" id="ansible-collections-community-dns-hetzner-dns-record-set-info-module-return-zone-id"><strong>zone_id</strong></p>
 <a class="ansibleOptionLink" href="#return-zone_id" title="Permalink to this return value"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
-<p><em class="ansible-option-versionadded">added in community.dns 0.2.0</em></p>
 </div></td>
 <td><div class="ansible-option-cell"><p>The ID of the zone.</p>
 <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> success</p>
