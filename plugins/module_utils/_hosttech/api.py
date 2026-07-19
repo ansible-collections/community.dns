@@ -47,7 +47,7 @@ class HosttechProviderInformation(ProviderInformation):
         """
         Return the (short) type for record IDs, like ``'int'`` or ``'str'``.
         """
-        return "int"
+        return "int"  # pragma: no cover
 
     def get_record_default_ttl(self) -> int | None:
         """

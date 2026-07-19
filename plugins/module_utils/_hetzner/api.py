@@ -1349,7 +1349,7 @@ class HetznerProviderInformation(ProviderInformation):
         """
         Return the (short) type for record IDs, like ``'int'`` or ``'str'``.
         """
-        return "str"
+        return "str"  # pragma: no cover
 
     def get_record_default_ttl(self) -> int | None:
         """
