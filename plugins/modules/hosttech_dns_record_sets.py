@@ -15,6 +15,9 @@ version_added: 2.0.0
 description:
   - Bulk synchronize DNS record sets in Hosttech DNS service.
   - This module replaces C(hosttech_dns_records) from community.dns before 2.0.0.
+options:
+  txt_character_encoding:
+    version_added: 2.5.0
 extends_documentation_fragment:
   - community.dns._hosttech
   - community.dns._hosttech.record_notes

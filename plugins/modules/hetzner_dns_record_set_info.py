@@ -14,6 +14,9 @@ version_added: 2.0.0
 
 description:
   - Retrieves DNS record sets in Hetzner DNS service.
+options:
+  txt_character_encoding:
+    version_added: 2.5.0
 extends_documentation_fragment:
   - community.dns._hetzner
   - community.dns._hetzner.record_type_choices
@@ -69,7 +72,6 @@ set:
       description: The record prefix.
       type: str
       sample: sample
-      version_added: 0.2.0
     type:
       description: The DNS record type.
       type: str
@@ -120,7 +122,6 @@ sets:
       description: The record prefix.
       type: str
       sample: sample
-      version_added: 0.2.0
     type:
       description: The DNS record type.
       type: str
@@ -162,7 +163,6 @@ zone_id:
   type: str
   returned: success
   sample: 23
-  version_added: 0.2.0
 """
 
 from ansible.module_utils.basic import AnsibleModule

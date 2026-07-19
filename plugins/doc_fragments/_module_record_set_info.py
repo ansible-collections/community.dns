@@ -27,8 +27,6 @@ options:
     choices: ['single_record', 'all_types_for_record', 'all_records']
     default: single_record
     type: str
-  zone_id:
-    version_added: 0.2.0
   record:
     description:
       - The full DNS record to retrieve.
@@ -42,7 +40,6 @@ options:
         would be V('') (empty string).
       - If O(what) is V(single_record) or V(all_types_for_record), exactly one of O(record) and O(prefix) is required.
     type: str
-    version_added: 0.2.0
   type:
     description:
       - The type of DNS record to retrieve.

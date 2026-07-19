@@ -14,6 +14,9 @@ version_added: 2.0.0
 
 description:
   - Retrieves DNS records in Hosttech DNS service.
+options:
+  txt_character_encoding:
+    version_added: 2.5.0
 extends_documentation_fragment:
   - community.dns._hosttech
   - community.dns._hosttech.record_type_choices

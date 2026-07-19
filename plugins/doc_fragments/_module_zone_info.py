@@ -15,7 +15,5 @@ class ModuleDocFragment:
 attributes:
   idempotent:
     support: full
-options:
-  zone_id:
-    version_added: 0.2.0
+options: {}
 """

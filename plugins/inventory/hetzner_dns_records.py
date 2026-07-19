@@ -25,6 +25,8 @@ options:
       - community.dns.hetzner_dns_records
     type: str
 
+  txt_character_encoding:
+    version_added: 2.5.0
   filters:
     version_added: 3.0.0
 

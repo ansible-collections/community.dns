@@ -62,5 +62,4 @@ options:
       - decimal
       - octal
     default: decimal
-    version_added: 2.5.0
 """

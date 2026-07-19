@@ -29,8 +29,6 @@ options:
     required: true
     choices: ['present', 'absent']
     type: str
-  zone_id:
-    version_added: 0.2.0
   record:
     description:
       - The full DNS record to create or delete.
@@ -44,7 +42,6 @@ options:
         would be V('') (empty string).
       - Exactly one of O(record) and O(prefix) must be specified.
     type: str
-    version_added: 0.2.0
   ttl:
     description:
       - The TTL to give the new record, in seconds.

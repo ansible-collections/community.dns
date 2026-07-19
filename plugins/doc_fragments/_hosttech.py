@@ -36,7 +36,6 @@ options:
     aliases:
       - api_token
     type: str
-    version_added: 0.2.0
 """
 
     # NOTE: This document fragment augments the above standard DOCUMENTATION document fragment
