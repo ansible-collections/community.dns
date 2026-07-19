@@ -105,7 +105,7 @@ def test_list_pagination():
     api = InfomaniakJSONAPI(http_helper=MagicMock(), token="123")
 
     api._get = MagicMock(side_effect=get_1)
-    result = api._list_pagination("https://example.com", per_page=1, allow_404=False)
+    result = api._list_pagination("https://example.com", per_page=1, accept_404=False)
     assert result == [1, 2]
 
     api._get = MagicMock(side_effect=get_2)
@@ -113,12 +113,12 @@ def test_list_pagination():
         "https://example.com",
         query={"foo": "bar"},
         per_page=2,
-        allow_404=True,
+        accept_404=True,
     )
     assert result == ["bar", "baz", "foo"]
 
     api._get = MagicMock(side_effect=get_3)
-    result = api._list_pagination("https://example.com", allow_404=True)
+    result = api._list_pagination("https://example.com", accept_404=True)
     assert result is None
 
 

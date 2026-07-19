@@ -157,7 +157,7 @@ class InfomaniakJSONAPI(ZoneRecordAPI[str, int], JSONAPIHelper):
         *,
         query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
         per_page: int = 100,
-        allow_404: t.Literal[False] = False,
+        accept_404: t.Literal[False] = False,
     ) -> list[t.Any]: ...  # pragma: no cover
 
     @t.overload
@@ -167,7 +167,7 @@ class InfomaniakJSONAPI(ZoneRecordAPI[str, int], JSONAPIHelper):
         *,
         query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
         per_page: int = 100,
-        allow_404: t.Literal[True],
+        accept_404: t.Literal[True],
     ) -> list[t.Any] | None: ...  # pragma: no cover
 
     def _list_pagination(
@@ -176,7 +176,7 @@ class InfomaniakJSONAPI(ZoneRecordAPI[str, int], JSONAPIHelper):
         *,
         query: dict[str, str] | Sequence[tuple[str, str]] | None = None,
         per_page: int = 100,
-        allow_404: bool = False,
+        accept_404: bool = False,
     ) -> list[t.Any] | None:
         result = []
         page = 1
@@ -186,7 +186,7 @@ class InfomaniakJSONAPI(ZoneRecordAPI[str, int], JSONAPIHelper):
                 url,
                 query=query_,
                 must_have_content=True,
-                expected=[200, 404] if allow_404 and page == 1 else [200],
+                expected=[200, 404] if accept_404 and page == 1 else [200],
                 require_json_object=True,
             )
             if info["status"] == 404:
@@ -265,7 +265,7 @@ class InfomaniakJSONAPI(ZoneRecordAPI[str, int], JSONAPIHelper):
         result = self._list_pagination(
             f"/2/zones/{q(zone_id)}/records",
             query=query,
-            allow_404=True,
+            accept_404=True,
         )
         if result is None:
             return None
