@@ -298,7 +298,7 @@ def augment_fragment(provider_fragment, provider_info):
                 if part not in insertion_pos:
                     insertion_pos[part] = {}
                 insertion_pos = insertion_pos[part]
-                original_pos = original_pos[part]
+                original_pos = original_pos.get(part) or {}
                 if depth >= 2:
                     for x in original_pos:
                         if x not in insertion_pos:
