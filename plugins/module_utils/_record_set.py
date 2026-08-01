@@ -28,7 +28,9 @@ RecordSetIDT = t.TypeVar("RecordSetIDT")
 RecordSetIDT_co = t.TypeVar("RecordSetIDT_co", covariant=True)
 
 
-class IDNSRecordSet(t.Protocol, t.Generic[RecordSetIDT_co, RecordIDT_co]):  # pragma: no cover
+class IDNSRecordSet(
+    t.Protocol, t.Generic[RecordSetIDT_co, RecordIDT_co]
+):  # pragma: no cover
     @property
     def id(self) -> RecordSetIDT_co: ...
 
