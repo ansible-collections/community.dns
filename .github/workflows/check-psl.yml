@@ -9,6 +9,7 @@ name: Check for Public Suffix List updates
     branches:
       - main
     paths:
+      - .github/workflows/check-psl.yml
       - plugins/public_suffix_list.dat
   # Run CI once per day (at 04:30 UTC)
   schedule:
