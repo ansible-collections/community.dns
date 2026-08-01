@@ -25,7 +25,7 @@ ZoneIDT = t.TypeVar("ZoneIDT")
 ZoneIDT_co = t.TypeVar("ZoneIDT_co", covariant=True)
 
 
-class IDNSZone(t.Protocol, t.Generic[ZoneIDT_co]):
+class IDNSZone(t.Protocol, t.Generic[ZoneIDT_co]):  # pragma: no cover
     @property
     def id(self) -> ZoneIDT_co: ...
 
