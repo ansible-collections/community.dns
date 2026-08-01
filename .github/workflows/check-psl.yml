@@ -17,14 +17,7 @@ name: Check for Public Suffix List updates
 
 jobs:
   update_check:
-    name: Check for Public Suffix List updates
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out collection
-        uses: actions/checkout@v7
-        with:
-          persist-credentials: false
-      - name: Run nox
-        uses: ansible-community/antsibull-nox@main
-        with:
-          sessions: update-psl
+    uses: ansible-community/antsibull-nox/.github/workflows/reusable-nox-run.yml@main
+    with:
+      session-name: Check for Public Suffix List updates
+      sessions: update-psl
