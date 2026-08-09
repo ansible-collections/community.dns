@@ -4,6 +4,44 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v4.1.0
+======
+
+Release Summary
+---------------
+
+Feature and bugfix release with updated PSL.
+
+Minor Changes
+-------------
+
+- hetzner_dns_record_info, hetzner_dns_record_set_info - if ``zone_name`` is provided together with ``record`` for the new JSON API, and ``what`` is not ``all_records``, also filter by prefix. This was already done if ``prefix`` had been specified (https://github.com/ansible-collections/community.dns/pull/340)."
+- unquote_txt filter plugin - a new ``lenient`` option allows to be more lenient when decoding TXT values. Right now this allows missing ending double quotation marks (https://github.com/ansible-collections/community.dns/pull/339).
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- various DNS modules - if ``zone_id`` was combined with an IDN ``prefix``, the prefix was not converted to punycode (https://github.com/ansible-collections/community.dns/pull/340).
+
+New Plugins
+-----------
+
+Inventory
+~~~~~~~~~
+
+- community.dns.infomaniak_dns_records - Create inventory from Infomaniak DNS records.
+
+New Modules
+-----------
+
+- community.dns.infomaniak_dns_record - Add or delete a single record in Infomaniak DNS service.
+- community.dns.infomaniak_dns_record_info - Retrieve records in Infomaniak DNS service.
+- community.dns.infomaniak_dns_record_set - Add or delete record sets in Infomaniak DNS service.
+- community.dns.infomaniak_dns_record_set_info - Retrieve record sets in Infomaniak DNS service.
+- community.dns.infomaniak_dns_record_sets - Bulk synchronize DNS record sets in Infomaniak DNS service.
+- community.dns.infomaniak_dns_zone_info - Retrieve zone information in Infomaniak DNS service.
+
 v4.0.2
 ======
 

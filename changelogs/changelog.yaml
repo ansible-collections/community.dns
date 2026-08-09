@@ -1319,3 +1319,49 @@ releases:
       - 4.0.2.yml
       - update-psl.yml
     release_date: '2026-07-13'
+  4.1.0:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+        - various DNS modules - if ``zone_id`` was combined with an IDN ``prefix``,
+          the prefix was not converted to punycode (https://github.com/ansible-collections/community.dns/pull/340).
+      minor_changes:
+        - hetzner_dns_record_info, hetzner_dns_record_set_info - if ``zone_name``
+          is provided together with ``record`` for the new JSON API, and ``what``
+          is not ``all_records``, also filter by prefix. This was already done if
+          ``prefix`` had been specified (https://github.com/ansible-collections/community.dns/pull/340)."
+        - unquote_txt filter plugin - a new ``lenient`` option allows to be more lenient
+          when decoding TXT values. Right now this allows missing ending double quotation
+          marks (https://github.com/ansible-collections/community.dns/pull/339).
+      release_summary: Feature and bugfix release with updated PSL.
+    fragments:
+      - 339-lenient-txt.yml
+      - 340-prefix-normalize.yml
+      - 342-filter-info.yml
+      - 4.1.0.yml
+      - update-psl.yml
+    modules:
+      - description: Add or delete a single record in Infomaniak DNS service.
+        name: infomaniak_dns_record
+        namespace: ''
+      - description: Retrieve records in Infomaniak DNS service.
+        name: infomaniak_dns_record_info
+        namespace: ''
+      - description: Add or delete record sets in Infomaniak DNS service.
+        name: infomaniak_dns_record_set
+        namespace: ''
+      - description: Retrieve record sets in Infomaniak DNS service.
+        name: infomaniak_dns_record_set_info
+        namespace: ''
+      - description: Bulk synchronize DNS record sets in Infomaniak DNS service.
+        name: infomaniak_dns_record_sets
+        namespace: ''
+      - description: Retrieve zone information in Infomaniak DNS service.
+        name: infomaniak_dns_zone_info
+        namespace: ''
+    plugins:
+      inventory:
+        - description: Create inventory from Infomaniak DNS records.
+          name: infomaniak_dns_records
+          namespace: null
+    release_date: '2026-08-09'
