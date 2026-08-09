@@ -1291,3 +1291,15 @@ releases:
       - 3.5.7.yml
       - update-psl.yml
     release_date: '2026-07-13'
+  3.5.8:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+        - various DNS modules - if ``zone_id`` was combined with an IDN ``prefix``,
+          the prefix was not converted to punycode (https://github.com/ansible-collections/community.dns/pull/340).
+      release_summary: Bugfix release with updated PSL.
+    fragments:
+      - 3.5.8.yml
+      - 340-prefix-normalize.yml
+      - update-psl.yml
+    release_date: '2026-08-09'

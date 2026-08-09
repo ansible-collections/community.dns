@@ -4,6 +4,20 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.5.8
+======
+
+Release Summary
+---------------
+
+Bugfix release with updated PSL.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- various DNS modules - if ``zone_id`` was combined with an IDN ``prefix``, the prefix was not converted to punycode (https://github.com/ansible-collections/community.dns/pull/340).
+
 v3.5.7
 ======
 
