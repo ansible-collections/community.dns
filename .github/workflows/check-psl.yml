@@ -16,6 +16,9 @@ name: Check for Public Suffix List updates
     - cron: '30 4 * * *'
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   update_check:
     uses: ansible-community/antsibull-nox/.github/workflows/reusable-nox-run.yml@main

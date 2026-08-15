@@ -37,6 +37,10 @@ jobs:
             tag-as-latest: false
             source: docker.io/adguard/adguardhome:latest
 
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: Install dependencies
         run: |
