@@ -416,14 +416,14 @@ see <a class="reference internal" href="#ansible-collections-community-dns-hostt
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AAAA</span>
 <span class="nt">filters</span><span class="p">:</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
-<span class="w">      </span><span class="no">&#39;*.&#39; not in inventory_hostname</span>
+<span class="w">      </span><span class="no">'*.' not in inventory_hostname</span>
 <span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">exclude</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
 <span class="c1"># You can also configure the token by putting secret value into this file,</span>
 <span class="c1"># but this is discouraged. Use a lookup like below, or leave it away and</span>
 <span class="c1"># set it with the ANSIBLE_HOSTTECH_DNS_TOKEN environment variable.</span>
 <span class="nt">hosttech_token</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
-<span class="w">  </span><span class="cp">{{</span> <span class="o">(</span><span class="nv">lookup</span><span class="o">(</span><span class="s1">&#39;community.sops.sops&#39;</span><span class="o">,</span> <span class="s1">&#39;keys/hosttech.sops.yml&#39;</span><span class="o">)</span> <span class="o">|</span> <span class="nf">from_yaml</span><span class="o">)</span><span class="nv">.hosttech_dns_token</span> <span class="cp">}}</span>
+<span class="w">  </span><span class="cp">{{</span> <span class="o">(</span><span class="nv">lookup</span><span class="o">(</span><span class="s1">'community.sops.sops'</span><span class="o">,</span> <span class="s1">'keys/hosttech.sops.yml'</span><span class="o">)</span> <span class="o">|</span> <span class="nf">from_yaml</span><span class="o">)</span><span class="nv">.hosttech_dns_token</span> <span class="cp">}}</span>
 </pre></div>
 </div>
 <section id="authors">
