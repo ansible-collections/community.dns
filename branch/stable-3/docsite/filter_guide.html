@@ -178,13 +178,13 @@
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">assert</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">that</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
-<span class="w">        </span><span class="no">&quot;www.ansible.com&quot; | community.dns.get_public_suffix == &quot;.com&quot;</span>
+<span class="w">        </span><span class="no">"www.ansible.com" | community.dns.get_public_suffix == ".com"</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
-<span class="w">        </span><span class="no">&quot;some.random.prefixes.ansible.co.uk&quot; | community.dns.get_public_suffix == &quot;.co.uk&quot;</span>
+<span class="w">        </span><span class="no">"some.random.prefixes.ansible.co.uk" | community.dns.get_public_suffix == ".co.uk"</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
-<span class="w">        </span><span class="no">&quot;www.ansible.com&quot; | community.dns.remove_public_suffix == &quot;www.ansible&quot;</span>
+<span class="w">        </span><span class="no">"www.ansible.com" | community.dns.remove_public_suffix == "www.ansible"</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
-<span class="w">        </span><span class="no">&quot;some.random.prefixes.ansible.co.uk&quot; | community.dns.remove_public_suffix == &quot;some.random.prefixes.ansible&quot;</span>
+<span class="w">        </span><span class="no">"some.random.prefixes.ansible.co.uk" | community.dns.remove_public_suffix == "some.random.prefixes.ansible"</span>
 </pre></div>
 </div>
 <p>The filters also allow additional options (keyword arguments):</p>
@@ -212,13 +212,13 @@
 <div class="highlight-yaml+jinja notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">assert</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">that</span><span class="p">:</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
-<span class="w">        </span><span class="no">&quot;www.ansible.com&quot; | community.dns.get_registrable_domain == &quot;ansible.com&quot;</span>
+<span class="w">        </span><span class="no">"www.ansible.com" | community.dns.get_registrable_domain == "ansible.com"</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
-<span class="w">        </span><span class="no">&quot;some.random.prefixes.ansible.co.uk&quot; | community.dns.get_registrable_domain == &quot;ansible.co.uk&quot;</span>
+<span class="w">        </span><span class="no">"some.random.prefixes.ansible.co.uk" | community.dns.get_registrable_domain == "ansible.co.uk"</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
-<span class="w">        </span><span class="no">&quot;www.ansible.com&quot; | community.dns.remove_registrable_domain == &quot;www&quot;</span>
+<span class="w">        </span><span class="no">"www.ansible.com" | community.dns.remove_registrable_domain == "www"</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">&gt;-</span>
-<span class="w">        </span><span class="no">&quot;some.random.prefixes.ansible.co.uk&quot; | community.dns.remove_registrable_domain == &quot;some.random.prefixes&quot;</span>
+<span class="w">        </span><span class="no">"some.random.prefixes.ansible.co.uk" | community.dns.remove_registrable_domain == "some.random.prefixes"</span>
 </pre></div>
 </div>
 <p>The filters also allow additional options (keyword arguments):</p>
