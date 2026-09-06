@@ -1365,3 +1365,12 @@ releases:
           name: infomaniak_dns_records
           namespace: null
     release_date: '2026-08-09'
+  4.1.1:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+      release_summary: Maintenance release with updated PSL.
+    fragments:
+      - 4.1.1.yml
+      - update-psl.yml
+    release_date: '2026-09-06'
