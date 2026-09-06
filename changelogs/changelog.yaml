@@ -1303,3 +1303,12 @@ releases:
       - 340-prefix-normalize.yml
       - update-psl.yml
     release_date: '2026-08-09'
+  3.5.9:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+      release_summary: Maintenance release with updated PSL.
+    fragments:
+      - 3.5.9.yml
+      - update-psl.yml
+    release_date: '2026-09-06'
