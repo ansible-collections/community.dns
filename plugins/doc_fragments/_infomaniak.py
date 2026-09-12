@@ -30,6 +30,7 @@ options:
   infomaniak_token:
     env:
       - name: ANSIBLE_INFOMANIAK_DNS_TOKEN
+    secret: true
 """
 
     # NOTE: This document fragment adds additional information on records.
