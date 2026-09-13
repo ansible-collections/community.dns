@@ -1,3 +1,6 @@
+plugins/inventory/hetzner_dns_records.py validate-modules:invalid-documentation  # secret not supported
+plugins/inventory/hosttech_dns_records.py validate-modules:invalid-documentation  # secret not supported
+plugins/inventory/infomaniak_dns_records.py validate-modules:invalid-documentation  # secret not supported
 plugins/module_utils/_module/record.py no-assert  # The asserts are mainly needed for type inference
 plugins/module_utils/_module/record_info.py no-assert  # The asserts are mainly needed for type inference
 plugins/module_utils/_module/record_set.py no-assert  # The asserts are mainly needed for type inference
