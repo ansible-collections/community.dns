@@ -41,9 +41,11 @@ options:
   hetzner_token:
     env:
       - name: HETZNER_DNS_TOKEN
+    secret: true
   hetzner_api_token:
     env:
       - name: HETZNER_API_TOKEN
+    secret: true
 """
 
     # NOTE: This document fragment adds additional information on records.
