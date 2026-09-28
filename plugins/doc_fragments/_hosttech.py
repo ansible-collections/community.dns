@@ -51,10 +51,12 @@ options:
     env:
       - name: ANSIBLE_HOSTTECH_API_PASSWORD
         version_added: 2.5.0
+    secret: true
   hosttech_token:
     env:
       - name: ANSIBLE_HOSTTECH_DNS_TOKEN
         version_added: 2.5.0
+    secret: true
 """
 
     # NOTE: This document fragment adds additional information on records.
