@@ -1,5 +1,7 @@
 plugins/inventory/hetzner_dns_records.py validate-modules:illegal-future-imports
+plugins/inventory/hetzner_dns_records.py validate-modules:invalid-documentation  # secret not supported
 plugins/inventory/hosttech_dns_records.py validate-modules:illegal-future-imports
+plugins/inventory/hosttech_dns_records.py validate-modules:invalid-documentation  # secret not supported
 plugins/lookup/lookup.py validate-modules:illegal-future-imports
 plugins/lookup/lookup.py validate-modules:import-before-documentation
 plugins/lookup/lookup_as_dict.py validate-modules:illegal-future-imports
