@@ -4,6 +4,24 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.5.10
+=======
+
+Release Summary
+---------------
+
+Maintenance release with updated PSL and adjustments for ansible-core 2.22+.
+
+Minor Changes
+-------------
+
+- inventory plugins - sensitive options (tokens, passwords) are now marked as ``secret=true`` for ansible-core 2.22+'s secret masking (https://github.com/ansible-collections/community.dns/pull/353).
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+
 v3.5.9
 ======
 

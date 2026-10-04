@@ -1312,3 +1312,17 @@ releases:
       - 3.5.9.yml
       - update-psl.yml
     release_date: '2026-09-06'
+  3.5.10:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+      minor_changes:
+        - inventory plugins - sensitive options (tokens, passwords) are now marked
+          as ``secret=true`` for ansible-core 2.22+'s secret masking (https://github.com/ansible-collections/community.dns/pull/353).
+      release_summary: Maintenance release with updated PSL and adjustments for ansible-core
+        2.22+.
+    fragments:
+      - 3.5.10.yml
+      - 353-secrets.yml
+      - update-psl.yml
+    release_date: '2026-10-04'
