@@ -27,6 +27,9 @@ try:
     import dns.name
     import dns.rdata
     import dns.rdatatype
+    import dns.version
+
+    _VERSION = (dns.version.MAJOR, dns.version.MINOR)
 
     try:
         import dns.rdtypes.ANY.NSEC3
@@ -203,7 +206,14 @@ def convert_rdata_to_dict(
         if rdata.rdtype == dns.rdatatype.DNSKEY and f == "key":
             val = dns.rdata._base64ify(rdata.key).replace(" ", "")  # type: ignore
         if rdata.rdtype == dns.rdatatype.NSEC3 and f == "next":
-            val = to_native(base64.b32encode(rdata.next).translate(dns.rdtypes.ANY.NSEC3.b32_normal_to_hex).lower())  # type: ignore
+            if _VERSION < (2, 9):
+                # b32_normal_to_hex has been removed from dnspython 2.9.0
+                # pylint: disable-next=no-member
+                val = to_native(base64.b32encode(rdata.next).translate(dns.rdtypes.ANY.NSEC3.b32_normal_to_hex).lower())  # type: ignore
+            else:
+                # next_name() has been added in 2.9, it returns a dns.name.Name object; see
+                # https://github.com/rthalley/dnspython/commit/c7d5b21dc3123ce5a48c522743b2d92cd29adf74
+                val = str(rdata.next_name())  # type: ignore[attr-defined]
         if rdata.rdtype in (dns.rdatatype.NSEC, dns.rdatatype.NSEC3) and f == "windows":
             val = dns.rdtypes.util.Bitmap(rdata.windows).to_text().lstrip(" ")  # type: ignore
         if (
