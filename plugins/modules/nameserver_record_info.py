@@ -494,22 +494,22 @@ results:
     - name: www.example.com
       result:
         - nameserver: ns1.example.com
-          values:
+          entries:
             - address: 127.0.0.1
         - nameserver: ns2.example.com
-          values:
+          entries:
             - address: 127.0.0.1
     - name: example.org
       result:
         - nameserver: ns1.example.org
-          values:
+          entries:
             - address: 127.0.0.1
             - address: 127.0.0.2
         - nameserver: ns2.example.org
-          values:
+          entries:
             - address: 127.0.0.2
         - nameserver: ns3.example.org
-          values:
+          entries:
             - address: 127.0.0.1
 """
 
