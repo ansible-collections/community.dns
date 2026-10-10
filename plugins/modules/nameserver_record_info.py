@@ -146,7 +146,8 @@ results:
             - Depending on O(type), different fields are returned.
             - For O(type=TXT) and O(type=SPF), also the concatenated value is returned as RV(results[].result[].entries[].value).
             - B(The field has been renamed) to RV(results[].result[].entries) in community.dns 3.4.0.
-              While the old name will be around for a longer time, prefer using the new one.
+              While the old name will be around until community.dns 5.0.0; prefer using the new one.
+              On ansible-core 2.19 and newer, a deprecation message will be shown if this value is used.
           returned: success
           type: list
           elements: dict
@@ -526,6 +527,9 @@ from ansible_collections.community.dns.plugins.module_utils._resolver import (
     assert_requirements_present,
     guarded_run,
 )
+from ansible_collections.community.dns.plugins.module_utils._tagging import (
+    deprecate_value,
+)
 
 
 def main() -> None:
@@ -607,7 +611,11 @@ def main() -> None:
                 if records is not None:
                     for data in records:
                         values.append(convert_rdata_to_dict(data))
-                ns_result["values"] = values
+                ns_result["values"] = deprecate_value(
+                    values,
+                    msg="The 'values' return value is deprecated. Uses 'entries' instead.",
+                    version="5.0.0",
+                )
                 ns_result["entries"] = values
             result.sort(key=lambda v: v["nameserver"])
 
