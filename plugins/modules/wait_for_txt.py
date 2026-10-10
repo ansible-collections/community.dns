@@ -127,7 +127,7 @@ EXAMPLES = r"""
       # We want that example.com has a specific SPF record set.
       # We do not care about other TXT records.
       - name: www.example.com
-        entries "v=spf1 a mx -all"
+        entries: "v=spf1 a mx -all"
         mode: subset
 """
 
