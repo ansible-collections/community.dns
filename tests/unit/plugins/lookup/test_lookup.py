@@ -709,7 +709,7 @@ class TestLookup(TestCase):
                                 dns.rdata.from_text(
                                     dns.rdataclass.IN,
                                     dns.rdatatype.HTTPS,
-                                    '8 foo alpn="f\\\\oo\\,bar,h2"',
+                                    '8 foo alpn="f\\\\\\\\oo\\\\,bar,h2"',
                                 ),
                                 dns.rdata.from_text(
                                     dns.rdataclass.IN,
@@ -739,8 +739,13 @@ class TestLookup(TestCase):
             result[6]
             == '7 foo mandatory="alpn,ipv4hint" alpn="h2,h3-19" ipv4hint="192.0.2.1"'
         )
-        assert result[7] == '8 foo alpn="foo,bar,h2"'
-        assert result[8] == '9 foo alpn="f\\\\00092oo\\\\00092,bar,h2"'
+        assert result[7] == '8 foo alpn="f\\\\\\\\oo\\\\,bar,h2"'
+        assert result[8] in (
+            # dnspython < 2.9:
+            '9 foo alpn="f\\\\00092oo\\\\00092,bar,h2"',
+            # dnspython >= 2.9:
+            '9 foo alpn="f\\00092oo\\00092,bar,h2"',
+        )
 
     def test_svcb(self) -> None:
         resolver = mock_resolver(
@@ -794,7 +799,7 @@ class TestLookup(TestCase):
                                 dns.rdata.from_text(
                                     dns.rdataclass.IN,
                                     dns.rdatatype.SVCB,
-                                    '8 foo alpn="f\\\\oo\\,bar,h2"',
+                                    '8 foo alpn="f\\\\\\\\oo\\\\,bar,h2"',
                                 ),
                                 dns.rdata.from_text(
                                     dns.rdataclass.IN,
@@ -834,8 +839,13 @@ class TestLookup(TestCase):
             result[6]
             == '7 foo mandatory="alpn,ipv4hint" alpn="h2,h3-19" ipv4hint="192.0.2.1"'
         )
-        assert result[7] == '8 foo alpn="foo,bar,h2"'
-        assert result[8] == '9 foo alpn="f\\\\00092oo\\\\00092,bar,h2"'
+        assert result[7] == '8 foo alpn="f\\\\\\\\oo\\\\,bar,h2"'
+        assert result[8] in (
+            # dnspython < 2.9:
+            '9 foo alpn="f\\\\00092oo\\\\00092,bar,h2"',
+            # dnspython >= 2.9:
+            '9 foo alpn="f\\00092oo\\00092,bar,h2"',
+        )
         assert (
             result[9]
             == '10 . ech="AEX+DQBBSQAgACBuPcsDfK+zfZY0gE1U80ppEIny7ZVjHw+y2AiJFqsZBAAEAAEAAQASY292ZXIuZWNoLWxhYnMuY29tAAA="'
