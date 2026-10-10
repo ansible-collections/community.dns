@@ -42,7 +42,7 @@ options:
       entries:
         description:
           - The TXT values to look for.
-          - The option was originally called C(values). The alias O(records[].entries) has been added in community.dns 3.4.0,
+          - The option was originally called O(records[].values). The alias O(records[].entries) has been added in community.dns 3.4.0,
             and option and alias switched in community.dns 4.3.0.
         aliases:
           - values
