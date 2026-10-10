@@ -39,12 +39,13 @@ options:
           - A DNS name, like V(www.example.com).
         type: str
         required: true
-      values:
+      entries:
         description:
           - The TXT values to look for.
-          - The alias O(records[].entries) has been added in community.dns 3.4.0.
+          - The option was originally called C(values). The alias O(records[].entries) has been added in community.dns 3.4.0,
+            and option and alias switched in community.dns 4.3.0.
         aliases:
-          - entries
+          - values
         type: list
         elements: str
         required: true
@@ -121,12 +122,12 @@ EXAMPLES = r"""
       # We want that www.example.com has a single TXT record with value 'Hello world!'.
       # There should not be any other TXT record for www.example.com.
       - name: www.example.com
-        values: "Hello world!"
+        entries: "Hello world!"
         mode: equals
       # We want that example.com has a specific SPF record set.
       # We do not care about other TXT records.
       - name: www.example.com
-        values: "v=spf1 a mx -all"
+        entries "v=spf1 a mx -all"
         mode: subset
 """
 
@@ -369,11 +370,11 @@ def main() -> None:
                 "elements": "dict",
                 "options": {
                     "name": {"required": True, "type": "str"},
-                    "values": {
+                    "entries": {
                         "required": True,
                         "type": "list",
                         "elements": "str",
-                        "aliases": ["entries"],
+                        "aliases": ["values"],
                     },
                     "mode": {
                         "type": "str",
