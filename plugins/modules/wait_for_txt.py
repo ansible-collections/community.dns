@@ -39,12 +39,13 @@ options:
           - A DNS name, like V(www.example.com).
         type: str
         required: true
-      values:
+      entries:
         description:
           - The TXT values to look for.
-          - The alias O(records[].entries) has been added in community.dns 3.4.0.
+          - The option was originally called O(records[].values). The alias O(records[].entries) has been added in community.dns 3.4.0,
+            and option and alias switched in community.dns 4.3.0.
         aliases:
-          - entries
+          - values
         type: list
         elements: str
         required: true
@@ -121,12 +122,12 @@ EXAMPLES = r"""
       # We want that www.example.com has a single TXT record with value 'Hello world!'.
       # There should not be any other TXT record for www.example.com.
       - name: www.example.com
-        values: "Hello world!"
+        entries: "Hello world!"
         mode: equals
       # We want that example.com has a specific SPF record set.
       # We do not care about other TXT records.
       - name: www.example.com
-        values: "v=spf1 a mx -all"
+        entries: "v=spf1 a mx -all"
         mode: subset
 """
 
@@ -158,7 +159,8 @@ records:
         - If these are multiple TXT entries for a nameserver, the order is as it was received from that nameserver. This might
           not be the same order provided in the check.
         - B(The field has been renamed) to RV(records[].entries) in community.dns 3.4.0.
-          While the old name will be around for a longer time, prefer using the new one.
+          While the old name will be around until community.dns 5.0.0; prefer using the new one.
+          On ansible-core 2.19 and newer, a deprecation message will be shown if this value is used.
       returned: lookup was done at least once
       type: dict
       elements: list
@@ -212,6 +214,9 @@ from ansible_collections.community.dns.plugins.module_utils._resolver import (
     ResolveDirectlyFromNameServers,
     assert_requirements_present,
     guarded_run,
+)
+from ansible_collections.community.dns.plugins.module_utils._tagging import (
+    deprecate_value,
 )
 
 try:
@@ -305,11 +310,15 @@ class Waiter:
                 if self.results[index]["done"]:
                     continue
                 txts = lookup(self.resolver, record["name"])
-                self.results[index]["values"] = txts
+                self.results[index]["values"] = deprecate_value(
+                    txts,
+                    msg="The 'values' return value is deprecated. Uses 'entries' instead.",
+                    version="5.0.0",
+                )
                 self.results[index]["entries"] = txts
                 self.results[index]["check_count"] += 1
                 if txts and all(
-                    validate_check(txt, record["values"], record["mode"])
+                    validate_check(txt, record["entries"], record["mode"])
                     for txt in txts.values()
                 ):
                     self.results[index]["done"] = True
@@ -361,11 +370,11 @@ def main() -> None:
                 "elements": "dict",
                 "options": {
                     "name": {"required": True, "type": "str"},
-                    "values": {
+                    "entries": {
                         "required": True,
                         "type": "list",
                         "elements": "str",
-                        "aliases": ["entries"],
+                        "aliases": ["values"],
                     },
                     "mode": {
                         "type": "str",
