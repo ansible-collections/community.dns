@@ -686,7 +686,7 @@ class TestLookupAsDict(TestCase):
                                 dns.rdata.from_text(
                                     dns.rdataclass.IN,
                                     dns.rdatatype.HTTPS,
-                                    '8 foo alpn="f\\\\oo\\,bar,h2"',
+                                    '8 foo alpn="f\\\\\\\\oo\\\\,bar,h2"',
                                 ),
                                 dns.rdata.from_text(
                                     dns.rdataclass.IN,
@@ -740,7 +740,7 @@ class TestLookupAsDict(TestCase):
         assert result[7] == {
             "priority": 8,
             "target": "foo",
-            "params": {"alpn": ["Zm9v", "YmFy", "aDI="]},
+            "params": {"alpn": ["ZlxvbyxiYXI=", "aDI="]},
         }
         assert result[8] == {
             "priority": 9,
@@ -800,7 +800,7 @@ class TestLookupAsDict(TestCase):
                                 dns.rdata.from_text(
                                     dns.rdataclass.IN,
                                     dns.rdatatype.SVCB,
-                                    '8 foo alpn="f\\\\oo\\,bar,h2"',
+                                    '8 foo alpn="f\\\\\\\\oo\\\\,bar,h2"',
                                 ),
                                 dns.rdata.from_text(
                                     dns.rdataclass.IN,
@@ -864,7 +864,7 @@ class TestLookupAsDict(TestCase):
         assert result[7] == {
             "priority": 8,
             "target": "foo",
-            "params": {"alpn": ["Zm9v", "YmFy", "aDI="]},
+            "params": {"alpn": ["ZlxvbyxiYXI=", "aDI="]},
         }
         assert result[8] == {
             "priority": 9,
