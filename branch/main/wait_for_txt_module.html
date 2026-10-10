@@ -258,6 +258,16 @@ see <a class="reference internal" href="#ansible-collections-community-dns-wait-
 </div></td>
 </tr>
 <tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<div class="ansibleOptionAnchor" id="parameter-records/entries"></div>
+<div class="ansibleOptionAnchor" id="parameter-records/values"></div><p class="ansible-option-title" id="ansible-collections-community-dns-wait-for-txt-module-parameter-records-values"><span id="ansible-collections-community-dns-wait-for-txt-module-parameter-records-entries"></span><strong>entries</strong></p>
+<a class="ansibleOptionLink" href="#parameter-records/entries" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: values</span></p>
+<p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span> / <span class="ansible-option-required">required</span></p>
+</div></td>
+<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The TXT values to look for.</p>
+<p>The option was originally called <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-wait-for-txt-module-parameter-records-values"><span class="std std-ref"><span class="pre">records[].values</span></span></a></strong></code>. The alias <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-wait-for-txt-module-parameter-records-entries"><span class="std std-ref"><span class="pre">records[].entries</span></span></a></strong></code> has been added in community.dns 3.4.0, and option and alias switched in community.dns 4.3.0.</p>
+</div></td>
+</tr>
+<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-records/mode"></div><p class="ansible-option-title" id="ansible-collections-community-dns-wait-for-txt-module-parameter-records-mode"><strong>mode</strong></p>
 <a class="ansibleOptionLink" href="#parameter-records/mode" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span></p>
 </div></td>
@@ -277,21 +287,11 @@ see <a class="reference internal" href="#ansible-collections-community-dns-wait-
 </ul>
 </div></td>
 </tr>
-<tr class="row-even"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
+<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
 <div class="ansibleOptionAnchor" id="parameter-records/name"></div><p class="ansible-option-title" id="ansible-collections-community-dns-wait-for-txt-module-parameter-records-name"><strong>name</strong></p>
 <a class="ansibleOptionLink" href="#parameter-records/name" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-type">string</span> / <span class="ansible-option-required">required</span></p>
 </div></td>
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>A DNS name, like <code class="ansible-value docutils literal notranslate"><span class="pre">www.example.com</span></code>.</p>
-</div></td>
-</tr>
-<tr class="row-odd"><td><div class="ansible-option-indent"></div><div class="ansible-option-cell">
-<div class="ansibleOptionAnchor" id="parameter-records/values"></div>
-<div class="ansibleOptionAnchor" id="parameter-records/entries"></div><p class="ansible-option-title" id="ansible-collections-community-dns-wait-for-txt-module-parameter-records-values"><span id="ansible-collections-community-dns-wait-for-txt-module-parameter-records-entries"></span><strong>values</strong></p>
-<a class="ansibleOptionLink" href="#parameter-records/values" title="Permalink to this option"></a><p class="ansible-option-type-line"><span class="ansible-option-aliases">aliases: entries</span></p>
-<p class="ansible-option-type-line"><span class="ansible-option-type">list</span> / <span class="ansible-option-elements">elements=string</span> / <span class="ansible-option-required">required</span></p>
-</div></td>
-<td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>The TXT values to look for.</p>
-<p>The alias <code class="ansible-option docutils literal notranslate"><strong><a class="reference internal" href="#ansible-collections-community-dns-wait-for-txt-module-parameter-records-entries"><span class="std std-ref"><span class="pre">records[].entries</span></span></a></strong></code> has been added in community.dns 3.4.0.</p>
 </div></td>
 </tr>
 <tr class="row-even"><td><div class="ansible-option-cell">
@@ -373,12 +373,12 @@ see <a class="reference internal" href="#ansible-collections-community-dns-wait-
 <span class="w">      </span><span class="c1"># We want that www.example.com has a single TXT record with value 'Hello world!'.</span>
 <span class="w">      </span><span class="c1"># There should not be any other TXT record for www.example.com.</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www.example.com</span>
-<span class="w">        </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="s">"Hello</span><span class="nv"> </span><span class="s">world!"</span>
+<span class="w">        </span><span class="nt">entries</span><span class="p">:</span><span class="w"> </span><span class="s">"Hello</span><span class="nv"> </span><span class="s">world!"</span>
 <span class="w">        </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">equals</span>
 <span class="w">      </span><span class="c1"># We want that example.com has a specific SPF record set.</span>
 <span class="w">      </span><span class="c1"># We do not care about other TXT records.</span>
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">www.example.com</span>
-<span class="w">        </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="s">"v=spf1</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">mx</span><span class="nv"> </span><span class="s">-all"</span>
+<span class="w">        </span><span class="nt">entries</span><span class="p">:</span><span class="w"> </span><span class="s">"v=spf1</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">mx</span><span class="nv"> </span><span class="s">-all"</span>
 <span class="w">        </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subset</span>
 </pre></div>
 </div>
@@ -459,7 +459,7 @@ see <a class="reference internal" href="#ansible-collections-community-dns-wait-
 <td><div class="ansible-option-indent-desc"></div><div class="ansible-option-cell"><p>For every authoritative nameserver for the DNS name, lists the TXT records retrieved during the last lookup made.</p>
 <p>Once the check completed for all TXT records retrieved, the TXT records for this DNS name are no longer checked.</p>
 <p>If these are multiple TXT entries for a nameserver, the order is as it was received from that nameserver. This might not be the same order provided in the check.</p>
-<p><strong>The field has been renamed</strong> to <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-wait-for-txt-module-return-records-entries"><span class="std std-ref"><span class="pre">records[].entries</span></span></a></code> in community.dns 3.4.0. While the old name will be around for a longer time, prefer using the new one.</p>
+<p><strong>The field has been renamed</strong> to <code class="ansible-return-value docutils literal notranslate"><a class="reference internal" href="#ansible-collections-community-dns-wait-for-txt-module-return-records-entries"><span class="std std-ref"><span class="pre">records[].entries</span></span></a></code> in community.dns 3.4.0. While the old name will be around until community.dns 5.0.0; prefer using the new one. On ansible-core 2.19 and newer, a deprecation message will be shown if this value is used.</p>
 <p class="ansible-option-line"><strong class="ansible-option-returned-bold">Returned:</strong> lookup was done at least once</p>
 </div></td>
 </tr>
