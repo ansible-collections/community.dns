@@ -4,6 +4,21 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v3.5.11
+=======
+
+Release Summary
+---------------
+
+Bugfix release with updated PSL.
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- lookup_as_dict lookup plugin - make ``NSEC3`` decoding compatible with dnspython 2.9.0 (https://github.com/ansible-collections/community.dns/pull/360).
+- nameserver_record_info - make ``NSEC3`` decoding compatible with dnspython 2.9.0 (https://github.com/ansible-collections/community.dns/pull/360).
+
 v3.5.10
 =======
 
