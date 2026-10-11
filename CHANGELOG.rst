@@ -4,6 +4,32 @@ Community DNS Collection Release Notes
 
 .. contents:: Topics
 
+v4.3.0
+======
+
+Release Summary
+---------------
+
+Maintenance, bugfix, feature, and deprecation release with updated PSL.
+
+Minor Changes
+-------------
+
+- wait_for_txt - ``records[].values`` has been renamed to its alias ``records[].entries``. No change in roles and playbooks is needed, it is just that documentation now shows the new preferred name ``entries``, with ``values`` as an alias (https://github.com/ansible-collections/community.dns/pull/362).
+
+Deprecated Features
+-------------------
+
+- nameserver_record_info - the return value ``results[].result[].values`` is deprecated and will be removed from community.dns 5.0.0. Use ``results[].result[].entries`` instead, which has been available for some time (https://github.com/ansible-collections/community.dns/pull/362).
+- wait_for_txt - the return value ``records[].values`` is deprecated and will be removed from community.dns 5.0.0. Use ``records[].entries`` instead, which has been available for some time (https://github.com/ansible-collections/community.dns/pull/362).
+
+Bugfixes
+--------
+
+- Update Public Suffix List.
+- lookup_as_dict lookup plugin - make ``NSEC3`` decoding compatible with dnspython 2.9.0 (https://github.com/ansible-collections/community.dns/pull/360).
+- nameserver_record_info - make ``NSEC3`` decoding compatible with dnspython 2.9.0 (https://github.com/ansible-collections/community.dns/pull/360).
+
 v4.2.0
 ======
 
