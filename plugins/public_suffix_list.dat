@@ -6809,7 +6809,7 @@ org.zw
 
 // newGTLDs
 
-// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2026-10-16T18:37:24Z
+// List of new gTLDs imported from https://www.icann.org/resources/registries/gtlds/v2/gtlds.json on 2026-10-30T19:51:02Z
 // This list is auto-generated, don't edit it manually.
 // aaa : American Automobile Association, Inc.
 // https://www.iana.org/domains/root/db/aaa.html
@@ -8494,10 +8494,6 @@ healthcare
 // help : Innovation service Limited
 // https://www.iana.org/domains/root/db/help.html
 help
-
-// helsinki : City of Helsinki
-// https://www.iana.org/domains/root/db/helsinki.html
-helsinki
 
 // here : Charleston Road Registry Inc.
 // https://www.iana.org/domains/root/db/here.html
@@ -11343,9 +11339,10 @@ barsy.ca
 *.compute.estate
 *.alces.network
 
-// Alibaba Cloud API Gateway
+// Alibaba
 // Submitted by Alibaba Cloud Security <cloud_product_security_team@alibaba-inc.com>
 alibabacloudcs.com
+*.ztna-dingtalk.com
 ms.fun
 ms.show
 
@@ -13790,10 +13787,6 @@ futuremailing.at
 gadget.app
 gadget.host
 
-// GCom Internet : https://www.gcom.net.au
-// Submitted by Leo Julius <support@gcom.net.au>
-aliases121.com
-
 // GDS : https://www.gov.uk/service-manual/technology/managing-domain-names
 // Submitted by Stephen Ford <hostmaster@digital.cabinet-office.gov.uk>
 campaign.gov.uk
@@ -13838,7 +13831,6 @@ gitlab.io
 
 // Gitplac.si : https://gitplac.si
 // Submitted by Aljaž Starc <me@aljaxus.eu>
-gitapp.si
 gitpage.si
 
 // Glide : https://www.glideapps.com
@@ -14482,10 +14474,6 @@ koobin.events
 // Submitted by Ben Francis <ben@krellian.com>
 webthings.io
 krellian.net
-
-// KUROKU LTD : https://kuroku.ltd/
-// Submitted by DisposaBoy <security@oya.to>
-oya.to
 
 // KV GmbH : https://www.nic.co.de
 // Submitted by KV GmbH <registry@kv-gmbh.de>
