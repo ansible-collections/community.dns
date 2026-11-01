@@ -1416,3 +1416,12 @@ releases:
       - 4.3.0.yml
       - update-psl.yml
     release_date: '2026-10-11'
+  4.3.1:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+      release_summary: Maintenance release.
+    fragments:
+      - 4.3.1.yml
+      - update-psl.yml
+    release_date: '2026-11-01'
