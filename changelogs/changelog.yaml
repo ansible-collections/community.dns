@@ -1340,3 +1340,12 @@ releases:
       - 360-dnspython-2.9.yml
       - update-psl.yml
     release_date: '2026-10-11'
+  3.5.12:
+    changes:
+      bugfixes:
+        - Update Public Suffix List.
+      release_summary: Maintenance release.
+    fragments:
+      - 3.5.12.yml
+      - update-psl.yml
+    release_date: '2026-11-01'
