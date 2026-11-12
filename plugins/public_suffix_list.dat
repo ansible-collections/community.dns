@@ -14907,6 +14907,12 @@ mocha.app
 mochausercontent.com
 mocha-sandbox.dev
 
+// Modelence : https://modelence.com/
+// Submitted by Modelence Security <security@modelence.com>
+modelence.app
+cloud.modelence.app
+sandbox.modelence.app
+
 // MODX Systems LLC : https://modx.com
 // Submitted by Elizabeth Southwell <elizabeth@modx.com>
 modx.dev
@@ -15572,6 +15578,10 @@ ravpage.co.il
 // Submitted by David Fischer <team@readthedocs.org>
 readthedocs-hosted.com
 readthedocs.io
+
+// ReadWriteExecute, Inc : https://www.rwx.com
+// Submitted by Dan Manges <security@rwx.com>
+rwx.run
 
 // Red Hat, Inc. OpenShift : https://openshift.redhat.com/
 // Submitted by Tim Kramer <tkramer@rhcloud.com>
@@ -16386,6 +16396,10 @@ now.sh
 // VeryPositive SIA : http://very.lv
 // Submitted by Danko Aleksejevs <danko@very.lv>
 2038.io
+
+// VibeKit : https://vibekit.bot/
+// Submitted by Brian Boisjoli <info@vibekit.bot>
+vibekit.page
 
 // Virtual-Info : https://www.virtual-info.info/
 // Submitted by Adnan RIHAN <hostmaster@v-info.info>
