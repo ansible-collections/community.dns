@@ -12490,6 +12490,11 @@ myasustor.com
 *.atlassian-isolated-3p.com
 cdn.prod.atlassian-dev.net
 
+// Automattic Inc. : https://automattic.com
+// Submitted by Stefano Sala <support@spacefast.com>
+space.fast
+view.fast
+
 // AVM : https://avm.de
 // Submitted by Andreas Weise <a.weise@avm.de>
 myfritz.link
@@ -12961,6 +12966,10 @@ dattoweb.com
 mydatto.com
 dattolocal.net
 mydatto.net
+
+// ddns.ge : https://nic.ddns.ge
+// Submitted by John Snow <support@mail.ddns.ge>
+ddns.ge
 
 // ddnss.de : https://www.ddnss.de/
 // Submitted by Robert Niedziela <webmaster@ddnss.de>
@@ -13802,6 +13811,10 @@ freemyip.com
 // Submitted by Daniel A. Maierhofer <vorstand@funkfeuer.at>
 wien.funkfeuer.at
 
+// FurryBox : https://www.furry.box
+// Submitted by Aether <furry@org.digital>
+xwx.me
+
 // Future Versatile Group. : https://www.fvg-on.net/
 // T.Kabu <webmaster@fvg-on.net>
 daemon.asia
@@ -14228,11 +14241,6 @@ iki.fi
 // Submitted by Marios Makassikis <mmakassikis@freebox.fr>
 ibxos.it
 iliadboxos.it
-
-// Imagine : https://imagine.dev
-// Submitted by Steven Nguyen <security@imagine.dev>
-imagine.diy
-imagine-proxy.work
 
 // Incsub, LLC : https://incsub.com/
 // Submitted by Aaron Edwards <sysadmins@incsub.com>
@@ -15084,6 +15092,10 @@ torun.pl
 nh-serv.co.uk
 nimsite.uk
 
+// Ninjaneer Media : https://ninjaneer.au
+// Submitted by the Ninjaneer Media team <admin@ninjaneer.au>
+ninjaneer-sites.com
+
 // No-IP.com : https://noip.com/
 // Submitted by Deven Reza <publicsuffixlist@noip.com>
 mmafan.biz
@@ -15719,6 +15731,10 @@ io.noc.ruhr-uni-bochum.de
 // Submitted by Tech Support <support@rasnet.ru>
 ras.ru
 
+// Sail Research Co. : https://sailresearch.com/
+// Submitted by Sail Support <support@sailresearch.com>
+sail.box
+
 // Sakura Frp : https://www.natfrp.com
 // Submitted by Bobo Liu <support@natfrp.cloud>
 nyat.app
@@ -15961,6 +15977,13 @@ shopitsite.com
 // Submitted by Jens Küper <cloud@shopware.com>
 shopware.shop
 shopware.store
+
+// Show Corporation : https://doma.in
+// Submitted by Xiufeng Guo <support@cctld.com>
+co.fo
+com.fo
+wz.io
+wz.org
 
 // Siemens Mobility GmbH
 // Submitted by Oliver Graebner <security@mo-siemens.io>
@@ -16270,6 +16293,10 @@ telebit.io
 // Teleport : https://goteleport.com
 // Submitted by Rob Picard <security@goteleport.com>
 teleport.sh
+
+// Terramind.com, Inc. : https://terramind.com
+// Submitted by Terramind Sites <sites@terramind.com>
+terramind.io
 
 // Thingdust AG : https://thingdust.com/
 // Submitted by Adrian Imboden <adi@thingdust.com>
