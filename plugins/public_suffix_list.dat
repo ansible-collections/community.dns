@@ -12380,6 +12380,13 @@ eero-stage.online
 
 // concludes Amazon
 
+// Amba : https://amba.dev
+// Submitted by Amba Abuse Desk <abuse@amba.dev>
+app.amba.host
+cdn.amba.host
+fn.amba.host
+go.amba.host
+
 // Anomaly : https://opencode.ai
 // Submitted by Dax Raad <security@anoma.ly>
 opentunnel.xyz
@@ -12891,6 +12898,10 @@ craft.me
 // Craynic, s.r.o. : http://www.craynic.com/
 // Submitted by Ales Krajnik <ales.krajnik@craynic.com>
 realm.cz
+
+// Curia : https://curiabots.com
+// Submitted by Curia <psl@crbts.app>
+crbts.app
 
 // cyber_Folks S.A. : https://cyberfolks.pl
 // Submitted by Bartlomiej Kida <security@cyberfolks.pl>
