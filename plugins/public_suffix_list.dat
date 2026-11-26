@@ -15529,6 +15529,10 @@ mypep.link
 // Submitted by Alec Xiang <security@perplexity.ai>
 pplx.app
 
+// Phron : https://phron.net
+// Submitted by Phron Security <security@phron.net>
+phronusercontent.com
+
 // Ping Identity : https://www.pingidentity.com
 // Submitted by Ping Identity <security@pingidentity.com>
 forgeblocks.com
@@ -15763,6 +15767,10 @@ instances.spawn.cc
 reliantlabs.dev
 sites.reliantlabs.dev
 reliantpreview.dev
+
+// Relume : https://www.relume.ai/
+// Submitted by Relume Security Team <security@relume.ai>
+relumesite.ai
 
 // Render : https://render.com
 // Submitted by Anurag Goel <dev@render.com>
@@ -16151,6 +16159,10 @@ streamlitapp.com
 // Submitted by Ian Streeter <ian@snowplowanalytics.com>
 try-snowplow.com
 
+// Softr : https://www.softr.io/
+// Submitted by Softr Support <support@softr.io>
+softr.app
+
 // Software Consulting Michal Zalewski : https://www.mafelo.com
 // Submitted by Michal Zalewski <security@mafelo.com>
 mafelo.net
@@ -16198,6 +16210,10 @@ spawnbase.app
 // SpeedPartner GmbH : https://www.speedpartner.de/
 // Submitted by Stefan Neufeind <info@speedpartner.de>
 customer.speedpartner.de
+
+// Spheron : https://www.spheron.ai
+// Submitted by Spheron Team <info@spheron.ai>
+spheron.live
 
 // Spreadshop (sprd.net AG) : https://www.spreadshop.com/
 // Submitted by Martin Breest <security@spreadshop.com>
@@ -16250,6 +16266,10 @@ indevs.in
 // Submitted by Matthias Merkel <matthias.merkel@staclar.com>
 musician.io
 novecore.site
+
+// Static.run : https://static.run
+// Submitted by Static.run <security@static.run>
+staticrun.app
 
 // statichost.eu : https://www.statichost.eu
 // Submitted by Eric Selin <admin@statichost.eu>
@@ -16752,6 +16772,12 @@ js.wpenginepowered.com
 // Submitted by Julian Uphoff <publicsuffixlist@xenoncloud.net>
 *.xenonconnect.de
 half.host
+
+// xPort : https://xport.dev
+// Submitted by Sascha Klein <security@xport.dev>
+xport.free
+xport.host
+xport.sh
 
 // XS4ALL Internet bv : https://www.xs4all.nl/
 // Submitted by Daniel Mostertman <unixbeheer+publicsuffix@xs4all.net>
